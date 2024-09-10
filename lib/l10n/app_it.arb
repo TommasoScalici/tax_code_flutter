@@ -1,0 +1,14 @@
+{
+    "@@author": "Tommaso Scalici",
+    "@@locale": "it",
+    "appTitle": "Codice Fiscale",
+    "required": "Obbligatorio",
+    "newItem": "Nuovo",
+    "fillData": "Inserisci i dati",
+    "firstName": "Nome",
+    "lastName": "Cognome",
+    "gender": "Sesso",
+    "birthDate": "Data di nascita",
+    "birthPlace": "Luogo di nascita",
+    "confirm": "Conferma"
+}

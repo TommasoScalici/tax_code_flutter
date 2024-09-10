@@ -1,0 +1,45 @@
+name: tax_code_flutter
+description: "App for Italian Tax Code calculation."
+publish_to: none # Remove this line if you wish to publish to pub.dev
+version: 1.0.1+1
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
+  cupertino_icons: ^1.0.6
+  firebase_analytics: ^10.8.0
+  firebase_auth: ^4.16.0
+  firebase_core: ^2.24.2
+  firebase_remote_config: ^4.3.8
+  http: ^1.2.2
+  provider: ^6.1.2
+  reactive_forms: ^17.0.1
+  reactive_date_time_picker: ^4.0.0
+  reactive_raw_autocomplete: ^2.1.1
+  shared_preferences: ^2.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+
+flutter:
+  generate: true
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
+
+  assets:
+    - assets/

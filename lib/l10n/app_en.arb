@@ -1,0 +1,14 @@
+{
+    "@@author": "Tommaso Scalici",
+    "@@locale": "en",
+    "appTitle": "Tax Code",
+    "required": "Required",
+    "newItem": "New",
+    "fillData": "Fill data",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "gender": "Gender",
+    "birthDate": "Birth date",
+    "birthPlace": "Birth place",
+    "confirm": "Confirm"
+}
