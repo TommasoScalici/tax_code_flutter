@@ -10,5 +10,17 @@
     "gender": "Gender",
     "birthDate": "Birth date",
     "birthPlace": "Birth place",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "deleteConfirmation": "Delete confirmation",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "deleteMessage": "Are you sure you want to delete the contact with tax code '{taxCode}'?",
+    "@deleteMessage": {
+        "placeholders": {
+            "taxCode": {
+                "type": "String",
+                "example": "AAABBB00C00D000E"
+            }
+        }
+    }
 }

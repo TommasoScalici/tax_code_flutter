@@ -10,5 +10,17 @@
     "gender": "Sesso",
     "birthDate": "Data di nascita",
     "birthPlace": "Luogo di nascita",
-    "confirm": "Conferma"
+    "confirm": "Conferma",
+    "deleteConfirmation": "Conferma eliminazione",
+    "delete": "Elimina",
+    "cancel": "Annulla",
+    "deleteMessage": "Sei sicuro di voler eliminare il contatto con codice fiscale: '{taxCode}'?",
+    "@deleteMessage": {
+        "placeholders": {
+            "taxCode": {
+                "type": "String",
+                "example": "AAABBB00C00D000E"
+            }
+        }
+    }
 }

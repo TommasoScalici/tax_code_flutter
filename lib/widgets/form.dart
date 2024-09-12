@@ -1,29 +1,33 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+import 'package:logger/logger.dart';
 import 'package:reactive_date_time_picker/reactive_date_time_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tax_code_flutter/settings.dart';
 
 import '../models/birthplace.dart';
 import '../models/contact.dart';
 import '../models/tax_code_response.dart';
-import '../providers/app_state.dart';
 
 final class FormPage extends StatefulWidget {
-  const FormPage({super.key});
+  final Contact? contact;
+  const FormPage({super.key, required this.contact});
 
   @override
   State<StatefulWidget> createState() => _FormPageState();
 }
 
 final class _FormPageState extends State<FormPage> {
+  final logger = Logger();
+  final SharedPreferencesAsync prefs = SharedPreferencesAsync();
+
   final _form = FormGroup({
     'firstName': FormControl<String>(validators: [Validators.required]),
     'lastName': FormControl<String>(validators: [Validators.required]),
@@ -32,28 +36,23 @@ final class _FormPageState extends State<FormPage> {
     'birthPlace': FormControl<Birthplace>(validators: [Validators.required]),
   });
 
-  final _contact = Contact();
-
-  var _accessToken = '';
   var _shouldPushForm = false;
   late List<Birthplace> _birthplaces;
 
   String get _firstName => _form.control('firstName').value;
   String get _lastName => _form.control('lastName').value;
-  String get _gender => _form.control('gender').value;
+  String get _sex => _form.control('gender').value;
   DateTime get _birthDate => _form.control('birthDate').value;
   Birthplace get _birthPlace => _form.control('birthPlace').value;
 
   Future<TaxCodeResponse> _fetchTaxCode() async {
-    if (_accessToken.isEmpty) {
-      _accessToken = await _getAccessToken();
-    }
-
+    var accessToken = await prefs.getString(Settings.apiAccessTokenKey);
     var baseUri = 'http://api.miocodicefiscale.com/calculate?';
-    var params = 'lname=$_lastName&fname=$_firstName&gender=$_gender'
+    var params =
+        'lname=${_lastName.trim()}&fname=${_firstName.trim()}&gender=$_sex'
         '&city=${_birthPlace.name}&state=${_birthPlace.state}'
         '&day=${_birthDate.day}&month=${_birthDate.month}&year=${_birthDate.year}'
-        '&access_token=$_accessToken';
+        '&access_token=$accessToken';
 
     final response = await http.get(Uri.parse('$baseUri$params'));
     if (response.statusCode == 200) {
@@ -62,12 +61,6 @@ final class _FormPageState extends State<FormPage> {
       throw Exception(
           'API call to miocodicefiscale.com failed, status code: ${response.statusCode}}');
     }
-  }
-
-  Future<String> _getAccessToken() async {
-    final remoteConfig = FirebaseRemoteConfig.instance;
-    remoteConfig.fetchAndActivate();
-    return remoteConfig.getString('miocodicefiscale_access_token');
   }
 
   Future<String> _loadAsset() async =>
@@ -82,15 +75,17 @@ final class _FormPageState extends State<FormPage> {
     setState(() => _birthplaces = birthplaces);
   }
 
-  Future<void> _onSubmit() async {
+  Future<Contact> _onSubmit() async {
     var response = await _fetchTaxCode();
 
-    _contact.firstName = _firstName;
-    _contact.lastName = _lastName;
-    _contact.sex = _gender;
-    _contact.birthDate = _birthDate;
-    _contact.birthPlace = _birthPlace;
-    _contact.taxCode = response.data.cf;
+    return Contact(
+      firstName: _firstName.trim(),
+      lastName: _lastName.trim(),
+      sex: _sex,
+      taxCode: response.data.cf,
+      birthPlace: _birthPlace,
+      birthDate: _birthDate,
+    );
   }
 
   @override
@@ -280,11 +275,9 @@ final class _FormPageState extends State<FormPage> {
                       onPressed: () async {
                         _form.markAllAsTouched();
                         if (_form.valid) {
-                          await _onSubmit();
-
+                          final contact = await _onSubmit();
                           if (context.mounted) {
-                            context.read<AppState>().addContact(_contact);
-                            Navigator.pop(context);
+                            Navigator.pop<Contact>(context, contact);
                           }
                         }
                       },

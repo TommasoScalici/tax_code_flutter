@@ -1,15 +1,18 @@
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:tax_code_flutter/providers/app_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
-
 import 'models/contact.dart';
-import 'widgets/contact_card.dart';
+import 'providers/app_state.dart';
+import 'settings.dart';
+
+import 'widgets/contacts_list.dart';
 import 'widgets/form.dart';
 
 void main() async {
@@ -23,12 +26,12 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [ChangeNotifierProvider(create: (_) => AppState())],
-    child: const MyApp(),
+    child: const TaxCodeApp(),
   ));
 }
 
-final class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+final class TaxCodeApp extends StatelessWidget {
+  const TaxCodeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,39 +57,59 @@ final class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  Widget buildListView(List<Contact> contacts) {
-    return ListView.builder(
-      itemCount: contacts.length,
-      itemBuilder: (context, index) {
-        final contact = contacts[index];
-        return ContactCard(contact: contact);
-      },
-    );
+final class _HomePageState extends State<HomePage> {
+  final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
+
+  @override
+  void initState() {
+    super.initState();
+    _setCache();
   }
 
   @override
   Widget build(BuildContext context) {
-    final contacts = Provider.of<AppState>(context, listen: true).contacts;
-    // final prefs = Provider.of<AppState>(context, listen: false).prefs;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(AppLocalizations.of(context)!.appTitle),
-      ),
-      body: buildListView(contacts),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const FormPage(),
-              ));
-        },
-        tooltip: AppLocalizations.of(context)!.newItem,
-        child: const Icon(Icons.add),
-      ),
+    return Consumer<AppState>(
+      builder: (BuildContext context, AppState value, Widget? child) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: Text(AppLocalizations.of(context)!.appTitle),
+          ),
+          body: const ContactsListPage(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final contact = await Navigator.push<Contact>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FormPage(contact: null),
+                  ));
+              await Future.delayed(const Duration(milliseconds: 500));
+              if (contact != null) value.addContact(contact);
+            },
+            tooltip: AppLocalizations.of(context)!.newItem,
+            child: const Icon(Icons.add),
+          ),
+        );
+      },
     );
+  }
+
+  Future<String> _getAccessToken() async {
+    if (Platform.isAndroid) {
+      final remoteConfig = FirebaseRemoteConfig.instance;
+      remoteConfig.fetchAndActivate();
+      return remoteConfig.getString(Settings.apiAccessTokenKey);
+    }
+
+    return '';
+  }
+
+  Future<void> _setCache() async {
+    final accessToken = await _prefs.getString(Settings.apiAccessTokenKey);
+
+    if (accessToken == null || accessToken.isEmpty) {
+      await _prefs.setString(
+          Settings.apiAccessTokenKey, await _getAccessToken());
+    }
   }
 }
