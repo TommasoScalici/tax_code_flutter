@@ -19,8 +19,8 @@ final class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  void editContact(Contact contact) {
-    final contactToEdit = contacts.where((c) => c.id == contact.id).first;
+  void editContact(Contact contact, String oldContact) {
+    final contactToEdit = contacts.where((c) => c.id == oldContact).first;
     final index = _contacts.indexOf(contactToEdit);
     contacts.removeAt(index);
     contacts.insert(index, contact);
@@ -42,12 +42,15 @@ final class AppState with ChangeNotifier {
       final directory = await getApplicationDocumentsDirectory();
       final path = directory.path;
       final file = File('$path/contacts.json');
-      final contactsSerialized = await file.readAsString();
-      List<dynamic> contactsDeserialized = json.decode(contactsSerialized);
-      List<Contact> contacts = contactsDeserialized
-          .map((json) => Contact.fromJson(json as Map<String, dynamic>))
-          .toList();
-      updateContacts(contacts);
+
+      if (await file.exists()) {
+        final contactsSerialized = await file.readAsString();
+        List<dynamic> contactsDeserialized = json.decode(contactsSerialized);
+        List<Contact> contacts = contactsDeserialized
+            .map((json) => Contact.fromJson(json as Map<String, dynamic>))
+            .toList();
+        updateContacts(contacts);
+      }
     } on Exception catch (e) {
       logger.e('Error while loading state: $e');
     }

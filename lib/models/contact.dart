@@ -10,7 +10,7 @@ final class Contact {
   String id;
   String firstName;
   String lastName;
-  String sex;
+  String gender;
   String taxCode;
   Birthplace birthPlace;
   DateTime birthDate;
@@ -18,7 +18,7 @@ final class Contact {
   Contact({
     required this.firstName,
     required this.lastName,
-    required this.sex,
+    required this.gender,
     required this.taxCode,
     required this.birthPlace,
     required this.birthDate,
@@ -29,7 +29,7 @@ final class Contact {
   Map<String, dynamic> toJson() => _$ContactToJson(this);
 
   @override
-  String toString() => '$firstName $lastName ($sex)'
+  String toString() => '$firstName $lastName ($gender)'
       ' - ${DateFormat.yMd().format(birthDate)}'
       ' - ${birthPlace.toString()}';
 }

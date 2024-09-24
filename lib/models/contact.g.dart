@@ -9,7 +9,7 @@ part of 'contact.dart';
 Contact _$ContactFromJson(Map<String, dynamic> json) => Contact(
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
-      sex: json['sex'] as String,
+      gender: json['gender'] as String,
       taxCode: json['taxCode'] as String,
       birthPlace:
           Birthplace.fromJson(json['birthPlace'] as Map<String, dynamic>),
@@ -20,7 +20,7 @@ Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
       'id': instance.id,
       'firstName': instance.firstName,
       'lastName': instance.lastName,
-      'sex': instance.sex,
+      'gender': instance.gender,
       'taxCode': instance.taxCode,
       'birthPlace': instance.birthPlace,
       'birthDate': instance.birthDate.toIso8601String(),

@@ -55,7 +55,7 @@ class _ContactsListPageState extends State<ContactsListPage> {
               sliverGridDelegate:
                   const SliverGridDelegateWithMaxCrossAxisExtent(
                       crossAxisSpacing: 50,
-                      mainAxisExtent: 250,
+                      mainAxisExtent: 280,
                       maxCrossAxisExtent: 800),
               longPressDraggable: false,
               shrinkWrap: true,

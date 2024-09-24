@@ -90,47 +90,60 @@ final class _ContactCardState extends State<ContactCard> {
                       children: [
                         Row(
                           children: [
-                            const Text('Nome: '),
                             Text(
-                              widget.contact.firstName,
-                              style: valueTextStyle,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text('Cognome: '),
-                            Text(
-                              widget.contact.lastName,
-                              style: valueTextStyle,
+                                '${AppLocalizations.of(context)!.firstName}: '),
+                            Flexible(
+                              child: Text(
+                                widget.contact.firstName,
+                                style: valueTextStyle,
+                              ),
                             )
                           ],
                         ),
                         Row(
                           children: [
-                            const Text('Sesso: '),
-                            Text(
-                              widget.contact.sex,
-                              style: valueTextStyle,
+                            Text('${AppLocalizations.of(context)!.lastName}: '),
+                            Flexible(
+                              child: Text(
+                                widget.contact.lastName,
+                                style: valueTextStyle,
+                              ),
                             )
                           ],
                         ),
                         Row(
                           children: [
-                            const Text('Data di nascita: '),
+                            Text('${AppLocalizations.of(context)!.gender}: '),
+                            Flexible(
+                              child: Text(
+                                widget.contact.gender,
+                                style: valueTextStyle,
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
                             Text(
-                              DateFormat.yMd(intl)
-                                  .format(widget.contact.birthDate),
-                              style: valueTextStyle,
+                                '${AppLocalizations.of(context)!.birthDate}: '),
+                            Flexible(
+                              child: Text(
+                                DateFormat.yMd(intl)
+                                    .format(widget.contact.birthDate),
+                                style: valueTextStyle,
+                              ),
                             ),
                           ],
                         ),
                         Row(
                           children: [
-                            const Text('Luogo di nascita: '),
                             Text(
-                              widget.contact.birthPlace.toString(),
-                              style: valueTextStyle,
+                                '${AppLocalizations.of(context)!.birthPlace}: '),
+                            Flexible(
+                              child: Text(
+                                widget.contact.birthPlace.toString(),
+                                style: valueTextStyle,
+                              ),
                             ),
                           ],
                         )
@@ -156,7 +169,9 @@ final class _ContactCardState extends State<ContactCard> {
                             );
 
                             if (editedContact != null) {
-                              value.editContact(editedContact);
+                              value.editContact(
+                                  editedContact, widget.contact.id);
+                              await value.saveState();
                             }
                           },
                           icon: const Icon(Icons.edit)),

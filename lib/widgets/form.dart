@@ -36,12 +36,13 @@ final class _FormPageState extends State<FormPage> {
     'birthPlace': FormControl<Birthplace>(validators: [Validators.required]),
   });
 
+  var contactId = '';
   var _shouldPushForm = false;
   late List<Birthplace> _birthplaces;
 
   String get _firstName => _form.control('firstName').value;
   String get _lastName => _form.control('lastName').value;
-  String get _sex => _form.control('gender').value;
+  String get _gender => _form.control('gender').value;
   DateTime get _birthDate => _form.control('birthDate').value;
   Birthplace get _birthPlace => _form.control('birthPlace').value;
 
@@ -49,7 +50,7 @@ final class _FormPageState extends State<FormPage> {
     var accessToken = await prefs.getString(Settings.apiAccessTokenKey);
     var baseUri = 'http://api.miocodicefiscale.com/calculate?';
     var params =
-        'lname=${_lastName.trim()}&fname=${_firstName.trim()}&gender=$_sex'
+        'lname=${_lastName.trim()}&fname=${_firstName.trim()}&gender=$_gender'
         '&city=${_birthPlace.name}&state=${_birthPlace.state}'
         '&day=${_birthDate.day}&month=${_birthDate.month}&year=${_birthDate.year}'
         '&access_token=$accessToken';
@@ -81,23 +82,36 @@ final class _FormPageState extends State<FormPage> {
     return Contact(
       firstName: _firstName.trim(),
       lastName: _lastName.trim(),
-      sex: _sex,
+      gender: _gender,
       taxCode: response.data.cf,
       birthPlace: _birthPlace,
       birthDate: _birthDate,
     );
   }
 
+  void _setPreviousData() {
+    if (widget.contact != null) {
+      contactId = widget.contact!.id;
+      _form.control('firstName').value = widget.contact?.firstName;
+      _form.control('lastName').value = widget.contact?.lastName;
+      _form.control('gender').value = widget.contact?.gender;
+      _form.control('birthDate').value = widget.contact?.birthDate;
+      _form.control('birthPlace').value = widget.contact?.birthPlace;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _loadBirthplacesData();
+    _setPreviousData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(AppLocalizations.of(context)!.fillData),
       ),
       body: Padding(

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tax_code_flutter/widgets/info_modal.dart';
 
 import 'firebase_options.dart';
 import 'models/contact.dart';
@@ -72,9 +73,32 @@ final class _HomePageState extends State<HomePage> {
       builder: (BuildContext context, AppState value, Widget? child) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: Text(AppLocalizations.of(context)!.appTitle),
-          ),
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              title: Text(AppLocalizations.of(context)!.appTitle),
+              actions: [
+                PopupMenuButton(
+                  child: const Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: Icon(Icons.more_vert)),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: Row(
+                        children: [
+                          const Icon(Icons.info),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(AppLocalizations.of(context)!.info),
+                          )
+                        ],
+                      ),
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) => const InfoModal(),
+                      ),
+                    ),
+                  ],
+                ),
+              ]),
           body: const ContactsListPage(),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
@@ -96,11 +120,19 @@ final class _HomePageState extends State<HomePage> {
 
   Future<String> _getAccessToken() async {
     if (Platform.isAndroid) {
-      final remoteConfig = FirebaseRemoteConfig.instance;
-      remoteConfig.fetchAndActivate();
-      return remoteConfig.getString(Settings.apiAccessTokenKey);
+      try {
+        final remoteConfig = FirebaseRemoteConfig.instance;
+        await remoteConfig.fetchAndActivate();
+        return remoteConfig.getString(Settings.apiAccessTokenKey);
+      } on Exception catch (e) {
+        if (mounted) {
+          context
+              .read<AppState>()
+              .logger
+              .e('Error while retrieving access token from remote config: $e');
+        }
+      }
     }
-
     return '';
   }
 
