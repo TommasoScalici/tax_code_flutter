@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 import 'package:reactive_date_time_picker/reactive_date_time_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
@@ -25,8 +24,7 @@ final class FormPage extends StatefulWidget {
 }
 
 final class _FormPageState extends State<FormPage> {
-  final logger = Logger();
-  final SharedPreferencesAsync prefs = SharedPreferencesAsync();
+  final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
 
   final _form = FormGroup({
     'firstName': FormControl<String>(validators: [Validators.required]),
@@ -47,7 +45,7 @@ final class _FormPageState extends State<FormPage> {
   Birthplace get _birthPlace => _form.control('birthPlace').value;
 
   Future<TaxCodeResponse> _fetchTaxCode() async {
-    var accessToken = await prefs.getString(Settings.apiAccessTokenKey);
+    var accessToken = await _prefs.getString(Settings.apiAccessTokenKey);
     var baseUri = 'http://api.miocodicefiscale.com/calculate?';
     var params =
         'lname=${_lastName.trim()}&fname=${_firstName.trim()}&gender=$_gender'

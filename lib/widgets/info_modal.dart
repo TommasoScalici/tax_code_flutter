@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,15 +12,17 @@ class InfoModal extends StatelessWidget {
   Future<String> getHtmlPrivacyPolicy(BuildContext context) async {
     var languageCode = Localizations.localeOf(context).languageCode;
 
-    var querySnapshot = await FirebaseFirestore.instance
-        .collection('html-strings')
-        .where('name', isEqualTo: 'privacy_policy')
-        .get();
+    if (Platform.isAndroid) {
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection('html-strings')
+          .where('name', isEqualTo: 'privacy_policy')
+          .get();
 
-    var doc = querySnapshot.docs.firstOrNull;
+      var doc = querySnapshot.docs.firstOrNull;
 
-    if (doc != null) {
-      return doc.data()[languageCode] as String;
+      if (doc != null) {
+        return doc.data()[languageCode] as String;
+      }
     }
 
     return '';
