@@ -16,6 +16,7 @@
     "cancel": "Annulla",
     "close": "Chiudi",
     "info": "Informazioni",
+    "search": "Cerca...",
     "errorNoInternet": "Errore: nessuna connessione ad Internet",
     "deleteMessage": "Sei sicuro di voler eliminare il contatto con codice fiscale: '{taxCode}'?",
     "@deleteMessage": {

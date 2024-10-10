@@ -10,9 +10,11 @@ import '../models/contact.dart';
 final class AppState with ChangeNotifier {
   final _logger = Logger();
   List<Contact> _contacts = [];
+  bool _isSearching = false;
 
-  Logger get logger => _logger;
   List<Contact> get contacts => _contacts;
+  bool get isSearching => _isSearching;
+  Logger get logger => _logger;
 
   void addContact(Contact contact) {
     contacts.add(contact);
@@ -36,6 +38,8 @@ final class AppState with ChangeNotifier {
     _contacts = contacts;
     notifyListeners();
   }
+
+  void setSearchState(bool searchState) => _isSearching = searchState;
 
   Future<void> loadState() async {
     try {

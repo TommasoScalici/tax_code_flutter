@@ -75,6 +75,11 @@ class InfoModal extends StatelessWidget {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
+                          var currentFocusNode =
+                              FocusManager.instance.primaryFocus;
+                          if (currentFocusNode != null) {
+                            currentFocusNode.unfocus();
+                          }
                         },
                         child: Text(AppLocalizations.of(context)!.close),
                       ),

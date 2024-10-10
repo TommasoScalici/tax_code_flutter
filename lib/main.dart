@@ -107,6 +107,11 @@ final class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(
                     builder: (context) => const FormPage(contact: null),
                   ));
+
+              var currentFocus = FocusManager.instance.primaryFocus;
+
+              if (currentFocus != null) currentFocus.unfocus();
+
               await Future.delayed(const Duration(milliseconds: 500));
               if (contact != null) value.addContact(contact);
             },

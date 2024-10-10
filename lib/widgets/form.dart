@@ -122,6 +122,12 @@ final class _FormPageState extends State<FormPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                //   child: ElevatedButton(
+                //       onPressed: () => {}, child: Text('Apri Fotocamera')),
+                // ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -130,6 +136,7 @@ final class _FormPageState extends State<FormPage> {
                         labelText: AppLocalizations.of(context)!.firstName),
                     formControlName: 'firstName',
                     onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                    textInputAction: TextInputAction.next,
                     validationMessages: {
                       ValidationMessage.required: (error) =>
                           AppLocalizations.of(context)!.required,
@@ -144,6 +151,7 @@ final class _FormPageState extends State<FormPage> {
                         labelText: AppLocalizations.of(context)!.lastName),
                     formControlName: 'lastName',
                     onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                    textInputAction: TextInputAction.next,
                     validationMessages: {
                       ValidationMessage.required: (error) =>
                           AppLocalizations.of(context)!.required,
@@ -183,8 +191,8 @@ final class _FormPageState extends State<FormPage> {
                               labelText:
                                   AppLocalizations.of(context)!.birthDate,
                             ),
-                            clearIcon: const Icon(Icons.clear),
                             helpText: AppLocalizations.of(context)!.birthDate,
+                            showClearIcon: true,
                             firstDate: DateTime(1900),
                             lastDate: DateTime.now(),
                             type: ReactiveDatePickerFieldType.date,

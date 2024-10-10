@@ -1,5 +1,5 @@
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -18,10 +18,10 @@ final class ContactCard extends StatefulWidget {
 }
 
 final class _ContactCardState extends State<ContactCard> {
-  final intl = Intl.getCurrentLocale();
-  final taxCodeTextStyle = const TextStyle(
+  final _intl = Intl.getCurrentLocale();
+  final _taxCodeTextStyle = const TextStyle(
       color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700);
-  final valueTextStyle = const TextStyle(fontWeight: FontWeight.w600);
+  final _valueTextStyle = const TextStyle(fontWeight: FontWeight.w600);
 
   void _showConfirmationDialog(BuildContext context, Contact contact) {
     showDialog(
@@ -78,7 +78,7 @@ final class _ContactCardState extends State<ContactCard> {
                   title: Center(
                     child: Text(
                       widget.contact.taxCode,
-                      style: taxCodeTextStyle,
+                      style: _taxCodeTextStyle,
                     ),
                   ),
                 ),
@@ -95,7 +95,7 @@ final class _ContactCardState extends State<ContactCard> {
                             Flexible(
                               child: Text(
                                 widget.contact.firstName,
-                                style: valueTextStyle,
+                                style: _valueTextStyle,
                               ),
                             )
                           ],
@@ -106,7 +106,7 @@ final class _ContactCardState extends State<ContactCard> {
                             Flexible(
                               child: Text(
                                 widget.contact.lastName,
-                                style: valueTextStyle,
+                                style: _valueTextStyle,
                               ),
                             )
                           ],
@@ -117,7 +117,7 @@ final class _ContactCardState extends State<ContactCard> {
                             Flexible(
                               child: Text(
                                 widget.contact.gender,
-                                style: valueTextStyle,
+                                style: _valueTextStyle,
                               ),
                             )
                           ],
@@ -128,9 +128,9 @@ final class _ContactCardState extends State<ContactCard> {
                                 '${AppLocalizations.of(context)!.birthDate}: '),
                             Flexible(
                               child: Text(
-                                DateFormat.yMd(intl)
+                                DateFormat.yMd(_intl)
                                     .format(widget.contact.birthDate),
-                                style: valueTextStyle,
+                                style: _valueTextStyle,
                               ),
                             ),
                           ],
@@ -142,7 +142,7 @@ final class _ContactCardState extends State<ContactCard> {
                             Flexible(
                               child: Text(
                                 widget.contact.birthPlace.toString(),
-                                style: valueTextStyle,
+                                style: _valueTextStyle,
                               ),
                             ),
                           ],
@@ -152,9 +152,10 @@ final class _ContactCardState extends State<ContactCard> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10, right: 10),
+                  padding:
+                      const EdgeInsets.only(left: 16, bottom: 10, right: 10),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
                           onPressed: () => Share.share(widget.contact.taxCode),

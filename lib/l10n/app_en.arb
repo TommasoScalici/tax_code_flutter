@@ -16,6 +16,7 @@
     "cancel": "Cancel",
     "close": "Close",
     "info": "Info",
+    "search": "Search...",
     "errorNoInternet": "Error: no Internet connection available",
     "deleteMessage": "Are you sure you want to delete the contact with tax code '{taxCode}'?",
     "@deleteMessage": {
