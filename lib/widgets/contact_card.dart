@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:tax_code_flutter/providers/app_state.dart';
-import 'package:tax_code_flutter/widgets/form.dart';
+import 'package:tax_code_flutter/screens/barcode_page.dart';
+import 'package:tax_code_flutter/screens/form_page.dart';
 
 import '../models/contact.dart';
 
@@ -158,28 +160,43 @@ final class _ContactCardState extends State<ContactCard> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                          onPressed: () => Share.share(widget.contact.taxCode),
-                          icon: const Icon(Icons.share)),
+                        onPressed: () => Share.share(widget.contact.taxCode),
+                        icon: const Icon(Icons.share),
+                      ),
                       IconButton(
-                          onPressed: () async {
-                            final editedContact = await Navigator.push<Contact>(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      FormPage(contact: widget.contact)),
-                            );
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  BarcodePage(taxCode: widget.contact.taxCode),
+                            ),
+                          );
+                        },
+                        icon: Icon(Symbols.barcode),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          final editedContact = await Navigator.push<Contact>(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  FormPage(contact: widget.contact),
+                            ),
+                          );
 
-                            if (editedContact != null) {
-                              value.editContact(
-                                  editedContact, widget.contact.id);
-                              await value.saveState();
-                            }
-                          },
-                          icon: const Icon(Icons.edit)),
+                          if (editedContact != null) {
+                            value.editContact(editedContact, widget.contact.id);
+                            await value.saveState();
+                          }
+                        },
+                        icon: const Icon(Icons.edit),
+                      ),
                       IconButton(
-                          onPressed: () =>
-                              _showConfirmationDialog(context, widget.contact),
-                          icon: const Icon(Icons.delete)),
+                        onPressed: () =>
+                            _showConfirmationDialog(context, widget.contact),
+                        icon: const Icon(Icons.delete),
+                      ),
                     ],
                   ),
                 )
