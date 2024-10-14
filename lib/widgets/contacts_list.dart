@@ -24,17 +24,6 @@ class _ContactsListPageState extends State<ContactsListPage> {
 
   final _searchTextEditingController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-
-    final appState = context.read<AppState>();
-
-    if (mounted) {
-      Future.microtask(() => appState.loadState());
-    }
-  }
-
   void _filterContacts(String searchText) {
     final appState = context.read<AppState>();
 
@@ -66,7 +55,7 @@ class _ContactsListPageState extends State<ContactsListPage> {
           final movedContact = contacts.removeAt(oldIndex);
           contacts.insert(newIndex, movedContact);
           value.updateContacts(contacts);
-          value.saveState();
+          value.saveContacts();
         }
 
         return Padding(

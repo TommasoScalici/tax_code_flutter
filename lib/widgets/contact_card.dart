@@ -21,9 +21,6 @@ final class ContactCard extends StatefulWidget {
 
 final class _ContactCardState extends State<ContactCard> {
   final _intl = Intl.getCurrentLocale();
-  final _taxCodeTextStyle = const TextStyle(
-      color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700);
-  final _valueTextStyle = const TextStyle(fontWeight: FontWeight.w600);
 
   void _showConfirmationDialog(BuildContext context, Contact contact) {
     showDialog(
@@ -41,7 +38,7 @@ final class _ContactCardState extends State<ContactCard> {
             TextButton(
               onPressed: () async {
                 context.read<AppState>().removeContact(contact);
-                await context.read<AppState>().saveState();
+                await context.read<AppState>().saveContacts();
 
                 if (context.mounted) Navigator.of(context).pop();
               },
@@ -58,13 +55,19 @@ final class _ContactCardState extends State<ContactCard> {
 
   @override
   Widget build(BuildContext context) {
+    final valueTextStyle = const TextStyle(fontWeight: FontWeight.w600);
+    final taxCodeTextStyle = TextStyle(
+        color: Theme.of(context).colorScheme.surface,
+        fontSize: 22,
+        fontWeight: FontWeight.w700);
+
     return Consumer<AppState>(
       builder: (BuildContext context, AppState value, Widget? child) {
         return SizedBox(
           width: 400,
           child: Material(
             borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surfaceBright,
             elevation: 4,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -76,11 +79,11 @@ final class _ContactCardState extends State<ContactCard> {
                       topRight: Radius.circular(10),
                     ),
                   ),
-                  tileColor: const Color.fromARGB(128, 38, 128, 0),
+                  tileColor: Theme.of(context).colorScheme.primary,
                   title: Center(
                     child: Text(
                       widget.contact.taxCode,
-                      style: _taxCodeTextStyle,
+                      style: taxCodeTextStyle,
                     ),
                   ),
                 ),
@@ -97,7 +100,7 @@ final class _ContactCardState extends State<ContactCard> {
                             Flexible(
                               child: Text(
                                 widget.contact.firstName,
-                                style: _valueTextStyle,
+                                style: valueTextStyle,
                               ),
                             )
                           ],
@@ -108,7 +111,7 @@ final class _ContactCardState extends State<ContactCard> {
                             Flexible(
                               child: Text(
                                 widget.contact.lastName,
-                                style: _valueTextStyle,
+                                style: valueTextStyle,
                               ),
                             )
                           ],
@@ -119,7 +122,7 @@ final class _ContactCardState extends State<ContactCard> {
                             Flexible(
                               child: Text(
                                 widget.contact.gender,
-                                style: _valueTextStyle,
+                                style: valueTextStyle,
                               ),
                             )
                           ],
@@ -132,7 +135,7 @@ final class _ContactCardState extends State<ContactCard> {
                               child: Text(
                                 DateFormat.yMd(_intl)
                                     .format(widget.contact.birthDate),
-                                style: _valueTextStyle,
+                                style: valueTextStyle,
                               ),
                             ),
                           ],
@@ -144,7 +147,7 @@ final class _ContactCardState extends State<ContactCard> {
                             Flexible(
                               child: Text(
                                 widget.contact.birthPlace.toString(),
-                                style: _valueTextStyle,
+                                style: valueTextStyle,
                               ),
                             ),
                           ],
@@ -187,7 +190,7 @@ final class _ContactCardState extends State<ContactCard> {
 
                           if (editedContact != null) {
                             value.editContact(editedContact, widget.contact.id);
-                            await value.saveState();
+                            await value.saveContacts();
                           }
                         },
                         icon: const Icon(Icons.edit),

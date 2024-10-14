@@ -1,7 +1,5 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -30,23 +28,22 @@ class _InfoModalState extends State<InfoModal> {
     _initPackageInfo();
   }
 
-  Future<String> _getHtmlPrivacyPolicy(BuildContext context) async {
-    var languageCode = Localizations.localeOf(context).languageCode;
+  Future<String> _getHtmlTerms(BuildContext context) async {
+    final locale = Localizations.localeOf(context);
+    final htmlPath = _getLocalizedHtmlTermsPath(locale);
+    final htmlContent = await rootBundle.loadString(htmlPath);
+    return htmlContent;
+  }
 
-    if (Platform.isAndroid) {
-      var querySnapshot = await FirebaseFirestore.instance
-          .collection('html-strings')
-          .where('name', isEqualTo: 'privacy_policy')
-          .get();
-
-      var doc = querySnapshot.docs.firstOrNull;
-
-      if (doc != null) {
-        return doc.data()[languageCode] as String;
-      }
+  String _getLocalizedHtmlTermsPath(Locale locale) {
+    switch (locale.languageCode) {
+      case 'it':
+        return 'assets/html/it/terms.html';
+      case 'en':
+        return 'assets/html/en/terms.html';
+      default:
+        return 'assets/html/en/terms.html';
     }
-
-    return '';
   }
 
   Future<void> _initPackageInfo() async {
@@ -99,19 +96,14 @@ class _InfoModalState extends State<InfoModal> {
 
   FutureBuilder<String> _getModalContent() {
     return FutureBuilder<String>(
-        future: _getHtmlPrivacyPolicy(context),
+        future: _getHtmlTerms(context),
         builder: (context, snapshot) {
           return snapshot.hasData
               ? HtmlWidget(
                   snapshot.data!,
                   onTapUrl: (url) async => await launchUrl(Uri.parse(url)),
                 )
-              : snapshot.hasError
-                  ? Text(
-                      AppLocalizations.of(context)!.errorNoInternet,
-                      textAlign: TextAlign.center,
-                    )
-                  : const CircularProgressIndicator();
+              : const CircularProgressIndicator();
         });
   }
 

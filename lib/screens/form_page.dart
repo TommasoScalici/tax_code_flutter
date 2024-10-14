@@ -1,21 +1,24 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:provider/provider.dart';
 import 'package:reactive_date_time_picker/reactive_date_time_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tax_code_flutter/screens/camera_page.dart';
-import 'package:tax_code_flutter/settings.dart';
 
+import 'camera_page.dart';
 import '../models/birthplace.dart';
 import '../models/contact.dart';
 import '../models/tax_code_response.dart';
+import '../providers/app_state.dart';
+import '../settings.dart';
 
 final class FormPage extends StatefulWidget {
   final Contact? contact;
@@ -26,8 +29,6 @@ final class FormPage extends StatefulWidget {
 }
 
 final class _FormPageState extends State<FormPage> {
-  final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
-
   final _form = FormGroup({
     'firstName': FormControl<String>(validators: [Validators.required]),
     'lastName': FormControl<String>(validators: [Validators.required]),
@@ -47,7 +48,7 @@ final class _FormPageState extends State<FormPage> {
   Birthplace get _birthPlace => _form.control('birthPlace').value;
 
   Future<TaxCodeResponse> _fetchTaxCode() async {
-    var accessToken = await _prefs.getString(Settings.apiAccessTokenKey);
+    var accessToken = await _getAccessToken();
     var baseUri = 'http://api.miocodicefiscale.com/calculate?';
     var params =
         'lname=${_lastName.trim()}&fname=${_firstName.trim()}&gender=$_gender'
@@ -64,8 +65,26 @@ final class _FormPageState extends State<FormPage> {
     }
   }
 
+  Future<String> _getAccessToken() async {
+    if (Platform.isAndroid) {
+      try {
+        final remoteConfig = FirebaseRemoteConfig.instance;
+        await remoteConfig.fetchAndActivate();
+        return remoteConfig.getString(Settings.mioCodiceFiscaleApiKey);
+      } on Exception catch (e) {
+        if (mounted) {
+          context
+              .read<AppState>()
+              .logger
+              .e('Error while retrieving access token from remote config: $e');
+        }
+      }
+    }
+    return '';
+  }
+
   Future<String> _loadAsset() async =>
-      await rootBundle.loadString('assets/cities.json');
+      await rootBundle.loadString('assets/json/cities.json');
 
   Future<void> _loadBirthplacesData() async {
     String jsonString = await _loadAsset();

@@ -1,34 +1,16 @@
-import 'dart:io';
-
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tax_code_flutter/widgets/info_modal.dart';
 
 import '../models/contact.dart';
 import '../providers/app_state.dart';
-import '../settings.dart';
 
-import '../widgets/contacts_list.dart';
 import '../screens/form_page.dart';
+import '../widgets/contacts_list.dart';
+import '../widgets/info_modal.dart';
 
-final class HomePage extends StatefulWidget {
+final class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-final class _HomePageState extends State<HomePage> {
-  final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
-
-  @override
-  void initState() {
-    super.initState();
-    _setCache();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +21,14 @@ final class _HomePageState extends State<HomePage> {
               backgroundColor: Theme.of(context).colorScheme.inversePrimary,
               title: Text(AppLocalizations.of(context)!.appTitle),
               actions: [
+                IconButton(
+                  icon: Icon(value.theme.brightness == Brightness.dark
+                      ? Icons.light_mode_sharp
+                      : Icons.mode_night_sharp),
+                  onPressed: () {
+                    value.toggleTheme();
+                  },
+                ),
                 PopupMenuButton(
                   child: const Padding(
                       padding: EdgeInsets.only(right: 20),
@@ -84,32 +74,5 @@ final class _HomePageState extends State<HomePage> {
         );
       },
     );
-  }
-
-  Future<String> _getAccessToken() async {
-    if (Platform.isAndroid) {
-      try {
-        final remoteConfig = FirebaseRemoteConfig.instance;
-        await remoteConfig.fetchAndActivate();
-        return remoteConfig.getString(Settings.apiAccessTokenKey);
-      } on Exception catch (e) {
-        if (mounted) {
-          context
-              .read<AppState>()
-              .logger
-              .e('Error while retrieving access token from remote config: $e');
-        }
-      }
-    }
-    return '';
-  }
-
-  Future<void> _setCache() async {
-    final accessToken = await _prefs.getString(Settings.apiAccessTokenKey);
-
-    if (accessToken == null || accessToken.isEmpty) {
-      await _prefs.setString(
-          Settings.apiAccessTokenKey, await _getAccessToken());
-    }
   }
 }
