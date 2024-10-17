@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import '../models/contact.dart';
 import '../providers/app_state.dart';
 
-import 'contact_card.dart';
+import 'contact_card_phone.dart';
 
 final class ContactsListPage extends StatefulWidget {
   const ContactsListPage({super.key});
@@ -102,7 +102,7 @@ class _ContactsListPageState extends State<ContactsListPage> {
                                 duration: const Duration(milliseconds: 200),
                                 curve: Curves.easeInOut,
                                 child: Center(
-                                    child: ContactCard(contact: contact)),
+                                    child: ContactCardPhone(contact: contact)),
                               );
                             },
                             enterTransition: [FadeIn(), ScaleIn()],
@@ -126,7 +126,7 @@ class _ContactsListPageState extends State<ContactsListPage> {
                               return Container(
                                 key: ValueKey(contact.id),
                                 child: Center(
-                                    child: ContactCard(contact: contact)),
+                                    child: ContactCardPhone(contact: contact)),
                               );
                             },
                           ),

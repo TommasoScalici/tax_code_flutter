@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_date_time_picker/reactive_date_time_picker.dart';
@@ -69,7 +70,6 @@ final class _FormPageState extends State<FormPage> {
     if (Platform.isAndroid) {
       try {
         final remoteConfig = FirebaseRemoteConfig.instance;
-        await remoteConfig.fetchAndActivate();
         return remoteConfig.getString(Settings.mioCodiceFiscaleApiKey);
       } on Exception catch (e) {
         if (mounted) {
@@ -96,12 +96,12 @@ final class _FormPageState extends State<FormPage> {
   }
 
   void _openCameraPage(BuildContext context) async {
-    final base64Image = await Navigator.push(
+    final contact = await Navigator.push<Contact?>(
       context,
       MaterialPageRoute(builder: (context) => const CameraPage()),
     );
 
-    if (base64Image != null) {}
+    _setFromOCR(contact);
   }
 
   Future<Contact> _onSubmit() async {
@@ -115,6 +115,16 @@ final class _FormPageState extends State<FormPage> {
       birthPlace: _birthPlace,
       birthDate: _birthDate,
     );
+  }
+
+  void _setFromOCR(Contact? contact) {
+    if (contact != null) {
+      _form.control('firstName').value = contact.firstName;
+      _form.control('lastName').value = contact.lastName;
+      _form.control('gender').value = contact.gender;
+      _form.control('birthDate').value = contact.birthDate;
+      _form.control('birthPlace').value = contact.birthPlace;
+    }
   }
 
   void _setPreviousData() {
@@ -221,6 +231,10 @@ final class _FormPageState extends State<FormPage> {
                           ),
                           child: ReactiveDateTimePicker(
                             formControlName: 'birthDate',
+                            dateFormat: DateFormat.yMMMMd(
+                              Localizations.localeOf(context).toString(),
+                            ),
+                            locale: Localizations.localeOf(context),
                             decoration: InputDecoration(
                               labelText:
                                   AppLocalizations.of(context)!.birthDate,

@@ -10,6 +10,8 @@ import '../models/contact.dart';
 
 final class AppState with ChangeNotifier {
   final _logger = Logger();
+  final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
+
   List<Contact> _contacts = [];
   bool _isSearching = false;
   ThemeData _currentTheme = _getLightTheme();
@@ -73,7 +75,7 @@ final class AppState with ChangeNotifier {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 38, 128, 0),
-            brightness: Brightness.light));
+            brightness: Brightness.dark));
   }
 
   Future<void> _loadContacts() async {
@@ -96,8 +98,7 @@ final class AppState with ChangeNotifier {
   }
 
   Future<void> _loadTheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    final theme = prefs.getString('theme') ?? 'light';
+    final theme = await _prefs.getString('theme') ?? 'light';
 
     if (theme == 'dark') {
       _currentTheme = _getDarkTheme();
@@ -118,8 +119,6 @@ final class AppState with ChangeNotifier {
     }
   }
 
-  Future<void> _saveTheme(String theme) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('theme', theme);
-  }
+  Future<void> _saveTheme(String theme) async =>
+      _prefs.setString('theme', theme);
 }
