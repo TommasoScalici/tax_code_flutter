@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:tax_code_flutter/services.dart/ocr_service.dart';
+import 'package:tax_code_flutter/services/ocr_service.dart';
 
 import '../models/contact.dart';
 import '../providers/app_state.dart';

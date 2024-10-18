@@ -16,6 +16,7 @@
     "cancel": "Cancel",
     "close": "Close",
     "info": "Info",
+    "error": "Error",
     "search": "Search...",
     "scanCard": "Scan card",
     "takePicture": "Take a picture...",
@@ -28,7 +29,7 @@
     "buildNumber": "Build number",
     "buildSignature": "Build signature",
     "installerStore": "Installer store",
-    "errorNoInternet": "Error: no Internet connection available",
+    "errorNoInternet": "Poor or no Internet connection available, you need it for code calculation",
     "deleteMessage": "Are you sure you want to delete the contact with tax code '{taxCode}'?",
     "@deleteMessage": {
         "placeholders": {

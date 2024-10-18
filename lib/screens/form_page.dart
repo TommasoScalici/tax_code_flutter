@@ -7,7 +7,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_date_time_picker/reactive_date_time_picker.dart';
@@ -40,6 +42,8 @@ final class _FormPageState extends State<FormPage> {
 
   var contactId = '';
   var _shouldPushForm = false;
+
+  late Logger _logger;
   late List<Birthplace> _birthplaces;
 
   String get _firstName => _form.control('firstName').value;
@@ -47,6 +51,10 @@ final class _FormPageState extends State<FormPage> {
   String get _gender => _form.control('gender').value;
   DateTime get _birthDate => _form.control('birthDate').value;
   Birthplace get _birthPlace => _form.control('birthPlace').value;
+
+  _FormPageState() {
+    _logger = context.read<AppState>().logger;
+  }
 
   Future<TaxCodeResponse> _fetchTaxCode() async {
     var accessToken = await _getAccessToken();
@@ -57,13 +65,25 @@ final class _FormPageState extends State<FormPage> {
         '&day=${_birthDate.day}&month=${_birthDate.month}&year=${_birthDate.year}'
         '&access_token=$accessToken';
 
-    final response = await http.get(Uri.parse('$baseUri$params'));
-    if (response.statusCode == 200) {
-      return TaxCodeResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception(
-          'API call to miocodicefiscale.com failed, status code: ${response.statusCode}}');
+    final result = await InternetConnection().hasInternetAccess;
+
+    if (mounted && !result) {
+      _showErrorDialog(
+          context, AppLocalizations.of(context)!.errorNoInternet, '');
     }
+
+    final response = await http.get(Uri.parse('$baseUri$params'));
+    final decodedResponse = TaxCodeResponse.fromJson(jsonDecode(response.body));
+
+    if (mounted && response.statusCode != 200) {
+      final errorMessage =
+          'API call to miocodicefiscale.com failed, status code: ${response.statusCode}}';
+      final internalErrorMessage = decodedResponse.message;
+      _logger.e('$errorMessage - API message: $internalErrorMessage');
+      _showErrorDialog(context, errorMessage, internalErrorMessage);
+    }
+
+    return decodedResponse;
   }
 
   Future<String> _getAccessToken() async {
@@ -73,9 +93,7 @@ final class _FormPageState extends State<FormPage> {
         return remoteConfig.getString(Settings.mioCodiceFiscaleApiKey);
       } on Exception catch (e) {
         if (mounted) {
-          context
-              .read<AppState>()
-              .logger
+          _logger
               .e('Error while retrieving access token from remote config: $e');
         }
       }
@@ -104,17 +122,19 @@ final class _FormPageState extends State<FormPage> {
     _setFromOCR(contact);
   }
 
-  Future<Contact> _onSubmit() async {
+  Future<Contact?> _onSubmit() async {
     var response = await _fetchTaxCode();
 
-    return Contact(
-      firstName: _firstName.trim(),
-      lastName: _lastName.trim(),
-      gender: _gender,
-      taxCode: response.data.cf,
-      birthPlace: _birthPlace,
-      birthDate: _birthDate,
-    );
+    return response.status
+        ? Contact(
+            firstName: _firstName.trim(),
+            lastName: _lastName.trim(),
+            gender: _gender,
+            taxCode: response.data.cf,
+            birthPlace: _birthPlace,
+            birthDate: _birthDate,
+          )
+        : null;
   }
 
   void _setFromOCR(Contact? contact) {
@@ -136,6 +156,25 @@ final class _FormPageState extends State<FormPage> {
       _form.control('birthDate').value = widget.contact?.birthDate;
       _form.control('birthPlace').value = widget.contact?.birthPlace;
     }
+  }
+
+  void _showErrorDialog(
+      BuildContext context, String errorMessage, String internalErrorMessage) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.error),
+            content: Column(
+              children: [Text(errorMessage), Text(internalErrorMessage)],
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(AppLocalizations.of(context)!.close))
+            ],
+          );
+        });
   }
 
   @override
@@ -344,7 +383,7 @@ final class _FormPageState extends State<FormPage> {
                         _form.markAllAsTouched();
                         if (_form.valid) {
                           final contact = await _onSubmit();
-                          if (context.mounted) {
+                          if (context.mounted && contact != null) {
                             Navigator.pop<Contact>(context, contact);
                           }
                         }

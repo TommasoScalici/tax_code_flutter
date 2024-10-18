@@ -15,6 +15,7 @@
     "delete": "Elimina",
     "cancel": "Annulla",
     "close": "Chiudi",
+    "error": "Errore",
     "info": "Informazioni",
     "search": "Cerca...",
     "scanCard": "Scannerizza tessera",
@@ -28,7 +29,7 @@
     "buildNumber": "Numero build",
     "buildSignature": "Firma build",
     "installerStore": "Provenienza",
-    "errorNoInternet": "Errore: nessuna connessione ad Internet",
+    "errorNoInternet": "Connessione ad Internet scarsa o assente, è necessaria per il calcolo del codice",
     "deleteMessage": "Sei sicuro di voler eliminare il contatto con codice fiscale: '{taxCode}'?",
     "@deleteMessage": {
         "placeholders": {
