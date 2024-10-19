@@ -22,7 +22,7 @@ class HomeViewPhone extends StatelessWidget {
               title: Text(AppLocalizations.of(context)!.appTitle),
               actions: [
                 IconButton(
-                  icon: Icon(value.theme.brightness == Brightness.dark
+                  icon: Icon(value.theme == 'dark'
                       ? Icons.light_mode_sharp
                       : Icons.mode_night_sharp),
                   onPressed: () {

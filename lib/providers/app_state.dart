@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,29 +55,40 @@ final class AppState with ChangeNotifier {
   void setSearchState(bool searchState) => _isSearching = searchState;
 
   void toggleTheme() {
-    if (_currentTheme == 'dark') {
-      _currentTheme = 'light';
-      _saveTheme('light');
-    } else {
-      _currentTheme = 'dark';
-      _saveTheme('dark');
-    }
+    _currentTheme = _currentTheme == 'dark' ? 'light' : 'dark';
+    _saveTheme(_currentTheme);
     notifyListeners();
   }
 
   Future<void> _loadContacts() async {
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final path = directory.path;
-      final file = File('$path/contacts.json');
+      final currentUser = FirebaseAuth.instance.currentUser;
 
-      if (await file.exists()) {
-        final contactsSerialized = await file.readAsString();
-        List<dynamic> contactsDeserialized = json.decode(contactsSerialized);
-        List<Contact> contacts = contactsDeserialized
-            .map((json) => Contact.fromJson(json as Map<String, dynamic>))
+      if (currentUser != null && await InternetConnection().hasInternetAccess) {
+        final userId = currentUser.uid;
+        final contactsCollection = FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('contacts');
+        final querySnapshot = await contactsCollection.get();
+        final contacts = querySnapshot.docs
+            .map((doc) => Contact.fromMap(doc.data()))
             .toList();
         updateContacts(contacts);
+        await _saveContactsOnLocal();
+      } else {
+        final directory = await getApplicationDocumentsDirectory();
+        final path = directory.path;
+        final file = File('$path/contacts.json');
+
+        if (await file.exists()) {
+          final contactsSerialized = await file.readAsString();
+          List<dynamic> contactsDeserialized = json.decode(contactsSerialized);
+          List<Contact> contacts = contactsDeserialized
+              .map((json) => Contact.fromJson(json as Map<String, dynamic>))
+              .toList();
+          updateContacts(contacts);
+        }
       }
     } on Exception catch (e) {
       logger.e('Error while loading state: $e');
@@ -83,13 +97,37 @@ final class AppState with ChangeNotifier {
 
   Future<void> saveContacts() async {
     try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null && await InternetConnection().hasInternetAccess) {
+        final userId = currentUser.uid;
+        var contactsCollection = FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('contacts');
+
+        for (var contact in contacts) {
+          await contactsCollection
+              .doc(contact.id)
+              .set(contact.toMap(), SetOptions(merge: true));
+        }
+      }
+    } on Exception catch (e) {
+      logger.e('Error while saving state on Firebase: $e');
+    }
+
+    await _saveContactsOnLocal();
+  }
+
+  Future<void> _saveContactsOnLocal() async {
+    try {
       final directory = await getApplicationDocumentsDirectory();
       final path = directory.path;
       final file = File('$path/contacts.json');
       final contactsSerialized = json.encode(contacts);
       await file.writeAsString(contactsSerialized);
     } on Exception catch (e) {
-      logger.e('Error while saving state: $e');
+      logger.e('Error while saving state on local storage: $e');
     }
   }
 

@@ -2,13 +2,15 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 import 'providers/app_state.dart';
-import 'screens/home_page.dart';
+import 'settings.dart';
+import 'widgets/auth_gate.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,10 +38,15 @@ final class TaxCodeApp extends StatelessWidget {
         return MaterialApp(
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.appTitle,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: [
+            ...AppLocalizations.localizationsDelegates,
+            FirebaseUILocalizations.delegate
+          ],
           supportedLocales: AppLocalizations.supportedLocales,
-          theme: appState.theme,
-          home: const HomePage(),
+          theme: appState.theme == 'dark'
+              ? Settings.getDarkTheme()
+              : Settings.getLightTheme(),
+          home: const AuthGate(),
         );
       },
     );
