@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import '../models/contact.dart';
 import '../providers/app_state.dart';
 
-import 'contact_card_phone.dart';
+import 'contact_card.dart';
 
 final class ContactsListPage extends StatefulWidget {
   const ContactsListPage({super.key});

@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:tax_code_flutter/widgets/contact_card_watch.dart';
-import 'package:wear/wear.dart';
+import 'package:tax_code_flutter/wear_os/widgets/contact_card.dart';
 
-import '../providers/app_state.dart';
+import '../../providers/app_state.dart';
 
 class HomeViewWatch extends StatelessWidget {
   const HomeViewWatch({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppState>(
-        builder: (BuildContext context, AppState value, Widget? child) {
-      return WatchShape(
-          builder: (BuildContext context, WearShape shape, Widget? child) {
-        final isRound = shape == WearShape.round;
-
-        return Padding(
+    return Consumer<AppState>(builder: (context, value, child) {
+      final isRound = MediaQuery.of(context).size.width ==
+          MediaQuery.of(context).size.height;
+      return Scaffold(
+        backgroundColor: Colors.black,
+        body: Padding(
           padding: isRound ? EdgeInsets.all(20) : EdgeInsets.all(10),
           child: ListView.builder(
             itemCount: value.contacts.length,
@@ -30,8 +27,8 @@ class HomeViewWatch extends StatelessWidget {
               );
             },
           ),
-        );
-      });
+        ),
+      );
     });
   }
 }
