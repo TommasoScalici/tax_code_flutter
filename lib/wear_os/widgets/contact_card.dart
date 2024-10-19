@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tax_code_flutter/screens/barcode_page.dart';
 
 import '../../models/contact.dart';
+import '../screens/barcode_page.dart';
 
 class ContactCardWatch extends StatelessWidget {
   const ContactCardWatch({super.key, required this.contact});

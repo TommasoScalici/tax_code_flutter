@@ -14,11 +14,11 @@ final class AppState with ChangeNotifier {
 
   List<Contact> _contacts = [];
   bool _isSearching = false;
-  ThemeData _currentTheme = _getLightTheme();
+  String _currentTheme = 'light';
 
   List<Contact> get contacts => _contacts;
   bool get isSearching => _isSearching;
-  ThemeData get theme => _currentTheme;
+  String get theme => _currentTheme;
   Logger get logger => _logger;
 
   AppState() {
@@ -52,30 +52,14 @@ final class AppState with ChangeNotifier {
   void setSearchState(bool searchState) => _isSearching = searchState;
 
   void toggleTheme() {
-    if (_currentTheme.brightness == Brightness.dark) {
-      _currentTheme = _getLightTheme();
+    if (_currentTheme == 'dark') {
+      _currentTheme = 'light';
       _saveTheme('light');
     } else {
-      _currentTheme = _getDarkTheme();
+      _currentTheme = 'dark';
       _saveTheme('dark');
     }
     notifyListeners();
-  }
-
-  static ThemeData _getLightTheme() {
-    return ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 38, 128, 0),
-            brightness: Brightness.light));
-  }
-
-  static ThemeData _getDarkTheme() {
-    return ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 38, 128, 0),
-            brightness: Brightness.dark));
   }
 
   Future<void> _loadContacts() async {
@@ -97,16 +81,6 @@ final class AppState with ChangeNotifier {
     }
   }
 
-  Future<void> _loadTheme() async {
-    final theme = await _prefs.getString('theme') ?? 'light';
-
-    if (theme == 'dark') {
-      _currentTheme = _getDarkTheme();
-    } else {
-      _currentTheme = _getLightTheme();
-    }
-  }
-
   Future<void> saveContacts() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
@@ -119,6 +93,7 @@ final class AppState with ChangeNotifier {
     }
   }
 
-  Future<void> _saveTheme(String theme) async =>
-      _prefs.setString('theme', theme);
+  Future _loadTheme() async => await _prefs.getString('theme') ?? 'light';
+
+  Future _saveTheme(String theme) async => _prefs.setString('theme', theme);
 }

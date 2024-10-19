@@ -25,7 +25,6 @@ class _BarcodePageState extends State<BarcodePage> {
           child: BarcodeWidget(
             barcode: Barcode.code39(),
             backgroundColor: Colors.white,
-            drawText: false,
             data: widget.taxCode,
             height: isRound ? 80 : 100,
             width: MediaQuery.of(context).size.width * .8,
