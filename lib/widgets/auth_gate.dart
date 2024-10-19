@@ -30,8 +30,8 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ToDo Regenerate
-    // final clientId ='';
+    final clientId =
+        '1006489964692-qh5i60jgn4nqqlplqmt6tnvb6vmccgrt.apps.googleusercontent.com';
 
     return StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -43,7 +43,7 @@ class AuthGate extends StatelessWidget {
           if (!snapshot.hasData) {
             return SignInScreen(
               showAuthActionSwitch: false,
-              providers: [GoogleProvider(clientId: '')], // ToDo add clientId
+              providers: [GoogleProvider(clientId: clientId)],
               headerBuilder: (context, constraints, shrinkOffset) {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
