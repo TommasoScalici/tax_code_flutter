@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' hide ProfileScreen;
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:tax_code_flutter/widgets/info_modal.dart';
+import 'package:uni_links3/uni_links.dart';
 
 import '../providers/app_state.dart';
 import '../screens/home_page.dart';
+import '../screens/profile_screen.dart';
+import 'info_modal.dart';
 
 class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
@@ -26,6 +28,24 @@ class _AuthGateState extends State<AuthGate> {
   void initState() {
     super.initState();
     _logger = context.read<AppState>().logger;
+    initUniLinks();
+  }
+
+  Future<void> initUniLinks() async {
+    final auth = FirebaseAuth.instance;
+    await getInitialLink();
+    linkStream.listen((String? link) async {
+      if (link != null && link.isNotEmpty && link.contains('delete-account')) {
+        if (mounted) {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    auth.currentUser != null ? ProfileScreen() : AuthGate()),
+          );
+        }
+      }
+    });
   }
 
   Future<void> saveUserData(User user) async {
