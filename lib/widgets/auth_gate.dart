@@ -5,25 +5,31 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/app_state.dart';
 import '../screens/home_page.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
   Future<void> saveUserData(User user) async {
-    final userRef =
-        FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final usersCollection = FirebaseFirestore.instance.collection('users');
+    final userRef = usersCollection.doc(user.uid);
+    final userSnapshot = await userRef.get();
 
     final userData = {
-      'uid': user.uid,
+      'id': user.uid,
       'displayName': user.displayName ?? '',
       'email': user.email ?? '',
-      'phoneNumber': user.phoneNumber ?? '',
       'photoURL': user.photoURL ?? '',
-      'createdAt': FieldValue.serverTimestamp(),
       'lastLogin': FieldValue.serverTimestamp(),
     };
+
+    if (!userSnapshot.exists ||
+        !userSnapshot.data()!.containsKey('createdAt')) {
+      userData['createdAt'] = FieldValue.serverTimestamp();
+    }
 
     await userRef.set(userData, SetOptions(merge: true));
   }
@@ -100,9 +106,17 @@ class AuthGate extends StatelessWidget {
             );
           }
 
-          final user = snapshot.data;
-          if (user != null) {
-            Future.microtask(() async => await saveUserData(user));
+          if (snapshot.hasData) {
+            final user = snapshot.data;
+            if (user != null) {
+              Future.microtask(() async {
+                if (context.mounted) {
+                  final appState = context.read<AppState>();
+                  await saveUserData(user);
+                  await appState.loadContacts();
+                }
+              });
+            }
           }
 
           return HomePage();

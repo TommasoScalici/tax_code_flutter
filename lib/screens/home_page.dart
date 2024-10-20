@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tax_code_flutter/widgets/home_view_phone.dart';
-import 'package:tax_code_flutter/wear_os/screens/home_view_watch.dart';
+
+import '../wear_os/screens/home_view_watch.dart';
+import '../widgets/home_view_phone.dart';
 
 final class HomePage extends StatelessWidget {
   const HomePage({super.key});

@@ -25,7 +25,6 @@ final class AppState with ChangeNotifier {
   Logger get logger => _logger;
 
   AppState() {
-    _loadContacts();
     _loadTheme();
   }
 
@@ -60,7 +59,7 @@ final class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _loadContacts() async {
+  Future<void> loadContacts() async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
 
@@ -105,6 +104,16 @@ final class AppState with ChangeNotifier {
             .collection('users')
             .doc(userId)
             .collection('contacts');
+
+        final currentContactIds =
+            contacts.map((contact) => contact.id).toList();
+        final existingContactsSnapshot = await contactsCollection.get();
+
+        for (var doc in existingContactsSnapshot.docs) {
+          if (!currentContactIds.contains(doc.id)) {
+            await doc.reference.delete();
+          }
+        }
 
         for (var contact in contacts) {
           await contactsCollection

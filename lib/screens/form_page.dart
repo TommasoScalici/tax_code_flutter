@@ -52,8 +52,12 @@ final class _FormPageState extends State<FormPage> {
   DateTime get _birthDate => _form.control('birthDate').value;
   Birthplace get _birthPlace => _form.control('birthPlace').value;
 
-  _FormPageState() {
+  @override
+  void initState() {
+    super.initState();
     _logger = context.read<AppState>().logger;
+    _loadBirthplacesData();
+    _setPreviousData();
   }
 
   Future<TaxCodeResponse> _fetchTaxCode() async {
@@ -175,13 +179,6 @@ final class _FormPageState extends State<FormPage> {
             ],
           );
         });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadBirthplacesData();
-    _setPreviousData();
   }
 
   @override
