@@ -5,39 +5,60 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:tax_code_flutter/widgets/info_modal.dart';
 
 import '../providers/app_state.dart';
 import '../screens/home_page.dart';
 
-class AuthGate extends StatelessWidget {
+class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
 
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  late Logger _logger;
+
+  @override
+  void initState() {
+    super.initState();
+    _logger = context.read<AppState>().logger;
+  }
+
   Future<void> saveUserData(User user) async {
-    final usersCollection = FirebaseFirestore.instance.collection('users');
-    final userRef = usersCollection.doc(user.uid);
-    final userSnapshot = await userRef.get();
+    try {
+      final usersCollection = FirebaseFirestore.instance.collection('users');
+      final userRef = usersCollection.doc(user.uid);
+      final userSnapshot = await userRef.get();
 
-    final userData = {
-      'id': user.uid,
-      'displayName': user.displayName ?? '',
-      'email': user.email ?? '',
-      'photoURL': user.photoURL ?? '',
-      'lastLogin': FieldValue.serverTimestamp(),
-    };
+      final userData = {
+        'id': user.uid,
+        'displayName': user.displayName ?? '',
+        'email': user.email ?? '',
+        'photoURL': user.photoURL ?? '',
+        'lastLogin': FieldValue.serverTimestamp(),
+      };
 
-    if (!userSnapshot.exists ||
-        !userSnapshot.data()!.containsKey('createdAt')) {
-      userData['createdAt'] = FieldValue.serverTimestamp();
+      if (!userSnapshot.exists ||
+          !userSnapshot.data()!.containsKey('createdAt')) {
+        userData['createdAt'] = FieldValue.serverTimestamp();
+      }
+
+      await userRef.set(userData, SetOptions(merge: true));
+    } on Exception catch (e) {
+      _logger.e('Error while storing user date: $e');
     }
-
-    await userRef.set(userData, SetOptions(merge: true));
   }
 
   @override
   Widget build(BuildContext context) {
     final clientId =
         '1006489964692-qh5i60jgn4nqqlplqmt6tnvb6vmccgrt.apps.googleusercontent.com';
+
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -49,17 +70,22 @@ class AuthGate extends StatelessWidget {
           if (!snapshot.hasData) {
             return SignInScreen(
               showAuthActionSwitch: false,
+              resizeToAvoidBottomInset: true,
               providers: [GoogleProvider(clientId: clientId)],
+              headerMaxExtent: screenWidth < 300 ? 0 : null,
               headerBuilder: (context, constraints, shrinkOffset) {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: [
                       Expanded(
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child:
-                              Image.asset('assets/images/app_icon_512x512.png'),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: Image.asset(
+                                'assets/images/app_icon_512x512.png'),
+                          ),
                         ),
                       ),
                       Text(
@@ -73,12 +99,14 @@ class AuthGate extends StatelessWidget {
                 );
               },
               subtitleBuilder: (context, action) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: action == AuthAction.signIn
-                      ? Text(AppLocalizations.of(context)!.pleaseSignIn)
-                      : Text(AppLocalizations.of(context)!.pleaseSignUp),
-                );
+                return screenWidth < 300
+                    ? SizedBox.shrink()
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: action == AuthAction.signIn
+                            ? Text(AppLocalizations.of(context)!.pleaseSignIn)
+                            : Text(AppLocalizations.of(context)!.pleaseSignUp),
+                      );
               },
               footerBuilder: (context, action) {
                 return Padding(
@@ -89,7 +117,18 @@ class AuthGate extends StatelessWidget {
                         AppLocalizations.of(context)!.termsAndCondition,
                         style: TextStyle(color: Colors.grey),
                       ),
-                      Text(AppLocalizations.of(context)!.showTerms),
+                      screenWidth < 300
+                          ? SizedBox.shrink()
+                          : TextButton(
+                              onPressed: () async {
+                                await showDialog(
+                                    context: context,
+                                    builder: (context) => const InfoModal());
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.showTerms,
+                              ),
+                            ),
                     ],
                   ),
                 );
@@ -97,9 +136,12 @@ class AuthGate extends StatelessWidget {
               sideBuilder: (context, shrinkOffset) {
                 return Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Image.asset('assets/images/app_icon_512x512.png'),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Image.asset('assets/images/app_icon_512x512.png'),
+                    ),
                   ),
                 );
               },

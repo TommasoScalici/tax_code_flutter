@@ -30,6 +30,14 @@ android {
     compileSdk = flutter.compileSdkVersion
     // ndkVersion = flutter.ndkVersion
     
+    flavorDimensions "default"
+
+    productFlavors {      
+        wear {
+            applicationId "tommasoscalici.taxcode.wear"
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
