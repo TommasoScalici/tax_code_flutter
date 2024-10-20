@@ -17,6 +17,8 @@
     "confirm": "Confirm",
     "deleteConfirmation": "Delete confirmation",
     "delete": "Delete",
+    "deleteAccount": "Delete account",
+    "signOut": "Logout",
     "cancel": "Cancel",
     "close": "Close",
     "info": "Info",
@@ -33,7 +35,8 @@
     "buildNumber": "Build number",
     "buildSignature": "Build signature",
     "installerStore": "Installer store",
-    "errorNoInternet": "Poor or no Internet connection available, you need it for code calculation",
+    "errorNoInternet": "Poor or no Internet connection available, you need it for code calculation.",
+    "deleteAccountMessage": "Are you sure? All your data will be permanently loss.",
     "deleteMessage": "Are you sure you want to delete the contact with tax code '{taxCode}'?",
     "@deleteMessage": {
         "placeholders": {

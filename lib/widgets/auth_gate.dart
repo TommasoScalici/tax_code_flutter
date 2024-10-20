@@ -56,7 +56,7 @@ class _AuthGateState extends State<AuthGate> {
   @override
   Widget build(BuildContext context) {
     final clientId =
-        '1006489964692-qh5i60jgn4nqqlplqmt6tnvb6vmccgrt.apps.googleusercontent.com';
+        '1006489964692-qta6uauft2ou6jlhotd2u8o3ilv2nfvt.apps.googleusercontent.com';
 
     final screenWidth = MediaQuery.of(context).size.width;
 
