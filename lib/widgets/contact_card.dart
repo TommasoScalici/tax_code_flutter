@@ -188,7 +188,10 @@ final class _ContactCardPhoneState extends State<ContactCardPhone> {
                           );
 
                           if (editedContact != null) {
-                            value.editContact(editedContact, widget.contact.id);
+                            final contactToUpdate = value.contacts
+                                .firstWhere((c) => c.id == editedContact.id);
+                            contactToUpdate.updateFrom(editedContact);
+                            value.updateContacts(value.contacts);
                             await value.saveContacts();
                           }
                         },

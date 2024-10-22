@@ -52,8 +52,10 @@ class _ContactsListPageState extends State<ContactsListPage> {
             newIndex -= 1;
           }
 
-          final movedContact = contacts.removeAt(oldIndex);
-          contacts.insert(newIndex, movedContact);
+          final tempIndex = contacts[oldIndex].listIndex;
+          contacts[oldIndex].listIndex = contacts[newIndex].listIndex;
+          contacts[newIndex].listIndex = tempIndex;
+
           value.updateContacts(contacts);
           value.saveContacts();
         }

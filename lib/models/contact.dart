@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:tax_code_flutter/models/birthplace.dart';
-import 'package:uuid/uuid.dart';
 
 part 'contact.g.dart';
 
@@ -15,17 +14,9 @@ final class Contact {
   String taxCode;
   Birthplace birthPlace;
   DateTime birthDate;
+  int listIndex;
 
   Contact({
-    required this.firstName,
-    required this.lastName,
-    required this.gender,
-    required this.taxCode,
-    required this.birthPlace,
-    required this.birthDate,
-  }) : id = const Uuid().v4();
-
-  Contact.withId({
     required this.id,
     required this.firstName,
     required this.lastName,
@@ -33,7 +24,18 @@ final class Contact {
     required this.taxCode,
     required this.birthPlace,
     required this.birthDate,
+    required this.listIndex,
   });
+
+  void updateFrom(Contact other) {
+    firstName = other.firstName;
+    lastName = other.lastName;
+    gender = other.gender;
+    birthDate = other.birthDate;
+    birthPlace = other.birthPlace;
+    taxCode = other.taxCode;
+    listIndex = other.listIndex;
+  }
 
   factory Contact.fromJson(Map<String, dynamic> json) =>
       _$ContactFromJson(json);
@@ -51,11 +53,12 @@ final class Contact {
         'state': birthPlace.state,
       },
       'birthDate': Timestamp.fromDate(birthDate),
+      'listIndex': listIndex,
     };
   }
 
   factory Contact.fromMap(Map<String, dynamic> map) {
-    return Contact.withId(
+    return Contact(
       id: map['id'] ?? '',
       firstName: map['firstName'] ?? '',
       lastName: map['lastName'] ?? '',
@@ -66,6 +69,7 @@ final class Contact {
         state: map['birthPlace']['state'],
       ),
       birthDate: (map['birthDate'] as Timestamp).toDate(),
+      listIndex: map['listIndex'] ?? 0,
     );
   }
 

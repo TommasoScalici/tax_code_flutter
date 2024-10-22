@@ -7,6 +7,7 @@ part of 'contact.dart';
 // **************************************************************************
 
 Contact _$ContactFromJson(Map<String, dynamic> json) => Contact(
+      id: json['id'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       gender: json['gender'] as String,
@@ -14,7 +15,8 @@ Contact _$ContactFromJson(Map<String, dynamic> json) => Contact(
       birthPlace:
           Birthplace.fromJson(json['birthPlace'] as Map<String, dynamic>),
       birthDate: DateTime.parse(json['birthDate'] as String),
-    )..id = json['id'] as String;
+      listIndex: (json['listIndex'] as num).toInt(),
+    );
 
 Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
       'id': instance.id,
@@ -24,4 +26,5 @@ Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
       'taxCode': instance.taxCode,
       'birthPlace': instance.birthPlace,
       'birthDate': instance.birthDate.toIso8601String(),
+      'listIndex': instance.listIndex,
     };

@@ -54,6 +54,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final displayName =
+        auth.currentUser != null && auth.currentUser?.displayName != null
+            ? auth.currentUser!.displayName!
+            : '';
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -68,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.0),
                 child: Text(
-                  auth.currentUser!.displayName!,
+                  displayName,
                   style: TextStyle(fontSize: 24),
                 ),
               ),

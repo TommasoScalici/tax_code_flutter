@@ -24,20 +24,8 @@ final class AppState with ChangeNotifier {
   String get theme => _currentTheme;
   Logger get logger => _logger;
 
-  AppState() {
-    _loadTheme();
-  }
-
   void addContact(Contact contact) {
     contacts.add(contact);
-    notifyListeners();
-  }
-
-  void editContact(Contact contact, String oldContact) {
-    final contactToEdit = contacts.where((c) => c.id == oldContact).first;
-    final index = _contacts.indexOf(contactToEdit);
-    contacts.removeAt(index);
-    contacts.insert(index, contact);
     notifyListeners();
   }
 
@@ -48,6 +36,7 @@ final class AppState with ChangeNotifier {
 
   void updateContacts(List<Contact> contacts) {
     _contacts = contacts;
+    _contacts.sort((x, y) => x.listIndex.compareTo(y.listIndex));
     notifyListeners();
   }
 
@@ -140,7 +129,11 @@ final class AppState with ChangeNotifier {
     }
   }
 
-  Future _loadTheme() async => await _prefs.getString('theme') ?? 'light';
+  Future<void> loadTheme() async {
+    await _prefs.getString('theme') ?? 'light';
+    notifyListeners();
+  }
 
-  Future _saveTheme(String theme) async => _prefs.setString('theme', theme);
+  Future<void> _saveTheme(String theme) async =>
+      _prefs.setString('theme', theme);
 }

@@ -35,7 +35,9 @@ class _AuthGateState extends State<AuthGate> {
     final auth = FirebaseAuth.instance;
     await getInitialLink();
     linkStream.listen((String? link) async {
-      if (link != null && link.isNotEmpty && link.contains('delete-account')) {
+      if (link != null &&
+          link.isNotEmpty &&
+          link.contains('tax_code/delete-account.html')) {
         if (mounted) {
           await Navigator.push(
             context,
@@ -173,9 +175,7 @@ class _AuthGateState extends State<AuthGate> {
             if (user != null) {
               Future.microtask(() async {
                 if (context.mounted) {
-                  final appState = context.read<AppState>();
                   await saveUserData(user);
-                  await appState.loadContacts();
                 }
               });
             }

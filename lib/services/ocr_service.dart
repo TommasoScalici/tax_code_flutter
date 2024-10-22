@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/models/birthplace.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/contact.dart';
 import '../providers/app_state.dart';
@@ -135,16 +136,17 @@ class OCRService {
 
     if (firstName != null && lastName != null && gender != null) {
       return Contact(
-        firstName: firstName.toCapitalCase(),
-        lastName: lastName.toCapitalCase(),
-        gender: gender,
-        taxCode: '',
-        birthPlace: Birthplace(
-          name: birthPlace.name.toCapitalCase(),
-          state: birthPlace.name.toUpperCase(),
-        ),
-        birthDate: birthDate ?? DateTime.now(),
-      );
+          id: Uuid().v4(),
+          firstName: firstName.toCapitalCase(),
+          lastName: lastName.toCapitalCase(),
+          gender: gender,
+          taxCode: '',
+          birthPlace: Birthplace(
+            name: birthPlace.name.toCapitalCase(),
+            state: birthPlace.name.toUpperCase(),
+          ),
+          birthDate: birthDate ?? DateTime.now(),
+          listIndex: 0);
     }
 
     _logger.w('Failed to extract necessary contact information.');

@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:reactive_date_time_picker/reactive_date_time_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
+import 'package:uuid/uuid.dart';
 
 import 'camera_page.dart';
 import '../models/birthplace.dart';
@@ -40,12 +41,13 @@ final class _FormPageState extends State<FormPage> {
     'birthPlace': FormControl<Birthplace>(validators: [Validators.required]),
   });
 
-  var contactId = '';
   var _shouldPushForm = false;
 
   late Logger _logger;
   late List<Birthplace> _birthplaces;
+  late int _contactsLength;
 
+  String? _contactId;
   String get _firstName => _form.control('firstName').value;
   String get _lastName => _form.control('lastName').value;
   String get _gender => _form.control('gender').value;
@@ -56,6 +58,7 @@ final class _FormPageState extends State<FormPage> {
   void initState() {
     super.initState();
     _logger = context.read<AppState>().logger;
+    _contactsLength = context.read<AppState>().contacts.length;
     _loadBirthplacesData();
     _setPreviousData();
   }
@@ -131,12 +134,14 @@ final class _FormPageState extends State<FormPage> {
 
     return response.status
         ? Contact(
+            id: _contactId ?? Uuid().v4(),
             firstName: _firstName.trim(),
             lastName: _lastName.trim(),
             gender: _gender,
             taxCode: response.data.cf,
             birthPlace: _birthPlace,
             birthDate: _birthDate,
+            listIndex: _contactsLength + 1,
           )
         : null;
   }
@@ -153,7 +158,7 @@ final class _FormPageState extends State<FormPage> {
 
   void _setPreviousData() {
     if (widget.contact != null) {
-      contactId = widget.contact!.id;
+      _contactId = widget.contact!.id;
       _form.control('firstName').value = widget.contact?.firstName;
       _form.control('lastName').value = widget.contact?.lastName;
       _form.control('gender').value = widget.contact?.gender;

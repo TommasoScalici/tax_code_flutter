@@ -11,7 +11,7 @@
             ]
         },
         {
-            "name": "tax_code_flutter (mobile)",
+            "name": "tax_code_flutter (wear)",
             "request": "launch",
             "type": "dart",
             "args": [

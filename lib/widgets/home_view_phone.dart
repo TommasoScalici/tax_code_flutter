@@ -73,14 +73,14 @@ class HomeViewPhone extends StatelessWidget {
           body: const ContactsListPage(),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              var currentFocus = FocusManager.instance.primaryFocus;
-              if (currentFocus != null) currentFocus.unfocus();
-
               final contact = await Navigator.push<Contact>(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const FormPage(contact: null),
                   ));
+
+              var currentFocus = FocusManager.instance.primaryFocus;
+              if (currentFocus != null) currentFocus.unfocus();
 
               await Future.delayed(const Duration(milliseconds: 500));
 
