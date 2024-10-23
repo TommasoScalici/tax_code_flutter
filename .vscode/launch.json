@@ -2,22 +2,9 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "tax_code_flutter (mobile)",
+            "name": "tax_code_flutter",
             "request": "launch",
             "type": "dart",
-            "args": [
-                "--flavor",
-                "mobile"
-            ]
-        },
-        {
-            "name": "tax_code_flutter (wear)",
-            "request": "launch",
-            "type": "dart",
-            "args": [
-                "--flavor",
-                "wear"
-            ]
         },
     ]
 }
