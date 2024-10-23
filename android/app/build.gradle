@@ -28,18 +28,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "tommasoscalici.tax_code_flutter"
     compileSdk = flutter.compileSdkVersion
-    // ndkVersion = flutter.ndkVersion
-    
-    flavorDimensions "default"
-
-    productFlavors {      
-        mobile {
-            applicationId "tommasoscalici.taxcode"
-        }
-        wear {
-            applicationId "tommasoscalici.taxcode"
-        }
-    }
+    ndkVersion "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -52,8 +41,7 @@ android {
 
     defaultConfig {
         applicationId = "tommasoscalici.taxcode"
-        // minSdk = flutter.minSdkVersion
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -93,4 +81,3 @@ android {
 flutter {
     source = "../.."
 }
-
