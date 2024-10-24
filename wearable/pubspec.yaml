@@ -4,7 +4,7 @@ description: "App for Italian Tax Code calculation, made for Wear OS."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
-version: 1.2.1+17
+version: 1.2.2+19
 
 environment:
   sdk: ^3.5.3
@@ -24,6 +24,7 @@ dependencies:
   google_sign_in: ^6.2.1
   logger: ^2.4.0
   provider: ^6.1.2
+  screen_brightness: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:

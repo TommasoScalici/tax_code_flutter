@@ -48,7 +48,7 @@ final class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadContacts() async {
+  Future<List<Contact>> loadContacts() async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
 
@@ -81,6 +81,8 @@ final class AppState with ChangeNotifier {
     } on Exception catch (e) {
       logger.e('Error while loading state: $e');
     }
+
+    return _contacts;
   }
 
   Future<void> saveContacts() async {

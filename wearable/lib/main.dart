@@ -4,12 +4,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
-import 'package:tax_code_flutter_wear_os/widgets/auth_gate.dart';
+import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
+
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isAndroid) {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
 
   runApp(MultiProvider(
@@ -25,13 +29,11 @@ class TaxCodeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        colorScheme: const ColorScheme.dark(
-          primary: Colors.white,
-          onSurface: Colors.white,
-        ),
-        visualDensity: VisualDensity.compact,
-        useMaterial3: true,
-      ),
+          visualDensity: VisualDensity.compact,
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color.fromARGB(255, 38, 128, 0),
+              brightness: Brightness.dark)),
       home: AuthGate(),
     );
   }
