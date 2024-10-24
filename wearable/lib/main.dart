@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
 import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
+import 'package:tax_code_flutter_wear_os/screens/home_page.dart';
 
 import 'firebase_options.dart';
 
@@ -34,7 +35,7 @@ class TaxCodeApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(
               seedColor: const Color.fromARGB(255, 38, 128, 0),
               brightness: Brightness.dark)),
-      home: AuthGate(),
+      home: HomePage(),
     );
   }
 }

@@ -1,5 +1,5 @@
 plugins {
-    id "com.android.application" version "8.7.1"
+    id "com.android.application"
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
@@ -29,7 +29,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace "tommasoscalici.tax_code_flutter_wear_os"
     compileSdk flutter.compileSdkVersion
-    ndkVersion "27.0.12077973"
+    ndkVersion "25.1.8937393"
 
 
     compileOptions {
@@ -38,7 +38,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+        jvmTarget = '17'
     }
 
     defaultConfig {
@@ -47,9 +47,6 @@ android {
         targetSdk flutter.targetSdkVersion
         versionCode flutter.versionCode
         versionName flutter.versionName
-        ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a" // Only ARM architectures for Wear OS
-        }
     }
 
     signingConfigs {
@@ -79,10 +76,28 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            ndk {
+                abiFilters "armeabi-v7a", "arm64-v8a" // Only ARM architectures for Wear OS
+            }
         }
     }
 }
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.1"
+    
+    implementation "com.google.android.gms:play-services-wearable:18.1.0"
+    implementation "androidx.wear:wear:1.3.0"
+    
+    implementation "androidx.core:core-ktx:1.12.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
+
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.mockito:mockito-core:5.14.2"
 }
