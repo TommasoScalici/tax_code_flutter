@@ -1,0 +1,35 @@
+name: tax_code_flutter_wear_os
+description: "App for Italian Tax Code calculation, made for Wear OS."
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+
+version: 1.2.1+17
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  intl: any
+
+  shared:
+    path: ../shared
+  
+  barcode_widget: ^2.0.4
+  firebase_auth: ^5.3.1
+  firebase_core: ^3.5.0
+  google_sign_in: ^6.2.1
+  logger: ^2.4.0
+  provider: ^6.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

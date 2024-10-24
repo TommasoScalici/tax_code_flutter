@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1006489964692",
+    "project_id": "tax-code-flutter",
+    "storage_bucket": "tax-code-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006489964692:android:a699617069cf4c9083a481",
+        "android_client_info": {
+          "package_name": "tommasoscalici.taxcode"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006489964692-3d7uu7pff7n01b1f3neaukmfah34i47s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tommasoscalici.taxcode",
+            "certificate_hash": "b9769462a30442ecceb0ac76bf8170a50b9589b1"
+          }
+        },
+        {
+          "client_id": "1006489964692-qta6uauft2ou6jlhotd2u8o3ilv2nfvt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIZu2lgMQCbxCu33O5Wi5VI9Rummw5SdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1006489964692-qta6uauft2ou6jlhotd2u8o3ilv2nfvt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
