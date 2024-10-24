@@ -17,6 +17,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
 
+  @override
+  void initState() {
+    super.initState();
+
+    auth.authStateChanges().listen((User? user) {
+      if (user == null && mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => AuthGate()),
+          (route) => false,
+        );
+      }
+    });
+  }
+
   Future<void> _showConfirmationDialog(BuildContext context) async {
     await showDialog(
       context: context,
@@ -37,10 +51,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   final uid = currentUser.uid;
                   await firestore.collection('users').doc(uid).delete();
                   await currentUser.delete();
-
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
                 }
               },
               child: Text(
@@ -61,72 +71,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ? auth.currentUser!.displayName!
             : '';
 
-    return StreamBuilder(
-      stream: auth.authStateChanges(),
-      builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-        if (!snapshot.hasData) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => AuthGate()),
-              (route) => false);
-        }
-
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: Text(AppLocalizations.of(context)!.appTitle),
-          ),
-          body: Center(
-            child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  UserAvatar(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0),
-                    child: Text(
-                      displayName,
-                      style: TextStyle(fontSize: 24),
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () async {
-                        await auth.signOut();
-                        if (context.mounted) {
-                          Navigator.pop(context);
-                        }
-                      },
-                      icon: Icon(Icons.logout),
-                      label: Text(AppLocalizations.of(context)!.signOut),
-                    ),
-                  ),
-                  SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: () async {
-                          await _showConfirmationDialog(context);
-
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                          }
-                        },
-                        icon: Icon(Icons.delete),
-                        label: Text(
-                          AppLocalizations.of(context)!.deleteAccount,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          iconColor: Colors.white,
-                        ),
-                      ))
-                ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(AppLocalizations.of(context)!.appTitle),
+      ),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              UserAvatar(),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(
+                  displayName,
+                  style: TextStyle(fontSize: 24),
+                ),
               ),
-            ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    await auth.signOut();
+                  },
+                  icon: Icon(Icons.logout),
+                  label: Text(AppLocalizations.of(context)!.signOut),
+                ),
+              ),
+              SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      await _showConfirmationDialog(context);
+
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    icon: Icon(Icons.delete),
+                    label: Text(
+                      AppLocalizations.of(context)!.deleteAccount,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      iconColor: Colors.white,
+                    ),
+                  ))
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

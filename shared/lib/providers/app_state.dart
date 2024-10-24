@@ -17,7 +17,7 @@ final class AppState with ChangeNotifier {
 
   List<Contact> _contacts = [];
   bool _isSearching = false;
-  String _currentTheme = 'light';
+  String _currentTheme = '';
 
   List<Contact> get contacts => _contacts;
   bool get isSearching => _isSearching;
@@ -155,7 +155,7 @@ final class AppState with ChangeNotifier {
   }
 
   Future<void> loadTheme() async {
-    await _prefs.getString('theme') ?? 'light';
+    _currentTheme = await _prefs.getString('theme') ?? 'light';
     notifyListeners();
   }
 

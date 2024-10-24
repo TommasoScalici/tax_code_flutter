@@ -27,103 +27,97 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
+    auth.authStateChanges().listen((User? user) {
+      if (user == null && mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => AuthGate()),
+          (route) => false,
+        );
+      }
+    });
+
     final appState = context.read<AppState>();
     appState.loadContacts();
-    appState.loadTheme();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: auth.authStateChanges(),
-      builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-        if (!snapshot.hasData) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => AuthGate()),
-              (route) => false);
-        }
+    return Consumer<AppState>(
+        builder: (BuildContext context, AppState value, Widget? child) {
+      final currentUser = auth.currentUser;
 
-        return Consumer<AppState>(
-          builder: (BuildContext context, AppState value, Widget? child) {
-            final currentUser = auth.currentUser;
-
-            return Scaffold(
-              appBar: AppBar(
-                  backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                  title: Text(AppLocalizations.of(context)!.appTitle),
-                  actions: [
-                    IconButton(
-                        onPressed: () async {
-                          await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfileScreen()));
-                        },
-                        icon:
-                            currentUser != null && currentUser.photoURL != null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    child: Image.network(currentUser.photoURL!),
-                                  )
-                                : Icon(Symbols.account_circle_filled)),
-                    IconButton(
-                      icon: Icon(value.theme == 'dark'
-                          ? Icons.light_mode_sharp
-                          : Icons.mode_night_sharp),
-                      onPressed: () {
-                        value.toggleTheme();
-                      },
-                    ),
-                    PopupMenuButton(
-                      child: const Padding(
-                          padding: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.more_vert)),
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          child: Row(
-                            children: [
-                              const Icon(Icons.info),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(AppLocalizations.of(context)!.info),
-                              )
-                            ],
-                          ),
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                const InfoModal(),
-                          ),
-                        ),
+      return Scaffold(
+        appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: Text(AppLocalizations.of(context)!.appTitle),
+            actions: [
+              IconButton(
+                  onPressed: () async {
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProfileScreen()));
+                  },
+                  icon: currentUser != null && currentUser.photoURL != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: Image.network(currentUser.photoURL!),
+                        )
+                      : Icon(Symbols.account_circle_filled)),
+              IconButton(
+                icon: Icon(value.theme == 'dark'
+                    ? Icons.light_mode_sharp
+                    : Icons.mode_night_sharp),
+                onPressed: () {
+                  value.toggleTheme();
+                },
+              ),
+              PopupMenuButton(
+                child: const Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: Icon(Icons.more_vert)),
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    child: Row(
+                      children: [
+                        const Icon(Icons.info),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(AppLocalizations.of(context)!.info),
+                        )
                       ],
                     ),
-                  ]),
-              body: const ContactsListPage(),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () async {
-                  final contact = await Navigator.push<Contact>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const FormPage(contact: null),
-                      ));
-
-                  var currentFocus = FocusManager.instance.primaryFocus;
-                  if (currentFocus != null) currentFocus.unfocus();
-
-                  await Future.delayed(const Duration(milliseconds: 500));
-
-                  if (contact != null) {
-                    value.addContact(contact);
-                    value.saveContacts();
-                  }
-                },
-                tooltip: AppLocalizations.of(context)!.newItem,
-                child: const Icon(Icons.add),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (BuildContext context) => const InfoModal(),
+                    ),
+                  ),
+                ],
               ),
-            );
+            ]),
+        body: const ContactsListPage(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final contact = await Navigator.push<Contact>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FormPage(contact: null),
+                ));
+
+            var currentFocus = FocusManager.instance.primaryFocus;
+            if (currentFocus != null) currentFocus.unfocus();
+
+            await Future.delayed(const Duration(milliseconds: 500));
+
+            if (contact != null) {
+              value.addContact(contact);
+              value.saveContacts();
+            }
           },
-        );
-      },
-    );
+          tooltip: AppLocalizations.of(context)!.newItem,
+          child: const Icon(Icons.add),
+        ),
+      );
+    });
   }
 }

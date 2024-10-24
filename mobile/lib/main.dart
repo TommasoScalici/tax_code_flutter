@@ -35,6 +35,8 @@ final class TaxCodeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppState>(
       builder: (context, appState, child) {
+        Future.microtask(() async => await appState.loadTheme());
+
         return MaterialApp(
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.appTitle,

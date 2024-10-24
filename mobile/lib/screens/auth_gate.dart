@@ -6,10 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
-import 'package:uni_links3/uni_links.dart';
 
 import 'home_page.dart';
-import 'profile_screen.dart';
 import '../widgets/info_modal.dart';
 
 class AuthGate extends StatefulWidget {
@@ -20,31 +18,6 @@ class AuthGate extends StatefulWidget {
 }
 
 class _AuthGateState extends State<AuthGate> {
-  @override
-  void initState() {
-    super.initState();
-    initUniLinks();
-  }
-
-  Future<void> initUniLinks() async {
-    final auth = FirebaseAuth.instance;
-    await getInitialLink();
-    linkStream.listen((String? link) async {
-      if (link != null &&
-          link.isNotEmpty &&
-          link.contains('tax_code/delete-account.html')) {
-        if (mounted) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    auth.currentUser != null ? ProfileScreen() : AuthGate()),
-          );
-        }
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final clientId =
@@ -157,7 +130,7 @@ class _AuthGateState extends State<AuthGate> {
             }
           }
 
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         });
   }
 }
