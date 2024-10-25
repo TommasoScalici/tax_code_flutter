@@ -23,6 +23,12 @@ class _ContactsListPageState extends State<ContactsListPage> {
 
   final _searchTextEditingController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    context.read<AppState>().loadContacts();
+  }
+
   void _filterContacts(String searchText) {
     final appState = context.read<AppState>();
 

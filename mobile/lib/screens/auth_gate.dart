@@ -7,36 +7,41 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
 
+import '../settings.dart';
 import 'home_page.dart';
 import '../widgets/info_modal.dart';
 
-class AuthGate extends StatefulWidget {
+class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
   @override
-  State<AuthGate> createState() => _AuthGateState();
-}
-
-class _AuthGateState extends State<AuthGate> {
-  @override
   Widget build(BuildContext context) {
-    final clientId =
-        '1006489964692-qta6uauft2ou6jlhotd2u8o3ilv2nfvt.apps.googleusercontent.com';
-
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
+    return Consumer<AppState>(
+      builder: (context, value, child) {
+        return StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+            if (snapshot.hasData) {
+              return const HomePage();
+            }
 
-          if (!snapshot.hasData) {
             return SignInScreen(
               showAuthActionSwitch: false,
               resizeToAvoidBottomInset: true,
-              providers: [GoogleProvider(clientId: clientId)],
+              actions: [
+                AuthStateChangeAction<SignedIn>((context, state) {
+                  final user = state.user;
+                  if (user != null) {
+                    final appState = context.read<AppState>();
+                    appState.saveUserData(user);
+                  }
+                })
+              ],
+              providers: [
+                GoogleProvider(clientId: Settings.googleProviderClientId)
+              ],
               headerMaxExtent: screenWidth < 300 ? 0 : null,
               headerBuilder: (context, constraints, shrinkOffset) {
                 return Padding(
@@ -111,26 +116,9 @@ class _AuthGateState extends State<AuthGate> {
                 );
               },
             );
-          }
-
-          if (snapshot.hasData) {
-            final user = snapshot.data;
-            if (user != null) {
-              Future.microtask(() async {
-                if (context.mounted) {
-                  final appState = context.read<AppState>();
-                  await appState.saveUserData(user);
-
-                  if (context.mounted) {
-                    await Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => HomePage()));
-                  }
-                }
-              });
-            }
-          }
-
-          return Center(child: CircularProgressIndicator());
-        });
+          },
+        );
+      },
+    );
   }
 }

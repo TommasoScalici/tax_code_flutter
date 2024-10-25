@@ -1,11 +1,8 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
-    // START: FlutterFire Configuration
     id 'com.google.gms.google-services'
-    // END: FlutterFire Configuration
 }
 
 def localProperties = new Properties()
@@ -16,8 +13,8 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = localProperties.getProperty("flutter.versionCode", "1")
-def flutterVersionName = localProperties.getProperty("flutter.versionName", "1.0")
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
+def flutterVersionName = localProperties.getProperty("flutter.versionName")
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
@@ -27,8 +24,13 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "tommasoscalici.tax_code_flutter"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion "27.0.12077973"
+    compileSdk = 34
+
+    ndkVersion "26.1.10909125"
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -36,16 +38,24 @@ android {
     }
     
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+        jvmTarget = "17"
     }
+
+    lint {
+        baseline file("lint-baseline.xml")
+    }
+
 
     defaultConfig {
         applicationId = "tommasoscalici.taxcode"
-        // minSdk = flutter.minSdkVersion
-        minSdk = 23 // Required at least for firebase_auth plugin
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        minSdk = 23
+        targetSdk = 34
+        versionCode = (flutterVersionCode ?: "1") as Integer
+        versionName = flutterVersionName ?: "1.0"
+
+        buildConfigField "String", "WEAR_PATH_OPEN_APP", "\"/open_app\""
+        buildConfigField "String", "DEEP_LINK_SCHEME", "\"tommasoscalici.taxcode\""
+        buildConfigField "boolean", "ENABLE_WEAR_LOGGING", "false"
     }
 
     signingConfigs {
@@ -65,9 +75,11 @@ android {
     
     buildTypes {
         debug {
+            buildConfigField "boolean", "ENABLE_WEAR_LOGGING", "true"
             signingConfig = signingConfigs.debug
         }
         release {
+            buildConfigField "boolean", "ENABLE_WEAR_LOGGING", "false"
             minifyEnabled = true
             shrinkResources = true
             signingConfig = signingConfigs.release
@@ -77,6 +89,13 @@ android {
             )
         }
     }
+}
+
+dependencies {
+    implementation 'com.google.android.gms:play-services-base:18.5.0'
+    implementation 'com.google.android.play:integrity:1.4.0'
+    implementation 'com.google.android.gms:play-services-wearable:18.2.0'
+    implementation 'com.google.android.wearable:wearable:2.9.0'
 }
 
 flutter {

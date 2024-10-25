@@ -3,35 +3,32 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:shared/providers/app_state.dart';
 
-import 'auth_gate.dart';
-
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
+  Future<void> _deleteUser(BuildContext context) async {
+    final auth = FirebaseAuth.instance;
+    final firestore = FirebaseFirestore.instance;
+    final currentUser = auth.currentUser;
+    final logger = context.read<AppState>().logger;
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  final auth = FirebaseAuth.instance;
-  final firestore = FirebaseFirestore.instance;
-
-  @override
-  void initState() {
-    super.initState();
-
-    auth.authStateChanges().listen((User? user) {
-      if (user == null && mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => AuthGate()),
-          (route) => false,
-        );
+    if (currentUser != null) {
+      final uid = currentUser.uid;
+      await firestore.collection('users').doc(uid).delete();
+      try {
+        await currentUser.delete();
+        if (context.mounted) Navigator.pop(context);
+      } on FirebaseAuthException catch (e) {
+        logger.e(
+            'Error while deleting user, probably needs to reauthenticate: $e');
       }
-    });
+    }
   }
 
-  Future<void> _showConfirmationDialog(BuildContext context) async {
+  Future<void> _showDeleteUserConfirmDialog(BuildContext context) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -44,15 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(AppLocalizations.of(context)!.cancel),
             ),
             TextButton(
-              onPressed: () async {
-                final currentUser = auth.currentUser;
-
-                if (currentUser != null) {
-                  final uid = currentUser.uid;
-                  await firestore.collection('users').doc(uid).delete();
-                  await currentUser.delete();
-                }
-              },
+              onPressed: () async => await _deleteUser(context),
               child: Text(
                 AppLocalizations.of(context)!.delete,
                 style: const TextStyle(color: Colors.red),
@@ -66,6 +55,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = FirebaseAuth.instance;
+
     final displayName =
         auth.currentUser != null && auth.currentUser?.displayName != null
             ? auth.currentUser!.displayName!
@@ -94,6 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: ElevatedButton.icon(
                   onPressed: () async {
                     await auth.signOut();
+                    if (context.mounted) Navigator.pop(context);
                   },
                   icon: Icon(Icons.logout),
                   label: Text(AppLocalizations.of(context)!.signOut),
@@ -102,13 +94,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () async {
-                      await _showConfirmationDialog(context);
-
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                      }
-                    },
+                    onPressed: () async =>
+                        await _showDeleteUserConfirmDialog(context),
                     icon: Icon(Icons.delete),
                     label: Text(
                       AppLocalizations.of(context)!.deleteAccount,

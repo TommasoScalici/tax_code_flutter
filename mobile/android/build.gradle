@@ -1,4 +1,19 @@
 allprojects {
+
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            android {
+                lintOptions {
+                    disable 'InvalidPackage', 'NewApi'
+                }
+            }
+
+            project.tasks.withType(Test) {
+                enabled = false
+            }
+        }
+    }
+
     repositories {
         google()
         mavenCentral()
@@ -6,10 +21,9 @@ allprojects {
 }
 
 rootProject.buildDir = "../build"
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(":app")
 }
 

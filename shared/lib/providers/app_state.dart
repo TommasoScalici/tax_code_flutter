@@ -16,13 +16,13 @@ final class AppState with ChangeNotifier {
   final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
 
   List<Contact> _contacts = [];
-  bool _isSearching = false;
   String _currentTheme = '';
+  bool _isSearching = false;
 
+  Logger get logger => _logger;
   List<Contact> get contacts => _contacts;
   bool get isSearching => _isSearching;
   String get theme => _currentTheme;
-  Logger get logger => _logger;
 
   void addContact(Contact contact) {
     contacts.add(contact);
@@ -48,10 +48,9 @@ final class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Contact>> loadContacts() async {
+  Future<void> loadContacts() async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
-
       if (currentUser != null && await InternetConnection().hasInternetAccess) {
         final userId = currentUser.uid;
         final contactsCollection = FirebaseFirestore.instance
@@ -81,14 +80,11 @@ final class AppState with ChangeNotifier {
     } on Exception catch (e) {
       logger.e('Error while loading state: $e');
     }
-
-    return _contacts;
   }
 
   Future<void> saveContacts() async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
-
       if (currentUser != null && await InternetConnection().hasInternetAccess) {
         final userId = currentUser.uid;
         var contactsCollection = FirebaseFirestore.instance
