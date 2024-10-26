@@ -47,7 +47,6 @@ final class _FormPageState extends State<FormPage> {
   late List<Birthplace> _birthplaces;
   late int _contactsLength;
 
-  String? _contactId;
   String get _firstName => _form.control('firstName').value;
   String get _lastName => _form.control('lastName').value;
   String get _gender => _form.control('gender').value;
@@ -131,17 +130,18 @@ final class _FormPageState extends State<FormPage> {
 
   Future<Contact?> _onSubmit() async {
     var response = await _fetchTaxCode();
+    final oldContact = widget.contact;
 
     return response.status
         ? Contact(
-            id: _contactId ?? Uuid().v4(),
+            id: oldContact?.id ?? Uuid().v4(),
             firstName: _firstName.trim(),
             lastName: _lastName.trim(),
             gender: _gender,
             taxCode: response.data.cf,
             birthPlace: _birthPlace,
             birthDate: _birthDate,
-            listIndex: _contactsLength + 1,
+            listIndex: oldContact?.listIndex ?? _contactsLength + 1,
           )
         : null;
   }
@@ -157,8 +157,9 @@ final class _FormPageState extends State<FormPage> {
   }
 
   void _setPreviousData() {
-    if (widget.contact != null) {
-      _contactId = widget.contact!.id;
+    final oldContact = widget.contact;
+
+    if (oldContact != null) {
       _form.control('firstName').value = widget.contact?.firstName;
       _form.control('lastName').value = widget.contact?.lastName;
       _form.control('gender').value = widget.contact?.gender;

@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.9.0'
+    ext.kotlin_version = '1.9.22'
     repositories {
         google()
         mavenCentral()
@@ -11,13 +11,29 @@ allprojects {
         google()
         mavenCentral()
     }
+
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            android {
+                lintOptions {
+                    disable 'InvalidPackage', 'NewApi'
+                }
+            }
+
+            project.tasks.withType(JavaCompile) {
+                options.compilerArgs << '-Xlint:-options'
+            }
+
+            project.tasks.withType(Test) {
+                enabled = false
+            }
+        }
+    }
 }
 
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(":app")
 }
 

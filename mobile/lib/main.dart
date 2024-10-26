@@ -9,8 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
 
 import 'firebase_options.dart';
-import 'settings.dart';
 import 'screens/auth_gate.dart';
+import 'settings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
