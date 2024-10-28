@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' hide ProfileScreen;
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
@@ -7,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
 
+import '../services/integrity_service.dart';
 import '../settings.dart';
 import 'home_page.dart';
 import '../widgets/info_modal.dart';
@@ -16,6 +18,7 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final remoteConfig = FirebaseRemoteConfig.instance;
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Consumer<AppState>(
@@ -32,6 +35,7 @@ class AuthGate extends StatelessWidget {
               resizeToAvoidBottomInset: true,
               actions: [
                 AuthStateChangeAction<SignedIn>((context, state) {
+                  IntegrityService.checkIntegrity(context);
                   final user = state.user;
                   if (user != null) {
                     final appState = context.read<AppState>();
@@ -40,7 +44,9 @@ class AuthGate extends StatelessWidget {
                 })
               ],
               providers: [
-                GoogleProvider(clientId: Settings.googleProviderClientId)
+                GoogleProvider(
+                    clientId:
+                        remoteConfig.getString(Settings.googleProviderClientId))
               ],
               headerMaxExtent: screenWidth < 300 ? 0 : null,
               headerBuilder: (context, constraints, shrinkOffset) {
