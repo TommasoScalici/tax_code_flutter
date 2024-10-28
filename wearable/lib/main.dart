@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
 import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
@@ -29,13 +30,17 @@ class TaxCodeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateTitle: (BuildContext context) =>
+          AppLocalizations.of(context)!.appTitle,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
           visualDensity: VisualDensity.compact,
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
               seedColor: const Color.fromARGB(255, 38, 128, 0),
               brightness: Brightness.dark)),
-      home: const HomePage(),
+      home: const AuthGate(),
     );
   }
 }

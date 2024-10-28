@@ -33,6 +33,8 @@ final class FormPage extends StatefulWidget {
 }
 
 final class _FormPageState extends State<FormPage> {
+  final _logger = Logger();
+
   final _form = FormGroup({
     'firstName': FormControl<String>(validators: [Validators.required]),
     'lastName': FormControl<String>(validators: [Validators.required]),
@@ -43,7 +45,6 @@ final class _FormPageState extends State<FormPage> {
 
   var _shouldPushForm = false;
 
-  late Logger _logger;
   late List<Birthplace> _birthplaces;
   late int _contactsLength;
 
@@ -56,7 +57,6 @@ final class _FormPageState extends State<FormPage> {
   @override
   void initState() {
     super.initState();
-    _logger = context.read<AppState>().logger;
     _contactsLength = context.read<AppState>().contacts.length;
     _loadBirthplacesData();
     _setPreviousData();

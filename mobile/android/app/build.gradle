@@ -53,10 +53,6 @@ android {
         targetSdk = 34
         versionCode = (flutterVersionCode ?: "1") as Integer
         versionName = flutterVersionName ?: "1.0"
-
-        buildConfigField "String", "WEAR_PATH_OPEN_APP", "\"/open_app\""
-        buildConfigField "String", "DEEP_LINK_SCHEME", "\"tommasoscalici.taxcode\""
-        buildConfigField "boolean", "ENABLE_WEAR_LOGGING", "false"
     }
 
     signingConfigs {
@@ -76,11 +72,9 @@ android {
     
     buildTypes {
         debug {
-            buildConfigField "boolean", "ENABLE_WEAR_LOGGING", "true"
             signingConfig = signingConfigs.debug
         }
         release {
-            buildConfigField "boolean", "ENABLE_WEAR_LOGGING", "false"
             minifyEnabled = true
             shrinkResources = true
             signingConfig = signingConfigs.release

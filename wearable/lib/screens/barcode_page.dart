@@ -28,14 +28,10 @@ class _BarcodePageState extends State<BarcodePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isRound =
-        MediaQuery.of(context).size.width == MediaQuery.of(context).size.height;
-    final padding = isRound ? 20.0 : 10.0;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.all(padding),
+        padding: EdgeInsets.all(20.0),
         child: Center(
           child: BarcodeWidget(
             barcode: Barcode.code39(),
@@ -43,7 +39,7 @@ class _BarcodePageState extends State<BarcodePage> {
             color: Colors.black,
             style: TextStyle(color: Colors.black),
             data: widget.taxCode,
-            height: isRound ? 80 : 100,
+            height: 80,
           ),
         ),
       ),

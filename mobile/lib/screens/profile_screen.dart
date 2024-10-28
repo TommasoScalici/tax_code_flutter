@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
-import 'package:shared/providers/app_state.dart';
+import 'package:logger/logger.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -13,12 +12,23 @@ class ProfileScreen extends StatelessWidget {
     final auth = FirebaseAuth.instance;
     final firestore = FirebaseFirestore.instance;
     final currentUser = auth.currentUser;
-    final logger = context.read<AppState>().logger;
+    final logger = Logger();
 
     if (currentUser != null) {
       final uid = currentUser.uid;
-      await firestore.collection('users').doc(uid).delete();
+      final userDocRef = firestore.collection('users').doc(uid);
+      final contactsRef = userDocRef.collection('contacts');
+      final querySnapshot = await contactsRef.get();
+
       try {
+        final batch = firestore.batch();
+
+        for (var doc in querySnapshot.docs) {
+          batch.delete(doc.reference);
+        }
+
+        await batch.commit();
+        await userDocRef.delete();
         await currentUser.delete();
         if (context.mounted) Navigator.pop(context);
       } on FirebaseAuthException catch (e) {

@@ -19,7 +19,6 @@ final class AppState with ChangeNotifier {
   String _currentTheme = '';
   bool _isSearching = false;
 
-  Logger get logger => _logger;
   List<Contact> get contacts => _contacts;
   bool get isSearching => _isSearching;
   String get theme => _currentTheme;
@@ -78,7 +77,7 @@ final class AppState with ChangeNotifier {
         }
       }
     } on Exception catch (e) {
-      logger.e('Error while loading state: $e');
+      _logger.e('Error while loading state: $e');
     }
   }
 
@@ -109,7 +108,7 @@ final class AppState with ChangeNotifier {
         }
       }
     } on Exception catch (e) {
-      logger.e('Error while saving state on Firebase: $e');
+      _logger.e('Error while saving state on Firebase: $e');
     }
 
     await _saveContactsOnLocal();
@@ -123,7 +122,7 @@ final class AppState with ChangeNotifier {
       final contactsSerialized = json.encode(contacts);
       await file.writeAsString(contactsSerialized);
     } on Exception catch (e) {
-      logger.e('Error while saving state on local storage: $e');
+      _logger.e('Error while saving state on local storage: $e');
     }
   }
 

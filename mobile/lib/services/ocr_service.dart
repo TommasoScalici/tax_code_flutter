@@ -1,23 +1,16 @@
 import 'package:change_case/change_case.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:googleapis/vision/v1.dart' as vision;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
-import 'package:shared/providers/app_state.dart';
 import 'package:uuid/uuid.dart';
 
 class OCRService {
-  late Logger _logger;
+  final _logger = Logger();
   ServiceAccountCredentials? _credentials;
-
-  OCRService(BuildContext context) {
-    _logger = context.read<AppState>().logger;
-  }
 
   Future<void> initialize() async {
     try {

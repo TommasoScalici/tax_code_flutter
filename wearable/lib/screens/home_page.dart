@@ -13,9 +13,7 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.black,
         body: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Expanded(
-            child: const ContactList(),
-          ),
+          child: const ContactList(),
         ),
       );
     });

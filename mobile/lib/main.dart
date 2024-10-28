@@ -7,6 +7,7 @@ import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
 
@@ -15,26 +16,33 @@ import 'screens/auth_gate.dart';
 import 'settings.dart';
 
 void main() async {
+  final logger = Logger();
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (Platform.isAndroid) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    await FirebaseRemoteConfig.instance.fetchAndActivate();
+  try {
+    if (Platform.isAndroid) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      await FirebaseRemoteConfig.instance.fetchAndActivate();
 
-    FlutterError.onError = (errorDetails) {
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-    };
+      FlutterError.onError = (errorDetails) {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      };
 
-    PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      return true;
-    };
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
+    }
+  } on Exception catch (e) {
+    logger.e('Error while configuring the app with Firebase: $e');
   }
 
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => AppState())],
+    providers: [
+      ChangeNotifierProvider(create: (_) => AppState()),
+    ],
     child: const TaxCodeApp(),
   ));
 }

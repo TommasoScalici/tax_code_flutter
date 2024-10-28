@@ -7,9 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
-import 'package:shared/providers/app_state.dart';
 import 'package:tax_code_flutter/services/ocr_service.dart';
 
 class CameraPage extends StatefulWidget {
@@ -20,6 +18,9 @@ class CameraPage extends StatefulWidget {
 }
 
 class _CameraPageState extends State<CameraPage> {
+  final _logger = Logger();
+  final _ocrService = OCRService();
+
   String? _base64Image;
   String? _imagePath;
 
@@ -31,16 +32,11 @@ class _CameraPageState extends State<CameraPage> {
   late List<CameraDescription> _cameras;
   late CameraDescription _camera;
   late DeviceOrientation _pictureOrientation;
-  late Logger _logger;
-
-  late OCRService _ocrService;
 
   @override
   void initState() {
     super.initState();
-    _logger = context.read<AppState>().logger;
     _initializeCamera();
-    _ocrService = OCRService(context);
     _ocrService.initialize();
   }
 
@@ -135,7 +131,7 @@ class _CameraPageState extends State<CameraPage> {
       });
     } catch (e) {
       if (mounted) {
-        context.read<AppState>().logger.e('Error taking picture: $e');
+        _logger.e('Error taking picture: $e');
       }
     }
   }

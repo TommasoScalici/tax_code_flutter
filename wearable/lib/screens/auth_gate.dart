@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
 
@@ -11,7 +13,7 @@ class AuthGate extends StatelessWidget {
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     final appState = context.read<AppState>();
-    final logger = appState.logger;
+    final logger = Logger();
 
     try {
       final auth = FirebaseAuth.instance;
@@ -47,8 +49,6 @@ class AuthGate extends StatelessWidget {
               return const HomePage();
             }
 
-            final currentLocale = Localizations.localeOf(context);
-            final countryCode = currentLocale.countryCode?.toLowerCase();
             return Scaffold(
               backgroundColor: Colors.black,
               body: SizedBox.expand(
@@ -56,14 +56,10 @@ class AuthGate extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        child: Text(countryCode == 'it'
-                            ? 'Benvenuto su'
-                            : 'Welcome to'),
+                        child: Text(AppLocalizations.of(context)!.welcomeTo),
                       ),
                       SizedBox(
-                        child: Text(countryCode == 'it'
-                            ? 'Codice Fiscale'
-                            : 'Tax Code'),
+                        child: Text(AppLocalizations.of(context)!.appTitle),
                       ),
                       SizedBox(height: 10),
                       SizedBox(
