@@ -72,7 +72,7 @@ final class HomePage extends StatelessWidget {
                 ],
               ),
             ]),
-        body: const ContactsListPage(),
+        body: const ContactsList(),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             final contact = await Navigator.push<Contact>(

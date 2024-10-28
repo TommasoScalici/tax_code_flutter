@@ -156,7 +156,7 @@ class OCRService {
     var parts = line.split(key);
 
     if (parts.length > 1 && parts[1].isNotEmpty) {
-      var format = DateFormat("dd/MM/yyyy");
+      var format = DateFormat('dd/MM/yyyy');
       var date = format.tryParse(parts[1].trim(), true);
       return date;
     }

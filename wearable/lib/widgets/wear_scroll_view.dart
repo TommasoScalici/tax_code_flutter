@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class WearScrollController extends ScrollController {
@@ -37,21 +38,35 @@ class WearScrollView extends StatefulWidget {
   State<WearScrollView> createState() => _WearScrollViewState();
 }
 
-class _WearScrollViewState extends State<WearScrollView> {
+class _WearScrollViewState extends State<WearScrollView>
+    with SingleTickerProviderStateMixin {
   late WearScrollController _controller;
   double _progress = 0.0;
+  late AnimationController _fadeController;
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller ?? WearScrollController();
-    _controller.addListener(_updateProgress);
+    _controller.addListener(_handleScroll);
+
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
-  void _updateProgress() {
+  void _handleScroll() {
     if (_controller.hasClients && _controller.position.maxScrollExtent > 0) {
       setState(() {
         _progress = _controller.offset / _controller.position.maxScrollExtent;
+      });
+
+      _fadeController.forward();
+      Future.delayed(const Duration(milliseconds: 600), () {
+        if (mounted) {
+          _fadeController.reverse();
+        }
       });
     }
   }
@@ -62,23 +77,33 @@ class _WearScrollViewState extends State<WearScrollView> {
       children: [
         SingleChildScrollView(
           controller: _controller,
-          padding: widget.padding,
+          padding: EdgeInsets.only(
+            right: 8.0,
+            left: widget.padding?.horizontal ?? 0,
+            top: widget.padding?.vertical ?? 0,
+            bottom: widget.padding?.vertical ?? 0,
+          ),
           physics: const BouncingScrollPhysics(),
           child: widget.child,
         ),
-        // Circular scroll indicator
+        // Curved scrollbar
         Positioned(
           right: 2,
           top: 0,
           bottom: 0,
-          child: SizedBox(
-            width: 2,
-            child: CustomPaint(
-              painter: CircularProgressPainter(
-                progress: _progress,
-                color: widget.progressColor,
+          child: FadeTransition(
+            opacity: _fadeController,
+            child: Center(
+              child: SizedBox(
+                height: 40, // Ridotta l'altezza della scrollbar
+                width: 2,
+                child: CustomPaint(
+                  painter: CurvedScrollbarPainter(
+                    progress: _progress,
+                    color: widget.progressColor,
+                  ),
+                ),
               ),
-              size: const Size(2, double.infinity),
             ),
           ),
         ),
@@ -91,49 +116,79 @@ class _WearScrollViewState extends State<WearScrollView> {
     if (widget.controller == null) {
       _controller.dispose();
     }
+    _fadeController.dispose();
     super.dispose();
   }
 }
 
-class CircularProgressPainter extends CustomPainter {
+class CurvedScrollbarPainter extends CustomPainter {
   final double progress;
   final Color color;
 
-  CircularProgressPainter({
+  CurvedScrollbarPainter({
     required this.progress,
     required this.color,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Background track
+    final height = size.height;
+    final width = size.width;
+
+    // Aumentata la curvatura
+    final curveWidth = 4.0;
+
+    // Path per la traccia di background (la barra completa)
+    final trackPath = Path();
+    for (var y = 0.0; y < height; y++) {
+      final normalizedY = y / height;
+      // Usa una funzione sinusoidale modificata per una curvatura più pronunciata
+      final x = curveWidth * math.sin(normalizedY * math.pi);
+
+      if (y == 0) {
+        trackPath.moveTo(x, y);
+      } else {
+        trackPath.lineTo(x, y);
+      }
+    }
+
+    // Disegna la traccia di background
     final trackPaint = Paint()
       ..color = color.withOpacity(0.2)
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
-    canvas.drawLine(
-      Offset(0, 0),
-      Offset(0, size.height),
-      trackPaint,
-    );
+    canvas.drawPath(trackPath, trackPaint);
 
-    // Progress indicator
-    final progressPaint = Paint()
+    // Disegna l'indicatore di posizione (un piccolo segmento che si muove)
+    final indicatorPaint = Paint()
       ..color = color
-      ..strokeWidth = 2
+      ..strokeWidth = 2.5
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
-    canvas.drawLine(
-      Offset(0, 0),
-      Offset(0, size.height * progress),
-      progressPaint,
-    );
+    // Calcola la posizione dell'indicatore
+    final indicatorPosition = progress * height;
+    final indicatorLength =
+        height * 0.15; // Lunghezza dell'indicatore (15% della barra)
+
+    final indicatorPath = Path();
+    for (var y = -indicatorLength / 2; y < indicatorLength / 2; y++) {
+      final normalizedY = (indicatorPosition + y) / height;
+      final x = curveWidth * math.sin(normalizedY * math.pi);
+
+      if (y == -indicatorLength / 2) {
+        indicatorPath.moveTo(x, indicatorPosition + y);
+      } else {
+        indicatorPath.lineTo(x, indicatorPosition + y);
+      }
+    }
+
+    canvas.drawPath(indicatorPath, indicatorPaint);
   }
 
   @override
-  bool shouldRepaint(CircularProgressPainter oldDelegate) =>
+  bool shouldRepaint(CurvedScrollbarPainter oldDelegate) =>
       progress != oldDelegate.progress || color != oldDelegate.color;
 }

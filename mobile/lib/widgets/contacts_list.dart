@@ -10,14 +10,14 @@ import 'package:shared/providers/app_state.dart';
 
 import 'contact_card.dart';
 
-final class ContactsListPage extends StatefulWidget {
-  const ContactsListPage({super.key});
+final class ContactsList extends StatefulWidget {
+  const ContactsList({super.key});
 
   @override
-  State<ContactsListPage> createState() => _ContactsListPageState();
+  State<ContactsList> createState() => _ContactsListState();
 }
 
-class _ContactsListPageState extends State<ContactsListPage> {
+class _ContactsListState extends State<ContactsList> {
   List<Contact> _contacts = [];
   var _searchText = '';
 
