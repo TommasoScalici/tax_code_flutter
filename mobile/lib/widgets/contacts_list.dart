@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/providers/app_state.dart';
 
-import '../services/integrity_service.dart';
 import 'contact_card.dart';
 
 final class ContactsList extends StatefulWidget {
@@ -27,7 +26,6 @@ class _ContactsListState extends State<ContactsList> {
   @override
   void initState() {
     super.initState();
-    IntegrityService.checkIntegrity(context);
     context.read<AppState>().loadContacts();
   }
 

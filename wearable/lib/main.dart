@@ -6,7 +6,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
 import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
-import 'package:tax_code_flutter_wear_os/screens/home_page.dart';
 
 import 'firebase_options.dart';
 

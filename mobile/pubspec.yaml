@@ -1,7 +1,7 @@
 name: tax_code_flutter
 description: "App for Italian Tax Code calculation."
 publish_to: none # Remove this line if you wish to publish to pub.dev
-version: 1.2.4+24
+version: 1.2.4+26
 
 environment:
   sdk: ^3.5.3
@@ -17,7 +17,6 @@ dependencies:
     path: ../shared
 
   animated_reorderable_list: ^1.1.1
-  app_device_integrity: ^1.0.5
   barcode_widget: ^2.0.4
   build_runner: ^2.4.13
   camera: ^0.11.0+2

@@ -8,7 +8,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
 
-import '../services/integrity_service.dart';
 import '../settings.dart';
 import 'home_page.dart';
 import '../widgets/info_modal.dart';
@@ -35,7 +34,6 @@ class AuthGate extends StatelessWidget {
               resizeToAvoidBottomInset: true,
               actions: [
                 AuthStateChangeAction<SignedIn>((context, state) {
-                  IntegrityService.checkIntegrity(context);
                   final user = state.user;
                   if (user != null) {
                     final appState = context.read<AppState>();

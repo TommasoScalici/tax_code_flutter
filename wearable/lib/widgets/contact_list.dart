@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:shared/models/birthplace.dart';
-import 'package:shared/models/contact.dart';
 import 'package:shared/providers/app_state.dart';
 
 import 'contact_card.dart';
@@ -18,7 +15,8 @@ class ContactList extends StatefulWidget {
 class _ContactListState extends State<ContactList> {
   bool _isLoading = false;
 
-  // List<Contact> contacts = [
+  // List<Contact> contacts =
+  // [
   //   Contact(
   //     id: '1',
   //     firstName: 'Mario',
