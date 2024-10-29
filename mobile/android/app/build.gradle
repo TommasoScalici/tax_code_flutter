@@ -86,13 +86,6 @@ android {
     }
 }
 
-dependencies {
-    implementation 'com.google.android.gms:play-services-base:18.5.0'
-    implementation 'com.google.android.play:integrity:1.4.0'
-    implementation 'com.google.android.gms:play-services-wearable:18.2.0'
-    compileOnly 'com.google.android.wearable:wearable:2.9.0'
-}
-
 flutter {
     source = "../.."
 }

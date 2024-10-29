@@ -18,6 +18,7 @@ class BarcodePage extends StatelessWidget {
         ScreenBrightness().resetApplicationScreenBrightness();
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(AppLocalizations.of(context)!.appTitle),
@@ -25,6 +26,7 @@ class BarcodePage extends StatelessWidget {
         body: Center(
           child: BarcodeWidget(
             barcode: Barcode.code39(),
+            style: TextStyle(color: Colors.black),
             data: taxCode,
             height: 150,
             width: MediaQuery.of(context).size.width * .8,
