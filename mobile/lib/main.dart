@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -15,9 +16,10 @@ import 'firebase_options.dart';
 import 'screens/auth_gate.dart';
 import 'settings.dart';
 
-void main() async {
-  final logger = Logger();
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final logger = Logger();
 
   try {
     if (Platform.isAndroid) {
@@ -25,6 +27,8 @@ void main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       await FirebaseRemoteConfig.instance.fetchAndActivate();
+      await FirebaseAppCheck.instance
+          .activate(androidProvider: AndroidProvider.playIntegrity);
 
       FlutterError.onError = (errorDetails) {
         FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);

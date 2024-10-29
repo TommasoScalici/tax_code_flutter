@@ -45,6 +45,10 @@ android {
         versionName flutter.versionName
     }
 
+    lint {
+        baseline file("lint-baseline.xml")
+    }
+
     signingConfigs {
         debug {
             keyAlias keystoreProperties['keyAliasDebug']
