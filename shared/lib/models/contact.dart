@@ -79,3 +79,19 @@ final class Contact {
       ' - ${DateFormat.yMd().format(birthDate)}'
       ' - ${birthPlace.toString()}';
 }
+
+extension ContactNativeMapper on Contact {
+  Map<String, dynamic> toNativeMap() => {
+        'id': id,
+        'firstName': firstName,
+        'lastName': lastName,
+        'gender': gender,
+        'taxCode': taxCode,
+        'birthPlace': {
+          'name': birthPlace.name,
+          'state': birthPlace.state,
+        },
+        'birthDate': birthDate.toString(),
+        'listIndex': listIndex,
+      };
+}

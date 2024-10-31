@@ -1,34 +1,46 @@
 package tommasoscalici.tax_code_flutter_wear_os
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.InputDevice
-import android.view.MotionEvent
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.FlutterEngineCache
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-class MainActivity : FlutterActivity() {
-    private val channelName = "tommasoscalici.tax_code_flutter_wear_os/navigation"
-    private lateinit var channel: MethodChannel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+class MainActivity : FlutterActivity() {
+    private val channelName = "tommasoscalici.tax_code_flutter_wear_os/channel"
+    private lateinit var methodChannel: MethodChannel
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        FlutterEngineCache.getInstance().put("default", flutterEngine)
+        setupMethodChannel(flutterEngine)
+    }
 
-        channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName)
+    private fun setupMethodChannel(flutterEngine: FlutterEngine) {
+        methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName)
+        methodChannel.setMethodCallHandler(::handleMethodCall)
+    }
 
-        window.decorView.setOnGenericMotionListener { _, event ->
-            when {
-                event.action == MotionEvent.ACTION_SCROLL && event.source == InputDevice.SOURCE_ROTARY_ENCODER -> {
-                    val delta = event.getAxisValue(MotionEvent.AXIS_SCROLL)
-                    channel.invokeMethod("onRotaryInput", delta)
-                    true
-                }
-                else -> false
+    private fun handleMethodCall(call: MethodCall, result: MethodChannel.Result) {
+        when (call.method) {
+            "openNativeContactList" -> handleOpenContactList(call, result)
+            else -> result.notImplemented()
+        }
+    }
+
+    private fun handleOpenContactList(call: MethodCall, result: MethodChannel.Result) {
+        try {
+            val contacts = call.argument<ArrayList<HashMap<String, Any>>>("contacts")
+            val intent = Intent(this, ContactListActivity::class.java).apply {
+                putExtra("contacts", contacts)
             }
+            startActivity(intent)
+            result.success(null)
+        } catch (e: Exception) {
+            result.error("ERROR", "Failed to open contact list", e.message)
         }
     }
 }

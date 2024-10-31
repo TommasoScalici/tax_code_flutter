@@ -10,16 +10,11 @@ import 'package:shared/providers/app_state.dart';
 import '../screens/barcode_page.dart';
 import '../screens/form_page.dart';
 
-final class ContactCardPhone extends StatefulWidget {
+final class ContactCard extends StatelessWidget {
   final Contact contact;
 
-  const ContactCardPhone({super.key, required this.contact});
+  const ContactCard({super.key, required this.contact});
 
-  @override
-  State<StatefulWidget> createState() => _ContactCardPhoneState();
-}
-
-final class _ContactCardPhoneState extends State<ContactCardPhone> {
   void _showConfirmationDialog(BuildContext context, Contact contact) {
     showDialog(
       context: context,
@@ -80,7 +75,7 @@ final class _ContactCardPhoneState extends State<ContactCardPhone> {
                   tileColor: Theme.of(context).colorScheme.primary,
                   title: Center(
                     child: Text(
-                      widget.contact.taxCode,
+                      contact.taxCode,
                       style: taxCodeTextStyle,
                     ),
                   ),
@@ -97,7 +92,7 @@ final class _ContactCardPhoneState extends State<ContactCardPhone> {
                                 '${AppLocalizations.of(context)!.firstName}: '),
                             Flexible(
                               child: Text(
-                                widget.contact.firstName,
+                                contact.firstName,
                                 style: valueTextStyle,
                               ),
                             )
@@ -108,7 +103,7 @@ final class _ContactCardPhoneState extends State<ContactCardPhone> {
                             Text('${AppLocalizations.of(context)!.lastName}: '),
                             Flexible(
                               child: Text(
-                                widget.contact.lastName,
+                                contact.lastName,
                                 style: valueTextStyle,
                               ),
                             )
@@ -119,7 +114,7 @@ final class _ContactCardPhoneState extends State<ContactCardPhone> {
                             Text('${AppLocalizations.of(context)!.gender}: '),
                             Flexible(
                               child: Text(
-                                widget.contact.gender,
+                                contact.gender,
                                 style: valueTextStyle,
                               ),
                             )
@@ -133,7 +128,7 @@ final class _ContactCardPhoneState extends State<ContactCardPhone> {
                               child: Text(
                                 DateFormat.yMd(Localizations.localeOf(context)
                                         .toString())
-                                    .format(widget.contact.birthDate),
+                                    .format(contact.birthDate),
                                 style: valueTextStyle,
                               ),
                             ),
@@ -145,7 +140,7 @@ final class _ContactCardPhoneState extends State<ContactCardPhone> {
                                 '${AppLocalizations.of(context)!.birthPlace}: '),
                             Flexible(
                               child: Text(
-                                widget.contact.birthPlace.toString(),
+                                contact.birthPlace.toString(),
                                 style: valueTextStyle,
                               ),
                             ),
@@ -162,7 +157,7 @@ final class _ContactCardPhoneState extends State<ContactCardPhone> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        onPressed: () => Share.share(widget.contact.taxCode),
+                        onPressed: () => Share.share(contact.taxCode),
                         icon: const Icon(Icons.share),
                       ),
                       IconButton(
@@ -171,7 +166,7 @@ final class _ContactCardPhoneState extends State<ContactCardPhone> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  BarcodePage(taxCode: widget.contact.taxCode),
+                                  BarcodePage(taxCode: contact.taxCode),
                             ),
                           );
                         },
@@ -182,8 +177,7 @@ final class _ContactCardPhoneState extends State<ContactCardPhone> {
                           final editedContact = await Navigator.push<Contact>(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  FormPage(contact: widget.contact),
+                              builder: (context) => FormPage(contact: contact),
                             ),
                           );
 
@@ -199,7 +193,7 @@ final class _ContactCardPhoneState extends State<ContactCardPhone> {
                       ),
                       IconButton(
                         onPressed: () =>
-                            _showConfirmationDialog(context, widget.contact),
+                            _showConfirmationDialog(context, contact),
                         icon: const Icon(Icons.delete),
                       ),
                     ],

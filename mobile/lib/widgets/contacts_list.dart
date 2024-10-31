@@ -109,7 +109,7 @@ class _ContactsListState extends State<ContactsList> {
                                 duration: const Duration(milliseconds: 200),
                                 curve: Curves.easeInOut,
                                 child: Center(
-                                    child: ContactCardPhone(contact: contact)),
+                                    child: ContactCard(contact: contact)),
                               );
                             },
                             enterTransition: [FadeIn(), ScaleIn()],
@@ -133,7 +133,7 @@ class _ContactsListState extends State<ContactsList> {
                               return Container(
                                 key: ValueKey(contact.id),
                                 child: Center(
-                                    child: ContactCardPhone(contact: contact)),
+                                    child: ContactCard(contact: contact)),
                               );
                             },
                           ),
