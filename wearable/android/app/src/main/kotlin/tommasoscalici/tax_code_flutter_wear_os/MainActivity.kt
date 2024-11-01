@@ -1,46 +1,45 @@
 package tommasoscalici.tax_code_flutter_wear_os
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
-import io.flutter.embedding.android.FlutterActivity
+import androidx.fragment.app.Fragment
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.embedding.engine.FlutterEngineCache
-import io.flutter.plugin.common.MethodCall
+import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.MethodChannel
 
-
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
     private val channelName = "tommasoscalici.tax_code_flutter_wear_os/channel"
     private lateinit var methodChannel: MethodChannel
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        FlutterEngineCache.getInstance().put("default", flutterEngine)
-        setupMethodChannel(flutterEngine)
-    }
-
-    private fun setupMethodChannel(flutterEngine: FlutterEngine) {
         methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName)
-        methodChannel.setMethodCallHandler(::handleMethodCall)
-    }
-
-    private fun handleMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        when (call.method) {
-            "openNativeContactList" -> handleOpenContactList(call, result)
-            else -> result.notImplemented()
-        }
-    }
-
-    private fun handleOpenContactList(call: MethodCall, result: MethodChannel.Result) {
-        try {
-            val contacts = call.argument<ArrayList<HashMap<String, Any>>>("contacts")
-            val intent = Intent(this, ContactListActivity::class.java).apply {
-                putExtra("contacts", contacts)
+        methodChannel.setMethodCallHandler { call, result ->
+            when (call.method) {
+                "openNativeContactList" -> {
+                    try {
+                        val contacts = call.argument<ArrayList<HashMap<String, Any>>>("contacts")
+                        showContactList(contacts)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("ERROR", "Error opening contact list", e.message)
+                    }
+                }
+                else -> result.notImplemented()
             }
-            startActivity(intent)
-            result.success(null)
-        } catch (e: Exception) {
-            result.error("ERROR", "Failed to open contact list", e.message)
         }
+
+        flutterEngine.navigationChannel.setInitialRoute("/barcode")
+    }
+
+    fun getEngine(): FlutterEngine? {
+        return flutterEngine
+    }
+
+    private fun showContactList(contacts: ArrayList<HashMap<String, Any>>?) {
+        supportFragmentManager.beginTransaction()
+            .replace(android.R.id.content, ContactListFragment.newInstance(contacts))
+            .commit()
     }
 }

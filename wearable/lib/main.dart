@@ -9,6 +9,7 @@ import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
 import 'package:tax_code_flutter_wear_os/screens/home_page.dart';
 
 import 'firebase_options.dart';
+import 'screens/barcode_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,9 +28,29 @@ void main() async {
 class TaxCodeApp extends StatelessWidget {
   const TaxCodeApp({super.key});
 
+  Route<dynamic> _onGenerateRoute(RouteSettings settings) {
+    if (settings.name?.startsWith('/barcode') == true) {
+      final uri = Uri.parse(settings.name!);
+      final taxCode = uri.queryParameters['taxCode'];
+
+      if (taxCode != null) {
+        return MaterialPageRoute(
+          builder: (context) => BarcodePage(taxCode: taxCode),
+        );
+      }
+    }
+
+    return MaterialPageRoute(
+      builder: (context) => const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: _onGenerateRoute,
       onGenerateTitle: (BuildContext context) =>
           AppLocalizations.of(context)!.appTitle,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

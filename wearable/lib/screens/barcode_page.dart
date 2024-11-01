@@ -15,15 +15,13 @@ class _BarcodePageState extends State<BarcodePage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() async {
-      await ScreenBrightness().setApplicationScreenBrightness(1.0);
-    });
+    ScreenBrightness().setApplicationScreenBrightness(1.0);
   }
 
   @override
   void dispose() {
-    super.dispose();
     ScreenBrightness().resetApplicationScreenBrightness();
+    super.dispose();
   }
 
   @override
@@ -31,13 +29,13 @@ class _BarcodePageState extends State<BarcodePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Center(
           child: BarcodeWidget(
             barcode: Barcode.code39(),
             backgroundColor: Colors.white,
             color: Colors.black,
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
             data: widget.taxCode,
             height: 80,
           ),

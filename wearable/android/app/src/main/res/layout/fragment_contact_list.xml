@@ -7,11 +7,14 @@
     android:layout_height="match_parent"
     android:scrollbars="vertical"
     android:fadeScrollbars="false"
-    android:scrollbarStyle="outsideOverlay">
+    android:scrollbarStyle="outsideOverlay"
+    android:fillViewport="true">
 
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="88dp"
+        android:paddingBottom="88dp">
 
         <androidx.wear.widget.CircularProgressLayout android:id="@+id/circular_progress"
             android:layout_width="match_parent"

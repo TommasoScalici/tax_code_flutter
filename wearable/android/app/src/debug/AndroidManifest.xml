@@ -25,10 +25,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ContactListActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
         <meta-data android:name="flutterEmbedding"
             android:value="2" />
         <meta-data android:name="com.google.android.wearable.standalone"

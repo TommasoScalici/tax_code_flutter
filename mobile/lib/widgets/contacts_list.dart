@@ -57,9 +57,17 @@ class _ContactsListState extends State<ContactsList> {
             newIndex -= 1;
           }
 
-          final tempIndex = contacts[oldIndex].listIndex;
-          contacts[oldIndex].listIndex = contacts[newIndex].listIndex;
-          contacts[newIndex].listIndex = tempIndex;
+          if (newIndex > oldIndex) {
+            for (int i = oldIndex; i < newIndex; i++) {
+              contacts[i].listIndex = contacts[i + 1].listIndex;
+            }
+          } else if (newIndex < oldIndex) {
+            for (int i = oldIndex; i > newIndex; i--) {
+              contacts[i].listIndex = contacts[i - 1].listIndex;
+            }
+          }
+
+          contacts[newIndex].listIndex = newIndex;
 
           value.updateContacts(contacts);
           value.saveContacts();

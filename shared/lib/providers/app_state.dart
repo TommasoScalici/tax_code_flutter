@@ -60,7 +60,8 @@ final class AppState with ChangeNotifier {
         final contacts = querySnapshot.docs
             .map((doc) => Contact.fromMap(doc.data()))
             .toList();
-        updateContacts(contacts);
+        contacts.sort((x, y) => x.listIndex.compareTo(y.listIndex));
+        _contacts = contacts;
         await _saveContactsOnLocal();
       } else {
         final directory = await getApplicationDocumentsDirectory();
@@ -73,7 +74,8 @@ final class AppState with ChangeNotifier {
           List<Contact> contacts = contactsDeserialized
               .map((json) => Contact.fromJson(json as Map<String, dynamic>))
               .toList();
-          updateContacts(contacts);
+          contacts.sort((x, y) => x.listIndex.compareTo(y.listIndex));
+          _contacts = contacts;
         }
       }
     } on Exception catch (e) {

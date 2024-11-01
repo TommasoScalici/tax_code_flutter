@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/providers/app_state.dart';
-
-import '../screens/barcode_page.dart';
 
 class ContactList extends StatefulWidget {
   const ContactList({super.key});
@@ -67,9 +64,9 @@ class _ContactListState extends State<ContactList> {
   @override
   void initState() {
     super.initState();
+
     final appState = context.read<AppState>();
     _loadAndShowContacts(appState);
-    _setupMethodCallHandler();
   }
 
   Future<void> _loadAndShowContacts(AppState appState) async {
@@ -79,21 +76,17 @@ class _ContactListState extends State<ContactList> {
       await appState.loadContacts();
 
       if (mounted) {
-        print('Contacts to send: ${contacts.length}');
         final contactsData = contacts.map((c) => c.toNativeMap()).toList();
-        print('Contacts mapped: $contactsData');
+        print(
+            "Flutter: Calling openNativeContactList with ${contactsData.length} contacts"); // Log
 
         await _platform.invokeMethod('openNativeContactList', {
           'contacts': contactsData,
         });
+        print("Flutter: Called openNativeContactList successfully"); // Log
       }
     } catch (e) {
-      if (mounted) {
-        print('Error: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error opening contacts: $e')),
-        );
-      }
+      print("Flutter: Error in _loadAndShowContacts: $e"); // Log
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -101,73 +94,10 @@ class _ContactListState extends State<ContactList> {
     }
   }
 
-  void _setupMethodCallHandler() {
-    _platform.setMethodCallHandler((call) async {
-      if (call.method == 'openBarcodePage') {
-        final taxCode = call.arguments as String;
-        if (mounted) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BarcodePage(taxCode: taxCode),
-            ),
-          );
-          return true;
-        }
-      }
-      return false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return _isLoading
         ? const Center(child: CircularProgressIndicator())
-        : const SizedBox(); // Questo widget sarà vuoto perché la lista è mostrata nativamente
+        : const SizedBox();
   }
 }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Consumer<AppState>(builder: (context, value, child) {
-//       return _isLoading
-//           ? Center(child: CircularProgressIndicator())
-//           : contacts.isEmpty
-//               ? SingleChildScrollView(
-//                   child: Column(children: [
-//                     SizedBox(height: 40),
-//                     Text(AppLocalizations.of(context)!.noContactsFoundMessage),
-//                     SizedBox(height: 20),
-//                     SizedBox(
-//                       height: 50,
-//                       child: ElevatedButton.icon(
-//                         onPressed: () async => await _openOnPhone(),
-//                         icon: Icon(
-//                           Icons.phone_android,
-//                           color: Theme.of(context).colorScheme.primary,
-//                         ),
-//                         label: Text(
-//                           countryCode == 'it' ? 'Apri sul telefono' : 'Open on phone',
-//                           style: TextStyle(
-//                             color: Theme.of(context).colorScheme.primary,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                     SizedBox(height: 40),
-//                   ]),
-//                 )
-//               : ListView.builder(
-//                   controller: _scrollController,
-//                   shrinkWrap: true,
-//                   physics: ClampingScrollPhysics(),
-//                   itemCount: contacts.length,
-//                   itemBuilder: (context, index) {
-//                     final contact = contacts[index];
-//                     return Padding(
-//                         padding: EdgeInsets.symmetric(vertical: 10.0),
-//                         child: ContactCard(contact: contact));
-//                   },
-//                 );
-//     });
-//   }
