@@ -1,26 +1,59 @@
 import 'dart:io';
 
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
 import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
-import 'package:tax_code_flutter_wear_os/screens/home_page.dart';
 
 import 'firebase_options.dart';
 import 'screens/barcode_page.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isAndroid) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+
+  final logger = Logger();
+
+  try {
+    if (Platform.isAndroid) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      await FirebaseRemoteConfig.instance.fetchAndActivate();
+
+      if (kDebugMode) {
+        await FirebaseAppCheck.instance.activate(
+          androidProvider: AndroidProvider.debug,
+        );
+      } else {
+        await FirebaseAppCheck.instance.activate(
+          androidProvider: AndroidProvider.playIntegrity,
+        );
+      }
+
+      FlutterError.onError = (errorDetails) {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      };
+
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
+    }
+  } on Exception catch (e) {
+    logger.e('Error while configuring the app with Firebase: $e');
   }
 
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => AppState())],
+    providers: [
+      ChangeNotifierProvider(create: (_) => AppState()),
+    ],
     child: const TaxCodeApp(),
   ));
 }
@@ -65,7 +98,7 @@ class TaxCodeApp extends StatelessWidget {
           style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[800]),
         ),
       ),
-      home: const HomePage(),
+      home: AuthGate(),
     );
   }
 }

@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.flutter.plugin.common.MethodChannel
 import java.text.DateFormat
@@ -12,9 +14,8 @@ import java.text.DateFormat
 class ContactAdapter(
     private val context: Context,
     private val methodChannel: MethodChannel
-) : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
+) : ListAdapter<Contact, ContactAdapter.ViewHolder>(ContactDiffCallback()) {
     private val TAG = "ContactAdapter"
-    private var contacts: List<Contact> = emptyList()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val taxCode: TextView = view.findViewById(R.id.tax_code)
@@ -30,13 +31,22 @@ class ContactAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val contact = contacts[position]
+        val contact = getItem(position)
         val locale = context.resources.configuration.locales[0]
         
         with(holder) {
             taxCode.text = contact.taxCode
-            nameGender.text = "${contact.firstName} ${contact.lastName} (${contact.gender})"
-            birthPlace.text = "${contact.birthPlace.name} (${contact.birthPlace.state})"
+            nameGender.text = context.getString(
+                R.string.contact_name_format,
+                contact.firstName,
+                contact.lastName,
+                contact.gender
+            )
+            birthPlace.text = context.getString(
+                R.string.birth_place_format,
+                contact.birthPlace.name,
+                contact.birthPlace.state
+            )
             birthDate.text = DateFormat.getDateInstance(DateFormat.SHORT, locale)
                 .format(contact.birthDate)
 
@@ -46,10 +56,24 @@ class ContactAdapter(
         }
     }
 
-    override fun getItemCount() = contacts.size
-
     fun updateContacts(newContacts: List<Contact>) {
-        contacts = newContacts
-        notifyDataSetChanged()
+        submitList(newContacts)
+    }
+}
+
+private class ContactDiffCallback : DiffUtil.ItemCallback<Contact>() {
+    override fun areItemsTheSame(oldItem: Contact, newItem: Contact): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: Contact, newItem: Contact): Boolean {
+        return oldItem == newItem || (
+            oldItem.firstName == newItem.firstName &&
+            oldItem.lastName == newItem.lastName &&
+            oldItem.gender == newItem.gender &&
+            oldItem.taxCode == newItem.taxCode &&
+            oldItem.birthPlace == newItem.birthPlace &&
+            oldItem.birthDate == newItem.birthDate
+        )
     }
 }

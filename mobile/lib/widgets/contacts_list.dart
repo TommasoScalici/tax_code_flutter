@@ -53,21 +53,18 @@ class _ContactsListState extends State<ContactsList> {
           HapticFeedback.lightImpact();
           final contacts = value.contacts;
 
-          if (newIndex > oldIndex) {
-            newIndex -= 1;
-          }
+          final contact = contacts.removeAt(oldIndex);
+          contacts.insert(newIndex, contact);
 
-          if (newIndex > oldIndex) {
-            for (int i = oldIndex; i < newIndex; i++) {
-              contacts[i].listIndex = contacts[i + 1].listIndex;
+          if (oldIndex < newIndex) {
+            for (int i = oldIndex; i <= newIndex; i++) {
+              contacts[i].listIndex = i;
             }
-          } else if (newIndex < oldIndex) {
-            for (int i = oldIndex; i > newIndex; i--) {
-              contacts[i].listIndex = contacts[i - 1].listIndex;
+          } else {
+            for (int i = newIndex; i <= oldIndex; i++) {
+              contacts[i].listIndex = i;
             }
           }
-
-          contacts[newIndex].listIndex = newIndex;
 
           value.updateContacts(contacts);
           value.saveContacts();

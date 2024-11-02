@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Title -->
     <string name="app_name">Tax Code</string>
+
+    <!-- Empty state -->
+    <string name="empty_message">No contacts found, you must add one first from your smartphone to see here the list.</string>
+    <string name="phone_button">Open on phone</string>
+
+    <!-- Contact item -->
+    <string name="contact_name_format">%1$s %2$s (%3$s)</string>
+    <string name="birth_place_format">%1$s (%2$s)</string>
 </resources>

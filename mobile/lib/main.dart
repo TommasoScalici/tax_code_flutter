@@ -27,8 +27,16 @@ Future<void> main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       await FirebaseRemoteConfig.instance.fetchAndActivate();
-      await FirebaseAppCheck.instance
-          .activate(androidProvider: AndroidProvider.playIntegrity);
+
+      if (kDebugMode) {
+        await FirebaseAppCheck.instance.activate(
+          androidProvider: AndroidProvider.debug,
+        );
+      } else {
+        await FirebaseAppCheck.instance.activate(
+          androidProvider: AndroidProvider.playIntegrity,
+        );
+      }
 
       FlutterError.onError = (errorDetails) {
         FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);

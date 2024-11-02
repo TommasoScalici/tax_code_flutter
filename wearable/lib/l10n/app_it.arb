@@ -2,6 +2,7 @@
     "@@author": "Tommaso Scalici",
     "@@locale": "it",
     "appTitle": "Codice Fiscale",
+    "loginError": "Errore durante il login",
     "welcomeTo": "Benvenuto su",
     "noContactsFoundMessage": "Nessun contatto trovato, aggiungi prima un contatto da smartphone per visualizzare qui la lista."
 }

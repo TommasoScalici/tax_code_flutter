@@ -6,14 +6,15 @@
         <item name="android:colorBackground">@android:color/black</item>
         <item name="android:icon">@mipmap/ic_launcher</item>
     </style>
-    <!-- Theme applied to the Android Window as soon as the process has started.
-         This theme determines the color of the Android Window while your
-         Flutter UI initializes, as well as behind your Flutter UI while its
-         running.
 
-         This Theme is only used starting with V2 of Flutter's Android embedding. -->
     <style name="NormalTheme"
         parent="@android:style/Theme.DeviceDefault">
         <item name="android:windowBackground">@android:color/black</item>
+    </style>
+
+    <style name="CardStyle">
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="cardCornerRadius">24dp</item>
+        <item name="cardElevation">0dp</item>
     </style>
 </resources>

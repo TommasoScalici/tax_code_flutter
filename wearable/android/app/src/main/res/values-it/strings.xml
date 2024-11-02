@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Title -->
     <string name="app_name">Codice Fiscale</string>
+
+    <!-- Empty state -->
+    <string name="empty_message">Nessun contatto trovato, aggiungi prima un contatto da smartphone per visualizzare qui la lista.</string>
+    <string name="phone_button">Apri sul telefono</string>
+
+    <!-- Contact item -->
+    <string name="contact_name_format">%1$s %2$s (%3$s)</string>
+    <string name="birth_place_format">%1$s (%2$s)</string>
 </resources>

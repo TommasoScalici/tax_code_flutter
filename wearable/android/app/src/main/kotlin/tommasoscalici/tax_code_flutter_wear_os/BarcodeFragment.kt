@@ -92,8 +92,13 @@ class BarcodeFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        val activity = requireActivity() as MainActivity
+        activity.getEngine()?.let { engine ->
+            engine.navigationChannel.popRoute()
+        }
+        
         flutterView?.detachFromFlutterEngine()
         flutterView = null
+        super.onDestroyView()
     }
 }

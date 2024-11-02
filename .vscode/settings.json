@@ -1,0 +1,5 @@
+{
+    "cmake.buildDirectory": "${workspaceFolder}/mobile/windows/build",
+    "cmake.sourceDirectory": "${workspaceFolder}/mobile/windows",
+    "cmake.ignoreCMakeListsMissing": true
+}

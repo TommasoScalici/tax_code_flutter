@@ -2,6 +2,7 @@
     "@@author": "Tommaso Scalici",
     "@@locale": "en",
     "appTitle": "Tax Code",
+    "loginError": "Unexpected login error",
     "welcomeTo": "Welcome to",
     "noContactsFoundMessage": "No contacts found, you must add one first from your smartphone to see here the list."
 }

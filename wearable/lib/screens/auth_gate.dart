@@ -9,32 +9,80 @@ import 'package:shared/providers/app_state.dart';
 import 'home_page.dart';
 
 class AuthGate extends StatelessWidget {
-  const AuthGate({super.key});
+  AuthGate({super.key});
 
-  Future<void> _signInWithGoogle(BuildContext context) async {
-    final appState = context.read<AppState>();
-    final logger = Logger();
+  final _loadingNotifier = ValueNotifier<bool>(false);
+  final _logger = Logger();
 
+  Future<GoogleSignInAccount?> _selectGoogleAccount() async {
     try {
-      final auth = FirebaseAuth.instance;
+      _loadingNotifier.value = true;
       final googleSignIn = GoogleSignIn();
-      final googleUser = await googleSignIn.signIn();
-
-      if (googleUser != null) {
-        final googleAuth = await googleUser.authentication;
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-
-        final userCredential = await auth.signInWithCredential(credential);
-        final user = userCredential.user;
-        if (user != null) await appState.saveUserData(user);
-      } else {
-        logger.w('No account selected');
-      }
+      return await googleSignIn.signIn();
     } catch (e) {
-      logger.e('Error while Google login: $e');
+      _logger.e('Error while selecting Google account: $e');
+      return null;
+    } finally {
+      _loadingNotifier.value = false;
+    }
+  }
+
+  Future<User?> _authenticateWithFirebase(
+    BuildContext context,
+    GoogleSignInAccount googleUser,
+  ) async {
+    try {
+      _loadingNotifier.value = true;
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.black87,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const CircularProgressIndicator(),
+          ),
+        ),
+      );
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final auth = FirebaseAuth.instance;
+      final userCredential = await auth.signInWithCredential(credential);
+
+      if (context.mounted) Navigator.of(context).pop();
+
+      return userCredential.user;
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.loginError)),
+        );
+      }
+      _logger.e('Error while Firebase authentication: $e');
+      return null;
+    } finally {
+      _loadingNotifier.value = false;
+    }
+  }
+
+  Future<void> _handleSignIn(BuildContext context) async {
+    final googleUser = await _selectGoogleAccount();
+
+    if (googleUser != null && context.mounted) {
+      final user = await _authenticateWithFirebase(context, googleUser);
+      if (user != null && context.mounted) {
+        await context.read<AppState>().saveUserData(user);
+      }
     }
   }
 
@@ -53,25 +101,47 @@ class AuthGate extends StatelessWidget {
               backgroundColor: Colors.black,
               body: SizedBox.expand(
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        child: Text(AppLocalizations.of(context)!.welcomeTo),
-                      ),
-                      SizedBox(
-                        child: Text(AppLocalizations.of(context)!.appTitle),
-                      ),
-                      SizedBox(height: 10),
-                      SizedBox(
-                        height: 50,
-                        child: ElevatedButton.icon(
-                          onPressed: () async =>
-                              await _signInWithGoogle(context),
-                          icon: Icon(Icons.login),
-                          label: const Text('Login'),
-                        ),
-                      ),
-                    ]),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      child: Text(AppLocalizations.of(context)!.welcomeTo),
+                    ),
+                    SizedBox(
+                      child: Text(AppLocalizations.of(context)!.appTitle),
+                    ),
+                    const SizedBox(height: 10),
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _loadingNotifier,
+                      builder: (context, isLoading, _) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              height: 50,
+                              child: ElevatedButton.icon(
+                                onPressed: isLoading
+                                    ? null
+                                    : () => _handleSignIn(context),
+                                icon: const Icon(Icons.login),
+                                label: const Text('Login'),
+                              ),
+                            ),
+                            if (isLoading) ...[
+                              const SizedBox(height: 10),
+                              const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            ],
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             );
           },
