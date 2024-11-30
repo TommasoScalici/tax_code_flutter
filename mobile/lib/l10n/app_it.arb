@@ -22,6 +22,7 @@
     "cancel": "Annulla",
     "close": "Chiudi",
     "error": "Errore",
+    "errorLoading": "Errore durante il caricamento dei contatti: ",
     "info": "Informazioni",
     "search": "Cerca...",
     "scanCard": "Scannerizza tessera",

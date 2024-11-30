@@ -23,6 +23,7 @@
     "close": "Close",
     "info": "Info",
     "error": "Error",
+    "errorLoading": "Error occurred while loading contacts: ",
     "search": "Search...",
     "scanCard": "Scan card",
     "takePicture": "Take a picture...",
