@@ -6,11 +6,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.util.Log
+import androidx.concurrent.futures.await
+import androidx.core.net.toUri
 import androidx.wear.remote.interactions.RemoteActivityHelper
 import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.Locale
@@ -42,7 +43,7 @@ class PhoneAppLauncherService(private val context: Context) {
             }
             
             val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("app://$packageName")
+                data = "app://$packageName".toUri()
                 addCategory(Intent.CATEGORY_DEFAULT)
                 addCategory(Intent.CATEGORY_BROWSABLE)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

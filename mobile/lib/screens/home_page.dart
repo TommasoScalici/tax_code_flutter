@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/providers/app_state.dart';
+import 'package:tax_code_flutter/i18n/app_localizations.dart';
 
 import '../widgets/contacts_list.dart';
 import '../widgets/info_modal.dart';

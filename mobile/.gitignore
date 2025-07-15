@@ -1,5 +1,6 @@
 # Miscellaneous
 *.class
+*.hprof
 *.log
 *.pyc
 *.swp
@@ -44,3 +45,9 @@ app.*.map.json
 
 # Firebase Options
 /lib/firebase_options.dart
+
+# CMake files
+/android/app/.cxx
+
+# Crashlytics
+.crashlytics

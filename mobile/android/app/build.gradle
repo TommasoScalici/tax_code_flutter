@@ -25,9 +25,8 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "tommasoscalici.tax_code_flutter"
-    compileSdk = 34
-
-    ndkVersion "26.1.10909125"
+    compileSdk flutter.compileSdkVersion
+    ndkVersion "27.0.12077973"
 
     buildFeatures {
         buildConfig = true
@@ -37,22 +36,21 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    
-    kotlinOptions {
-        jvmTarget = "17"
+
+    defaultConfig {
+        applicationId = "tommasoscalici.taxcode"
+        minSdkVersion 23
+        targetSdkVersion 36
+        versionCode flutter.versionCode
+        versionName flutter.versionName
+    }
+
+    kotlin {
+        jvmToolchain(17)
     }
 
     lint {
         baseline file("lint-baseline.xml")
-    }
-
-
-    defaultConfig {
-        applicationId = "tommasoscalici.taxcode"
-        minSdk = 23
-        targetSdk = 34
-        versionCode = (flutterVersionCode ?: "1") as Integer
-        versionName = flutterVersionName ?: "1.0"
     }
 
     signingConfigs {

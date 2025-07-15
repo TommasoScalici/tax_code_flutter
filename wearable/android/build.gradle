@@ -1,11 +1,3 @@
-buildscript {
-    ext.kotlin_version = '1.9.22'
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
 allprojects {
     repositories {
         google()
@@ -16,7 +8,13 @@ allprojects {
         if (project.hasProperty('android')) {
             android {
                 lintOptions {
-                    disable 'InvalidPackage', 'NewApi'
+                    disable 'InvalidPackage', 
+                    'MemberExtensionConflict', 
+                    'NewApi', 
+                    'PropertyEscape',
+                    'SyntheticAccessor',
+                    'UnsafeOptInUsageError',
+                    'UseRequiresApi'
                 }
             }
 

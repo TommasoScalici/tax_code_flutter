@@ -1,8 +1,8 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:screen_brightness/screen_brightness.dart';
+import 'package:tax_code_flutter/i18n/app_localizations.dart';
 
 class BarcodePage extends StatelessWidget {
   const BarcodePage({super.key, required this.taxCode});

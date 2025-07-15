@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/providers/app_state.dart';
+import 'package:tax_code_flutter/i18n/app_localizations.dart';
 
 import '../screens/barcode_page.dart';
 import '../screens/form_page.dart';
@@ -157,7 +157,8 @@ final class ContactCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        onPressed: () => Share.share(contact.taxCode),
+                        onPressed: () => SharePlus.instance
+                            .share(ShareParams(text: contact.taxCode)),
                         icon: const Icon(Icons.share),
                       ),
                       IconButton(

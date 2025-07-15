@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 final class Settings {
-  static get mioCodiceFiscaleApiKey => 'miocodicefiscale_access_token';
-  static get cloudVisionApiKey => 'tax_code_flutter_vision';
-  static get projectIdNumber => 'project_id';
-  static get googleProviderClientId => 'google_provider_client_id';
+  static String get mioCodiceFiscaleApiKey => 'miocodicefiscale_access_token';
+  static String get cloudVisionApiKey => 'tax_code_flutter_vision';
+  static String get projectIdNumber => 'project_id';
+  static String get googleProviderClientId => 'google_provider_client_id';
 
   static ThemeData getLightTheme() {
     return ThemeData(

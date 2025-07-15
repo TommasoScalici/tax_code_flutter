@@ -1,11 +1,25 @@
 allprojects {
-
+    repositories {
+        google()
+        mavenCentral()
+    }
+    
     afterEvaluate { project ->
         if (project.hasProperty('android')) {
             android {
                 lintOptions {
-                    disable 'InvalidPackage', 'NewApi'
+                    disable 'InvalidPackage', 
+                    'MemberExtensionConflict', 
+                    'NewApi', 
+                    'PropertyEscape',
+                    'SyntheticAccessor',
+                    'UnsafeOptInUsageError',
+                    'UseRequiresApi'
                 }
+            }
+
+            project.tasks.withType(JavaCompile) {
+                options.compilerArgs << '-Xlint:-options'
             }
 
             project.tasks.withType(Test) {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tax_code_flutter/i18n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InfoModal extends StatefulWidget {

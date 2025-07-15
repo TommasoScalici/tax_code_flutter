@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
@@ -19,6 +18,7 @@ import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/models/tax_code_response.dart';
 import 'package:shared/providers/app_state.dart';
+import 'package:tax_code_flutter/i18n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 
 import 'camera_page.dart';

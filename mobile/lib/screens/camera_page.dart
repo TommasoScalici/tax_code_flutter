@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared/models/contact.dart';
+import 'package:tax_code_flutter/i18n/app_localizations.dart';
 import 'package:tax_code_flutter/services/ocr_service.dart';
 
 class CameraPage extends StatefulWidget {
@@ -168,8 +168,6 @@ class _CameraPageState extends State<CameraPage> {
         return 2;
       case DeviceOrientation.landscapeLeft:
         return 3;
-      default:
-        return 0;
     }
   }
 
@@ -194,8 +192,8 @@ class _CameraPageState extends State<CameraPage> {
                 )
               : Center(child: CameraPreview(_cameraController)),
           Positioned(
-            top: 20,
-            left: 20,
+            top: 40,
+            left: 40,
             child: IconButton(
               icon: Icon(
                 _flashMode == FlashMode.off ? Icons.flash_off : Icons.flash_on,
@@ -208,7 +206,7 @@ class _CameraPageState extends State<CameraPage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
+              padding: const EdgeInsets.only(bottom: 100.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

@@ -4,9 +4,9 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart' hide ProfileScreen;
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
+import 'package:tax_code_flutter/i18n/app_localizations.dart';
 
 import '../settings.dart';
 import 'home_page.dart';
