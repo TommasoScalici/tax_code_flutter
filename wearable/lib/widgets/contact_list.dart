@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/providers/app_state.dart';
 
-class ContactList extends StatefulWidget {
+final class ContactList extends StatefulWidget {
   const ContactList({super.key});
 
   @override
@@ -17,43 +17,51 @@ class _ContactListState extends State<ContactList> {
       MethodChannel('tommasoscalici.tax_code_flutter_wear_os/channel');
 
   final Logger _logger = Logger();
-  bool _isLoading = false;
+  bool _nativeViewShown = false;
 
   @override
-  void initState() {
-    super.initState();
-
-    final appState = context.read<AppState>();
-    _loadAndShowContacts(appState);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final appState = Provider.of<AppState>(context, listen: false);
+    if (appState.contacts.isEmpty) {
+      _nativeViewShown = false;
+    }
   }
 
-  Future<void> _loadAndShowContacts(AppState appState) async {
-    setState(() => _isLoading = true);
+  Future<void> _showNativeContacts(List<Contact> contacts) async {
+    if (!mounted || _nativeViewShown) return;
+
+    _nativeViewShown = true;
+    _logger.i('Invoking native contact list view.');
 
     try {
-      await appState.loadContacts();
-
-      if (mounted) {
-        final contactsData =
-            appState.contacts.map((c) => c.toNativeMap()).toList();
-
-        await _platform.invokeMethod('openNativeContactList', {
-          'contacts': contactsData,
-        });
-      }
-    } catch (e) {
-      _logger.e('Error while loading contact list: $e');
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      final contactsData = contacts.map((c) => c.toNativeMap()).toList();
+      await _platform.invokeMethod('openNativeContactList', {
+        'contacts': contactsData,
+      });
+    } on PlatformException catch (e) {
+      _logger.e("Failed to invoke native method: '${e.message}'.");
+      _nativeViewShown = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : const SizedBox();
+    return Consumer<AppState>(
+      builder: (context, appState, child) {
+        if (appState.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (appState.contacts.isNotEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _showNativeContacts(appState.contacts);
+          });
+        }
+
+        // Return an empty widget, as the UI is fully handled by the native side.
+        return const SizedBox.shrink();
+      },
+    );
   }
 }

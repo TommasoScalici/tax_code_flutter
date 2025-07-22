@@ -1,8 +1,6 @@
 import 'package:animated_reorderable_list/animated_reorderable_list.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/providers/app_state.dart';
@@ -25,9 +23,6 @@ class _ContactsListState extends State<ContactsList> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AppState>().loadContacts();
-    });
   }
 
   void _filterContacts(String searchText, List<Contact> allContacts) {
@@ -55,7 +50,6 @@ class _ContactsListState extends State<ContactsList> {
     final contact = contacts.removeAt(oldIndex);
     contacts.insert(newIndex, contact);
 
-    // Riassegna gli indici per mantenere l'ordine corretto
     for (int i = 0; i < contacts.length; i++) {
       contacts[i].listIndex = i;
     }
@@ -120,7 +114,6 @@ class _ContactsListState extends State<ContactsList> {
       );
     }
 
-    // Grid per la visualizzazione dei risultati filtrati (non riordinabile)
     return GridView.builder(
       itemCount: contacts.length,
       shrinkWrap: true,
@@ -141,11 +134,24 @@ class _ContactsListState extends State<ContactsList> {
 
   @override
   Widget build(BuildContext context) {
-    // Il Consumer ascolta AppState e ricostruisce l'interfaccia quando cambia.
     return Consumer<AppState>(
       builder: (context, appState, child) {
+        if (appState.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
         final contactsToShow =
             _searchText.isEmpty ? appState.contacts : _filteredContacts;
+
+        // Show a message if the list is empty and the user is not searching.
+        if (contactsToShow.isEmpty && _searchText.isEmpty) {
+          return Center(
+            child: Text(
+              AppLocalizations.of(context)!.noContactsFound,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          );
+        }
 
         return Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 90.0),

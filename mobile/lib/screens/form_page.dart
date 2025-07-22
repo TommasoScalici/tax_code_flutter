@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -62,7 +62,7 @@ final class _FormPageState extends State<FormPage> {
     _setPreviousData();
   }
 
-  Future<TaxCodeResponse> _fetchTaxCode() async {
+  Future<TaxCodeResponse?> _fetchTaxCode() async {
     var accessToken = await _getAccessToken();
     var baseUri = 'http://api.miocodicefiscale.com/calculate?';
     var params =
@@ -71,25 +71,48 @@ final class _FormPageState extends State<FormPage> {
         '&day=${_birthDate.day}&month=${_birthDate.month}&year=${_birthDate.year}'
         '&access_token=$accessToken';
 
-    final result = await InternetConnection().hasInternetAccess;
+    try {
+      final response = await http
+          .get(Uri.parse('$baseUri$params'))
+          .timeout(const Duration(seconds: 10));
+      final decodedResponse =
+          TaxCodeResponse.fromJson(jsonDecode(response.body));
 
-    if (mounted && !result) {
-      _showErrorDialog(
-          context, AppLocalizations.of(context)!.errorNoInternet, '');
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return decodedResponse;
+      } else {
+        throw http.ClientException(
+          'Server returned status ${response.statusCode}',
+          response.request?.url,
+        );
+      }
+    } on SocketException catch (error, stacktrace) {
+      FirebaseCrashlytics.instance.recordError(error, stacktrace,
+          reason: 'Tax code fetch failed due to a network error');
+
+      if (mounted) {
+        _showErrorDialog(
+          context,
+          AppLocalizations.of(context)!.errorConnection,
+          AppLocalizations.of(context)!.errorNoInternet,
+        );
+      }
+
+      return null;
+    } catch (error, stacktrace) {
+      FirebaseCrashlytics.instance.recordError(error, stacktrace,
+          reason: 'An unexpected error occurred during tax code fetch');
+
+      if (mounted) {
+        _showErrorDialog(
+          context,
+          AppLocalizations.of(context)!.errorUnexpected,
+          AppLocalizations.of(context)!.errorOccurred,
+        );
+      }
+
+      return null;
     }
-
-    final response = await http.get(Uri.parse('$baseUri$params'));
-    final decodedResponse = TaxCodeResponse.fromJson(jsonDecode(response.body));
-
-    if (mounted && response.statusCode != 200) {
-      final errorMessage =
-          'API call to miocodicefiscale.com failed, status code: ${response.statusCode}}';
-      final internalErrorMessage = decodedResponse.message;
-      _logger.e('$errorMessage - API message: $internalErrorMessage');
-      _showErrorDialog(context, errorMessage, internalErrorMessage);
-    }
-
-    return decodedResponse;
   }
 
   Future<String> _getAccessToken() async {
@@ -130,6 +153,11 @@ final class _FormPageState extends State<FormPage> {
 
   Future<Contact?> _onSubmit() async {
     var response = await _fetchTaxCode();
+
+    if (response == null) {
+      return null;
+    }
+
     final oldContact = widget.contact;
 
     return response.status

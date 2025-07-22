@@ -117,8 +117,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get installerStore => 'Provenienza';
 
   @override
+  String get errorConnection => 'Errore di connessione';
+
+  @override
+  String get errorUnexpected => 'Errore imprevisto';
+
+  @override
+  String get errorOccurred => 'Si è verificato un errore, riprova più tardi.';
+
+  @override
   String get errorNoInternet =>
-      'Connessione ad Internet scarsa o assente, è necessaria per il calcolo del codice.';
+      'Controlla la tua connessione internet e riprova.';
+
+  @override
+  String get noContactsFound => 'Nessun contatto trovato.';
 
   @override
   String get deleteAccountMessage =>

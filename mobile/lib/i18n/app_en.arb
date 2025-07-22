@@ -1,50 +1,178 @@
 {
-    "@@author": "Tommaso Scalici",
-    "@@locale": "en",
-    "appTitle": "Tax Code",
-    "pleaseSignIn": "Welcome to Tax Code, please sign in.",
-    "pleaseSignUp": "Welcome to Tax Code, please sign up.",
-    "termsAndCondition": "By signing in/up, you agree to our terms and conditions.",
-    "showTerms": "Show terms and conditions",
-    "required": "Required",
-    "newItem": "New",
-    "fillData": "Fill data",
-    "firstName": "First name",
-    "lastName": "Last name",
-    "gender": "Gender",
-    "birthDate": "Birth date",
-    "birthPlace": "Birth place",
-    "confirm": "Confirm",
-    "deleteConfirmation": "Delete confirmation",
-    "delete": "Delete",
-    "deleteAccount": "Delete account",
-    "signOut": "Logout",
-    "cancel": "Cancel",
-    "close": "Close",
-    "info": "Info",
-    "error": "Error",
-    "errorLoading": "Error occurred while loading contacts: ",
-    "search": "Search...",
-    "scanCard": "Scan card",
-    "takePicture": "Take a picture...",
-    "permissionRequired": "Permission Required",
-    "openSettings": "Open Settings",
-    "cameraPermissionInfo": "The camera permission has been permanently denied.\nGo to the app settings, open the Permissions section, and enable the camera permission.",
-    "appName": "App name",
-    "packageName": "Package name",
-    "appVersion": "App version",
-    "buildNumber": "Build number",
-    "buildSignature": "Build signature",
-    "installerStore": "Installer store",
-    "errorNoInternet": "Poor or no Internet connection available, you need it for code calculation.",
-    "deleteAccountMessage": "Are you sure? All your data will be permanently loss.",
-    "deleteMessage": "Are you sure you want to delete the contact with tax code '{taxCode}'?",
-    "@deleteMessage": {
-        "placeholders": {
-            "taxCode": {
-                "type": "String",
-                "example": "AAABBB00C00D000E"
-            }
-        }
+  "@@author": "Tommaso Scalici",
+  "@@locale": "en",
+  "appTitle": "Tax Code",
+  "@appTitle": {
+    "description": "The title of the application, often shown in the app bar."
+  },
+  "pleaseSignIn": "Welcome to Tax Code, please sign in.",
+  "@pleaseSignIn": {
+    "description": "A welcome message on the login screen."
+  },
+  "pleaseSignUp": "Welcome to Tax Code, please sign up.",
+  "@pleaseSignUp": {
+    "description": "A welcome message on the registration screen."
+  },
+  "termsAndCondition": "By signing in/up, you agree to our terms and conditions.",
+  "@termsAndCondition": {
+    "description": "A notice informing the user that they agree to the terms by signing in or up."
+  },
+  "showTerms": "Show terms and conditions",
+  "@showTerms": {
+    "description": "Label for a button or link to display the terms and conditions."
+  },
+  "required": "Required",
+  "@required": {
+    "description": "A validation error message for a required form field."
+  },
+  "newItem": "New",
+  "@newItem": {
+    "description": "Label for a button to create a new item, like a new contact."
+  },
+  "fillData": "Fill data",
+  "@fillData": {
+    "description": "Label for a button or section to fill in data."
+  },
+  "firstName": "First name",
+  "@firstName": {
+    "description": "Label for the first name input field."
+  },
+  "lastName": "Last name",
+  "@lastName": {
+    "description": "Label for the last name input field."
+  },
+  "gender": "Gender",
+  "@gender": {
+    "description": "Label for the gender input field or selector."
+  },
+  "birthDate": "Birth date",
+  "@birthDate": {
+    "description": "Label for the birth date input field."
+  },
+  "birthPlace": "Birth place",
+  "@birthPlace": {
+    "description": "Label for the birth place input field."
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Label for a confirmation button, typically in a dialog."
+  },
+  "deleteConfirmation": "Delete confirmation",
+  "@deleteConfirmation": {
+    "description": "The title for a dialog asking the user to confirm a delete action."
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Label for a delete button."
+  },
+  "deleteAccount": "Delete account",
+  "@deleteAccount": {
+    "description": "Label for a button or menu item to delete the user's account."
+  },
+  "signOut": "Logout",
+  "@signOut": {
+    "description": "Label for a button to sign out of the application."
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Label for a button to cancel an action, typically in a dialog."
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Label for a button to close a screen or dialog."
+  },
+  "info": "Info",
+  "@info": {
+    "description": "A generic title for an informational dialog or screen."
+  },
+  "error": "Error",
+  "@error": {
+    "description": "A generic title for an error dialog."
+  },
+  "errorLoading": "Error occurred while loading contacts: ",
+  "@errorLoading": {
+    "description": "An error message shown when loading data fails. An error code or message might be appended."
+  },
+  "search": "Search...",
+  "@search": {
+    "description": "Placeholder text inside a search bar."
+  },
+  "scanCard": "Scan card",
+  "@scanCard": {
+    "description": "Label for a button that initiates scanning a card."
+  },
+  "takePicture": "Take a picture...",
+  "@takePicture": {
+    "description": "Label for a button that opens the camera to take a picture."
+  },
+  "permissionRequired": "Permission Required",
+  "@permissionRequired": {
+    "description": "Title for a dialog informing the user that a permission is required."
+  },
+  "openSettings": "Open Settings",
+  "@openSettings": {
+    "description": "Label for a button that navigates the user to the app's settings on their device."
+  },
+  "cameraPermissionInfo": "The camera permission has been permanently denied.\nGo to the app settings, open the Permissions section, and enable the camera permission.",
+  "@cameraPermissionInfo": {
+    "description": "An informational message explaining how to grant camera permission after it has been permanently denied."
+  },
+  "appName": "App name",
+  "@appName": {
+    "description": "Label for the app name field in an info screen."
+  },
+  "packageName": "Package name",
+  "@packageName": {
+    "description": "Label for the package name field in an info screen."
+  },
+  "appVersion": "App version",
+  "@appVersion": {
+    "description": "Label for the app version field in an info screen."
+  },
+  "buildNumber": "Build number",
+  "@buildNumber": {
+    "description": "Label for the build number field in an info screen."
+  },
+  "buildSignature": "Build signature",
+  "@buildSignature": {
+    "description": "Label for the build signature field in an info screen."
+  },
+  "installerStore": "Installer store",
+  "@installerStore": {
+    "description": "Label for the installer store field in an info screen."
+  },
+  "errorConnection": "Connection error",
+  "@errorConnection": {
+    "description": "A generic error message for network connection issues."
+  },
+  "errorUnexpected": "Unexpected error",
+  "@errorUnexpected": {
+    "description": "A generic error message for unexpected or unknown errors."
+  },
+  "errorOccurred": "An error occurred, please try again later.",
+  "@errorOccurred": {
+    "description": "A user-friendly message for a generic error, asking them to retry."
+  },
+  "errorNoInternet": "Check your internet connection and try again.",
+  "@errorNoInternet": {
+    "description": "An error message indicating that there is no internet connection."
+  },
+  "noContactsFound": "No contacts found.",
+  "@noContactsFound": {
+    "description": "A message displayed when a list of contacts is empty or a search returns no results."
+  },
+  "deleteAccountMessage": "Are you sure? All your data will be permanently loss.",
+  "@deleteAccountMessage": {
+    "description": "A confirmation message shown to the user before deleting their account."
+  },
+  "deleteMessage": "Are you sure you want to delete the contact with tax code '{taxCode}'?",
+  "@deleteMessage": {
+    "description": "A confirmation message for deleting a specific contact, which includes their tax code.",
+    "placeholders": {
+      "taxCode": {
+        "type": "String",
+        "example": "AAABBB00C00D000E"
+      }
     }
+  }
 }

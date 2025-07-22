@@ -1,7 +1,7 @@
 name: tax_code_flutter_wear_os
 description: "App for Italian Tax Code calculation, made for Wear OS."
 publish_to: "none"
-version: 1.3.2+35
+version: 1.3.2+36
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -33,7 +33,7 @@ dependencies:
   firebase_core: ^3.15.1
   firebase_crashlytics: ^4.3.9
   firebase_remote_config: ^5.4.7
-  google_sign_in: ^7.1.0
+  google_sign_in: ^6.3.0
 
 dev_dependencies:
   flutter_test:

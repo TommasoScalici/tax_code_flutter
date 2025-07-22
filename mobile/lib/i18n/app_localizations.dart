@@ -98,229 +98,253 @@ abstract class AppLocalizations {
     Locale('it')
   ];
 
-  /// No description provided for @appTitle.
+  /// The title of the application, often shown in the app bar.
   ///
   /// In en, this message translates to:
   /// **'Tax Code'**
   String get appTitle;
 
-  /// No description provided for @pleaseSignIn.
+  /// A welcome message on the login screen.
   ///
   /// In en, this message translates to:
   /// **'Welcome to Tax Code, please sign in.'**
   String get pleaseSignIn;
 
-  /// No description provided for @pleaseSignUp.
+  /// A welcome message on the registration screen.
   ///
   /// In en, this message translates to:
   /// **'Welcome to Tax Code, please sign up.'**
   String get pleaseSignUp;
 
-  /// No description provided for @termsAndCondition.
+  /// A notice informing the user that they agree to the terms by signing in or up.
   ///
   /// In en, this message translates to:
   /// **'By signing in/up, you agree to our terms and conditions.'**
   String get termsAndCondition;
 
-  /// No description provided for @showTerms.
+  /// Label for a button or link to display the terms and conditions.
   ///
   /// In en, this message translates to:
   /// **'Show terms and conditions'**
   String get showTerms;
 
-  /// No description provided for @required.
+  /// A validation error message for a required form field.
   ///
   /// In en, this message translates to:
   /// **'Required'**
   String get required;
 
-  /// No description provided for @newItem.
+  /// Label for a button to create a new item, like a new contact.
   ///
   /// In en, this message translates to:
   /// **'New'**
   String get newItem;
 
-  /// No description provided for @fillData.
+  /// Label for a button or section to fill in data.
   ///
   /// In en, this message translates to:
   /// **'Fill data'**
   String get fillData;
 
-  /// No description provided for @firstName.
+  /// Label for the first name input field.
   ///
   /// In en, this message translates to:
   /// **'First name'**
   String get firstName;
 
-  /// No description provided for @lastName.
+  /// Label for the last name input field.
   ///
   /// In en, this message translates to:
   /// **'Last name'**
   String get lastName;
 
-  /// No description provided for @gender.
+  /// Label for the gender input field or selector.
   ///
   /// In en, this message translates to:
   /// **'Gender'**
   String get gender;
 
-  /// No description provided for @birthDate.
+  /// Label for the birth date input field.
   ///
   /// In en, this message translates to:
   /// **'Birth date'**
   String get birthDate;
 
-  /// No description provided for @birthPlace.
+  /// Label for the birth place input field.
   ///
   /// In en, this message translates to:
   /// **'Birth place'**
   String get birthPlace;
 
-  /// No description provided for @confirm.
+  /// Label for a confirmation button, typically in a dialog.
   ///
   /// In en, this message translates to:
   /// **'Confirm'**
   String get confirm;
 
-  /// No description provided for @deleteConfirmation.
+  /// The title for a dialog asking the user to confirm a delete action.
   ///
   /// In en, this message translates to:
   /// **'Delete confirmation'**
   String get deleteConfirmation;
 
-  /// No description provided for @delete.
+  /// Label for a delete button.
   ///
   /// In en, this message translates to:
   /// **'Delete'**
   String get delete;
 
-  /// No description provided for @deleteAccount.
+  /// Label for a button or menu item to delete the user's account.
   ///
   /// In en, this message translates to:
   /// **'Delete account'**
   String get deleteAccount;
 
-  /// No description provided for @signOut.
+  /// Label for a button to sign out of the application.
   ///
   /// In en, this message translates to:
   /// **'Logout'**
   String get signOut;
 
-  /// No description provided for @cancel.
+  /// Label for a button to cancel an action, typically in a dialog.
   ///
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
 
-  /// No description provided for @close.
+  /// Label for a button to close a screen or dialog.
   ///
   /// In en, this message translates to:
   /// **'Close'**
   String get close;
 
-  /// No description provided for @info.
+  /// A generic title for an informational dialog or screen.
   ///
   /// In en, this message translates to:
   /// **'Info'**
   String get info;
 
-  /// No description provided for @error.
+  /// A generic title for an error dialog.
   ///
   /// In en, this message translates to:
   /// **'Error'**
   String get error;
 
-  /// No description provided for @errorLoading.
+  /// An error message shown when loading data fails. An error code or message might be appended.
   ///
   /// In en, this message translates to:
   /// **'Error occurred while loading contacts: '**
   String get errorLoading;
 
-  /// No description provided for @search.
+  /// Placeholder text inside a search bar.
   ///
   /// In en, this message translates to:
   /// **'Search...'**
   String get search;
 
-  /// No description provided for @scanCard.
+  /// Label for a button that initiates scanning a card.
   ///
   /// In en, this message translates to:
   /// **'Scan card'**
   String get scanCard;
 
-  /// No description provided for @takePicture.
+  /// Label for a button that opens the camera to take a picture.
   ///
   /// In en, this message translates to:
   /// **'Take a picture...'**
   String get takePicture;
 
-  /// No description provided for @permissionRequired.
+  /// Title for a dialog informing the user that a permission is required.
   ///
   /// In en, this message translates to:
   /// **'Permission Required'**
   String get permissionRequired;
 
-  /// No description provided for @openSettings.
+  /// Label for a button that navigates the user to the app's settings on their device.
   ///
   /// In en, this message translates to:
   /// **'Open Settings'**
   String get openSettings;
 
-  /// No description provided for @cameraPermissionInfo.
+  /// An informational message explaining how to grant camera permission after it has been permanently denied.
   ///
   /// In en, this message translates to:
   /// **'The camera permission has been permanently denied.\nGo to the app settings, open the Permissions section, and enable the camera permission.'**
   String get cameraPermissionInfo;
 
-  /// No description provided for @appName.
+  /// Label for the app name field in an info screen.
   ///
   /// In en, this message translates to:
   /// **'App name'**
   String get appName;
 
-  /// No description provided for @packageName.
+  /// Label for the package name field in an info screen.
   ///
   /// In en, this message translates to:
   /// **'Package name'**
   String get packageName;
 
-  /// No description provided for @appVersion.
+  /// Label for the app version field in an info screen.
   ///
   /// In en, this message translates to:
   /// **'App version'**
   String get appVersion;
 
-  /// No description provided for @buildNumber.
+  /// Label for the build number field in an info screen.
   ///
   /// In en, this message translates to:
   /// **'Build number'**
   String get buildNumber;
 
-  /// No description provided for @buildSignature.
+  /// Label for the build signature field in an info screen.
   ///
   /// In en, this message translates to:
   /// **'Build signature'**
   String get buildSignature;
 
-  /// No description provided for @installerStore.
+  /// Label for the installer store field in an info screen.
   ///
   /// In en, this message translates to:
   /// **'Installer store'**
   String get installerStore;
 
-  /// No description provided for @errorNoInternet.
+  /// A generic error message for network connection issues.
   ///
   /// In en, this message translates to:
-  /// **'Poor or no Internet connection available, you need it for code calculation.'**
+  /// **'Connection error'**
+  String get errorConnection;
+
+  /// A generic error message for unexpected or unknown errors.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected error'**
+  String get errorUnexpected;
+
+  /// A user-friendly message for a generic error, asking them to retry.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred, please try again later.'**
+  String get errorOccurred;
+
+  /// An error message indicating that there is no internet connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your internet connection and try again.'**
   String get errorNoInternet;
 
-  /// No description provided for @deleteAccountMessage.
+  /// A message displayed when a list of contacts is empty or a search returns no results.
+  ///
+  /// In en, this message translates to:
+  /// **'No contacts found.'**
+  String get noContactsFound;
+
+  /// A confirmation message shown to the user before deleting their account.
   ///
   /// In en, this message translates to:
   /// **'Are you sure? All your data will be permanently loss.'**
   String get deleteAccountMessage;
 
-  /// No description provided for @deleteMessage.
+  /// A confirmation message for deleting a specific contact, which includes their tax code.
   ///
   /// In en, this message translates to:
   /// **'Are you sure you want to delete the contact with tax code \'{taxCode}\'?'**

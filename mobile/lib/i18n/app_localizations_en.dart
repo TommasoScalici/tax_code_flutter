@@ -116,8 +116,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get installerStore => 'Installer store';
 
   @override
-  String get errorNoInternet =>
-      'Poor or no Internet connection available, you need it for code calculation.';
+  String get errorConnection => 'Connection error';
+
+  @override
+  String get errorUnexpected => 'Unexpected error';
+
+  @override
+  String get errorOccurred => 'An error occurred, please try again later.';
+
+  @override
+  String get errorNoInternet => 'Check your internet connection and try again.';
+
+  @override
+  String get noContactsFound => 'No contacts found.';
 
   @override
   String get deleteAccountMessage =>
