@@ -1,23 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import 'birthplace.dart';
 
 part 'contact.g.dart';
 
-@JsonSerializable()
-final class Contact {
-  String id;
-  String firstName;
-  String lastName;
-  String gender;
-  String taxCode;
-  Birthplace birthPlace;
-  DateTime birthDate;
-  int listIndex;
+@JsonSerializable(explicitToJson: true)
+final class Contact extends Equatable {
+  final String id;
+  final String firstName;
+  final String lastName;
+  final String gender;
+  final String taxCode;
+  final Birthplace birthPlace;
+  final DateTime birthDate;
+  final int listIndex;
 
-  Contact({
+  const Contact({
     required this.id,
     required this.firstName,
     required this.lastName,
@@ -28,14 +30,39 @@ final class Contact {
     required this.listIndex,
   });
 
-  void updateFrom(Contact other) {
-    firstName = other.firstName;
-    lastName = other.lastName;
-    gender = other.gender;
-    birthDate = other.birthDate;
-    birthPlace = other.birthPlace;
-    taxCode = other.taxCode;
-    listIndex = other.listIndex;
+  factory Contact.empty() {
+    return Contact(
+      id: const Uuid().v4(),
+      firstName: '',
+      lastName: '',
+      gender: '',
+      taxCode: '',
+      birthPlace: Birthplace(name: '', state: ''),
+      birthDate: DateTime.now(),
+      listIndex: 0,
+    );
+  }
+
+  Contact copyWith({
+    String? id,
+    String? firstName,
+    String? lastName,
+    String? gender,
+    String? taxCode,
+    Birthplace? birthPlace,
+    DateTime? birthDate,
+    int? listIndex,
+  }) {
+    return Contact(
+      id: id ?? this.id,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      gender: gender ?? this.gender,
+      taxCode: taxCode ?? this.taxCode,
+      birthPlace: birthPlace ?? this.birthPlace,
+      birthDate: birthDate ?? this.birthDate,
+      listIndex: listIndex ?? this.listIndex,
+    );
   }
 
   factory Contact.fromJson(Map<String, dynamic> json) =>
@@ -49,10 +76,7 @@ final class Contact {
       'lastName': lastName,
       'gender': gender,
       'taxCode': taxCode,
-      'birthPlace': {
-        'name': birthPlace.name,
-        'state': birthPlace.state,
-      },
+      'birthPlace': {'name': birthPlace.name, 'state': birthPlace.state},
       'birthDate': Timestamp.fromDate(birthDate),
       'listIndex': listIndex,
     };
@@ -75,23 +99,24 @@ final class Contact {
   }
 
   @override
-  String toString() => '$firstName $lastName ($gender)'
+  String toString() =>
+      '$firstName $lastName ($gender)'
       ' - ${DateFormat.yMd().format(birthDate)}'
       ' - ${birthPlace.toString()}';
+
+  @override
+  List<Object?> get props => [id];
 }
 
 extension ContactNativeMapper on Contact {
   Map<String, dynamic> toNativeMap() => {
-        'id': id,
-        'firstName': firstName,
-        'lastName': lastName,
-        'gender': gender,
-        'taxCode': taxCode,
-        'birthPlace': {
-          'name': birthPlace.name,
-          'state': birthPlace.state,
-        },
-        'birthDate': birthDate.toString(),
-        'listIndex': listIndex,
-      };
+    'id': id,
+    'firstName': firstName,
+    'lastName': lastName,
+    'gender': gender,
+    'taxCode': taxCode,
+    'birthPlace': {'name': birthPlace.name, 'state': birthPlace.state},
+    'birthDate': birthDate.toString(),
+    'listIndex': listIndex,
+  };
 }

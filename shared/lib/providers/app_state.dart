@@ -5,19 +5,23 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/contact.dart';
 
+///
 /// Manages the application's state, including authentication,
 /// contacts, and theme settings.
+///
 final class AppState with ChangeNotifier {
   final _logger = Logger();
-  final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
+  late final FirebaseAuth _auth;
+  late final FirebaseFirestore _firestore;
+  late final SharedPreferencesAsync _prefs;
   StreamSubscription? _contactsSubscription;
+  Completer<void>? _initCompleter;
 
   List<Contact> _contacts = [];
   String _currentTheme = 'light';
@@ -29,9 +33,33 @@ final class AppState with ChangeNotifier {
   bool get isSearching => _isSearching;
   bool get isLoading => _isLoading;
   String get theme => _currentTheme;
+  Future<void>? get initializationComplete => _initCompleter?.future;
 
+  @visibleForTesting
+  User? get currentUser => _currentUser;
+
+  ///
+  /// The main constructor for the application.
   /// Initializes the AppState by listening to authentication changes.
-  AppState() {
+  ///
+  AppState.main()
+    : this(
+        auth: FirebaseAuth.instance,
+        firestore: FirebaseFirestore.instance,
+        prefs: SharedPreferencesAsync(),
+      );
+
+  ///
+  /// A special constructor for testing purposes to allow dependency injection.
+  ///
+  @visibleForTesting
+  AppState({
+    required FirebaseAuth auth,
+    required FirebaseFirestore firestore,
+    required SharedPreferencesAsync prefs,
+  }) : _auth = auth,
+       _firestore = firestore,
+       _prefs = prefs {
     _listenToAuthChanges();
     loadTheme();
   }
@@ -42,53 +70,80 @@ final class AppState with ChangeNotifier {
     super.dispose();
   }
 
-  /// Adds a new contact to the local list and saves it to Firestore.
+  ///
+  /// Adds a new contact or updates an existing one.
+  /// Persists the change to Firestore and local cache.
+  ///
   Future<void> addContact(Contact contact) async {
-    _contacts.add(contact);
+    final index = _contacts.indexWhere((c) => c.id == contact.id);
+
+    if (index != -1) {
+      _contacts[index] = contact;
+    } else {
+      _contacts.add(contact);
+    }
+    _sortContacts();
     notifyListeners();
-    await saveContacts();
+
+    await _addOrUpdateContactInFirebase(contact);
+    await _saveContactsToLocalCache();
   }
 
-  /// Removes a contact from the local list and deletes it from Firestore.
+  ///
+  /// Removes a contact.
+  /// Persists the change to Firestore and local cache.
+  ///
   Future<void> removeContact(Contact contact) async {
-    _contacts.remove(contact);
+    _contacts.removeWhere((c) => c.id == contact.id);
+    notifyListeners();
+
+    await _removeContactFromFirebase(contact);
+    await _saveContactsToLocalCache();
+  }
+
+  ///
+  /// Updates the local list of contacts, usually after a reorder operation,
+  /// and persists the new order to Firestore and local cache.
+  ///
+  Future<void> updateContacts(List<Contact> contacts) async {
+    _contacts = contacts;
     notifyListeners();
     await saveContacts();
   }
 
-  /// Updates the local list of contacts, usually after a reorder operation.
-  void updateContacts(List<Contact> contacts) {
-    _contacts = contacts;
-    _contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
-    notifyListeners();
-  }
-
+  ///
   /// Sets the searching state to show or hide search-specific UI.
+  ///
   void setSearchState(bool searchState) {
     _isSearching = searchState;
+    notifyListeners();
   }
 
+  ///
   /// Toggles the application theme between light and dark mode.
+  ///
   void toggleTheme() {
     _currentTheme = _currentTheme == 'dark' ? 'light' : 'dark';
     _saveTheme(_currentTheme);
     notifyListeners();
   }
 
-  /// Persists all current contacts to Firestore and local cache.
+  ///
+  /// Persists the full list of contacts to Firestore and local cache.
+  /// Ideal for operations that affect the entire list, like reordering.
+  ///
   Future<void> saveContacts() async {
     if (_currentUser == null) return;
     await _saveContactsToFirebase();
     await _saveContactsToLocalCache();
   }
 
+  ///
   /// Saves user metadata to Firestore upon login or registration.
+  ///
   Future<void> saveUserData(User user) async {
-    if (!await InternetConnection().hasInternetAccess) return;
-
     try {
-      final userRef =
-          FirebaseFirestore.instance.collection('users').doc(user.uid);
+      final userRef = _firestore.collection('users').doc(user.uid);
       final userSnapshot = await userRef.get();
 
       final userData = {
@@ -109,7 +164,9 @@ final class AppState with ChangeNotifier {
     }
   }
 
+  ///
   /// Loads the saved theme from shared preferences.
+  ///
   Future<void> loadTheme() async {
     _currentTheme = await _prefs.getString('theme') ?? 'light';
     notifyListeners();
@@ -120,15 +177,17 @@ final class AppState with ChangeNotifier {
   }
 
   void _listenToAuthChanges() {
-    FirebaseAuth.instance.authStateChanges().listen((user) {
+    _auth.authStateChanges().listen((user) {
       _isLoading = true;
       _contactsSubscription?.cancel();
+      _initCompleter = Completer<void>();
 
       if (user == null) {
         _currentUser = null;
         _contacts = [];
         _isLoading = false;
         notifyListeners();
+        if (!_initCompleter!.isCompleted) _initCompleter!.complete();
       } else {
         _currentUser = user;
         _initializeUserData();
@@ -138,37 +197,44 @@ final class AppState with ChangeNotifier {
 
   Future<void> _initializeUserData() async {
     if (_currentUser == null) return;
-
-    if (await InternetConnection().hasInternetAccess) {
-      _listenToRemoteContacts();
-    } else {
-      _logger.i('No internet connection. Loading contacts from local cache.');
-      await _loadContactsFromLocalCache();
-      notifyListeners();
-    }
+    // The new logic starts listening to remote first.
+    _listenToRemoteContacts();
   }
 
   void _listenToRemoteContacts() {
     if (_currentUser == null) return;
-    final collection = FirebaseFirestore.instance
+    final collection = _firestore
         .collection('users')
         .doc(_currentUser!.uid)
         .collection('contacts');
 
     _contactsSubscription = collection.snapshots().listen(
       (snapshot) {
-        final remoteContacts =
-            snapshot.docs.map((doc) => Contact.fromMap(doc.data())).toList();
-        remoteContacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
+        // Success path: data from Firestore is the source of truth.
+        final remoteContacts = snapshot.docs
+            .map((doc) => Contact.fromMap(doc.data()))
+            .toList();
         _contacts = remoteContacts;
-        _isLoading = false;
+        _sortContacts();
+
+        if (_isLoading) _isLoading = false;
         notifyListeners();
+
+        // Update the cache with the fresh data.
         _saveContactsToLocalCache();
+
+        if (!_initCompleter!.isCompleted) _initCompleter!.complete();
       },
       onError: (e) {
-        _logger.e('Error listening to remote contacts: $e');
-        _isLoading = false;
-        notifyListeners();
+        // Error path: could be offline. Load from cache as a fallback.
+        _logger.e(
+          'Error listening to remote contacts: $e. Loading from cache.',
+        );
+        _loadContactsFromLocalCache().whenComplete(() {
+          _isLoading = false;
+          notifyListeners();
+          if (!_initCompleter!.isCompleted) _initCompleter!.complete();
+        });
       },
     );
   }
@@ -182,13 +248,11 @@ final class AppState with ChangeNotifier {
         _contacts = contactsDeserialized
             .map((json) => Contact.fromJson(json as Map<String, dynamic>))
             .toList();
-        _contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
+        _sortContacts();
       }
     } on Exception catch (e) {
       _logger.e('Error loading contacts from local cache: $e');
       _contacts = [];
-    } finally {
-      _isLoading = false;
     }
   }
 
@@ -196,8 +260,9 @@ final class AppState with ChangeNotifier {
     if (_currentUser == null) return;
     try {
       final file = await _getLocalCacheFile();
-      final contactsSerialized =
-          json.encode(_contacts.map((c) => c.toJson()).toList());
+      final contactsSerialized = json.encode(
+        _contacts.map((c) => c.toJson()).toList(),
+      );
       await file.writeAsString(contactsSerialized);
     } on Exception catch (e) {
       _logger.e('Error saving contacts to local cache: $e');
@@ -206,23 +271,45 @@ final class AppState with ChangeNotifier {
 
   Future<File> _getLocalCacheFile() async {
     final directory = await getApplicationDocumentsDirectory();
-    final path = directory.path;
-    return File('$path/contacts_${_currentUser!.uid}.json');
+    return File('${directory.path}/contacts_${_currentUser!.uid}.json');
+  }
+
+  Future<void> _addOrUpdateContactInFirebase(Contact contact) async {
+    if (_currentUser == null) return;
+    try {
+      final docRef = _firestore
+          .collection('users')
+          .doc(_currentUser!.uid)
+          .collection('contacts')
+          .doc(contact.id);
+      await docRef.set(contact.toMap());
+    } on Exception catch (e) {
+      _logger.e('Error adding/updating contact in Firebase: $e');
+    }
+  }
+
+  Future<void> _removeContactFromFirebase(Contact contact) async {
+    if (_currentUser == null) return;
+    try {
+      final docRef = _firestore
+          .collection('users')
+          .doc(_currentUser!.uid)
+          .collection('contacts')
+          .doc(contact.id);
+      await docRef.delete();
+    } on Exception catch (e) {
+      _logger.e('Error removing contact from Firebase: $e');
+    }
   }
 
   Future<void> _saveContactsToFirebase() async {
-    if (_currentUser == null || !await InternetConnection().hasInternetAccess) {
-      return;
-    }
-
+    if (_currentUser == null) return;
     try {
-      final collection = FirebaseFirestore.instance
+      final collection = _firestore
           .collection('users')
           .doc(_currentUser!.uid)
           .collection('contacts');
-
-      final WriteBatch batch = FirebaseFirestore.instance.batch();
-
+      final WriteBatch batch = _firestore.batch();
       final remoteSnapshot = await collection.get();
       final localIds = _contacts.map((contact) => contact.id).toSet();
 
@@ -232,8 +319,13 @@ final class AppState with ChangeNotifier {
         }
       }
 
-      for (final contact in _contacts) {
-        batch.set(collection.doc(contact.id), contact.toMap());
+      for (var i = 0; i < _contacts.length; i++) {
+        final contactWithNewIndex = _contacts[i].copyWith(listIndex: i);
+        _contacts[i] = contactWithNewIndex;
+        batch.set(
+          collection.doc(contactWithNewIndex.id),
+          contactWithNewIndex.toMap(),
+        );
       }
 
       await batch.commit();
@@ -241,9 +333,15 @@ final class AppState with ChangeNotifier {
       _logger.e('Error while saving contacts to Firebase: $e');
     }
   }
+
+  void _sortContacts() {
+    _contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
+  }
 }
 
+///
 /// Simple wrapper for SharedPreferences to make it easier to mock in tests.
+///
 class SharedPreferencesAsync {
   Future<String?> getString(String key) async {
     final prefs = await SharedPreferences.getInstance();

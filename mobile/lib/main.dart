@@ -53,7 +53,7 @@ Future<void> main() async {
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (_) => AppState()),
+      ChangeNotifierProvider(create: (_) => AppState.main()),
     ],
     child: const TaxCodeApp(),
   ));
