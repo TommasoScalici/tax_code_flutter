@@ -15,7 +15,7 @@ import '../models/contact.dart';
 /// Manages the application's state, including authentication,
 /// contacts, and theme settings.
 ///
-final class AppState with ChangeNotifier {
+class AppState with ChangeNotifier {
   final _logger = Logger();
   late final FirebaseAuth _auth;
   late final FirebaseFirestore _firestore;

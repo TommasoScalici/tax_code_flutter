@@ -33,12 +33,16 @@ dependencies:
   firebase_core: ^3.15.1
   firebase_crashlytics: ^4.3.9
   firebase_remote_config: ^5.4.7
-  google_sign_in: ^6.3.0
+  google_sign_in: 6.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  build_runner: ^2.6.0
+  mockito: ^5.5.0
+  firebase_core_platform_interface: ^6.0.0
+  plugin_platform_interface: ^2.1.8
 
 flutter:
   generate: true
