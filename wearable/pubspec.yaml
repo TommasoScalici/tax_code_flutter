@@ -38,10 +38,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
   build_runner: ^2.6.0
-  mockito: ^5.5.0
+  firebase_auth_mocks: ^0.14.2
+  firebase_auth_platform_interface: ^7.7.3
   firebase_core_platform_interface: ^6.0.0
+  flutter_lints: ^6.0.0
+  google_sign_in_mocks: ^0.3.0
+  mockito: ^5.5.0
   plugin_platform_interface: ^2.1.8
 
 flutter:

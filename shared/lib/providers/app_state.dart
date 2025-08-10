@@ -7,7 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared/providers/shared_preferences_async.dart';
+import 'package:shared/services/database_service.dart';
 
 import '../models/contact.dart';
 
@@ -16,22 +17,24 @@ import '../models/contact.dart';
 /// contacts, and theme settings.
 ///
 class AppState with ChangeNotifier {
-  final _logger = Logger();
-  late final FirebaseAuth _auth;
-  late final FirebaseFirestore _firestore;
-  late final SharedPreferencesAsync _prefs;
+  final DatabaseService _dbService;
+  final FirebaseAuth _auth;
+  final Logger _logger;
+  final SharedPreferencesAsync _prefs;
+
   StreamSubscription? _contactsSubscription;
   Completer<void>? _initCompleter;
 
   List<Contact> _contacts = [];
   String _currentTheme = 'light';
   User? _currentUser;
-  bool _isSearching = false;
   bool _isLoading = true;
+  bool _isSearching = false;
 
   List<Contact> get contacts => _contacts;
-  bool get isSearching => _isSearching;
   bool get isLoading => _isLoading;
+  bool get isSearching => _isSearching;
+  bool get isSignedIn => _currentUser != null;
   String get theme => _currentTheme;
   Future<void>? get initializationComplete => _initCompleter?.future;
 
@@ -43,23 +46,27 @@ class AppState with ChangeNotifier {
   /// Initializes the AppState by listening to authentication changes.
   ///
   AppState.main()
-    : this(
-        auth: FirebaseAuth.instance,
-        firestore: FirebaseFirestore.instance,
-        prefs: SharedPreferencesAsync(),
-      );
+    : _auth = FirebaseAuth.instance,
+      _dbService = DatabaseService(firestore: FirebaseFirestore.instance),
+      _logger = Logger(),
+      _prefs = SharedPreferencesAsync() {
+    _listenToAuthChanges();
+    loadTheme();
+  }
 
   ///
   /// A special constructor for testing purposes to allow dependency injection.
   ///
   @visibleForTesting
-  AppState({
+  AppState.withMocks({
     required FirebaseAuth auth,
-    required FirebaseFirestore firestore,
+    required DatabaseService dbService,
+    required Logger logger,
     required SharedPreferencesAsync prefs,
   }) : _auth = auth,
-       _firestore = firestore,
-       _prefs = prefs {
+       _dbService = dbService,
+       _prefs = prefs,
+       _logger = logger {
     _listenToAuthChanges();
     loadTheme();
   }
@@ -71,10 +78,19 @@ class AppState with ChangeNotifier {
   }
 
   ///
+  /// Signs the current user out.
+  ///
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
+
+  ///
   /// Adds a new contact or updates an existing one.
   /// Persists the change to Firestore and local cache.
   ///
   Future<void> addContact(Contact contact) async {
+    if (_currentUser == null) return;
+
     final index = _contacts.indexWhere((c) => c.id == contact.id);
 
     if (index != -1) {
@@ -85,7 +101,15 @@ class AppState with ChangeNotifier {
     _sortContacts();
     notifyListeners();
 
-    await _addOrUpdateContactInFirebase(contact);
+    try {
+      await _dbService.addOrUpdateContact(_currentUser!.uid, contact);
+    } on Exception catch (e, s) {
+      _logger.e(
+        'Error adding/updating contact in Firebase',
+        error: e,
+        stackTrace: s,
+      );
+    }
     await _saveContactsToLocalCache();
   }
 
@@ -94,10 +118,20 @@ class AppState with ChangeNotifier {
   /// Persists the change to Firestore and local cache.
   ///
   Future<void> removeContact(Contact contact) async {
+    if (_currentUser == null) return;
+
     _contacts.removeWhere((c) => c.id == contact.id);
     notifyListeners();
 
-    await _removeContactFromFirebase(contact);
+    try {
+      await _dbService.removeContact(_currentUser!.uid, contact.id);
+    } on Exception catch (e, s) {
+      _logger.e(
+        'Error removing contact from Firebase',
+        error: e,
+        stackTrace: s,
+      );
+    }
     await _saveContactsToLocalCache();
   }
 
@@ -107,8 +141,40 @@ class AppState with ChangeNotifier {
   ///
   Future<void> updateContacts(List<Contact> contacts) async {
     _contacts = contacts;
+    for (var i = 0; i < _contacts.length; i++) {
+      _contacts[i] = _contacts[i].copyWith(listIndex: i);
+    }
     notifyListeners();
     await saveContacts();
+  }
+
+  ///
+  /// Persists the full list of contacts to Firestore and local cache.
+  /// Ideal for operations that affect the entire list, like reordering.
+  ///
+  Future<void> saveContacts() async {
+    if (_currentUser == null) return;
+    try {
+      await _dbService.saveAllContacts(_currentUser!.uid, _contacts);
+    } on Exception catch (e, s) {
+      _logger.e(
+        'Error while saving contacts to Firebase',
+        error: e,
+        stackTrace: s,
+      );
+    }
+    await _saveContactsToLocalCache();
+  }
+
+  ///
+  /// Saves user metadata to Firestore upon login or registration.
+  ///
+  Future<void> saveUserData(User user) async {
+    try {
+      await _dbService.saveUserData(user);
+    } on Exception catch (e, s) {
+      _logger.e('Error while storing user data', error: e, stackTrace: s);
+    }
   }
 
   ///
@@ -129,42 +195,6 @@ class AppState with ChangeNotifier {
   }
 
   ///
-  /// Persists the full list of contacts to Firestore and local cache.
-  /// Ideal for operations that affect the entire list, like reordering.
-  ///
-  Future<void> saveContacts() async {
-    if (_currentUser == null) return;
-    await _saveContactsToFirebase();
-    await _saveContactsToLocalCache();
-  }
-
-  ///
-  /// Saves user metadata to Firestore upon login or registration.
-  ///
-  Future<void> saveUserData(User user) async {
-    try {
-      final userRef = _firestore.collection('users').doc(user.uid);
-      final userSnapshot = await userRef.get();
-
-      final userData = {
-        'id': user.uid,
-        'displayName': user.displayName ?? '',
-        'email': user.email ?? '',
-        'photoURL': user.photoURL ?? '',
-        'lastLogin': FieldValue.serverTimestamp(),
-      };
-
-      if (!userSnapshot.exists) {
-        userData['createdAt'] = FieldValue.serverTimestamp();
-      }
-
-      await userRef.set(userData, SetOptions(merge: true));
-    } on Exception catch (e) {
-      _logger.e('Error while storing user data: $e');
-    }
-  }
-
-  ///
   /// Loads the saved theme from shared preferences.
   ///
   Future<void> loadTheme() async {
@@ -181,62 +211,65 @@ class AppState with ChangeNotifier {
       _isLoading = true;
       _contactsSubscription?.cancel();
       _initCompleter = Completer<void>();
+      notifyListeners();
 
       if (user == null) {
-        _currentUser = null;
-        _contacts = [];
-        _isLoading = false;
-        notifyListeners();
-        if (!_initCompleter!.isCompleted) _initCompleter!.complete();
+        _onUserSignedOut();
       } else {
-        _currentUser = user;
-        _initializeUserData();
+        _onUserSignedIn(user);
       }
     });
   }
 
-  Future<void> _initializeUserData() async {
-    if (_currentUser == null) return;
-    // The new logic starts listening to remote first.
+  void _onUserSignedIn(User user) {
+    _currentUser = user;
+    saveUserData(user);
     _listenToRemoteContacts();
+  }
+
+  void _onUserSignedOut() {
+    _currentUser = null;
+    _contacts = [];
+    _isLoading = false;
+    notifyListeners();
+    if (_initCompleter?.isCompleted == false) {
+      _initCompleter!.complete();
+    }
+  }
+
+  void _sortContacts() {
+    _contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
   }
 
   void _listenToRemoteContacts() {
     if (_currentUser == null) return;
-    final collection = _firestore
-        .collection('users')
-        .doc(_currentUser!.uid)
-        .collection('contacts');
 
-    _contactsSubscription = collection.snapshots().listen(
-      (snapshot) {
-        // Success path: data from Firestore is the source of truth.
-        final remoteContacts = snapshot.docs
-            .map((doc) => Contact.fromMap(doc.data()))
-            .toList();
-        _contacts = remoteContacts;
-        _sortContacts();
-
-        if (_isLoading) _isLoading = false;
-        notifyListeners();
-
-        // Update the cache with the fresh data.
-        _saveContactsToLocalCache();
-
-        if (!_initCompleter!.isCompleted) _initCompleter!.complete();
-      },
-      onError: (e) {
-        // Error path: could be offline. Load from cache as a fallback.
-        _logger.e(
-          'Error listening to remote contacts: $e. Loading from cache.',
+    _contactsSubscription = _dbService
+        .getContactsStream(_currentUser!.uid)
+        .listen(
+          (remoteContacts) {
+            _contacts = remoteContacts;
+            _sortContacts();
+            _finishLoading();
+            _saveContactsToLocalCache();
+          },
+          onError: (e, s) {
+            _logger.e(
+              'Error listening to remote contacts. Loading from cache',
+              error: e,
+              stackTrace: s,
+            );
+            _loadContactsFromLocalCache().whenComplete(() => _finishLoading());
+          },
         );
-        _loadContactsFromLocalCache().whenComplete(() {
-          _isLoading = false;
-          notifyListeners();
-          if (!_initCompleter!.isCompleted) _initCompleter!.complete();
-        });
-      },
-    );
+  }
+
+  void _finishLoading() {
+    if (_isLoading) _isLoading = false;
+    notifyListeners();
+    if (_initCompleter?.isCompleted == false) {
+      _initCompleter!.complete();
+    }
   }
 
   Future<void> _loadContactsFromLocalCache() async {
@@ -250,8 +283,12 @@ class AppState with ChangeNotifier {
             .toList();
         _sortContacts();
       }
-    } on Exception catch (e) {
-      _logger.e('Error loading contacts from local cache: $e');
+    } on Exception catch (e, s) {
+      _logger.e(
+        'Error loading contacts from local cache',
+        error: e,
+        stackTrace: s,
+      );
       _contacts = [];
     }
   }
@@ -264,92 +301,17 @@ class AppState with ChangeNotifier {
         _contacts.map((c) => c.toJson()).toList(),
       );
       await file.writeAsString(contactsSerialized);
-    } on Exception catch (e) {
-      _logger.e('Error saving contacts to local cache: $e');
+    } on Exception catch (e, s) {
+      _logger.e(
+        'Error saving contacts to local cache',
+        error: e,
+        stackTrace: s,
+      );
     }
   }
 
   Future<File> _getLocalCacheFile() async {
     final directory = await getApplicationDocumentsDirectory();
     return File('${directory.path}/contacts_${_currentUser!.uid}.json');
-  }
-
-  Future<void> _addOrUpdateContactInFirebase(Contact contact) async {
-    if (_currentUser == null) return;
-    try {
-      final docRef = _firestore
-          .collection('users')
-          .doc(_currentUser!.uid)
-          .collection('contacts')
-          .doc(contact.id);
-      await docRef.set(contact.toMap());
-    } on Exception catch (e) {
-      _logger.e('Error adding/updating contact in Firebase: $e');
-    }
-  }
-
-  Future<void> _removeContactFromFirebase(Contact contact) async {
-    if (_currentUser == null) return;
-    try {
-      final docRef = _firestore
-          .collection('users')
-          .doc(_currentUser!.uid)
-          .collection('contacts')
-          .doc(contact.id);
-      await docRef.delete();
-    } on Exception catch (e) {
-      _logger.e('Error removing contact from Firebase: $e');
-    }
-  }
-
-  Future<void> _saveContactsToFirebase() async {
-    if (_currentUser == null) return;
-    try {
-      final collection = _firestore
-          .collection('users')
-          .doc(_currentUser!.uid)
-          .collection('contacts');
-      final WriteBatch batch = _firestore.batch();
-      final remoteSnapshot = await collection.get();
-      final localIds = _contacts.map((contact) => contact.id).toSet();
-
-      for (final doc in remoteSnapshot.docs) {
-        if (!localIds.contains(doc.id)) {
-          batch.delete(doc.reference);
-        }
-      }
-
-      for (var i = 0; i < _contacts.length; i++) {
-        final contactWithNewIndex = _contacts[i].copyWith(listIndex: i);
-        _contacts[i] = contactWithNewIndex;
-        batch.set(
-          collection.doc(contactWithNewIndex.id),
-          contactWithNewIndex.toMap(),
-        );
-      }
-
-      await batch.commit();
-    } on Exception catch (e) {
-      _logger.e('Error while saving contacts to Firebase: $e');
-    }
-  }
-
-  void _sortContacts() {
-    _contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
-  }
-}
-
-///
-/// Simple wrapper for SharedPreferences to make it easier to mock in tests.
-///
-class SharedPreferencesAsync {
-  Future<String?> getString(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key);
-  }
-
-  Future<bool> setString(String key, String value) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.setString(key, value);
   }
 }

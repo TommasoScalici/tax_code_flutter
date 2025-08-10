@@ -1,5 +1,6 @@
 import 'package:change_case/change_case.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:googleapis/vision/v1.dart' as vision;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:intl/intl.dart';
@@ -9,13 +10,34 @@ import 'package:shared/models/contact.dart';
 import 'package:uuid/uuid.dart';
 
 class OCRService {
-  final _logger = Logger();
+  final Logger _logger;
+  final FirebaseRemoteConfig _remoteConfig;
+  final vision.VisionApi? _visionApi;
   ServiceAccountCredentials? _credentials;
+
+  ///
+  /// Public constructor for production use.
+  ///
+  OCRService()
+      : _logger = Logger(),
+        _remoteConfig = FirebaseRemoteConfig.instance,
+        _visionApi = null;
+
+  ///
+  /// Constructor for testing purposes, allowing dependency injection.
+  ///
+  @visibleForTesting
+  OCRService.withMocks({
+    required Logger logger,
+    required FirebaseRemoteConfig remoteConfig,
+    required vision.VisionApi visionApi,
+  })  : _logger = logger,
+        _remoteConfig = remoteConfig,
+        _visionApi = visionApi;
 
   Future<void> initialize() async {
     try {
-      final remoteConfig = FirebaseRemoteConfig.instance;
-      var jsonString = remoteConfig.getString('tax_code_flutter_vision');
+      var jsonString = _remoteConfig.getString('tax_code_flutter_vision');
 
       if (jsonString.isEmpty) {
         _logger.w('Remote config string for credentials is empty');
@@ -28,35 +50,41 @@ class OCRService {
     }
   }
 
+  Future<vision.VisionApi> _getVisionApi() async {
+    if (_visionApi != null) {
+      return _visionApi;
+    }
+
+    if (_credentials == null) {
+      _logger.e('Credentials not loaded. Call initialize() first.');
+      throw Exception('Credentials not loaded');
+    }
+
+    final authClient = await clientViaServiceAccount(
+      _credentials!,
+      [vision.VisionApi.cloudVisionScope],
+    );
+
+    return vision.VisionApi(authClient);
+  }
+
   Future<vision.BatchAnnotateImagesResponse?> analyzeImage(
       String base64Image) async {
     try {
-      if (_credentials == null) {
-        _logger.e('Credentials not loaded. Call initialize() first.');
-      }
-
-      final authClient = await clientViaServiceAccount(
-        _credentials!,
-        [vision.VisionApi.cloudVisionScope],
-      );
-
-      final visionApi = vision.VisionApi(authClient);
+      final visionApi = await _getVisionApi();
       final feature = vision.Feature(type: 'TEXT_DETECTION');
       final image = vision.Image(content: base64Image);
-      final images = visionApi.images;
 
       final request =
           vision.AnnotateImageRequest(image: image, features: [feature]);
       final batchRequest =
           vision.BatchAnnotateImagesRequest(requests: [request]);
-      final response = await images.annotate(batchRequest);
 
-      return response;
+      return await visionApi.images.annotate(batchRequest);
     } catch (e) {
       _logger.e('Error during the image analysis: $e');
+      return null;
     }
-
-    return null;
   }
 
   Future<Contact?> performCardOCR(String base64Image) async {
@@ -135,7 +163,7 @@ class OCRService {
           taxCode: '',
           birthPlace: Birthplace(
             name: birthPlace.name.toCapitalCase(),
-            state: birthPlace.name.toUpperCase(),
+            state: birthPlace.state.toUpperCase(),
           ),
           birthDate: birthDate ?? DateTime.now(),
           listIndex: 0);

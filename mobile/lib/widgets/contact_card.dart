@@ -31,9 +31,7 @@ final class ContactCard extends StatelessWidget {
             TextButton(
               onPressed: () async {
                 context.read<AppState>().removeContact(contact);
-                await context.read<AppState>().saveContacts();
-
-                if (context.mounted) Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
               child: Text(
                 AppLocalizations.of(context)!.delete,
@@ -182,12 +180,8 @@ final class ContactCard extends StatelessWidget {
                             ),
                           );
 
-                          if (editedContact != null) {
-                            final contactToUpdate = value.contacts
-                                .firstWhere((c) => c.id == editedContact.id);
-                            contactToUpdate.updateFrom(editedContact);
-                            value.updateContacts(value.contacts);
-                            await value.saveContacts();
+                          if (editedContact != null && context.mounted) {
+                            context.read<AppState>().addContact(editedContact);
                           }
                         },
                         icon: const Icon(Icons.edit),

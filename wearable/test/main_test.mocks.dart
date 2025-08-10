@@ -3,14 +3,24 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
-import 'dart:ui' as _i7;
+import 'dart:async' as _i7;
+import 'dart:ui' as _i9;
 
-import 'package:firebase_auth/firebase_auth.dart' as _i6;
+import 'package:firebase_app_check/firebase_app_check.dart' as _i12;
+import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart'
+    as _i13;
+import 'package:firebase_auth/firebase_auth.dart' as _i8;
+import 'package:firebase_core/firebase_core.dart' as _i2;
+import 'package:firebase_crashlytics/firebase_crashlytics.dart' as _i14;
+import 'package:firebase_remote_config/firebase_remote_config.dart' as _i11;
+import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart'
+    as _i3;
+import 'package:flutter/material.dart' as _i15;
+import 'package:logger/logger.dart' as _i10;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i4;
-import 'package:shared/models/contact.dart' as _i3;
-import 'package:shared/providers/app_state.dart' as _i2;
+import 'package:mockito/src/dummies.dart' as _i6;
+import 'package:shared/models/contact.dart' as _i5;
+import 'package:shared/providers/app_state.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -26,19 +36,61 @@ import 'package:shared/providers/app_state.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeFirebaseApp_0 extends _i1.SmartFake implements _i2.FirebaseApp {
+  _FakeFirebaseApp_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeDateTime_1 extends _i1.SmartFake implements DateTime {
+  _FakeDateTime_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeRemoteConfigSettings_2 extends _i1.SmartFake
+    implements _i3.RemoteConfigSettings {
+  _FakeRemoteConfigSettings_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeRemoteConfigValue_3 extends _i1.SmartFake
+    implements _i3.RemoteConfigValue {
+  _FakeRemoteConfigValue_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [AppState].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAppState extends _i1.Mock implements _i2.AppState {
+class MockAppState extends _i1.Mock implements _i4.AppState {
   MockAppState() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  List<_i3.Contact> get contacts => (super.noSuchMethod(
+  List<_i5.Contact> get contacts => (super.noSuchMethod(
         Invocation.getter(#contacts),
-        returnValue: <_i3.Contact>[],
-      ) as List<_i3.Contact>);
+        returnValue: <_i5.Contact>[],
+      ) as List<_i5.Contact>);
 
   @override
   bool get isSearching => (super.noSuchMethod(
@@ -55,7 +107,7 @@ class MockAppState extends _i1.Mock implements _i2.AppState {
   @override
   String get theme => (super.noSuchMethod(
         Invocation.getter(#theme),
-        returnValue: _i4.dummyValue<String>(
+        returnValue: _i6.dummyValue<String>(
           this,
           Invocation.getter(#theme),
         ),
@@ -77,35 +129,35 @@ class MockAppState extends _i1.Mock implements _i2.AppState {
       );
 
   @override
-  _i5.Future<void> addContact(_i3.Contact? contact) => (super.noSuchMethod(
+  _i7.Future<void> addContact(_i5.Contact? contact) => (super.noSuchMethod(
         Invocation.method(
           #addContact,
           [contact],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 
   @override
-  _i5.Future<void> removeContact(_i3.Contact? contact) => (super.noSuchMethod(
+  _i7.Future<void> removeContact(_i5.Contact? contact) => (super.noSuchMethod(
         Invocation.method(
           #removeContact,
           [contact],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 
   @override
-  _i5.Future<void> updateContacts(List<_i3.Contact>? contacts) =>
+  _i7.Future<void> updateContacts(List<_i5.Contact>? contacts) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateContacts,
           [contacts],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 
   @override
   void setSearchState(bool? searchState) => super.noSuchMethod(
@@ -126,37 +178,37 @@ class MockAppState extends _i1.Mock implements _i2.AppState {
       );
 
   @override
-  _i5.Future<void> saveContacts() => (super.noSuchMethod(
+  _i7.Future<void> saveContacts() => (super.noSuchMethod(
         Invocation.method(
           #saveContacts,
           [],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 
   @override
-  _i5.Future<void> saveUserData(_i6.User? user) => (super.noSuchMethod(
+  _i7.Future<void> saveUserData(_i8.User? user) => (super.noSuchMethod(
         Invocation.method(
           #saveUserData,
           [user],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 
   @override
-  _i5.Future<void> loadTheme() => (super.noSuchMethod(
+  _i7.Future<void> loadTheme() => (super.noSuchMethod(
         Invocation.method(
           #loadTheme,
           [],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 
   @override
-  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i9.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -165,7 +217,7 @@ class MockAppState extends _i1.Mock implements _i2.AppState {
       );
 
   @override
-  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i9.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -181,4 +233,699 @@ class MockAppState extends _i1.Mock implements _i2.AppState {
         ),
         returnValueForMissingStub: null,
       );
+}
+
+/// A class which mocks [Logger].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLogger extends _i1.Mock implements _i10.Logger {
+  MockLogger() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i7.Future<void> get init => (super.noSuchMethod(
+        Invocation.getter(#init),
+        returnValue: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  void v(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #v,
+          [message],
+          {
+            #time: time,
+            #error: error,
+            #stackTrace: stackTrace,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void t(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #t,
+          [message],
+          {
+            #time: time,
+            #error: error,
+            #stackTrace: stackTrace,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void d(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #d,
+          [message],
+          {
+            #time: time,
+            #error: error,
+            #stackTrace: stackTrace,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void i(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #i,
+          [message],
+          {
+            #time: time,
+            #error: error,
+            #stackTrace: stackTrace,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void w(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #w,
+          [message],
+          {
+            #time: time,
+            #error: error,
+            #stackTrace: stackTrace,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void e(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #e,
+          [message],
+          {
+            #time: time,
+            #error: error,
+            #stackTrace: stackTrace,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void wtf(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #wtf,
+          [message],
+          {
+            #time: time,
+            #error: error,
+            #stackTrace: stackTrace,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void f(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #f,
+          [message],
+          {
+            #time: time,
+            #error: error,
+            #stackTrace: stackTrace,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void log(
+    _i10.Level? level,
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #log,
+          [
+            level,
+            message,
+          ],
+          {
+            #time: time,
+            #error: error,
+            #stackTrace: stackTrace,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  bool isClosed() => (super.noSuchMethod(
+        Invocation.method(
+          #isClosed,
+          [],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  _i7.Future<void> close() => (super.noSuchMethod(
+        Invocation.method(
+          #close,
+          [],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+}
+
+/// A class which mocks [FirebaseRemoteConfig].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFirebaseRemoteConfig extends _i1.Mock
+    implements _i11.FirebaseRemoteConfig {
+  MockFirebaseRemoteConfig() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.FirebaseApp get app => (super.noSuchMethod(
+        Invocation.getter(#app),
+        returnValue: _FakeFirebaseApp_0(
+          this,
+          Invocation.getter(#app),
+        ),
+      ) as _i2.FirebaseApp);
+
+  @override
+  DateTime get lastFetchTime => (super.noSuchMethod(
+        Invocation.getter(#lastFetchTime),
+        returnValue: _FakeDateTime_1(
+          this,
+          Invocation.getter(#lastFetchTime),
+        ),
+      ) as DateTime);
+
+  @override
+  _i3.RemoteConfigFetchStatus get lastFetchStatus => (super.noSuchMethod(
+        Invocation.getter(#lastFetchStatus),
+        returnValue: _i3.RemoteConfigFetchStatus.noFetchYet,
+      ) as _i3.RemoteConfigFetchStatus);
+
+  @override
+  _i3.RemoteConfigSettings get settings => (super.noSuchMethod(
+        Invocation.getter(#settings),
+        returnValue: _FakeRemoteConfigSettings_2(
+          this,
+          Invocation.getter(#settings),
+        ),
+      ) as _i3.RemoteConfigSettings);
+
+  @override
+  _i7.Stream<_i3.RemoteConfigUpdate> get onConfigUpdated => (super.noSuchMethod(
+        Invocation.getter(#onConfigUpdated),
+        returnValue: _i7.Stream<_i3.RemoteConfigUpdate>.empty(),
+      ) as _i7.Stream<_i3.RemoteConfigUpdate>);
+
+  @override
+  Map<dynamic, dynamic> get pluginConstants => (super.noSuchMethod(
+        Invocation.getter(#pluginConstants),
+        returnValue: <dynamic, dynamic>{},
+      ) as Map<dynamic, dynamic>);
+
+  @override
+  _i7.Future<bool> activate() => (super.noSuchMethod(
+        Invocation.method(
+          #activate,
+          [],
+        ),
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
+
+  @override
+  _i7.Future<void> ensureInitialized() => (super.noSuchMethod(
+        Invocation.method(
+          #ensureInitialized,
+          [],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<void> fetch() => (super.noSuchMethod(
+        Invocation.method(
+          #fetch,
+          [],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<bool> fetchAndActivate() => (super.noSuchMethod(
+        Invocation.method(
+          #fetchAndActivate,
+          [],
+        ),
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
+
+  @override
+  Map<String, _i3.RemoteConfigValue> getAll() => (super.noSuchMethod(
+        Invocation.method(
+          #getAll,
+          [],
+        ),
+        returnValue: <String, _i3.RemoteConfigValue>{},
+      ) as Map<String, _i3.RemoteConfigValue>);
+
+  @override
+  bool getBool(String? key) => (super.noSuchMethod(
+        Invocation.method(
+          #getBool,
+          [key],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  int getInt(String? key) => (super.noSuchMethod(
+        Invocation.method(
+          #getInt,
+          [key],
+        ),
+        returnValue: 0,
+      ) as int);
+
+  @override
+  double getDouble(String? key) => (super.noSuchMethod(
+        Invocation.method(
+          #getDouble,
+          [key],
+        ),
+        returnValue: 0.0,
+      ) as double);
+
+  @override
+  String getString(String? key) => (super.noSuchMethod(
+        Invocation.method(
+          #getString,
+          [key],
+        ),
+        returnValue: _i6.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getString,
+            [key],
+          ),
+        ),
+      ) as String);
+
+  @override
+  _i3.RemoteConfigValue getValue(String? key) => (super.noSuchMethod(
+        Invocation.method(
+          #getValue,
+          [key],
+        ),
+        returnValue: _FakeRemoteConfigValue_3(
+          this,
+          Invocation.method(
+            #getValue,
+            [key],
+          ),
+        ),
+      ) as _i3.RemoteConfigValue);
+
+  @override
+  _i7.Future<void> setConfigSettings(
+          _i3.RemoteConfigSettings? remoteConfigSettings) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setConfigSettings,
+          [remoteConfigSettings],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<void> setDefaults(Map<String, dynamic>? defaultParameters) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setDefaults,
+          [defaultParameters],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<void> setCustomSignals(Map<String, Object?>? customSignals) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setCustomSignals,
+          [customSignals],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+}
+
+/// A class which mocks [FirebaseAppCheck].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFirebaseAppCheck extends _i1.Mock implements _i12.FirebaseAppCheck {
+  MockFirebaseAppCheck() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.FirebaseApp get app => (super.noSuchMethod(
+        Invocation.getter(#app),
+        returnValue: _FakeFirebaseApp_0(
+          this,
+          Invocation.getter(#app),
+        ),
+      ) as _i2.FirebaseApp);
+
+  @override
+  _i7.Stream<String?> get onTokenChange => (super.noSuchMethod(
+        Invocation.getter(#onTokenChange),
+        returnValue: _i7.Stream<String?>.empty(),
+      ) as _i7.Stream<String?>);
+
+  @override
+  set app(_i2.FirebaseApp? _app) => super.noSuchMethod(
+        Invocation.setter(
+          #app,
+          _app,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  Map<dynamic, dynamic> get pluginConstants => (super.noSuchMethod(
+        Invocation.getter(#pluginConstants),
+        returnValue: <dynamic, dynamic>{},
+      ) as Map<dynamic, dynamic>);
+
+  @override
+  _i7.Future<void> activate({
+    _i13.WebProvider? webProvider,
+    _i13.AndroidProvider? androidProvider = _i13.AndroidProvider.playIntegrity,
+    _i13.AppleProvider? appleProvider = _i13.AppleProvider.deviceCheck,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #activate,
+          [],
+          {
+            #webProvider: webProvider,
+            #androidProvider: androidProvider,
+            #appleProvider: appleProvider,
+          },
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<String?> getToken([bool? forceRefresh]) => (super.noSuchMethod(
+        Invocation.method(
+          #getToken,
+          [forceRefresh],
+        ),
+        returnValue: _i7.Future<String?>.value(),
+      ) as _i7.Future<String?>);
+
+  @override
+  _i7.Future<void> setTokenAutoRefreshEnabled(
+          bool? isTokenAutoRefreshEnabled) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setTokenAutoRefreshEnabled,
+          [isTokenAutoRefreshEnabled],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<String> getLimitedUseToken() => (super.noSuchMethod(
+        Invocation.method(
+          #getLimitedUseToken,
+          [],
+        ),
+        returnValue: _i7.Future<String>.value(_i6.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getLimitedUseToken,
+            [],
+          ),
+        )),
+      ) as _i7.Future<String>);
+}
+
+/// A class which mocks [FirebaseCrashlytics].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFirebaseCrashlytics extends _i1.Mock
+    implements _i14.FirebaseCrashlytics {
+  MockFirebaseCrashlytics() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.FirebaseApp get app => (super.noSuchMethod(
+        Invocation.getter(#app),
+        returnValue: _FakeFirebaseApp_0(
+          this,
+          Invocation.getter(#app),
+        ),
+      ) as _i2.FirebaseApp);
+
+  @override
+  bool get isCrashlyticsCollectionEnabled => (super.noSuchMethod(
+        Invocation.getter(#isCrashlyticsCollectionEnabled),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  set app(_i2.FirebaseApp? _app) => super.noSuchMethod(
+        Invocation.setter(
+          #app,
+          _app,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  Map<dynamic, dynamic> get pluginConstants => (super.noSuchMethod(
+        Invocation.getter(#pluginConstants),
+        returnValue: <dynamic, dynamic>{},
+      ) as Map<dynamic, dynamic>);
+
+  @override
+  _i7.Future<bool> checkForUnsentReports() => (super.noSuchMethod(
+        Invocation.method(
+          #checkForUnsentReports,
+          [],
+        ),
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
+
+  @override
+  void crash() => super.noSuchMethod(
+        Invocation.method(
+          #crash,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i7.Future<void> deleteUnsentReports() => (super.noSuchMethod(
+        Invocation.method(
+          #deleteUnsentReports,
+          [],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<bool> didCrashOnPreviousExecution() => (super.noSuchMethod(
+        Invocation.method(
+          #didCrashOnPreviousExecution,
+          [],
+        ),
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
+
+  @override
+  _i7.Future<void> recordError(
+    dynamic exception,
+    StackTrace? stack, {
+    dynamic reason,
+    Iterable<Object>? information = const [],
+    bool? printDetails,
+    bool? fatal = false,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #recordError,
+          [
+            exception,
+            stack,
+          ],
+          {
+            #reason: reason,
+            #information: information,
+            #printDetails: printDetails,
+            #fatal: fatal,
+          },
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<void> recordFlutterError(
+    _i15.FlutterErrorDetails? flutterErrorDetails, {
+    bool? fatal = false,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #recordFlutterError,
+          [flutterErrorDetails],
+          {#fatal: fatal},
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<void> recordFlutterFatalError(
+          _i15.FlutterErrorDetails? flutterErrorDetails) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #recordFlutterFatalError,
+          [flutterErrorDetails],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<void> log(String? message) => (super.noSuchMethod(
+        Invocation.method(
+          #log,
+          [message],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<void> sendUnsentReports() => (super.noSuchMethod(
+        Invocation.method(
+          #sendUnsentReports,
+          [],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<void> setCrashlyticsCollectionEnabled(bool? enabled) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setCrashlyticsCollectionEnabled,
+          [enabled],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<void> setUserIdentifier(String? identifier) => (super.noSuchMethod(
+        Invocation.method(
+          #setUserIdentifier,
+          [identifier],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<void> setCustomKey(
+    String? key,
+    Object? value,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setCustomKey,
+          [
+            key,
+            value,
+          ],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 }

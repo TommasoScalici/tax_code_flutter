@@ -9,16 +9,27 @@ import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'home_page.dart';
 
 class AuthGate extends StatefulWidget {
-  const AuthGate({super.key});
+  final FirebaseAuth? firebaseAuth;
+  final GoogleSignIn? googleSignIn;
+
+  const AuthGate({super.key, this.firebaseAuth, this.googleSignIn});
 
   @override
   State<AuthGate> createState() => _AuthGateState();
 }
 
 class _AuthGateState extends State<AuthGate> {
-  final _googleSignIn = GoogleSignIn();
+  late final FirebaseAuth _firebaseAuth;
+  late final GoogleSignIn _googleSignIn;
   final _loadingNotifier = ValueNotifier<bool>(false);
   final _logger = Logger();
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseAuth = widget.firebaseAuth ?? FirebaseAuth.instance;
+    _googleSignIn = widget.googleSignIn ?? GoogleSignIn();
+  }
 
   /// Handles the entire Google Sign-In and Firebase authentication process.
   Future<void> _handleSignIn(BuildContext context) async {
@@ -38,7 +49,7 @@ class _AuthGateState extends State<AuthGate> {
       );
 
       final userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+          await _firebaseAuth.signInWithCredential(credential);
 
       if (userCredential.user != null && context.mounted) {
         await context.read<AppState>().saveUserData(userCredential.user!);
@@ -60,7 +71,7 @@ class _AuthGateState extends State<AuthGate> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
+      stream: _firebaseAuth.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(

@@ -19,5 +19,11 @@ void main() {
       final json = birthplace.toJson();
       expect(json, equals(birthplaceMap));
     });
+
+    /// Tests if the toString method returns a correctly formatted string.
+    test('toString should return a correctly formatted string', () {
+      final result = birthplace.toString();
+      expect(result, 'Torino (TO)');
+    });
   });
 }

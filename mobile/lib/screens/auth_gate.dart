@@ -9,11 +9,14 @@ import 'package:shared/providers/app_state.dart';
 import 'package:tax_code_flutter/i18n/app_localizations.dart';
 
 import '../settings.dart';
-import 'home_page.dart';
 import '../widgets/info_modal.dart';
 
+import 'home_page.dart';
+
 class AuthGate extends StatelessWidget {
-  const AuthGate({super.key});
+  final FirebaseAuth? auth;
+
+  const AuthGate({super.key, this.auth});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class AuthGate extends StatelessWidget {
     return Consumer<AppState>(
       builder: (context, value, child) {
         return StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
+          stream: (auth ?? FirebaseAuth.instance).authStateChanges(),
           builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
             if (snapshot.hasData) {
               return const HomePage();

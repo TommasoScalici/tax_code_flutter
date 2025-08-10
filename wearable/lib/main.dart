@@ -15,40 +15,57 @@ import 'l10n/app_localizations.dart';
 import 'screens/auth_gate.dart';
 import 'screens/barcode_page.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  final logger = Logger();
-
+Future<void> configureApp({
+  required Logger logger,
+  required bool isAndroid,
+  required bool isDebug,
+  FirebaseRemoteConfig? remoteConfig,
+  FirebaseAppCheck? appCheck,
+  FirebaseCrashlytics? crashlytics,
+}) async {
   try {
-    if (Platform.isAndroid) {
+    if (isAndroid) {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      await FirebaseRemoteConfig.instance.fetchAndActivate();
 
-      if (kDebugMode) {
-        await FirebaseAppCheck.instance.activate(
+      final remoteConfigInstance =
+          remoteConfig ?? FirebaseRemoteConfig.instance;
+      final appCheckInstance = appCheck ?? FirebaseAppCheck.instance;
+      final crashlyticsInstance = crashlytics ?? FirebaseCrashlytics.instance;
+
+      await remoteConfigInstance.fetchAndActivate();
+
+      if (isDebug) {
+        await appCheckInstance.activate(
           androidProvider: AndroidProvider.debug,
         );
       } else {
-        await FirebaseAppCheck.instance.activate(
+        await appCheckInstance.activate(
           androidProvider: AndroidProvider.playIntegrity,
         );
       }
 
       FlutterError.onError = (errorDetails) {
-        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+        crashlyticsInstance.recordFlutterFatalError(errorDetails);
       };
 
       PlatformDispatcher.instance.onError = (error, stack) {
-        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        crashlyticsInstance.recordError(error, stack, fatal: true);
         return true;
       };
     }
   } on Exception catch (e) {
     logger.e('Error while configuring the app with Firebase: $e');
   }
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final logger = Logger();
+
+  await configureApp(
+      logger: logger, isAndroid: Platform.isAndroid, isDebug: kDebugMode);
 
   runApp(MultiProvider(
     providers: [
@@ -98,7 +115,7 @@ class TaxCodeApp extends StatelessWidget {
           style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[800]),
         ),
       ),
-      home: AuthGate(),
+      home: const AuthGate(),
     );
   }
 }

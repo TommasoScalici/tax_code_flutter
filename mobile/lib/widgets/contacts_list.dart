@@ -45,17 +45,12 @@ class _ContactsListState extends State<ContactsList> {
 
   void _onReorder(int oldIndex, int newIndex, AppState appState) {
     HapticFeedback.lightImpact();
-    final contacts = appState.contacts;
 
-    final contact = contacts.removeAt(oldIndex);
-    contacts.insert(newIndex, contact);
+    final reorderedContacts = List<Contact>.from(appState.contacts);
+    final contact = reorderedContacts.removeAt(oldIndex);
 
-    for (int i = 0; i < contacts.length; i++) {
-      contacts[i].listIndex = i;
-    }
-
-    appState.updateContacts(contacts);
-    appState.saveContacts();
+    reorderedContacts.insert(newIndex, contact);
+    appState.updateContacts(reorderedContacts);
   }
 
   Widget _buildSearchField(AppState appState) {

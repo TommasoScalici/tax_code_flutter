@@ -3,17 +3,19 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fake_async/fake_async.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:file/memory.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:logger/logger.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/providers/app_state.dart';
-
-import 'app_state_test.mocks.dart';
+import 'package:shared/providers/shared_preferences_async.dart';
+import 'package:shared/services/database_service.dart';
 
 ///
 /// A mock implementation of [PathProviderPlatform].
@@ -34,15 +36,15 @@ class MockPathProviderPlatform
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-@GenerateMocks([
-  CollectionReference,
-  DocumentReference,
-  FirebaseFirestore,
-  QuerySnapshot,
-  QueryDocumentSnapshot,
-  SharedPreferencesAsync,
-  WriteBatch,
-])
+class MockSharedPreferencesAsync extends Mock
+    implements SharedPreferencesAsync {}
+
+class MockLogger extends Mock implements Logger {}
+
+class MockDatabaseService extends Mock implements DatabaseService {}
+
+class MockFile extends Mock implements File {}
+
 void main() {
   setUpAll(() {
     TestWidgetsFlutterBinding.ensureInitialized();
@@ -61,117 +63,121 @@ void main() {
       ///
       group('Theme Management', () {
         late AppState appState;
+        late MockDatabaseService mockDbService;
+        late MockFirebaseAuth mockAuth;
+        late MockLogger mockLogger;
         late MockSharedPreferencesAsync mockSharedPreferences;
 
-        setUp(() async {
+        setUp(() {
+          mockAuth = MockFirebaseAuth();
+          mockDbService = MockDatabaseService();
+          mockLogger = MockLogger();
           mockSharedPreferences = MockSharedPreferencesAsync();
-
-          when(
-            mockSharedPreferences.getString(any),
-          ).thenAnswer((_) async => 'light');
-
-          appState = AppState(
-            prefs: mockSharedPreferences,
-            auth: MockFirebaseAuth(),
-            firestore: MockFirebaseFirestore(),
-          );
         });
 
-        test('should switch theme from light to dark', () async {
+        void initializeAppState({required String initialTheme}) {
           when(
-            mockSharedPreferences.setString(any, any),
+            () => mockSharedPreferences.getString('theme'),
+          ).thenAnswer((_) async => initialTheme);
+
+          appState = AppState.withMocks(
+            auth: mockAuth,
+            dbService: mockDbService,
+            logger: mockLogger,
+            prefs: mockSharedPreferences,
+          );
+        }
+
+        test('should switch theme from light to dark', () async {
+          initializeAppState(initialTheme: 'light');
+          await appState.loadTheme();
+
+          when(
+            () => mockSharedPreferences.setString('theme', 'dark'),
           ).thenAnswer((_) async => true);
 
           appState.toggleTheme();
           expect(appState.theme, 'dark');
-          verify(mockSharedPreferences.setString('theme', 'dark')).called(1);
+          verify(
+            () => mockSharedPreferences.setString('theme', 'dark'),
+          ).called(1);
+        });
+
+        test('should switch theme from dark to light', () async {
+          initializeAppState(initialTheme: 'dark');
+          await appState.loadTheme();
+
+          when(
+            () => mockSharedPreferences.setString('theme', 'light'),
+          ).thenAnswer((_) async => true);
+
+          appState.toggleTheme();
+          expect(appState.theme, 'light');
+          verify(
+            () => mockSharedPreferences.setString('theme', 'light'),
+          ).called(1);
         });
       });
 
       ///
-      /// Contact Management Tests
+      /// AppState Logic Tests
       /// This section tests the functionality of adding contacts to the AppState.
-      /// It verifies that contacts can be added, removed, and updated,
-      /// and that these changes are reflected in Firestore.
+      /// It verifies that contacts can be added, updated, and that the
+      /// Firestore stream is handled correctly.
       ///
-      group('Contact Management', () {
+      group('AppState Logic', () {
+        late DatabaseService dbService;
+        late FakeFirebaseFirestore fakeFirestore;
         late MockSharedPreferencesAsync mockSharedPreferences;
         late MockFirebaseAuth mockAuth;
-        late MockFirebaseFirestore mockFirestore;
+        late MockLogger mockLogger;
         late MockUser mockUser;
-        late StreamController<QuerySnapshot<Map<String, dynamic>>>
-        contactsStreamController;
 
-        late MockCollectionReference<Map<String, dynamic>> mockUsersCollection;
-        late MockDocumentReference<Map<String, dynamic>> mockUserDoc;
-        late MockCollectionReference<Map<String, dynamic>>
-        mockContactsCollection;
-
-        setUp(() async {
+        setUp(() {
           final directory = Directory(
             MockPathProviderPlatform.fakeDocumentsPath,
           );
           if (directory.existsSync()) directory.deleteSync(recursive: true);
           directory.createSync(recursive: true);
 
-          mockFirestore = MockFirebaseFirestore();
+          fakeFirestore = FakeFirebaseFirestore();
+          dbService = DatabaseService(firestore: fakeFirestore);
           mockSharedPreferences = MockSharedPreferencesAsync();
           mockUser = MockUser(isAnonymous: false, uid: 'test_user');
           mockAuth = MockFirebaseAuth(mockUser: mockUser, signedIn: true);
-
-          contactsStreamController =
-              StreamController<QuerySnapshot<Map<String, dynamic>>>.broadcast();
+          mockLogger = MockLogger();
 
           when(
-            mockSharedPreferences.getString(any),
+            () => mockSharedPreferences.getString('theme'),
           ).thenAnswer((_) async => 'light');
-
-          mockUsersCollection = MockCollectionReference<Map<String, dynamic>>();
-          mockUserDoc = MockDocumentReference<Map<String, dynamic>>();
-          mockContactsCollection =
-              MockCollectionReference<Map<String, dynamic>>();
-
-          when(
-            mockFirestore.collection('users'),
-          ).thenReturn(mockUsersCollection);
-          when(mockUsersCollection.doc(mockUser.uid)).thenReturn(mockUserDoc);
-          when(
-            mockUserDoc.collection('contacts'),
-          ).thenReturn(mockContactsCollection);
-          when(
-            mockContactsCollection.snapshots(),
-          ).thenAnswer((_) => contactsStreamController.stream);
-        });
-
-        tearDown(() {
-          contactsStreamController.close();
         });
 
         Future<AppState> createInitializedAppState({
           List<Contact>? initialContacts,
         }) async {
-          final appState = AppState(
-            prefs: mockSharedPreferences,
+          if (initialContacts != null) {
+            for (final contact in initialContacts) {
+              await fakeFirestore
+                  .collection('users')
+                  .doc(mockUser.uid)
+                  .collection('contacts')
+                  .doc(contact.id)
+                  .set(contact.toMap());
+            }
+          }
+
+          final appState = AppState.withMocks(
             auth: mockAuth,
-            firestore: mockFirestore,
+            dbService: dbService,
+            prefs: mockSharedPreferences,
+            logger: mockLogger,
           );
 
-          await Future.delayed(Duration.zero);
-
-          final initialDocs = (initialContacts ?? []).map((contact) {
-            final mockDoc = MockQueryDocumentSnapshot<Map<String, dynamic>>();
-            when(mockDoc.data()).thenReturn(contact.toMap());
-            when(mockDoc.id).thenReturn(contact.id);
-            return mockDoc;
-          }).toList();
-
-          final mockSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
-          when(mockSnapshot.docs).thenReturn(initialDocs);
-
-          contactsStreamController.add(mockSnapshot);
           await appState.initializationComplete;
           return appState;
         }
+
+        // --- Tests for main paths (happy paths) ---
 
         test('should initialize with contacts from firestore', () async {
           final contact = Contact.empty().copyWith(
@@ -181,138 +187,587 @@ void main() {
           final appState = await createInitializedAppState(
             initialContacts: [contact],
           );
-
           expect(appState.contacts.length, 1);
           expect(appState.contacts.first.firstName, 'Mario');
         });
 
-        test('addContact should add to list and save to firestore', () async {
+        test('addContact should add a new contact', () async {
+          // Arrange
           final appState = await createInitializedAppState();
           final contact = Contact.empty().copyWith(
             id: 'c1',
             firstName: 'Luigi',
           );
-          final mockContactDoc = MockDocumentReference<Map<String, dynamic>>();
 
-          when(
-            mockContactsCollection.doc(contact.id),
-          ).thenReturn(mockContactDoc);
-          when(mockContactDoc.set(any)).thenAnswer((_) async {});
-
+          // Act
           await appState.addContact(contact);
 
+          // Assert
           expect(appState.contacts.length, 1);
           expect(appState.contacts.first.firstName, 'Luigi');
-          verify(mockContactDoc.set(contact.toMap())).called(1);
 
-          final cacheFile = File(
-            '${MockPathProviderPlatform.fakeDocumentsPath}/contacts_${mockUser.uid}.json',
-          );
-          expect(await cacheFile.exists(), isTrue);
+          final doc = await fakeFirestore
+              .collection('users')
+              .doc(mockUser.uid)
+              .collection('contacts')
+              .doc('c1')
+              .get();
+
+          expect(doc.exists, isTrue);
+          expect(doc.data()?['firstName'], 'Luigi');
         });
 
-        test('removeContact should remove from list and firestore', () async {
+        test('addContact should update an existing contact', () async {
+          // Arrange
           final contact = Contact.empty().copyWith(
             id: 'c1',
-            firstName: 'Luigi',
+            firstName: 'Mario',
           );
           final appState = await createInitializedAppState(
             initialContacts: [contact],
           );
+          final updatedContact = contact.copyWith(firstName: 'Luigi');
 
-          final mockContactDoc = MockDocumentReference<Map<String, dynamic>>();
-          when(
-            mockContactsCollection.doc(contact.id),
-          ).thenReturn(mockContactDoc);
-          when(mockContactDoc.delete()).thenAnswer((_) async {});
+          // Act
+          await appState.addContact(updatedContact);
 
-          await appState.removeContact(contact);
+          // Assert
+          expect(appState.contacts.length, 1);
+          expect(appState.contacts.first.firstName, 'Luigi');
 
-          expect(appState.contacts.isEmpty, isTrue);
-          verify(mockContactDoc.delete()).called(1);
-          final cacheFile = File(
-            '${MockPathProviderPlatform.fakeDocumentsPath}/contacts_${mockUser.uid}.json',
-          );
-          final cacheContent = jsonDecode(await cacheFile.readAsString());
-          expect(cacheContent, isEmpty);
+          final doc = await fakeFirestore
+              .collection('users')
+              .doc(mockUser.uid)
+              .collection('contacts')
+              .doc('c1')
+              .get();
+
+          expect(doc.data()?['firstName'], 'Luigi');
         });
 
-        test(
-          'updateContacts should reorder list and save to firestore',
-          () async {
-            final contact1 = Contact.empty().copyWith(
-              id: 'c1',
-              firstName: 'Mario',
-              listIndex: 0,
-            );
-            final contact2 = Contact.empty().copyWith(
-              id: 'c2',
-              firstName: 'Luigi',
-              listIndex: 1,
-            );
-            final appState = await createInitializedAppState(
-              initialContacts: [contact1, contact2],
-            );
-
-            final mockWriteBatch = MockWriteBatch();
-            when(mockFirestore.batch()).thenReturn(mockWriteBatch);
-            final mockInitialSnapshot =
-                MockQuerySnapshot<Map<String, dynamic>>();
-            when(
-              mockContactsCollection.get(),
-            ).thenAnswer((_) async => mockInitialSnapshot);
-            when(mockInitialSnapshot.docs).thenReturn([]);
-            final mockDocRef1 = MockDocumentReference<Map<String, dynamic>>();
-            final mockDocRef2 = MockDocumentReference<Map<String, dynamic>>();
-            when(mockContactsCollection.doc('c1')).thenReturn(mockDocRef1);
-            when(mockContactsCollection.doc('c2')).thenReturn(mockDocRef2);
-
-            final reorderedList = [contact2, contact1];
-            await appState.updateContacts(reorderedList);
-
-            expect(appState.contacts.first.firstName, 'Luigi');
-            verify(
-              mockWriteBatch.set(
-                any,
-                argThat(
-                  allOf([
-                    containsPair('id', 'c2'),
-                    containsPair('listIndex', 0),
-                  ]),
-                ),
-              ),
-            ).called(1);
-            verify(
-              mockWriteBatch.set(
-                any,
-                argThat(
-                  allOf([
-                    containsPair('id', 'c1'),
-                    containsPair('listIndex', 1),
-                  ]),
-                ),
-              ),
-            ).called(1);
-            verify(mockWriteBatch.commit()).called(1);
-          },
-        );
-
-        test('should clear user data on logout', () async {
+        test('removeContact should remove a contact', () async {
+          // Arrange
           final contact = Contact.empty().copyWith(id: 'c1');
           final appState = await createInitializedAppState(
             initialContacts: [contact],
           );
-          expect(
-            appState.contacts.isNotEmpty,
-            isTrue,
-            reason: 'Precondition failed',
+
+          // Act
+          await appState.removeContact(contact);
+
+          // Assert
+          expect(appState.contacts.isEmpty, isTrue);
+
+          final doc = await fakeFirestore
+              .collection('users')
+              .doc(mockUser.uid)
+              .collection('contacts')
+              .doc('c1')
+              .get();
+
+          expect(doc.exists, isFalse);
+        });
+
+        test('updateContacts should replace the list and save', () async {
+          // Arrange
+          final initialContacts = [Contact.empty().copyWith(id: 'c1')];
+          final appState = await createInitializedAppState(
+            initialContacts: initialContacts,
+          );
+          final newContacts = [
+            Contact.empty().copyWith(id: 'c2', listIndex: 0),
+            Contact.empty().copyWith(id: 'c3', listIndex: 1),
+          ];
+
+          // Act
+          await appState.updateContacts(newContacts);
+
+          // Assert
+          expect(appState.contacts.length, 2);
+          expect(appState.contacts.first.id, 'c2');
+
+          final contactsCollection = fakeFirestore
+              .collection('users')
+              .doc(mockUser.uid)
+              .collection('contacts');
+
+          final oldDoc = await contactsCollection.doc('c1').get();
+          expect(oldDoc.exists, isFalse);
+
+          final newDoc2 = await contactsCollection.doc('c2').get();
+          final newDoc3 = await contactsCollection.doc('c3').get();
+          expect(newDoc2.exists, isTrue);
+          expect(newDoc3.exists, isTrue);
+        });
+
+        test('setSearchState should update the search state', () async {
+          final appState = await createInitializedAppState();
+          expect(appState.isSearching, isFalse);
+          appState.setSearchState(true);
+          expect(appState.isSearching, isTrue);
+        });
+
+        // --- Auth Tests ---
+
+        test('should clear contacts and stop loading when user logs out', () {
+          fakeAsync((async) {
+            mockAuth = MockFirebaseAuth(mockUser: mockUser, signedIn: true);
+
+            final appState = AppState.withMocks(
+              auth: mockAuth,
+              dbService: dbService,
+              logger: mockLogger,
+              prefs: mockSharedPreferences,
+            );
+
+            async.flushMicrotasks();
+            mockAuth.signOut();
+
+            async.flushMicrotasks();
+
+            expect(appState.currentUser, isNull);
+            expect(appState.contacts.isEmpty, isTrue);
+            expect(appState.isLoading, isFalse);
+          });
+        });
+
+        // --- Test for user data management ---
+
+        test('saveUserData should include createdAt for a new user', () async {
+          // Arrange
+          final appState = await createInitializedAppState();
+
+          // Act
+          await appState.saveUserData(mockUser);
+
+          // Assert
+          final userDoc = await fakeFirestore
+              .collection('users')
+              .doc(mockUser.uid)
+              .get();
+
+          expect(userDoc.exists, isTrue);
+          expect(userDoc.data(), contains('createdAt'));
+        });
+
+        test('saveUserData should log error on failure', () async {
+          // Arrange
+          final mockDbService = MockDatabaseService();
+
+          when(
+            () => mockDbService.saveUserData(any()),
+          ).thenThrow(Exception('DB Error'));
+
+          final appState = AppState.withMocks(
+            auth: mockAuth,
+            dbService: mockDbService,
+            prefs: mockSharedPreferences,
+            logger: mockLogger,
           );
 
-          await mockAuth.signOut();
+          // Act
+          await appState.saveUserData(mockUser);
+
+          // Assert
+          verify(
+            () => mockLogger.e(
+              any(),
+              error: any(named: 'error'),
+              stackTrace: any(named: 'stackTrace'),
+            ),
+          ).called(1);
+        });
+
+        // --- Tests for main and guard clauses
+
+        test(
+          'methods should do nothing when user is not logged in (Guard Clauses)',
+          () async {
+            // ARRANGE: Creiamo le nostre dipendenze mock
+            final mockAuthLoggedOut = MockFirebaseAuth(signedIn: false);
+            final mockDbService = MockDatabaseService();
+            final dummyContact = Contact.empty().copyWith(id: 'dummy');
+
+            final appState = AppState.withMocks(
+              auth: mockAuthLoggedOut,
+              dbService: mockDbService,
+              prefs: mockSharedPreferences,
+              logger: mockLogger,
+            );
+
+            // ACT
+            await appState.addContact(dummyContact);
+            await appState.removeContact(dummyContact);
+            await appState.saveContacts();
+
+            // VERIFY
+            verifyNever(() => mockDbService.addOrUpdateContact(any(), any()));
+            verifyNever(() => mockDbService.removeContact(any(), any()));
+            verifyNever(() => mockDbService.saveAllContacts(any(), any()));
+          },
+        );
+
+        // --- Tests for errors and edge cases ---
+
+        test(
+          'Firestore stream error should trigger loading from cache',
+          () async {
+            // Arrange
+            final mockDbService = MockDatabaseService();
+            final streamController = StreamController<List<Contact>>();
+
+            when(
+              () => mockDbService.getContactsStream(any()),
+            ).thenAnswer((_) => streamController.stream);
+
+            final cachedContact = Contact.empty().copyWith(id: 'cached');
+            final cacheFile = File(
+              '${MockPathProviderPlatform.fakeDocumentsPath}/contacts_${mockUser.uid}.json',
+            );
+            await cacheFile.writeAsString(jsonEncode([cachedContact.toJson()]));
+
+            final appState = AppState.withMocks(
+              auth: mockAuth,
+              dbService: mockDbService,
+              logger: mockLogger,
+              prefs: mockSharedPreferences,
+            );
+
+            await Future.delayed(Duration.zero);
+
+            // Act
+            streamController.addError(Exception('Connection failed'));
+            await appState.initializationComplete;
+
+            // Assert
+            expect(appState.contacts.length, 1);
+            expect(appState.contacts.first.id, 'cached');
+            verify(
+              () => mockLogger.e(
+                any(),
+                error: any(named: 'error'),
+                stackTrace: any(named: 'stackTrace'),
+              ),
+            ).called(1);
+
+            await streamController.close();
+          },
+        );
+
+        test('addContact should log error if firestore fails', () async {
+          // Arrange
+          final mockDbService = MockDatabaseService();
+          when(
+            () => mockDbService.addOrUpdateContact(any(), any()),
+          ).thenThrow(FirebaseException(plugin: 'test'));
+
+          final appState = AppState.withMocks(
+            auth: mockAuth,
+            dbService: mockDbService,
+            prefs: mockSharedPreferences,
+            logger: mockLogger,
+          );
+          final contact = Contact.empty().copyWith(id: 'c1');
+
+          // Act
+          await appState.addContact(contact);
+
+          // Assert
+          expect(appState.contacts.length, 1);
+          verify(
+            () => mockLogger.e(
+              any(),
+              error: any(named: 'error'),
+              stackTrace: any(named: 'stackTrace'),
+            ),
+          ).called(1);
+        });
+
+        test('removeContact should log error if firestore fails', () async {
+          // Arrange
+          final mockDbService = MockDatabaseService();
+          final contact = Contact.empty().copyWith(id: 'c1');
+
+          when(
+            () => mockDbService.removeContact(any(), any()),
+          ).thenThrow(FirebaseException(plugin: 'test'));
+
+          final appState = AppState.withMocks(
+            auth: mockAuth,
+            dbService: mockDbService,
+            prefs: mockSharedPreferences,
+            logger: mockLogger,
+          );
+
+          // Act
+          await appState.removeContact(contact);
+
+          // Assert
+          expect(appState.contacts.isEmpty, isTrue);
+          verify(
+            () => mockLogger.e(
+              any(),
+              error: any(named: 'error'),
+              stackTrace: any(named: 'stackTrace'),
+            ),
+          ).called(1);
+        });
+
+        test('removeContact should log error if firestore fails', () async {
+          // Arrange
+          final mockDbService = MockDatabaseService();
+          final contact = Contact.empty().copyWith(id: 'c1');
+
+          when(
+            () => mockDbService.removeContact(any(), any()),
+          ).thenThrow(FirebaseException(plugin: 'test'));
+
+          final appState = AppState.withMocks(
+            auth: mockAuth,
+            dbService: mockDbService,
+            prefs: mockSharedPreferences,
+            logger: mockLogger,
+          );
+
+          // Act
+          await appState.removeContact(contact);
+
+          // Assert
+          expect(appState.contacts.isEmpty, isTrue);
+          verify(
+            () => mockLogger.e(
+              any(),
+              error: any(named: 'error'),
+              stackTrace: any(named: 'stackTrace'),
+            ),
+          ).called(1);
+        });
+
+        test('saveContacts should log error on failure', () async {
+          // Arrange
+          final mockDbService = MockDatabaseService();
+          when(
+            () => mockDbService.saveAllContacts(any(), any()),
+          ).thenThrow(Exception('Batch failed'));
+
+          final appState = AppState.withMocks(
+            auth: mockAuth,
+            dbService: mockDbService,
+            prefs: mockSharedPreferences,
+            logger: mockLogger,
+          );
+
+          // Act
+          await appState.saveContacts();
+
+          // Assert
+          verify(
+            () => mockLogger.e(
+              any(),
+              error: any(named: 'error'),
+              stackTrace: any(named: 'stackTrace'),
+            ),
+          ).called(1);
+        });
+
+        test('saveUserData should handle non-null user properties', () async {
+          // Arrange
+          final appState = await createInitializedAppState();
+          final userWithData = MockUser(
+            uid: 'test_user_with_data',
+            displayName: 'Mario Rossi',
+            email: 'mario.rossi@example.com',
+            photoURL: 'http://example.com/photo.jpg',
+          );
+
+          // Act
+          await appState.saveUserData(userWithData);
+
+          // Assert
+          final userDoc = await fakeFirestore
+              .collection('users')
+              .doc(userWithData.uid)
+              .get();
+
+          expect(userDoc.exists, isTrue);
+          final data = userDoc.data();
+          expect(data?['displayName'], 'Mario Rossi');
+          expect(data?['email'], 'mario.rossi@example.com');
+          expect(data?['photoURL'], 'http://example.com/photo.jpg');
+          expect(data, contains('createdAt'));
+        });
+
+        test('should correctly handle subsequent Firestore updates', () async {
+          // Arrange
+          final appState = await createInitializedAppState(
+            initialContacts: [Contact.empty().copyWith(id: 'c1')],
+          );
+          expect(appState.isLoading, isFalse);
+
+          int listenerCallCount = 0;
+          appState.addListener(() => listenerCallCount++);
+
+          // Act
+          final newContactData = Contact.empty().copyWith(id: 'c2').toMap();
+          await fakeFirestore
+              .collection('users')
+              .doc(mockUser.uid)
+              .collection('contacts')
+              .doc('c2')
+              .set(newContactData);
+
+          await Future.delayed(Duration.zero);
+
+          // Assert
+          expect(appState.contacts.length, 2);
+          expect(listenerCallCount, isPositive);
+        });
+
+        // --- Tests of Locale Cache ---
+
+        test(
+          'should load from empty cache if cache file does not exist',
+          () async {
+            // Arrange
+            final mockDbService = MockDatabaseService();
+            when(
+              () => mockDbService.getContactsStream(any()),
+            ).thenAnswer((_) => Stream.error(Exception('Connection failed')));
+
+            final appState = AppState.withMocks(
+              auth: mockAuth,
+              dbService: mockDbService,
+              prefs: mockSharedPreferences,
+              logger: mockLogger,
+            );
+
+            // Act
+            await Future.delayed(Duration.zero);
+            await appState.initializationComplete;
+
+            // Assert
+            expect(appState.contacts.isEmpty, isTrue);
+          },
+        );
+
+        test('should handle error when reading corrupted cache file', () async {
+          // Arrange
+          final cacheFile = File(
+            '${MockPathProviderPlatform.fakeDocumentsPath}/contacts_${mockUser.uid}.json',
+          );
+          await cacheFile.writeAsString('{"invalid_json":}');
+
+          final mockDbService = MockDatabaseService();
+          when(
+            () => mockDbService.getContactsStream(any()),
+          ).thenAnswer((_) => Stream.error(Exception('Connection failed')));
+
+          final appState = AppState.withMocks(
+            auth: mockAuth,
+            dbService: mockDbService,
+            prefs: mockSharedPreferences,
+            logger: mockLogger,
+          );
+
+          // Act
+          await Future.delayed(Duration.zero);
           await appState.initializationComplete;
 
+          // Assert
           expect(appState.contacts.isEmpty, isTrue);
-          expect(appState.currentUser, isNull);
+          verify(
+            () => mockLogger.e(
+              any(),
+              error: any(named: 'error'),
+              stackTrace: any(named: 'stackTrace'),
+            ),
+          ).called(2);
+        });
+
+        test('should handle error when saving to local cache', () async {
+          // Arrange
+          final mockCacheFile = MockFile();
+          when(
+            () =>
+                mockCacheFile.writeAsString(any(), flush: any(named: 'flush')),
+          ).thenThrow(const FileSystemException('Disk is full!'));
+
+          // Usiamo un IOOverrides specifico per questo test
+          await IOOverrides.runZoned(
+            () async {
+              final mockDbService = MockDatabaseService();
+              when(
+                () => mockDbService.addOrUpdateContact(any(), any()),
+              ).thenAnswer((_) async {});
+
+              final appState = AppState.withMocks(
+                auth: mockAuth,
+                dbService: mockDbService,
+                prefs: mockSharedPreferences,
+                logger: mockLogger,
+              );
+
+              clearInteractions(mockLogger);
+
+              final contact = Contact.empty().copyWith(id: 'c1');
+
+              await appState.addContact(contact);
+
+              final verification = verify(
+                () => mockLogger.e(
+                  any(),
+                  error: captureAny(named: 'error'),
+                  stackTrace: any(named: 'stackTrace'),
+                ),
+              );
+
+              verification.called(1);
+
+              final capturedError = verification.captured.first as Exception;
+              expect(capturedError, isA<FileSystemException>());
+            },
+            createFile: (String path) {
+              final cacheFilePath =
+                  '${MockPathProviderPlatform.fakeDocumentsPath}/contacts_${mockUser.uid}.json';
+              if (path == cacheFilePath) {
+                return mockCacheFile;
+              }
+              return memoryFileSystem.file(path);
+            },
+          );
+        });
+
+        test('dispose should cancel contacts subscription', () async {
+          // Arrange
+          final mockDbService = MockDatabaseService();
+          final streamController = StreamController<List<Contact>>();
+
+          when(
+            () => mockDbService.getContactsStream(any()),
+          ).thenAnswer((_) => streamController.stream);
+
+          // Mock auth state to have a user signed in
+          when(
+            () => mockAuth.authStateChanges(),
+          ).thenAnswer((_) => Stream.value(mockUser));
+
+          final appState = AppState.withMocks(
+            auth: mockAuth,
+            dbService: mockDbService,
+            prefs: mockSharedPreferences,
+            logger: mockLogger,
+          );
+
+          await appState.initializationComplete;
+
+          // Act
+          appState.dispose();
+
+          // Assert
+          expect(streamController.hasListener, isFalse);
+
+          // Cleanup
+          await streamController.close();
         });
       });
     },
