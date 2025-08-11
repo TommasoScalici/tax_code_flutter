@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
-import 'package:shared/providers/app_state.dart';
+import 'package:shared/repositories/contact_repository.dart';
 
 final class ContactList extends StatefulWidget {
   const ContactList({super.key});
@@ -16,14 +16,16 @@ class _ContactListState extends State<ContactList> {
   static const _platform =
       MethodChannel('tommasoscalici.tax_code_flutter_wear_os/channel');
 
-  final Logger _logger = Logger();
+  late final Logger _logger;
   bool _nativeViewShown = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final appState = Provider.of<AppState>(context, listen: false);
-    if (appState.contacts.isEmpty) {
+    _logger = context.read<Logger>();
+    final contactRepo = context.watch<ContactRepository>();
+
+    if (contactRepo.contacts.isEmpty) {
       _nativeViewShown = false;
     }
   }
@@ -47,15 +49,15 @@ class _ContactListState extends State<ContactList> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppState>(
-      builder: (context, appState, child) {
-        if (appState.isLoading) {
+    return Consumer<ContactRepository>(
+      builder: (context, contactRepo, child) {
+        if (contactRepo.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (appState.contacts.isNotEmpty) {
+        if (contactRepo.contacts.isNotEmpty) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            _showNativeContacts(appState.contacts);
+            _showNativeContacts(contactRepo.contacts);
           });
         }
 

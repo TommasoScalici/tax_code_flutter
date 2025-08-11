@@ -19,8 +19,8 @@ void main() {
       listIndex: 0,
     );
 
-    /// Grouping tests for JSON and Firestore serialization
-    group('JSON Serialization', () {
+    /// Grouping tests for serialization
+    group('Serialization', () {
       final contactMap = {
         'id': '12345',
         'firstName': 'Mario',
@@ -28,7 +28,7 @@ void main() {
         'gender': 'M',
         'taxCode': 'RSSMRA90A15H501A',
         'birthPlace': {'name': 'Roma', 'state': 'RM'},
-        'birthDate': birthDate.toIso8601String(),
+        'birthDate': Timestamp.fromDate(birthDate),
         'listIndex': 0,
       };
 
@@ -42,22 +42,7 @@ void main() {
       test('toJson should return a valid json map', () {
         final json = contact.toJson();
         expect(json, equals(contactMap));
-      });
-    });
-
-    /// Grouping tests for Firestore serialization
-    group('Firestore Serialization', () {
-      test('toMap should return a map with a Timestamp', () {
-        final map = contact.toMap();
-        expect(map['birthDate'], isA<Timestamp>());
-        expect((map['birthDate'] as Timestamp).toDate(), birthDate);
-      });
-
-      /// Tests for converting the model to a Firestore map
-      test('fromMap should create a valid model from a map', () {
-        final firestoreMap = contact.toMap();
-        final model = Contact.fromMap(firestoreMap);
-        expect(model, equals(contact));
+        expect(json['birthDate'], isA<Timestamp>());
       });
     });
 

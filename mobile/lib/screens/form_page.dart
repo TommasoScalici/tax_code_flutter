@@ -166,7 +166,7 @@ final class _FormPageState extends State<FormPage> {
             firstName: _firstName.trim(),
             lastName: _lastName.trim(),
             gender: _gender,
-            taxCode: response.data.cf,
+            taxCode: response.data.fiscalCode,
             birthPlace: _birthPlace,
             birthDate: _birthDate,
             listIndex: oldContact?.listIndex ?? _contactsLength + 1,

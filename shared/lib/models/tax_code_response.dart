@@ -1,38 +1,40 @@
-// ignore_for_file: non_constant_identifier_names
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-final class Data {
-  String cf;
-  List<String> all_cf;
+part 'tax_code_response.g.dart';
 
-  Data({
-    required this.cf,
-    required this.all_cf,
-  });
+@JsonSerializable()
+class Data extends Equatable {
+  @JsonKey(name: 'cf')
+  final String fiscalCode;
+  @JsonKey(name: 'all_cf')
+  final List<String> allFiscalCodes;
 
-  factory Data.fromJson(Map<String, dynamic> json) {
-    return Data(
-      cf: json['cf'],
-      all_cf: List<String>.from(json['all_cf']),
-    );
-  }
+  const Data({required this.fiscalCode, required this.allFiscalCodes});
+
+  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+  Map<String, dynamic> toJson() => _$DataToJson(this);
+
+  @override
+  List<Object> get props => [fiscalCode, allFiscalCodes];
 }
 
-final class TaxCodeResponse {
+@JsonSerializable(explicitToJson: true)
+final class TaxCodeResponse extends Equatable {
   final bool status;
   final String message;
   final Data data;
 
-  TaxCodeResponse({
+  const TaxCodeResponse({
     required this.status,
     required this.message,
     required this.data,
   });
 
-  factory TaxCodeResponse.fromJson(Map<String, dynamic> json) {
-    return TaxCodeResponse(
-      status: json['status'],
-      message: json['message'],
-      data: Data.fromJson(json['data']),
-    );
-  }
+  factory TaxCodeResponse.fromJson(Map<String, dynamic> json) =>
+      _$TaxCodeResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$TaxCodeResponseToJson(this);
+
+  @override
+  List<Object> get props => [status, message, data];
 }

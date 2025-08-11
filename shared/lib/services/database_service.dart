@@ -20,7 +20,7 @@ class DatabaseService {
         .collection('contacts');
 
     return collection.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => Contact.fromMap(doc.data())).toList();
+      return snapshot.docs.map((doc) => Contact.fromJson(doc.data())).toList();
     });
   }
 
@@ -31,7 +31,7 @@ class DatabaseService {
         .doc(userId)
         .collection('contacts')
         .doc(contact.id);
-    return docRef.set(contact.toMap());
+    return docRef.set(contact.toJson());
   }
 
   /// Removes a single contact from Firestore.
@@ -68,7 +68,7 @@ class DatabaseService {
 
     // 3. Schedule writes for all current contacts (to add new ones or update existing ones)
     for (final contact in contacts) {
-      batch.set(collection.doc(contact.id), contact.toMap());
+      batch.set(collection.doc(contact.id), contact.toJson());
     }
 
     // 4. Commit all operations as a single atomic transaction

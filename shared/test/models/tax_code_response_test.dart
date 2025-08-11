@@ -14,28 +14,49 @@ void main() {
       },
     };
 
-    /// Tests for the Data model
-    test('Data.fromJson should correctly parse the data object', () {
-      final dataMap = fakeJson['data'] as Map<String, dynamic>;
-      final dataModel = Data.fromJson(dataMap);
+    final expectedData = const Data(
+      fiscalCode: 'RSSMRA80A01H501A',
+      allFiscalCodes: ['RSSMRA80A01H501A', 'RSSMRA80A01H501O'],
+    );
 
-      expect(dataModel.cf, 'RSSMRA80A01H501A');
-      expect(dataModel.all_cf, isA<List<String>>());
-      expect(dataModel.all_cf.length, 2);
-      expect(dataModel.all_cf.first, 'RSSMRA80A01H501A');
+    final expectedResponse = TaxCodeResponse(
+      status: true,
+      message: 'Codice Fiscale Calcolato',
+      data: expectedData,
+    );
+
+    /// Tests for the Data model
+    group('Data Model', () {
+      test('fromJson should create a valid model from map', () {
+        // Act
+        final result = Data.fromJson(fakeJson['data'] as Map<String, dynamic>);
+        // Assert
+        expect(result, equals(expectedData));
+      });
+
+      test('toJson should return a valid map', () {
+        // Act
+        final result = expectedData.toJson();
+        // Assert
+        expect(result, equals(fakeJson['data']));
+      });
     });
 
     /// Tests for the TaxCodeResponse model
-    test(
-      'TaxCodeResponse.fromJson should correctly parse the full response',
-      () {
-        final responseModel = TaxCodeResponse.fromJson(fakeJson);
+    group('TaxCodeResponse Model', () {
+      test('fromJson should create a valid model from map', () {
+        // Act
+        final result = TaxCodeResponse.fromJson(fakeJson);
+        // Assert
+        expect(result, equals(expectedResponse));
+      });
 
-        expect(responseModel.status, isTrue);
-        expect(responseModel.message, 'Codice Fiscale Calcolato');
-        expect(responseModel.data, isA<Data>());
-        expect(responseModel.data.cf, 'RSSMRA80A01H501A');
-      },
-    );
+      test('toJson should return a valid map', () {
+        // Act
+        final result = expectedResponse.toJson();
+        // Assert
+        expect(result, equals(fakeJson));
+      });
+    });
   });
 }

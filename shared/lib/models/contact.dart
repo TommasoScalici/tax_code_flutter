@@ -1,22 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:shared/util/timestamp_converter.dart';
 import 'package:uuid/uuid.dart';
 
 import 'birthplace.dart';
 
 part 'contact.g.dart';
 
+@HiveType(typeId: 0)
 @JsonSerializable(explicitToJson: true)
-final class Contact extends Equatable {
+class Contact extends Equatable {
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final String firstName;
+
+  @HiveField(2)
   final String lastName;
+
+  @HiveField(3)
   final String gender;
+
+  @HiveField(4)
   final String taxCode;
+
+  @HiveField(5)
   final Birthplace birthPlace;
+
+  @HiveField(6)
+  @TimestampConverter()
   final DateTime birthDate;
+
+  @HiveField(7)
   final int listIndex;
 
   const Contact({
@@ -68,35 +87,6 @@ final class Contact extends Equatable {
   factory Contact.fromJson(Map<String, dynamic> json) =>
       _$ContactFromJson(json);
   Map<String, dynamic> toJson() => _$ContactToJson(this);
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
-      'gender': gender,
-      'taxCode': taxCode,
-      'birthPlace': {'name': birthPlace.name, 'state': birthPlace.state},
-      'birthDate': Timestamp.fromDate(birthDate),
-      'listIndex': listIndex,
-    };
-  }
-
-  factory Contact.fromMap(Map<String, dynamic> map) {
-    return Contact(
-      id: map['id'] ?? '',
-      firstName: map['firstName'] ?? '',
-      lastName: map['lastName'] ?? '',
-      gender: map['gender'] ?? '',
-      taxCode: map['taxCode'] ?? '',
-      birthPlace: Birthplace(
-        name: map['birthPlace']['name'],
-        state: map['birthPlace']['state'],
-      ),
-      birthDate: (map['birthDate'] as Timestamp).toDate(),
-      listIndex: map['listIndex'] ?? 0,
-    );
-  }
 
   @override
   String toString() =>

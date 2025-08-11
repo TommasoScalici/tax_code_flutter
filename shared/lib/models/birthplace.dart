@@ -1,16 +1,17 @@
+import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'birthplace.g.dart';
 
+@HiveType(typeId: 1)
 @JsonSerializable()
-final class Birthplace {
-  String name;
-  String state;
+class Birthplace {
+  @HiveField(0)
+  final String name;
+  @HiveField(1)
+  final String state;
 
-  Birthplace({
-    required this.name,
-    required this.state,
-  });
+  Birthplace({required this.name, required this.state});
 
   factory Birthplace.fromJson(Map<String, dynamic> json) =>
       _$BirthplaceFromJson(json);
