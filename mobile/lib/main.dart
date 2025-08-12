@@ -1,46 +1,39 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
+import 'package:shared/repositories/contact_repository.dart';
+import 'package:shared/services/auth_service.dart';
+import 'package:shared/services/database_service.dart';
+import 'package:shared/services/theme_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tax_code_flutter/i18n/app_localizations.dart';
 
 import 'firebase_options.dart';
 import 'screens/auth_gate.dart';
 import 'settings.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  final logger = Logger();
-
+// AGGIUNTA: Funzione per una configurazione pulita
+Future<void> configureApp(Logger logger) async {
   try {
-    if (Platform.isAndroid) {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+    if (Platform.isAndroid || Platform.isIOS) {
       await FirebaseRemoteConfig.instance.fetchAndActivate();
 
-      if (kDebugMode) {
-        await FirebaseAppCheck.instance.activate(
-          androidProvider: AndroidProvider.debug,
-        );
-      } else {
-        await FirebaseAppCheck.instance.activate(
-          androidProvider: AndroidProvider.playIntegrity,
-        );
-      }
+      final appCheckProvider = kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity;
+      await FirebaseAppCheck.instance.activate(androidProvider: appCheckProvider);
 
-      FlutterError.onError = (errorDetails) {
-        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-      };
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
       PlatformDispatcher.instance.onError = (error, stack) {
         FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
@@ -50,13 +43,62 @@ Future<void> main() async {
   } on Exception catch (e) {
     logger.e('Error while configuring the app with Firebase: $e');
   }
+}
 
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => AppState.main()),
-    ],
-    child: const TaxCodeApp(),
-  ));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final logger = Logger();
+
+  // Inizializzazione di base
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await configureApp(logger);
+
+  final sharedPreferences = SharedPreferencesAsync();
+  final firebaseAuth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
+  final googleSignIn = GoogleSignIn();
+
+  runApp(
+    // MODIFICATO: Setup completo dei provider per la nuova architettura
+    MultiProvider(
+      providers: [
+        // Servizi di base
+        Provider<Logger>.value(value: logger),
+        Provider<DatabaseService>(
+          create: (_) => DatabaseService(firestore: firestore),
+        ),
+
+        // Servizi con stato (ChangeNotifier)
+        ChangeNotifierProvider<ThemeService>(
+          create: (_) => ThemeService(prefs: sharedPreferences)..init(),
+        ),
+        ChangeNotifierProvider<AuthService>(
+          create: (context) => AuthService(
+            auth: firebaseAuth,
+            googleSignIn: googleSignIn,
+            dbService: context.read<DatabaseService>(),
+            logger: context.read<Logger>(),
+          ),
+        ),
+        ChangeNotifierProvider<AppState>(
+          create: (_) => AppState(),
+        ),
+
+        // Provider che dipende da un altro ChangeNotifier
+        ChangeNotifierProxyProvider<AuthService, ContactRepository>(
+          create: (context) => ContactRepository(
+            authService: context.read<AuthService>(),
+            dbService: context.read<DatabaseService>(),
+            logger: context.read<Logger>(),
+          ),
+          update: (_, authService, previousRepo) => previousRepo!,
+        ),
+      ],
+      child: const TaxCodeApp(),
+    ),
+  );
 }
 
 final class TaxCodeApp extends StatelessWidget {
@@ -64,24 +106,22 @@ final class TaxCodeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppState>(
-      builder: (context, appState, child) {
-        appState.loadTheme();
+    // MODIFICATO: Ascoltiamo solo il ThemeService, di cui abbiamo bisogno qui
+    final themeService = context.watch<ThemeService>();
 
-        return MaterialApp(
-          onGenerateTitle: (BuildContext context) =>
-              AppLocalizations.of(context)!.appTitle,
-          localizationsDelegates: [
-            ...AppLocalizations.localizationsDelegates,
-            FirebaseUILocalizations.delegate
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-          theme: appState.theme == 'dark'
-              ? Settings.getDarkTheme()
-              : Settings.getLightTheme(),
-          home: const AuthGate(),
-        );
-      },
+    return MaterialApp(
+      onGenerateTitle: (BuildContext context) =>
+          AppLocalizations.of(context)!.appTitle,
+      localizationsDelegates: [
+        ...AppLocalizations.localizationsDelegates,
+        FirebaseUILocalizations.delegate
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      // MODIFICATO: Il tema dipende da ThemeService, non più dal vecchio AppState
+      theme: themeService.theme == 'dark'
+          ? Settings.getDarkTheme()
+          : Settings.getLightTheme(),
+      home: const AuthGate(),
     );
   }
 }

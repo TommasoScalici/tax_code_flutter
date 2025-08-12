@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/providers/app_state.dart';
+import 'package:shared/repositories/contact_repository.dart';
 import 'package:tax_code_flutter/i18n/app_localizations.dart';
 
 import 'contact_card.dart';
@@ -43,24 +44,23 @@ class _ContactsListState extends State<ContactsList> {
     });
   }
 
-  void _onReorder(int oldIndex, int newIndex, AppState appState) {
+  void _onReorder(int oldIndex, int newIndex, ContactRepository contactRepo) {
     HapticFeedback.lightImpact();
 
-    final reorderedContacts = List<Contact>.from(appState.contacts);
+    final reorderedContacts = List<Contact>.from(contactRepo.contacts);
     final contact = reorderedContacts.removeAt(oldIndex);
 
     reorderedContacts.insert(newIndex, contact);
-    appState.updateContacts(reorderedContacts);
+    contactRepo.updateContacts(reorderedContacts);
   }
 
-  Widget _buildSearchField(AppState appState) {
+  Widget _buildSearchField(List<Contact> allContacts) {
     return SizedBox(
       width: 400,
       child: TextField(
         autocorrect: false,
         controller: _searchTextEditingController,
-        onChanged: (searchText) =>
-            _filterContacts(searchText, appState.contacts),
+        onChanged: (searchText) => _filterContacts(searchText, allContacts),
         onTapOutside: (event) => FocusScope.of(context).unfocus(),
         decoration: InputDecoration(
             prefixIcon: const Icon(Icons.search),
@@ -68,15 +68,17 @@ class _ContactsListState extends State<ContactsList> {
             suffix: IconButton(
                 onPressed: () {
                   _searchTextEditingController.clear();
-                  _filterContacts('', appState.contacts);
+                  _filterContacts('', allContacts);
                   FocusScope.of(context).unfocus();
                 },
-                icon: const Icon(Icons.clear))),
+                icon: const Icon(Icons.clear)
+              )
+            ),
       ),
     );
   }
-
-  Widget _buildContactsGrid(List<Contact> contacts, AppState appState) {
+  
+  Widget _buildContactsGrid(List<Contact> contacts, ContactRepository contactRepo) {
     final isReorderable = _searchText.isEmpty;
 
     if (isReorderable) {
@@ -103,12 +105,12 @@ class _ContactsListState extends State<ContactsList> {
         insertDuration: const Duration(milliseconds: 400),
         removeDuration: const Duration(milliseconds: 400),
         onReorder: (oldIndex, newIndex) =>
-            _onReorder(oldIndex, newIndex, appState),
+            _onReorder(oldIndex, newIndex, contactRepo),
         onReorderStart: (index) => HapticFeedback.heavyImpact(),
         isSameItem: (Contact a, Contact b) => a.id == b.id,
       );
     }
-
+    // ... (GridView.builder rimane identico)
     return GridView.builder(
       itemCount: contacts.length,
       shrinkWrap: true,
@@ -129,16 +131,15 @@ class _ContactsListState extends State<ContactsList> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppState>(
-      builder: (context, appState, child) {
-        if (appState.isLoading) {
+    return Consumer2<ContactRepository, AppState>(
+      builder: (context, contactRepo, appState, child) {
+        if (contactRepo.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
 
         final contactsToShow =
-            _searchText.isEmpty ? appState.contacts : _filteredContacts;
+            _searchText.isEmpty ? contactRepo.contacts : _filteredContacts;
 
-        // Show a message if the list is empty and the user is not searching.
         if (contactsToShow.isEmpty && _searchText.isEmpty) {
           return Center(
             child: Text(
@@ -153,11 +154,11 @@ class _ContactsListState extends State<ContactsList> {
           child: Center(
             child: Column(
               children: [
-                _buildSearchField(appState),
+                _buildSearchField(contactRepo.contacts),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 20.0),
-                    child: _buildContactsGrid(contactsToShow, appState),
+                    child: _buildContactsGrid(contactsToShow, contactRepo),
                   ),
                 ),
               ],

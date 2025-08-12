@@ -17,7 +17,7 @@ import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/models/tax_code_response.dart';
-import 'package:shared/providers/app_state.dart';
+import 'package:shared/repositories/contact_repository.dart';
 import 'package:tax_code_flutter/i18n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 
@@ -33,7 +33,7 @@ final class FormPage extends StatefulWidget {
 }
 
 final class _FormPageState extends State<FormPage> {
-  final _logger = Logger();
+  late final Logger _logger;
 
   final _form = FormGroup({
     'firstName': FormControl<String>(validators: [Validators.required]),
@@ -57,7 +57,8 @@ final class _FormPageState extends State<FormPage> {
   @override
   void initState() {
     super.initState();
-    _contactsLength = context.read<AppState>().contacts.length;
+    _logger = context.read<Logger>();
+    _contactsLength = context.read<ContactRepository>().contacts.length;
     _loadBirthplacesData();
     _setPreviousData();
   }

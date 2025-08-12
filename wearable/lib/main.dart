@@ -8,6 +8,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart'; // AGGIUNTO
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/providers/app_state.dart';
@@ -58,6 +59,7 @@ Future<void> main() async {
   final sharedPreferences = SharedPreferencesAsync();
   final firebaseAuth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
+  final googleSignIn = GoogleSignIn();
 
   runApp(
     MultiProvider(
@@ -66,12 +68,14 @@ Future<void> main() async {
         Provider<DatabaseService>(
           create: (_) => DatabaseService(firestore: firestore),
         ),
+
         ChangeNotifierProvider<ThemeService>(
           create: (_) => ThemeService(prefs: sharedPreferences)..init(),
         ),
         ChangeNotifierProvider<AuthService>(
           create: (context) => AuthService(
             auth: firebaseAuth,
+            googleSignIn: googleSignIn,
             dbService: context.read<DatabaseService>(),
             logger: context.read<Logger>(),
           ),
@@ -79,6 +83,7 @@ Future<void> main() async {
         ChangeNotifierProvider<AppState>(
           create: (_) => AppState(),
         ),
+
         ChangeNotifierProxyProvider<AuthService, ContactRepository>(
           create: (context) => ContactRepository(
             authService: context.read<AuthService>(),

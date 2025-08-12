@@ -7,9 +7,9 @@ part 'birthplace.g.dart';
 @JsonSerializable()
 class Birthplace {
   @HiveField(0)
-  final String name;
+  String name;
   @HiveField(1)
-  final String state;
+  String state;
 
   Birthplace({required this.name, required this.state});
 
