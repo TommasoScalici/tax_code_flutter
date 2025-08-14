@@ -38,7 +38,6 @@ class AuthGate extends StatelessWidget {
                     icon: const Icon(Icons.login),
                     label: const Text('Login'),
                   ),
-                  // 5. Anche l'indicatore di caricamento dipende dallo stato del servizio
                   if (authService.isLoading) ...[
                     const SizedBox(height: 16),
                     const SizedBox(

@@ -1,59 +1,42 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
+import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/i18n/app_localizations.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  Future<void> _deleteUser(BuildContext context) async {
-    final auth = FirebaseAuth.instance;
-    final firestore = FirebaseFirestore.instance;
-    final currentUser = auth.currentUser;
-    final logger = Logger();
-
-    if (currentUser != null) {
-      final uid = currentUser.uid;
-      final userDocRef = firestore.collection('users').doc(uid);
-      final contactsRef = userDocRef.collection('contacts');
-      final querySnapshot = await contactsRef.get();
-
-      try {
-        final batch = firestore.batch();
-
-        for (var doc in querySnapshot.docs) {
-          batch.delete(doc.reference);
-        }
-
-        await batch.commit();
-        await userDocRef.delete();
-        await currentUser.delete();
-        if (context.mounted) Navigator.pop(context);
-      } on FirebaseAuthException catch (e) {
-        logger.e(
-            'Error while deleting user, probably needs to reauthenticate: $e');
-      }
-    }
-  }
-
   Future<void> _showDeleteUserConfirmDialog(BuildContext context) async {
+    final authService = context.read<AuthService>();
+    final l10n = AppLocalizations.of(context)!;
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     await showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (dialogContext) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.deleteConfirmation),
-          content: Text(AppLocalizations.of(context)!.deleteAccountMessage),
+          title: Text(l10n.deleteConfirmation),
+          content: Text(l10n.deleteAccountMessage),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context)!.cancel),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(l10n.cancel),
             ),
             TextButton(
-              onPressed: () async => await _deleteUser(context),
+              onPressed: () async {
+                try {
+                  await authService.deleteUserAccount();
+                  if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                } catch (e) {
+                  if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                  scaffoldMessenger.showSnackBar(
+                    SnackBar(content: Text(l10n.genericError)),
+                  );
+                }
+              },
               child: Text(
-                AppLocalizations.of(context)!.delete,
+                l10n.delete,
                 style: const TextStyle(color: Colors.red),
               ),
             ),
@@ -65,57 +48,58 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = FirebaseAuth.instance;
-
-    final displayName =
-        auth.currentUser != null && auth.currentUser?.displayName != null
-            ? auth.currentUser!.displayName!
-            : '';
+    final authService = context.watch<AuthService>();
+    final l10n = AppLocalizations.of(context)!;
+    final displayName = authService.currentUser?.displayName ?? '';
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(AppLocalizations.of(context)!.appTitle),
+        title: Text(l10n.profilePageTitle),
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              UserAvatar(),
+              const UserAvatar(),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
-                child: Text(
-                  displayName,
-                  style: TextStyle(fontSize: 24),
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(displayName, style: const TextStyle(fontSize: 24)),
               ),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () async {
-                    await auth.signOut();
-                    if (context.mounted) Navigator.pop(context);
+                    try {
+                      await authService.signOut();
+                      if (context.mounted) Navigator.pop(context);
+                    } catch (e) {
+                      scaffoldMessenger.showSnackBar(
+                        SnackBar(content: Text(l10n.genericError)),
+                      );
+                    }
                   },
-                  icon: Icon(Icons.logout),
-                  label: Text(AppLocalizations.of(context)!.signOut),
+                  icon: const Icon(Icons.logout),
+                  label: Text(l10n.signOut),
                 ),
               ),
               SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () async =>
-                        await _showDeleteUserConfirmDialog(context),
-                    icon: Icon(Icons.delete),
-                    label: Text(
-                      AppLocalizations.of(context)!.deleteAccount,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      iconColor: Colors.white,
-                    ),
-                  ))
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => _showDeleteUserConfirmDialog(context),
+                  icon: const Icon(Icons.delete),
+                  label: Text(
+                    l10n.deleteAccount,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    iconColor: Colors.white,
+                  ),
+                ),
+              )
             ],
           ),
         ),

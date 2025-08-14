@@ -1,54 +1,240 @@
 {
   "@@author": "Tommaso Scalici",
   "@@locale": "it",
+
+  "@_generic": {},
   "appTitle": "Codice Fiscale",
-  "pleaseSignIn": "Benvenuto su Codice Fiscale, per favore accedi.",
-  "pleaseSignUp": "Benvenuto su Codice Fiscale, per favore registrati.",
-  "termsAndCondition": "Accedendo o registrandoti, accetti i termini e le condizioni.",
-  "showTerms": "Mostra termini e condizioni",
-  "required": "Obbligatorio",
-  "newItem": "Nuovo",
-  "fillData": "Inserisci i dati",
-  "firstName": "Nome",
-  "lastName": "Cognome",
-  "gender": "Sesso",
-  "birthDate": "Data di nascita",
-  "birthPlace": "Luogo di nascita",
+  "@appTitle": {
+    "description": "The title of the application, often shown in the app bar."
+  },
   "confirm": "Conferma",
-  "deleteConfirmation": "Conferma eliminazione",
-  "delete": "Elimina",
-  "deleteAccount": "Elimina account",
-  "signOut": "Esci",
+  "@confirm": {
+    "description": "Label for a confirmation button."
+  },
   "cancel": "Annulla",
+  "@cancel": {
+    "description": "Label for a button to cancel an action."
+  },
   "close": "Chiudi",
-  "error": "Errore",
-  "errorLoading": "Errore durante il caricamento dei contatti: ",
+  "@close": {
+    "description": "Label for a button to close a screen or dialog."
+  },
+  "delete": "Elimina",
+  "@delete": {
+    "description": "Label for a delete button."
+  },
+  "edit": "Modifica",
+  "@edit": {
+    "description": "Label for an edit button."
+  },
+  "share": "Condividi",
+  "@share": {
+    "description": "Label for a share button."
+  },
   "info": "Informazioni",
-  "search": "Cerca...",
-  "scanCard": "Scannerizza tessera",
-  "takePicture": "Scatta una foto...",
-  "permissionRequired": "Permesso richiesto",
-  "openSettings": "Apri Impostazioni",
-  "cameraPermissionInfo": "Il permesso della fotocamera è stato negato in modo permanente.\nVai nelle impostazioni dell'app, apri la sezione Autorizzazioni e abilita il permesso della fotocamera.",
-  "appName": "Nome app",
-  "packageName": "Nome pacchetto",
-  "appVersion": "Versione",
-  "buildNumber": "Numero build",
-  "buildSignature": "Firma build",
-  "installerStore": "Provenienza",
-  "errorConnection": "Errore di connessione",
-  "errorUnexpected": "Errore imprevisto",
-  "errorOccurred": "Si è verificato un errore, riprova più tardi.",
-  "errorNoInternet": "Controlla la tua connessione internet e riprova.",
-  "noContactsFound": "Nessun contatto trovato.",
-  "deleteAccountMessage": "Sei sicuro? Tutti i tuoi dati verranno cancellati in modo permanente.",
-  "deleteMessage": "Sei sicuro di voler eliminare il contatto con codice fiscale: '{taxCode}'?",
+  "@info": {
+    "description": "A generic title for an informational dialog or screen."
+  },
+
+  "@_authentication": {},
+  "pleaseSignIn": "Benvenuto, accedi per continuare.",
+  "@pleaseSignIn": {
+    "description": "A welcome message on the login screen."
+  },
+  "pleaseSignUp": "Benvenuto, crea un account per continuare.",
+  "@pleaseSignUp": {
+    "description": "A welcome message on the registration screen."
+  },
+  "signOut": "Esci",
+  "@signOut": {
+    "description": "Label for a button to sign out of the application."
+  },
+  "deleteAccount": "Elimina Account",
+  "@deleteAccount": {
+    "description": "Label for a button to delete the user's account."
+  },
+  "deleteAccountMessage": "Sei sicuro di voler eliminare il tuo account? Tutti i tuoi dati verranno persi permanentemente. Questa azione è irreversibile.",
+  "@deleteAccountMessage": {
+    "description": "A confirmation message shown to the user before deleting their account."
+  },
+
+  "@_pageTitles": {},
+  "homePageTitle": "I Miei Contatti",
+  "@homePageTitle": {
+    "description": "Title for the main home page."
+  },
+  "profilePageTitle": "Profilo",
+  "@profilePageTitle": {
+    "description": "Title for the user profile screen."
+  },
+  "formPageTitle": "Dettagli Contatto",
+  "@formPageTitle": {
+    "description": "Title for the page where user enters contact details."
+  },
+  "barcodePageTitle": "Codice a Barre",
+  "@barcodePageTitle": {
+    "description": "Title for the page displaying the barcode."
+  },
+  "takePicture": "Scansiona Tessera",
+  "@takePicture": {
+    "description": "Title for the camera screen."
+  },
+
+  "@_homePageAndContactList": {},
+  "newItem": "Aggiungi Contatto",
+  "@newItem": {
+    "description": "Tooltip for the FloatingActionButton to create a new contact."
+  },
+  "search": "Cerca per nome o codice fiscale...",
+  "@search": {
+    "description": "Placeholder text inside a search bar."
+  },
+  "contactsListEmpty": "Nessun contatto presente.\nTocca il pulsante '+' per aggiungere il primo!",
+  "@contactsListEmpty": {
+    "description": "Message displayed when the contact list is empty."
+  },
+  "searchNoResults": "Nessun risultato trovato per '{searchText}'",
+  "@searchNoResults": {
+    "description": "Message displayed when a search yields no results.",
+    "placeholders": {
+      "searchText": {
+        "type": "String",
+        "example": "Rossi"
+      }
+    }
+  },
+  "tooltipShare": "Condividi Codice Fiscale",
+  "@tooltipShare": {
+    "description": "Tooltip for the share button on a contact card."
+  },
+  "tooltipShowBarcode": "Mostra Codice a Barre",
+  "@tooltipShowBarcode": {
+    "description": "Tooltip for the barcode button on a contact card."
+  },
+  "tooltipEdit": "Modifica Contatto",
+  "@tooltipEdit": {
+    "description": "Tooltip for the edit button on a contact card."
+  },
+  "tooltipDelete": "Elimina Contatto",
+  "@tooltipDelete": {
+    "description": "Tooltip for the delete button on a contact card."
+  },
+
+  "@_formPage": {},
+  "scanCard": "Scansiona da Tessera Sanitaria",
+  "@scanCard": {
+    "description": "Label for a button that initiates scanning a card."
+  },
+  "firstName": "Nome",
+  "@firstName": {
+    "description": "Label for the first name input field."
+  },
+  "lastName": "Cognome",
+  "@lastName": {
+    "description": "Label for the last name input field."
+  },
+  "gender": "Sesso",
+  "@gender": {
+    "description": "Label for the gender input field."
+  },
+  "birthDate": "Data di Nascita",
+  "@birthDate": {
+    "description": "Label for the birth date input field."
+  },
+  "birthPlace": "Luogo di Nascita",
+  "@birthPlace": {
+    "description": "Label for the birth place input field."
+  },
+  "required": "Questo campo è obbligatorio",
+  "@required": {
+    "description": "A validation error message for a required form field."
+  },
+
+  "@_dialogsAndMessages": {},
+  "deleteConfirmation": "Conferma Eliminazione",
+  "@deleteConfirmation": {
+    "description": "The title for a dialog asking the user to confirm a delete action."
+  },
+  "deleteMessage": "Sei sicuro di voler eliminare permanentemente il contatto per '{taxCode}'?",
   "@deleteMessage": {
+    "description": "A confirmation message for deleting a specific contact.",
     "placeholders": {
       "taxCode": {
         "type": "String",
-        "example": "AAABBB00C00D000E"
+        "example": "RSSMRA80A01H501A"
       }
     }
+  },
+  "permissionRequired": "Permesso Richiesto",
+  "@permissionRequired": {
+    "description": "Title for a dialog informing the user that a permission is required."
+  },
+  "cameraPermissionInfo": "Per scansionare le tessere, l'app necessita dell'accesso alla fotocamera. Vai alle impostazioni del dispositivo e concedi il permesso.",
+  "@cameraPermissionInfo": {
+    "description": "An informational message explaining how to grant camera permission."
+  },
+  "openSettings": "Apri Impostazioni",
+  "@openSettings": {
+    "description": "Label for a button that navigates the user to the app's settings page."
+  },
+  "error": "Errore",
+  "@error": {
+    "description": "A generic title for an error dialog."
+  },
+  "genericError": "Qualcosa è andato storto. Riprova.",
+  "@genericError": {
+    "description": "A user-friendly message for a generic error, asking them to retry."
+  },
+
+  "@_cameraPage": {},
+  "tooltipToggleFlash": "Attiva/Disattiva flash",
+  "@tooltipToggleFlash": {
+    "description": "Tooltip for the button that toggles the camera flash on and off."
+  },
+  "tooltipTakePicture": "Scatta foto",
+  "@tooltipTakePicture": {
+    "description": "Tooltip for the button to capture a picture."
+  },
+  "tooltipConfirmPicture": "Conferma foto",
+  "@tooltipConfirmPicture": {
+    "description": "Tooltip for the button to confirm the captured picture and proceed."
+  },
+  "tooltipRetakePicture": "Scatta di nuovo",
+  "@tooltipRetakePicture": {
+    "description": "Tooltip for the button to discard the current picture and take a new one."
+  },
+
+  "@_infoModalAndLegal": {},
+  "termsAndCondition": "Procedendo, accetti i nostri Termini e Condizioni.",
+  "@termsAndCondition": {
+    "description": "A notice about agreeing to terms and conditions."
+  },
+  "showTerms": "Visualizza Termini e Condizioni",
+  "@showTerms": {
+    "description": "Label for a button to display the terms and conditions."
+  },
+  "appName": "Nome App",
+  "@appName": {
+    "description": "Label for the app name field in an info screen."
+  },
+  "packageName": "Nome Pacchetto",
+  "@packageName": {
+    "description": "Label for the package name field in an info screen."
+  },
+  "appVersion": "Versione",
+  "@appVersion": {
+    "description": "Label for the app version field in an info screen."
+  },
+  "buildNumber": "Numero Build",
+  "@buildNumber": {
+    "description": "Label for the build number field in an info screen."
+  },
+  "buildSignature": "Firma Build",
+  "@buildSignature": {
+    "description": "Label for the build signature field in an info screen."
+  },
+  "installerStore": "Store di Installazione",
+  "@installerStore": {
+    "description": "Label for the installer store field in an info screen."
   }
 }

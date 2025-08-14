@@ -10,21 +10,25 @@ import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:shared/providers/app_state.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
-import 'package:shared/services/database_service.dart';
 import 'package:shared/services/theme_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/i18n/app_localizations.dart';
+import 'package:tax_code_flutter/services/birthplace_service.dart';
+import 'package:tax_code_flutter/services/info_service.dart';
+import 'package:tax_code_flutter/services/ocr_service.dart';
+import 'package:tax_code_flutter/services/tax_code_service.dart';
+import 'package:shared/services/database_service.dart'; // Assicurati che l'import sia corretto
 
 import 'firebase_options.dart';
 import 'screens/auth_gate.dart';
 import 'settings.dart';
 
-// AGGIUNTA: Funzione per una configurazione pulita
 Future<void> configureApp(Logger logger) async {
   try {
     if (Platform.isAndroid || Platform.isIOS) {
@@ -47,53 +51,81 @@ Future<void> configureApp(Logger logger) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final logger = Logger();
-
-  // Inizializzazione di base
+  
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  final logger = Logger();
   await configureApp(logger);
 
-  final sharedPreferences = SharedPreferencesAsync();
-  final firebaseAuth = FirebaseAuth.instance;
-  final firestore = FirebaseFirestore.instance;
-  final googleSignIn = GoogleSignIn();
+  final sharedPreferences = await SharedPreferences.getInstance();
 
   runApp(
-    // MODIFICATO: Setup completo dei provider per la nuova architettura
     MultiProvider(
       providers: [
-        // Servizi di base
+        // --- Level 1: low level and external instances ---
         Provider<Logger>.value(value: logger),
+        Provider<SharedPreferences>.value(value: sharedPreferences),
+        Provider<FirebaseAuth>.value(value: FirebaseAuth.instance),
+        Provider<FirebaseFirestore>.value(value: FirebaseFirestore.instance),
+        Provider<FirebaseRemoteConfig>.value(value: FirebaseRemoteConfig.instance),
+        Provider<GoogleSignIn>.value(value: GoogleSignIn()),
+        Provider<http.Client>(create: (_) => http.Client()),
+        Provider<FirebaseCrashlytics>(create: (_) => FirebaseCrashlytics.instance),
+
+        // --- Level 2: specialized services depending on level 1 ---
+        Provider<OCRService>(create: (_) => OCRService()),
+        Provider<InfoServiceAbstract>(
+          create: (context) => InfoService(logger: context.read<Logger>()),
+        ),
+        Provider<BirthplaceServiceAbstract>(
+          create: (context) => BirthplaceService(logger: context.read<Logger>()),
+        ),
+        Provider<TaxCodeServiceAbstract>(
+          create: (context) {
+            final remoteConfig = context.read<FirebaseRemoteConfig>();
+            final accessToken = remoteConfig.getString(Settings.mioCodiceFiscaleApiKey);
+            return TaxCodeService(
+              client: context.read<http.Client>(),
+              logger: context.read<Logger>(),
+              accessToken: accessToken,
+            );
+          },
+        ),
         Provider<DatabaseService>(
-          create: (_) => DatabaseService(firestore: firestore),
+          create: (context) => DatabaseService(firestore: context.read<FirebaseFirestore>()),
         ),
 
-        // Servizi con stato (ChangeNotifier)
+        // --- Level 3: State Services ---
         ChangeNotifierProvider<ThemeService>(
-          create: (_) => ThemeService(prefs: sharedPreferences)..init(),
+          create: (context) => ThemeService(prefs: context.read<SharedPreferencesAsync>())..init(),
         ),
         ChangeNotifierProvider<AuthService>(
           create: (context) => AuthService(
-            auth: firebaseAuth,
-            googleSignIn: googleSignIn,
+            auth: context.read<FirebaseAuth>(),
+            firestore: context.read<FirebaseFirestore>(),
+            googleSignIn: context.read<GoogleSignIn>(),
             dbService: context.read<DatabaseService>(),
             logger: context.read<Logger>(),
           ),
         ),
-        ChangeNotifierProvider<AppState>(
-          create: (_) => AppState(),
-        ),
 
-        // Provider che dipende da un altro ChangeNotifier
+        // --- Level 4: Repositories ---
         ChangeNotifierProxyProvider<AuthService, ContactRepository>(
           create: (context) => ContactRepository(
             authService: context.read<AuthService>(),
             dbService: context.read<DatabaseService>(),
             logger: context.read<Logger>(),
           ),
-          update: (_, authService, previousRepo) => previousRepo!,
+          update: (context, authService, previousRepository) => previousRepository!,
+        ),
+
+        // --- Level 5: View Controllers ---
+        ChangeNotifierProvider<HomePageController>(
+          create: (context) => HomePageController(
+            contactRepository: context.read<ContactRepository>(),
+          ),
         ),
       ],
       child: const TaxCodeApp(),
@@ -106,18 +138,15 @@ final class TaxCodeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // MODIFICATO: Ascoltiamo solo il ThemeService, di cui abbiamo bisogno qui
     final themeService = context.watch<ThemeService>();
 
     return MaterialApp(
-      onGenerateTitle: (BuildContext context) =>
-          AppLocalizations.of(context)!.appTitle,
-      localizationsDelegates: [
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+      localizationsDelegates: const [
         ...AppLocalizations.localizationsDelegates,
         FirebaseUILocalizations.delegate
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      // MODIFICATO: Il tema dipende da ThemeService, non più dal vecchio AppState
       theme: themeService.theme == 'dark'
           ? Settings.getDarkTheme()
           : Settings.getLightTheme(),

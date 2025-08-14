@@ -1,12 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:math';
-
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -16,418 +8,289 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
-import 'package:shared/models/tax_code_response.dart';
 import 'package:shared/repositories/contact_repository.dart';
+import 'package:tax_code_flutter/controllers/form_page_controller.dart';
 import 'package:tax_code_flutter/i18n/app_localizations.dart';
-import 'package:uuid/uuid.dart';
-
+import 'package:tax_code_flutter/services/birthplace_service.dart';
+import 'package:tax_code_flutter/services/tax_code_service.dart';
+import 'package:tax_code_flutter/services/ocr_service.dart';
 import 'camera_page.dart';
-import '../settings.dart';
 
-final class FormPage extends StatefulWidget {
+/// This widget is responsible for creating and providing the FormPageController
+/// to the widget tree.
+class FormPage extends StatelessWidget {
   final Contact? contact;
-  const FormPage({super.key, required this.contact});
+  const FormPage({super.key, this.contact});
 
   @override
-  State<StatefulWidget> createState() => _FormPageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => FormPageController(
+        taxCodeService: context.read<TaxCodeServiceAbstract>(),
+        birthplaceService: context.read<BirthplaceServiceAbstract>(),
+        contactRepository: context.read<ContactRepository>(),
+        logger: context.read<Logger>(),
+        initialContact: contact,
+      ),
+      child: const _FormView(),
+    );
+  }
 }
 
-final class _FormPageState extends State<FormPage> {
-  late final Logger _logger;
+/// This widget is responsible for building the UI and listening to the controller.
+class _FormView extends StatefulWidget {
+  const _FormView();
 
-  final _form = FormGroup({
-    'firstName': FormControl<String>(validators: [Validators.required]),
-    'lastName': FormControl<String>(validators: [Validators.required]),
-    'gender': FormControl<String>(validators: [Validators.required]),
-    'birthDate': FormControl<DateTime>(validators: [Validators.required]),
-    'birthPlace': FormControl<Birthplace>(validators: [Validators.required]),
-  });
+  @override
+  State<_FormView> createState() => _FormViewState();
+}
 
-  var _shouldPushForm = false;
-
-  late List<Birthplace> _birthplaces;
-  late int _contactsLength;
-
-  String get _firstName => _form.control('firstName').value;
-  String get _lastName => _form.control('lastName').value;
-  String get _gender => _form.control('gender').value;
-  DateTime get _birthDate => _form.control('birthDate').value;
-  Birthplace get _birthPlace => _form.control('birthPlace').value;
+class _FormViewState extends State<_FormView> {
+  final _birthplaceFocusNode = FocusNode();
+  bool _shouldPushForm = false;
 
   @override
   void initState() {
     super.initState();
-    _logger = context.read<Logger>();
-    _contactsLength = context.read<ContactRepository>().contacts.length;
-    _loadBirthplacesData();
-    _setPreviousData();
-  }
+    final controller = context.read<FormPageController>();
 
-  Future<TaxCodeResponse?> _fetchTaxCode() async {
-    var accessToken = await _getAccessToken();
-    var baseUri = 'http://api.miocodicefiscale.com/calculate?';
-    var params =
-        'lname=${_lastName.trim()}&fname=${_firstName.trim()}&gender=$_gender'
-        '&city=${_birthPlace.name}&state=${_birthPlace.state}'
-        '&day=${_birthDate.day}&month=${_birthDate.month}&year=${_birthDate.year}'
-        '&access_token=$accessToken';
-
-    try {
-      final response = await http
-          .get(Uri.parse('$baseUri$params'))
-          .timeout(const Duration(seconds: 10));
-      final decodedResponse =
-          TaxCodeResponse.fromJson(jsonDecode(response.body));
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return decodedResponse;
-      } else {
-        throw http.ClientException(
-          'Server returned status ${response.statusCode}',
-          response.request?.url,
-        );
-      }
-    } on SocketException catch (error, stacktrace) {
-      FirebaseCrashlytics.instance.recordError(error, stacktrace,
-          reason: 'Tax code fetch failed due to a network error');
-
+    _birthplaceFocusNode.addListener(() {
       if (mounted) {
-        _showErrorDialog(
-          context,
-          AppLocalizations.of(context)!.errorConnection,
-          AppLocalizations.of(context)!.errorNoInternet,
+        setState(() {
+          _shouldPushForm = _birthplaceFocusNode.hasFocus;
+        });
+      }
+    });
+
+    controller.addListener(() {
+      if (controller.errorMessage != null && mounted) {
+        _showErrorDialog(context, controller.errorMessage!);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _birthplaceFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    final l10n = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(l10n.error),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.close),
+            )
+          ],
         );
-      }
-
-      return null;
-    } catch (error, stacktrace) {
-      FirebaseCrashlytics.instance.recordError(error, stacktrace,
-          reason: 'An unexpected error occurred during tax code fetch');
-
-      if (mounted) {
-        _showErrorDialog(
-          context,
-          AppLocalizations.of(context)!.errorUnexpected,
-          AppLocalizations.of(context)!.errorOccurred,
-        );
-      }
-
-      return null;
-    }
+      },
+    );
   }
-
-  Future<String> _getAccessToken() async {
-    if (Platform.isAndroid) {
-      try {
-        final remoteConfig = FirebaseRemoteConfig.instance;
-        return remoteConfig.getString(Settings.mioCodiceFiscaleApiKey);
-      } on Exception catch (e) {
-        if (mounted) {
-          _logger
-              .e('Error while retrieving access token from remote config: $e');
-        }
-      }
-    }
-    return '';
-  }
-
-  Future<String> _loadAsset() async =>
-      await rootBundle.loadString('assets/json/cities.json');
-
-  Future<void> _loadBirthplacesData() async {
-    String jsonString = await _loadAsset();
-    final birthplaces = jsonDecode(jsonString)
-        .map<Birthplace>((json) => Birthplace.fromJson(json))
-        .toList();
-
-    setState(() => _birthplaces = birthplaces);
-  }
-
-  void _openCameraPage(BuildContext context) async {
+  
+  Future<void> _openCameraPage(FormPageController controller) async {
     final contact = await Navigator.push<Contact?>(
       context,
-      MaterialPageRoute(builder: (context) => const CameraPage()),
+      MaterialPageRoute(builder: (ctx) => CameraPage(
+        logger: ctx.read<Logger>(),
+        ocrService: ctx.read<OCRService>(),
+        )
+      ),
     );
 
-    _setFromOCR(contact);
-  }
-
-  Future<Contact?> _onSubmit() async {
-    var response = await _fetchTaxCode();
-
-    if (response == null) {
-      return null;
-    }
-
-    final oldContact = widget.contact;
-
-    return response.status
-        ? Contact(
-            id: oldContact?.id ?? Uuid().v4(),
-            firstName: _firstName.trim(),
-            lastName: _lastName.trim(),
-            gender: _gender,
-            taxCode: response.data.fiscalCode,
-            birthPlace: _birthPlace,
-            birthDate: _birthDate,
-            listIndex: oldContact?.listIndex ?? _contactsLength + 1,
-          )
-        : null;
-  }
-
-  void _setFromOCR(Contact? contact) {
     if (contact != null) {
-      _form.control('firstName').value = contact.firstName;
-      _form.control('lastName').value = contact.lastName;
-      _form.control('gender').value = contact.gender;
-      _form.control('birthDate').value = contact.birthDate;
-      _form.control('birthPlace').value = contact.birthPlace;
+      controller.populateFormFromContact(contact);
     }
-  }
-
-  void _setPreviousData() {
-    final oldContact = widget.contact;
-
-    if (oldContact != null) {
-      _form.control('firstName').value = widget.contact?.firstName;
-      _form.control('lastName').value = widget.contact?.lastName;
-      _form.control('gender').value = widget.contact?.gender;
-      _form.control('birthDate').value = widget.contact?.birthDate;
-      _form.control('birthPlace').value = widget.contact?.birthPlace;
-    }
-  }
-
-  void _showErrorDialog(
-      BuildContext context, String errorMessage, String internalErrorMessage) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.error),
-            content: Column(
-              children: [Text(errorMessage), Text(internalErrorMessage)],
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(AppLocalizations.of(context)!.close))
-            ],
-          );
-        });
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<FormPageController>();
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(AppLocalizations.of(context)!.fillData),
+        title: Text(l10n.formPageTitle),
       ),
-      body: Padding(
-        padding: EdgeInsets.only(
-            bottom:
-                _shouldPushForm ? MediaQuery.of(context).viewInsets.bottom : 0),
-        child: SingleChildScrollView(
-          child: ReactiveForm(
-            formGroup: _form,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 16),
-                    child: FilledButton.tonalIcon(
-                        onPressed: () => _openCameraPage(context),
-                        icon: Icon(Symbols.id_card),
-                        label: Text(AppLocalizations.of(context)!.scanCard)),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  child: ReactiveTextField(
-                    decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.firstName),
-                    formControlName: 'firstName',
-                    onTapOutside: (event) => FocusScope.of(context).unfocus(),
-                    textInputAction: TextInputAction.next,
-                    validationMessages: {
-                      ValidationMessage.required: (error) =>
-                          AppLocalizations.of(context)!.required,
-                    },
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  child: ReactiveTextField(
-                    decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.lastName),
-                    formControlName: 'lastName',
-                    onTapOutside: (event) => FocusScope.of(context).unfocus(),
-                    textInputAction: TextInputAction.next,
-                    validationMessages: {
-                      ValidationMessage.required: (error) =>
-                          AppLocalizations.of(context)!.required,
-                    },
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  child: Row(
+      body: controller.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: EdgeInsets.only(
+                  bottom: _shouldPushForm ? MediaQuery.of(context).viewInsets.bottom : 0),
+              child: SingleChildScrollView(
+                child: ReactiveForm(
+                  formGroup: controller.form,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Expanded(
-                        flex: 3,
-                        child: ReactiveDropdownField<String>(
-                          formControlName: 'gender',
-                          decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context)!.gender),
-                          items: const [
-                            DropdownMenuItem(value: 'M', child: Text('M')),
-                            DropdownMenuItem(value: 'F', child: Text('F')),
-                          ],
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                          child: FilledButton.tonalIcon(
+                              onPressed: () => _openCameraPage(controller),
+                              icon: const Icon(Symbols.id_card),
+                              label: Text(l10n.scanCard)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        child: ReactiveTextField(
+                          decoration: InputDecoration(labelText: l10n.firstName),
+                          formControlName: 'firstName',
+                          onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                          textInputAction: TextInputAction.next,
                           validationMessages: {
-                            ValidationMessage.required: (error) =>
-                                AppLocalizations.of(context)!.required,
+                            ValidationMessage.required: (error) => l10n.required,
                           },
                         ),
                       ),
-                      Expanded(
-                        flex: 7,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        child: ReactiveTextField(
+                          decoration: InputDecoration(
+                              labelText: l10n.lastName),
+                          formControlName: 'lastName',
+                          onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                          textInputAction: TextInputAction.next,
+                          validationMessages: {
+                            ValidationMessage.required: (error) => l10n.required,
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Expanded(
+                              flex: 3,
+                              child: ReactiveDropdownField<String>(
+                                formControlName: 'gender',
+                                decoration: InputDecoration(
+                                    labelText: l10n.gender),
+                                items: const [
+                                  DropdownMenuItem(value: 'M', child: Text('M')),
+                                  DropdownMenuItem(value: 'F', child: Text('F')),
+                                ],
+                                validationMessages: {
+                                  ValidationMessage.required: (error) => l10n.required,
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              flex: 7,
+                              child: ReactiveDateTimePicker(
+                                formControlName: 'birthDate',
+                                dateFormat: DateFormat.yMMMMd(
+                                  Localizations.localeOf(context).toString(),
+                                ),
+                                locale: Localizations.localeOf(context),
+                                decoration: InputDecoration(
+                                  labelText: l10n.birthDate,
+                                ),
+                                showClearIcon: true,
+                                firstDate: DateTime(1900),
+                                lastDate: DateTime.now(),
+                                type: ReactiveDatePickerFieldType.date,
+                                validationMessages: {
+                                  ValidationMessage.required: (error) => l10n.required,
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        child: ReactiveRawAutocomplete<Birthplace, Birthplace>(
+                          formControlName: 'birthPlace',
+                          validationMessages: {
+                            ValidationMessage.required: (error) => l10n.required,
+                          },
+                          optionsBuilder: (value) => value.text.isEmpty
+                              ? controller.birthplaces
+                              : controller.birthplaces
+                                  .where((b) => b.name.toLowerCase().startsWith(value.text.toLowerCase()))
+                                  .toList(),
+                          fieldViewBuilder: (
+                            BuildContext context,
+                            TextEditingController textEditingController,
+                            FocusNode focusNode,
+                            VoidCallback onFieldSubmitted,
+                          ) {
+                            return TextField(
+                              controller: textEditingController,
+                              focusNode: _birthplaceFocusNode,
+                              decoration: InputDecoration(
+                                labelText: l10n.birthPlace,
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    textEditingController.clear();
+                                    controller.form.control('birthPlace').value = null;
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          optionsViewBuilder: (
+                            BuildContext context,
+                            void Function(Birthplace) onSelected,
+                            Iterable<Birthplace> options,
+                          ) {
+                            return Align(
+                              alignment: Alignment.topLeft,
+                              child: Material(
+                                elevation: 4.0,
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(maxHeight: 240),
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    itemCount: options.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final birthplace = options.elementAt(index);
+                                      return InkWell(
+                                        onTap: () => onSelected(birthplace),
+                                        child: ListTile(
+                                          title: Text('${birthplace.name} (${birthplace.state})'),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Center(
                         child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 40,
-                          ),
-                          child: ReactiveDateTimePicker(
-                            formControlName: 'birthDate',
-                            dateFormat: DateFormat.yMMMMd(
-                              Localizations.localeOf(context).toString(),
-                            ),
-                            locale: Localizations.localeOf(context),
-                            decoration: InputDecoration(
-                              labelText:
-                                  AppLocalizations.of(context)!.birthDate,
-                            ),
-                            helpText: AppLocalizations.of(context)!.birthDate,
-                            showClearIcon: true,
-                            firstDate: DateTime(1900),
-                            lastDate: DateTime.now(),
-                            type: ReactiveDatePickerFieldType.date,
-                            validationMessages: {
-                              ValidationMessage.required: (error) =>
-                                  AppLocalizations.of(context)!.required,
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                          child: FilledButton(
+                            child: Text(l10n.confirm),
+                            onPressed: () async {
+                              final contact = await controller.submitForm();
+                              if (context.mounted && contact != null) {
+                                Navigator.pop<Contact>(context, contact);
+                              }
                             },
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  child: ReactiveRawAutocomplete<Birthplace, Birthplace>(
-                    formControlName: 'birthPlace',
-                    validationMessages: {
-                      ValidationMessage.required: (error) =>
-                          AppLocalizations.of(context)!.required,
-                    },
-                    fieldViewBuilder: (BuildContext context,
-                            TextEditingController controller,
-                            FocusNode focusNode,
-                            VoidCallback onFieldSubmitted) =>
-                        TextField(
-                      controller: controller,
-                      decoration: InputDecoration(
-                        errorText: (_form.control('birthPlace').touched &&
-                                    _form.control('birthPlace').invalid &&
-                                    _form.control('birthPlace').dirty) ||
-                                _form.control('birthPlace').hasErrors &&
-                                    _form.control('birthPlace').touched
-                            ? AppLocalizations.of(context)!.required
-                            : null,
-                        labelText: AppLocalizations.of(context)!.birthPlace,
-                        suffixIcon: IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _form.control('birthPlace').value = null;
-                              controller.value = TextEditingValue.empty;
-                              focusNode.unfocus();
-                              setState(() => _shouldPushForm = false);
-                            }),
-                      ),
-                      focusNode: focusNode,
-                      onSubmitted: (value) => onFieldSubmitted(),
-                      onTap: () => setState(() => _shouldPushForm = true),
-                      onTapOutside: (event) {
-                        FocusScope.of(context).unfocus();
-                        setState(() => _shouldPushForm = false);
-                      },
-                    ),
-                    optionsBuilder: (TextEditingValue textEditingValue) =>
-                        textEditingValue.text.isEmpty
-                            ? _birthplaces
-                            : _birthplaces
-                                .where((birthplace) => birthplace.name
-                                    .toLowerCase()
-                                    .startsWith(
-                                        textEditingValue.text.toLowerCase()))
-                                .toList(),
-                    optionsViewBuilder: (BuildContext context,
-                            void Function(Birthplace) onSelected,
-                            Iterable<Birthplace> options) =>
-                        Align(
-                      alignment: Alignment.topLeft,
-                      child: Material(
-                        elevation: 4,
-                        child: SizedBox(
-                          height: min(options.length, 5) * 60,
-                          child: ListView.builder(
-                            padding: const EdgeInsets.all(8),
-                            itemCount: min(options.length, 5),
-                            itemBuilder: (context, index) {
-                              final birthplace = options.elementAt(index);
-                              return ListTile(
-                                title: Text(
-                                    '${birthplace.name} (${birthplace.state})'),
-                                onTap: () {
-                                  onSelected(birthplace);
-                                  FocusScope.of(context).unfocus();
-                                  setState(() => _shouldPushForm = false);
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 16),
-                    child: FilledButton(
-                      child: Text(AppLocalizations.of(context)!.confirm),
-                      onPressed: () async {
-                        _form.markAllAsTouched();
-                        if (_form.valid) {
-                          final contact = await _onSubmit();
-                          if (context.mounted && contact != null) {
-                            Navigator.pop<Contact>(context, contact);
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

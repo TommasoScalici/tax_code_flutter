@@ -75,6 +75,7 @@ Future<void> main() async {
         ChangeNotifierProvider<AuthService>(
           create: (context) => AuthService(
             auth: firebaseAuth,
+            firestore: firestore,
             googleSignIn: googleSignIn,
             dbService: context.read<DatabaseService>(),
             logger: context.read<Logger>(),

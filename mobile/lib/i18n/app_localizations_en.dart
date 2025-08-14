@@ -12,56 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Tax Code';
 
   @override
-  String get pleaseSignIn => 'Welcome to Tax Code, please sign in.';
-
-  @override
-  String get pleaseSignUp => 'Welcome to Tax Code, please sign up.';
-
-  @override
-  String get termsAndCondition =>
-      'By signing in/up, you agree to our terms and conditions.';
-
-  @override
-  String get showTerms => 'Show terms and conditions';
-
-  @override
-  String get required => 'Required';
-
-  @override
-  String get newItem => 'New';
-
-  @override
-  String get fillData => 'Fill data';
-
-  @override
-  String get firstName => 'First name';
-
-  @override
-  String get lastName => 'Last name';
-
-  @override
-  String get gender => 'Gender';
-
-  @override
-  String get birthDate => 'Birth date';
-
-  @override
-  String get birthPlace => 'Birth place';
-
-  @override
   String get confirm => 'Confirm';
-
-  @override
-  String get deleteConfirmation => 'Delete confirmation';
-
-  @override
-  String get delete => 'Delete';
-
-  @override
-  String get deleteAccount => 'Delete account';
-
-  @override
-  String get signOut => 'Logout';
 
   @override
   String get cancel => 'Cancel';
@@ -70,72 +21,154 @@ class AppLocalizationsEn extends AppLocalizations {
   String get close => 'Close';
 
   @override
+  String get delete => 'Delete';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get share => 'Share';
+
+  @override
   String get info => 'Info';
 
   @override
-  String get error => 'Error';
+  String get pleaseSignIn => 'Welcome, please sign in to continue.';
 
   @override
-  String get errorLoading => 'Error occurred while loading contacts: ';
+  String get pleaseSignUp => 'Welcome, please create an account to continue.';
 
   @override
-  String get search => 'Search...';
+  String get signOut => 'Sign Out';
 
   @override
-  String get scanCard => 'Scan card';
+  String get deleteAccount => 'Delete Account';
 
   @override
-  String get takePicture => 'Take a picture...';
+  String get deleteAccountMessage =>
+      'Are you sure you want to delete your account? All your data will be permanently lost. This action is irreversible.';
+
+  @override
+  String get homePageTitle => 'My Contacts';
+
+  @override
+  String get profilePageTitle => 'Profile';
+
+  @override
+  String get formPageTitle => 'Contact Details';
+
+  @override
+  String get barcodePageTitle => 'Tax Code Barcode';
+
+  @override
+  String get takePicture => 'Scan Card';
+
+  @override
+  String get newItem => 'Add Contact';
+
+  @override
+  String get search => 'Search by name or tax code...';
+
+  @override
+  String get contactsListEmpty =>
+      'No contacts yet.\nTap the \'+\' button to add your first one!';
+
+  @override
+  String searchNoResults(String searchText) {
+    return 'No results found for \'$searchText\'';
+  }
+
+  @override
+  String get tooltipShare => 'Share Tax Code';
+
+  @override
+  String get tooltipShowBarcode => 'Show Barcode';
+
+  @override
+  String get tooltipEdit => 'Edit Contact';
+
+  @override
+  String get tooltipDelete => 'Delete Contact';
+
+  @override
+  String get scanCard => 'Scan from Health Card';
+
+  @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get birthDate => 'Date of Birth';
+
+  @override
+  String get birthPlace => 'Place of Birth';
+
+  @override
+  String get required => 'This field is required';
+
+  @override
+  String get deleteConfirmation => 'Confirm Deletion';
+
+  @override
+  String deleteMessage(String taxCode) {
+    return 'Are you sure you want to permanently delete the contact for \'$taxCode\'?';
+  }
 
   @override
   String get permissionRequired => 'Permission Required';
 
   @override
+  String get cameraPermissionInfo =>
+      'To scan cards, this app needs access to your camera. Please go to your device settings and grant camera permission.';
+
+  @override
   String get openSettings => 'Open Settings';
 
   @override
-  String get cameraPermissionInfo =>
-      'The camera permission has been permanently denied.\nGo to the app settings, open the Permissions section, and enable the camera permission.';
+  String get error => 'Error';
 
   @override
-  String get appName => 'App name';
+  String get genericError => 'Something went wrong. Please try again.';
 
   @override
-  String get packageName => 'Package name';
+  String get tooltipToggleFlash => 'Toggle flash';
 
   @override
-  String get appVersion => 'App version';
+  String get tooltipTakePicture => 'Take picture';
 
   @override
-  String get buildNumber => 'Build number';
+  String get tooltipConfirmPicture => 'Confirm picture';
 
   @override
-  String get buildSignature => 'Build signature';
+  String get tooltipRetakePicture => 'Retake picture';
 
   @override
-  String get installerStore => 'Installer store';
+  String get termsAndCondition =>
+      'By proceeding, you agree to our Terms and Conditions.';
 
   @override
-  String get errorConnection => 'Connection error';
+  String get showTerms => 'View Terms & Conditions';
 
   @override
-  String get errorUnexpected => 'Unexpected error';
+  String get appName => 'App Name';
 
   @override
-  String get errorOccurred => 'An error occurred, please try again later.';
+  String get packageName => 'Package Name';
 
   @override
-  String get errorNoInternet => 'Check your internet connection and try again.';
+  String get appVersion => 'Version';
 
   @override
-  String get noContactsFound => 'No contacts found.';
+  String get buildNumber => 'Build Number';
 
   @override
-  String get deleteAccountMessage =>
-      'Are you sure? All your data will be permanently loss.';
+  String get buildSignature => 'Build Signature';
 
   @override
-  String deleteMessage(String taxCode) {
-    return 'Are you sure you want to delete the contact with tax code \'$taxCode\'?';
-  }
+  String get installerStore => 'Installer Store';
 }

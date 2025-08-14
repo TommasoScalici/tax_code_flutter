@@ -1,178 +1,240 @@
 {
   "@@author": "Tommaso Scalici",
   "@@locale": "en",
+
+  "@_generic": {},
   "appTitle": "Tax Code",
   "@appTitle": {
     "description": "The title of the application, often shown in the app bar."
   },
-  "pleaseSignIn": "Welcome to Tax Code, please sign in.",
-  "@pleaseSignIn": {
-    "description": "A welcome message on the login screen."
-  },
-  "pleaseSignUp": "Welcome to Tax Code, please sign up.",
-  "@pleaseSignUp": {
-    "description": "A welcome message on the registration screen."
-  },
-  "termsAndCondition": "By signing in/up, you agree to our terms and conditions.",
-  "@termsAndCondition": {
-    "description": "A notice informing the user that they agree to the terms by signing in or up."
-  },
-  "showTerms": "Show terms and conditions",
-  "@showTerms": {
-    "description": "Label for a button or link to display the terms and conditions."
-  },
-  "required": "Required",
-  "@required": {
-    "description": "A validation error message for a required form field."
-  },
-  "newItem": "New",
-  "@newItem": {
-    "description": "Label for a button to create a new item, like a new contact."
-  },
-  "fillData": "Fill data",
-  "@fillData": {
-    "description": "Label for a button or section to fill in data."
-  },
-  "firstName": "First name",
-  "@firstName": {
-    "description": "Label for the first name input field."
-  },
-  "lastName": "Last name",
-  "@lastName": {
-    "description": "Label for the last name input field."
-  },
-  "gender": "Gender",
-  "@gender": {
-    "description": "Label for the gender input field or selector."
-  },
-  "birthDate": "Birth date",
-  "@birthDate": {
-    "description": "Label for the birth date input field."
-  },
-  "birthPlace": "Birth place",
-  "@birthPlace": {
-    "description": "Label for the birth place input field."
-  },
   "confirm": "Confirm",
   "@confirm": {
-    "description": "Label for a confirmation button, typically in a dialog."
-  },
-  "deleteConfirmation": "Delete confirmation",
-  "@deleteConfirmation": {
-    "description": "The title for a dialog asking the user to confirm a delete action."
-  },
-  "delete": "Delete",
-  "@delete": {
-    "description": "Label for a delete button."
-  },
-  "deleteAccount": "Delete account",
-  "@deleteAccount": {
-    "description": "Label for a button or menu item to delete the user's account."
-  },
-  "signOut": "Logout",
-  "@signOut": {
-    "description": "Label for a button to sign out of the application."
+    "description": "Label for a confirmation button."
   },
   "cancel": "Cancel",
   "@cancel": {
-    "description": "Label for a button to cancel an action, typically in a dialog."
+    "description": "Label for a button to cancel an action."
   },
   "close": "Close",
   "@close": {
     "description": "Label for a button to close a screen or dialog."
   },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Label for a delete button."
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Label for an edit button."
+  },
+  "share": "Share",
+  "@share": {
+    "description": "Label for a share button."
+  },
   "info": "Info",
   "@info": {
     "description": "A generic title for an informational dialog or screen."
   },
-  "error": "Error",
-  "@error": {
-    "description": "A generic title for an error dialog."
+
+  "@_authentication": {},
+  "pleaseSignIn": "Welcome, please sign in to continue.",
+  "@pleaseSignIn": {
+    "description": "A welcome message on the login screen."
   },
-  "errorLoading": "Error occurred while loading contacts: ",
-  "@errorLoading": {
-    "description": "An error message shown when loading data fails. An error code or message might be appended."
+  "pleaseSignUp": "Welcome, please create an account to continue.",
+  "@pleaseSignUp": {
+    "description": "A welcome message on the registration screen."
   },
-  "search": "Search...",
+  "signOut": "Sign Out",
+  "@signOut": {
+    "description": "Label for a button to sign out of the application."
+  },
+  "deleteAccount": "Delete Account",
+  "@deleteAccount": {
+    "description": "Label for a button to delete the user's account."
+  },
+  "deleteAccountMessage": "Are you sure you want to delete your account? All your data will be permanently lost. This action is irreversible.",
+  "@deleteAccountMessage": {
+    "description": "A confirmation message shown to the user before deleting their account."
+  },
+
+  "@_pageTitles": {},
+  "homePageTitle": "My Contacts",
+  "@homePageTitle": {
+    "description": "Title for the main home page."
+  },
+  "profilePageTitle": "Profile",
+  "@profilePageTitle": {
+    "description": "Title for the user profile screen."
+  },
+  "formPageTitle": "Contact Details",
+  "@formPageTitle": {
+    "description": "Title for the page where user enters contact details."
+  },
+  "barcodePageTitle": "Tax Code Barcode",
+  "@barcodePageTitle": {
+    "description": "Title for the page displaying the barcode."
+  },
+  "takePicture": "Scan Card",
+  "@takePicture": {
+    "description": "Title for the camera screen."
+  },
+
+  "@_homePageAndContactList": {},
+  "newItem": "Add Contact",
+  "@newItem": {
+    "description": "Tooltip for the FloatingActionButton to create a new contact."
+  },
+  "search": "Search by name or tax code...",
   "@search": {
     "description": "Placeholder text inside a search bar."
   },
-  "scanCard": "Scan card",
+  "contactsListEmpty": "No contacts yet.\nTap the '+' button to add your first one!",
+  "@contactsListEmpty": {
+    "description": "Message displayed when the contact list is empty."
+  },
+  "searchNoResults": "No results found for '{searchText}'",
+  "@searchNoResults": {
+    "description": "Message displayed when a search yields no results.",
+    "placeholders": {
+      "searchText": {
+        "type": "String",
+        "example": "Rossi"
+      }
+    }
+  },
+  "tooltipShare": "Share Tax Code",
+  "@tooltipShare": {
+    "description": "Tooltip for the share button on a contact card."
+  },
+  "tooltipShowBarcode": "Show Barcode",
+  "@tooltipShowBarcode": {
+    "description": "Tooltip for the barcode button on a contact card."
+  },
+  "tooltipEdit": "Edit Contact",
+  "@tooltipEdit": {
+    "description": "Tooltip for the edit button on a contact card."
+  },
+  "tooltipDelete": "Delete Contact",
+  "@tooltipDelete": {
+    "description": "Tooltip for the delete button on a contact card."
+  },
+
+  "@_formPage": {},
+  "scanCard": "Scan from Health Card",
   "@scanCard": {
     "description": "Label for a button that initiates scanning a card."
   },
-  "takePicture": "Take a picture...",
-  "@takePicture": {
-    "description": "Label for a button that opens the camera to take a picture."
+  "firstName": "First Name",
+  "@firstName": {
+    "description": "Label for the first name input field."
+  },
+  "lastName": "Last Name",
+  "@lastName": {
+    "description": "Label for the last name input field."
+  },
+  "gender": "Gender",
+  "@gender": {
+    "description": "Label for the gender input field."
+  },
+  "birthDate": "Date of Birth",
+  "@birthDate": {
+    "description": "Label for the birth date input field."
+  },
+  "birthPlace": "Place of Birth",
+  "@birthPlace": {
+    "description": "Label for the birth place input field."
+  },
+  "required": "This field is required",
+  "@required": {
+    "description": "A validation error message for a required form field."
+  },
+
+  "@_dialogsAndMessages": {},
+  "deleteConfirmation": "Confirm Deletion",
+  "@deleteConfirmation": {
+    "description": "The title for a dialog asking the user to confirm a delete action."
+  },
+  "deleteMessage": "Are you sure you want to permanently delete the contact for '{taxCode}'?",
+  "@deleteMessage": {
+    "description": "A confirmation message for deleting a specific contact.",
+    "placeholders": {
+      "taxCode": {
+        "type": "String",
+        "example": "RSSMRA80A01H501A"
+      }
+    }
   },
   "permissionRequired": "Permission Required",
   "@permissionRequired": {
     "description": "Title for a dialog informing the user that a permission is required."
   },
+  "cameraPermissionInfo": "To scan cards, this app needs access to your camera. Please go to your device settings and grant camera permission.",
+  "@cameraPermissionInfo": {
+    "description": "An informational message explaining how to grant camera permission."
+  },
   "openSettings": "Open Settings",
   "@openSettings": {
-    "description": "Label for a button that navigates the user to the app's settings on their device."
+    "description": "Label for a button that navigates the user to the app's settings page."
   },
-  "cameraPermissionInfo": "The camera permission has been permanently denied.\nGo to the app settings, open the Permissions section, and enable the camera permission.",
-  "@cameraPermissionInfo": {
-    "description": "An informational message explaining how to grant camera permission after it has been permanently denied."
+  "error": "Error",
+  "@error": {
+    "description": "A generic title for an error dialog."
   },
-  "appName": "App name",
+  "genericError": "Something went wrong. Please try again.",
+  "@genericError": {
+    "description": "A user-friendly message for a generic error, asking them to retry."
+  },
+
+  "@_cameraPage": {},
+  "tooltipToggleFlash": "Toggle flash",
+  "@tooltipToggleFlash": {
+    "description": "Tooltip for the button that toggles the camera flash on and off."
+  },
+  "tooltipTakePicture": "Take picture",
+  "@tooltipTakePicture": {
+    "description": "Tooltip for the button to capture a picture."
+  },
+  "tooltipConfirmPicture": "Confirm picture",
+  "@tooltipConfirmPicture": {
+    "description": "Tooltip for the button to confirm the captured picture and proceed."
+  },
+  "tooltipRetakePicture": "Retake picture",
+  "@tooltipRetakePicture": {
+    "description": "Tooltip for the button to discard the current picture and take a new one."
+  },
+
+  "@_infoModalAndLegal": {},
+  "termsAndCondition": "By proceeding, you agree to our Terms and Conditions.",
+  "@termsAndCondition": {
+    "description": "A notice about agreeing to terms and conditions."
+  },
+  "showTerms": "View Terms & Conditions",
+  "@showTerms": {
+    "description": "Label for a button to display the terms and conditions."
+  },
+  "appName": "App Name",
   "@appName": {
     "description": "Label for the app name field in an info screen."
   },
-  "packageName": "Package name",
+  "packageName": "Package Name",
   "@packageName": {
     "description": "Label for the package name field in an info screen."
   },
-  "appVersion": "App version",
+  "appVersion": "Version",
   "@appVersion": {
     "description": "Label for the app version field in an info screen."
   },
-  "buildNumber": "Build number",
+  "buildNumber": "Build Number",
   "@buildNumber": {
     "description": "Label for the build number field in an info screen."
   },
-  "buildSignature": "Build signature",
+  "buildSignature": "Build Signature",
   "@buildSignature": {
     "description": "Label for the build signature field in an info screen."
   },
-  "installerStore": "Installer store",
+  "installerStore": "Installer Store",
   "@installerStore": {
     "description": "Label for the installer store field in an info screen."
-  },
-  "errorConnection": "Connection error",
-  "@errorConnection": {
-    "description": "A generic error message for network connection issues."
-  },
-  "errorUnexpected": "Unexpected error",
-  "@errorUnexpected": {
-    "description": "A generic error message for unexpected or unknown errors."
-  },
-  "errorOccurred": "An error occurred, please try again later.",
-  "@errorOccurred": {
-    "description": "A user-friendly message for a generic error, asking them to retry."
-  },
-  "errorNoInternet": "Check your internet connection and try again.",
-  "@errorNoInternet": {
-    "description": "An error message indicating that there is no internet connection."
-  },
-  "noContactsFound": "No contacts found.",
-  "@noContactsFound": {
-    "description": "A message displayed when a list of contacts is empty or a search returns no results."
-  },
-  "deleteAccountMessage": "Are you sure? All your data will be permanently loss.",
-  "@deleteAccountMessage": {
-    "description": "A confirmation message shown to the user before deleting their account."
-  },
-  "deleteMessage": "Are you sure you want to delete the contact with tax code '{taxCode}'?",
-  "@deleteMessage": {
-    "description": "A confirmation message for deleting a specific contact, which includes their tax code.",
-    "placeholders": {
-      "taxCode": {
-        "type": "String",
-        "example": "AAABBB00C00D000E"
-      }
-    }
   }
 }

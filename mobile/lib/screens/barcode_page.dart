@@ -4,33 +4,45 @@ import 'package:flutter/material.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:tax_code_flutter/i18n/app_localizations.dart';
 
-class BarcodePage extends StatelessWidget {
+class BarcodePage extends StatefulWidget {
   const BarcodePage({super.key, required this.taxCode});
 
   final String taxCode;
 
   @override
-  Widget build(BuildContext context) {
-    ScreenBrightness().setApplicationScreenBrightness(1.0);
+  State<BarcodePage> createState() => _BarcodePageState();
+}
 
-    return PopScope(
-      onPopInvokedWithResult: (didPop, result) {
-        ScreenBrightness().resetApplicationScreenBrightness();
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(AppLocalizations.of(context)!.appTitle),
-        ),
-        body: Center(
-          child: BarcodeWidget(
-            barcode: Barcode.code39(),
-            style: TextStyle(color: Colors.black),
-            data: taxCode,
-            height: 150,
-            width: MediaQuery.of(context).size.width * .8,
-          ),
+class _BarcodePageState extends State<BarcodePage> {
+  @override
+  void initState() {
+    super.initState();
+    ScreenBrightness().setApplicationScreenBrightness(1.0);
+  }
+
+  @override
+  void dispose() {
+    ScreenBrightness().resetApplicationScreenBrightness();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(l10n.appTitle),
+      ),
+      body: Center(
+        child: BarcodeWidget(
+          barcode: Barcode.code39(),
+          style: const TextStyle(color: Colors.black),
+          data: widget.taxCode,
+          height: 150,
+          width: MediaQuery.of(context).size.width * .8,
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,6 +12,7 @@ import 'package:shared/services/database_service.dart';
 // --- Mocks ---
 class FakeAuthCredential extends Fake implements AuthCredential {}
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
 class MockDatabaseService extends Mock implements DatabaseService {}
 class MockLogger extends Mock implements Logger {}
 class MockUser extends Mock implements User {}
@@ -22,6 +24,7 @@ class MockUserCredential extends Mock implements UserCredential {}
 void main() {
   late AuthService authService;
   late MockFirebaseAuth mockAuth;
+  late MockFirebaseFirestore mockFirestore;
   late MockGoogleSignIn mockGoogleSignIn;
   late MockDatabaseService mockDbService;
   late MockLogger mockLogger;
@@ -35,6 +38,7 @@ void main() {
   setUp(() {
     authStreamController = StreamController<User?>.broadcast();
     mockAuth = MockFirebaseAuth();
+    mockFirestore = MockFirebaseFirestore();
     mockGoogleSignIn = MockGoogleSignIn();
     mockDbService = MockDatabaseService();
     mockLogger = MockLogger();
@@ -46,6 +50,7 @@ void main() {
 
     authService = AuthService(
       auth: mockAuth,
+      firestore: mockFirestore,
       googleSignIn: mockGoogleSignIn,
       dbService: mockDbService,
       logger: mockLogger,

@@ -12,27 +12,86 @@ class AppLocalizationsIt extends AppLocalizations {
   String get appTitle => 'Codice Fiscale';
 
   @override
-  String get pleaseSignIn => 'Benvenuto su Codice Fiscale, per favore accedi.';
+  String get confirm => 'Conferma';
 
   @override
-  String get pleaseSignUp =>
-      'Benvenuto su Codice Fiscale, per favore registrati.';
+  String get cancel => 'Annulla';
 
   @override
-  String get termsAndCondition =>
-      'Accedendo o registrandoti, accetti i termini e le condizioni.';
+  String get close => 'Chiudi';
 
   @override
-  String get showTerms => 'Mostra termini e condizioni';
+  String get delete => 'Elimina';
 
   @override
-  String get required => 'Obbligatorio';
+  String get edit => 'Modifica';
 
   @override
-  String get newItem => 'Nuovo';
+  String get share => 'Condividi';
 
   @override
-  String get fillData => 'Inserisci i dati';
+  String get info => 'Informazioni';
+
+  @override
+  String get pleaseSignIn => 'Benvenuto, accedi per continuare.';
+
+  @override
+  String get pleaseSignUp => 'Benvenuto, crea un account per continuare.';
+
+  @override
+  String get signOut => 'Esci';
+
+  @override
+  String get deleteAccount => 'Elimina Account';
+
+  @override
+  String get deleteAccountMessage =>
+      'Sei sicuro di voler eliminare il tuo account? Tutti i tuoi dati verranno persi permanentemente. Questa azione è irreversibile.';
+
+  @override
+  String get homePageTitle => 'I Miei Contatti';
+
+  @override
+  String get profilePageTitle => 'Profilo';
+
+  @override
+  String get formPageTitle => 'Dettagli Contatto';
+
+  @override
+  String get barcodePageTitle => 'Codice a Barre';
+
+  @override
+  String get takePicture => 'Scansiona Tessera';
+
+  @override
+  String get newItem => 'Aggiungi Contatto';
+
+  @override
+  String get search => 'Cerca per nome o codice fiscale...';
+
+  @override
+  String get contactsListEmpty =>
+      'Nessun contatto presente.\nTocca il pulsante \'+\' per aggiungere il primo!';
+
+  @override
+  String searchNoResults(String searchText) {
+    return 'Nessun risultato trovato per \'$searchText\'';
+  }
+
+  @override
+  String get tooltipShare => 'Condividi Codice Fiscale';
+
+  @override
+  String get tooltipShowBarcode => 'Mostra Codice a Barre';
+
+  @override
+  String get tooltipEdit => 'Modifica Contatto';
+
+  @override
+  String get tooltipDelete => 'Elimina Contatto';
+
+  @override
+  String get scanCard => 'Scansiona da Tessera Sanitaria';
 
   @override
   String get firstName => 'Nome';
@@ -44,100 +103,72 @@ class AppLocalizationsIt extends AppLocalizations {
   String get gender => 'Sesso';
 
   @override
-  String get birthDate => 'Data di nascita';
+  String get birthDate => 'Data di Nascita';
 
   @override
-  String get birthPlace => 'Luogo di nascita';
+  String get birthPlace => 'Luogo di Nascita';
 
   @override
-  String get confirm => 'Conferma';
+  String get required => 'Questo campo è obbligatorio';
 
   @override
-  String get deleteConfirmation => 'Conferma eliminazione';
+  String get deleteConfirmation => 'Conferma Eliminazione';
 
   @override
-  String get delete => 'Elimina';
+  String deleteMessage(String taxCode) {
+    return 'Sei sicuro di voler eliminare permanentemente il contatto per \'$taxCode\'?';
+  }
 
   @override
-  String get deleteAccount => 'Elimina account';
+  String get permissionRequired => 'Permesso Richiesto';
 
   @override
-  String get signOut => 'Esci';
-
-  @override
-  String get cancel => 'Annulla';
-
-  @override
-  String get close => 'Chiudi';
-
-  @override
-  String get info => 'Informazioni';
-
-  @override
-  String get error => 'Errore';
-
-  @override
-  String get errorLoading => 'Errore durante il caricamento dei contatti: ';
-
-  @override
-  String get search => 'Cerca...';
-
-  @override
-  String get scanCard => 'Scannerizza tessera';
-
-  @override
-  String get takePicture => 'Scatta una foto...';
-
-  @override
-  String get permissionRequired => 'Permesso richiesto';
+  String get cameraPermissionInfo =>
+      'Per scansionare le tessere, l\'app necessita dell\'accesso alla fotocamera. Vai alle impostazioni del dispositivo e concedi il permesso.';
 
   @override
   String get openSettings => 'Apri Impostazioni';
 
   @override
-  String get cameraPermissionInfo =>
-      'Il permesso della fotocamera è stato negato in modo permanente.\nVai nelle impostazioni dell\'app, apri la sezione Autorizzazioni e abilita il permesso della fotocamera.';
+  String get error => 'Errore';
 
   @override
-  String get appName => 'Nome app';
+  String get genericError => 'Qualcosa è andato storto. Riprova.';
 
   @override
-  String get packageName => 'Nome pacchetto';
+  String get tooltipToggleFlash => 'Attiva/Disattiva flash';
+
+  @override
+  String get tooltipTakePicture => 'Scatta foto';
+
+  @override
+  String get tooltipConfirmPicture => 'Conferma foto';
+
+  @override
+  String get tooltipRetakePicture => 'Scatta di nuovo';
+
+  @override
+  String get termsAndCondition =>
+      'Procedendo, accetti i nostri Termini e Condizioni.';
+
+  @override
+  String get showTerms => 'Visualizza Termini e Condizioni';
+
+  @override
+  String get appName => 'Nome App';
+
+  @override
+  String get packageName => 'Nome Pacchetto';
 
   @override
   String get appVersion => 'Versione';
 
   @override
-  String get buildNumber => 'Numero build';
+  String get buildNumber => 'Numero Build';
 
   @override
-  String get buildSignature => 'Firma build';
+  String get buildSignature => 'Firma Build';
 
   @override
-  String get installerStore => 'Provenienza';
-
-  @override
-  String get errorConnection => 'Errore di connessione';
-
-  @override
-  String get errorUnexpected => 'Errore imprevisto';
-
-  @override
-  String get errorOccurred => 'Si è verificato un errore, riprova più tardi.';
-
-  @override
-  String get errorNoInternet =>
-      'Controlla la tua connessione internet e riprova.';
-
-  @override
-  String get noContactsFound => 'Nessun contatto trovato.';
-
-  @override
-  String get deleteAccountMessage =>
-      'Sei sicuro? Tutti i tuoi dati verranno cancellati in modo permanente.';
-
-  @override
-  String deleteMessage(String taxCode) {
-    return 'Sei sicuro di voler eliminare il contatto con codice fiscale: \'$taxCode\'?';
-  }
+  String get installerStore => 'Store di Installazione';
 }

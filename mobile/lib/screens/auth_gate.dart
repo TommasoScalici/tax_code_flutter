@@ -16,7 +16,7 @@ class AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = context.watch<AuthService>();
-    final remoteConfig = FirebaseRemoteConfig.instance;
+    final remoteConfig = context.read<FirebaseRemoteConfig>();
     final screenWidth = MediaQuery.of(context).size.width;
 
     if (authService.isSignedIn) {
@@ -33,78 +33,124 @@ class AuthGate extends StatelessWidget {
       ],
       headerMaxExtent: screenWidth < 300 ? 0 : null,
       headerBuilder: (context, constraints, shrinkOffset) {
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Image.asset('assets/images/app_icon_512x512.png'),
-                  ),
-                ),
-              ),
-              Text(
-                AppLocalizations.of(context)!.appTitle,
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: 36),
-              ),
-            ],
-          ),
-        );
+        return const _LoginHeader();
       },
       subtitleBuilder: (context, action) {
-        return screenWidth < 300
-            ? const SizedBox.shrink()
-            : Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: action == AuthAction.signIn
-                    ? Text(AppLocalizations.of(context)!.pleaseSignIn)
-                    : Text(AppLocalizations.of(context)!.pleaseSignUp),
-              );
+        return _LoginSubtitle(action: action, screenWidth: screenWidth);
       },
       footerBuilder: (context, action) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-          child: Column(
-            children: [
-              Text(
-                AppLocalizations.of(context)!.termsAndCondition,
-                style: const TextStyle(color: Colors.grey),
-              ),
-              screenWidth < 300
-                  ? const SizedBox.shrink()
-                  : TextButton(
-                      onPressed: () async {
-                        await showDialog(
-                            context: context,
-                            builder: (context) => const InfoModal());
-                      },
-                      child: Text(
-                        AppLocalizations.of(context)!.showTerms,
-                      ),
-                    ),
-            ],
-          ),
-        );
+        return _LoginFooter(screenWidth: screenWidth);
       },
       sideBuilder: (context, shrinkOffset) {
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: const AspectRatio(
-              aspectRatio: 1,
-              child: Image(
-                image: AssetImage('assets/images/app_icon_512x512.png'),
+        return const _LoginSideImage();
+      },
+    );
+  }
+}
+
+class _LoginHeader extends StatelessWidget {
+  const _LoginHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Image.asset('assets/images/app_icon_512x512.png'),
               ),
             ),
           ),
-        );
-      },
+          Text(
+            l10n.appTitle,
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontSize: 36),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoginSubtitle extends StatelessWidget {
+  const _LoginSubtitle({required this.action, required this.screenWidth});
+
+  final AuthAction action;
+  final double screenWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (screenWidth < 300) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: action == AuthAction.signIn
+          ? Text(l10n.pleaseSignIn)
+          : Text(l10n.pleaseSignUp),
+    );
+  }
+}
+
+class _LoginFooter extends StatelessWidget {
+  const _LoginFooter({required this.screenWidth});
+
+  final double screenWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Column(
+        children: [
+          Text(
+            l10n.termsAndCondition,
+            style: const TextStyle(color: Colors.grey),
+          ),
+          if (screenWidth >= 300)
+            TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const InfoModal(),
+                );
+              },
+              child: Text(l10n.showTerms),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoginSideImage extends StatelessWidget {
+  const _LoginSideImage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20.0),
+        child: const AspectRatio(
+          aspectRatio: 1,
+          child: Image(
+            image: AssetImage('assets/images/app_icon_512x512.png'),
+          ),
+        ),
+      ),
     );
   }
 }

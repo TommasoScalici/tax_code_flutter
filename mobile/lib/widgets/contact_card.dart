@@ -1,51 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:shared/models/contact.dart';
-import 'package:shared/repositories/contact_repository.dart'; // MODIFICATO
 import 'package:tax_code_flutter/i18n/app_localizations.dart';
-
-import '../screens/barcode_page.dart';
-import '../screens/form_page.dart';
 
 final class ContactCard extends StatelessWidget {
   final Contact contact;
+  final VoidCallback onShare;
+  final VoidCallback onShowBarcode;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-  const ContactCard({super.key, required this.contact});
-
-  void _showConfirmationDialog(BuildContext context, Contact contact) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.deleteConfirmation),
-          content: Text(
-              AppLocalizations.of(context)!.deleteMessage(contact.taxCode)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context)!.cancel),
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<ContactRepository>().removeContact(contact);
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                AppLocalizations.of(context)!.delete,
-                style: const TextStyle(color: Colors.red),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  const ContactCard({
+    super.key,
+    required this.contact,
+    required this.onShare,
+    required this.onShowBarcode,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final valueTextStyle = const TextStyle(fontWeight: FontWeight.w600);
     final taxCodeTextStyle = TextStyle(
         color: Theme.of(context).colorScheme.surface,
@@ -82,48 +59,36 @@ final class ContactCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ... (la UI interna per mostrare i dati del contatto rimane IDENTICA)
                     Row(
                       children: [
-                        Text('${AppLocalizations.of(context)!.firstName}: '),
+                        Text('${l10n.firstName}: '),
                         Flexible(
-                          child: Text(
-                            contact.firstName,
-                            style: valueTextStyle,
-                          ),
+                          child: Text(contact.firstName, style: valueTextStyle),
                         )
                       ],
                     ),
                     Row(
                       children: [
-                        Text('${AppLocalizations.of(context)!.lastName}: '),
+                        Text('${l10n.lastName}: '),
                         Flexible(
-                          child: Text(
-                            contact.lastName,
-                            style: valueTextStyle,
-                          ),
+                          child: Text(contact.lastName, style: valueTextStyle),
                         )
                       ],
                     ),
                     Row(
                       children: [
-                        Text('${AppLocalizations.of(context)!.gender}: '),
+                        Text('${l10n.gender}: '),
                         Flexible(
-                          child: Text(
-                            contact.gender,
-                            style: valueTextStyle,
-                          ),
+                          child: Text(contact.gender, style: valueTextStyle),
                         )
                       ],
                     ),
                     Row(
                       children: [
-                        Text(
-                            '${AppLocalizations.of(context)!.birthDate}: '),
+                        Text('${l10n.birthDate}: '),
                         Flexible(
                           child: Text(
-                            DateFormat.yMd(Localizations.localeOf(context)
-                                    .toString())
+                            DateFormat.yMd(Localizations.localeOf(context).toString())
                                 .format(contact.birthDate),
                             style: valueTextStyle,
                           ),
@@ -132,8 +97,7 @@ final class ContactCard extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Text(
-                            '${AppLocalizations.of(context)!.birthPlace}: '),
+                        Text('${l10n.birthPlace}: '),
                         Flexible(
                           child: Text(
                             contact.birthPlace.toString(),
@@ -147,51 +111,29 @@ final class ContactCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.only(left: 16, bottom: 10, right: 10),
+              padding: const EdgeInsets.only(left: 16, bottom: 10, right: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IconButton(
-                    onPressed: () => SharePlus.instance.share(
-                      ShareParams(text: contact.taxCode)
-                    ),
+                    onPressed: onShare, // ✅ Chiama la callback
                     icon: const Icon(Icons.share),
+                    tooltip: l10n.tooltipShare,
                   ),
                   IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              BarcodePage(taxCode: contact.taxCode),
-                        ),
-                      );
-                    },
+                    onPressed: onShowBarcode, // ✅ Chiama la callback
                     icon: const Icon(Symbols.barcode),
+                    tooltip: l10n.tooltipShowBarcode,
                   ),
                   IconButton(
-                    onPressed: () async {
-                      final editedContact = await Navigator.push<Contact>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FormPage(contact: contact),
-                        ),
-                      );
-
-                      if (editedContact != null && context.mounted) {
-                        // MODIFICATO: Usiamo il ContactRepository
-                        context
-                            .read<ContactRepository>()
-                            .addOrUpdateContact(editedContact);
-                      }
-                    },
+                    onPressed: onEdit, // ✅ Chiama la callback
                     icon: const Icon(Icons.edit),
+                    tooltip: l10n.tooltipEdit,
                   ),
                   IconButton(
-                    onPressed: () =>
-                        _showConfirmationDialog(context, contact),
+                    onPressed: onDelete, // ✅ Chiama la callback
                     icon: const Icon(Icons.delete),
+                    tooltip: l10n.tooltipDelete,
                   ),
                 ],
               ),
