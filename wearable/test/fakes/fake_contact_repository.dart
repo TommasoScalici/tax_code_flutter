@@ -2,23 +2,40 @@ import 'package:flutter/foundation.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 
-class FakeContactRepository extends ChangeNotifier
-    implements ContactRepository {
-  
-  bool _isLoading = false;
-  List<Contact> _contacts = [];
+/// A fake implementation of [ContactRepository] for testing purposes.
+/// It extends [ChangeNotifier] to allow simulating state changes.
+class FakeContactRepository extends ChangeNotifier implements ContactRepository {
+  int listenerCount = 0;
 
-  @override
-  bool get isLoading => _isLoading;
+  List<Contact> _contacts = [];
+  bool _isLoading = false;
+
   @override
   List<Contact> get contacts => _contacts;
 
-  void setState({bool? loading, List<Contact>? newContacts}) {
-    if (loading != null) _isLoading = loading;
-    if (newContacts != null) _contacts = newContacts;
+  @override
+  bool get isLoading => _isLoading;
+
+  /// A test helper to manually update the state and notify listeners.
+  void setState({required List<Contact> contacts, bool isLoading = false}) {
+    _contacts = contacts;
+    _isLoading = isLoading;
     notifyListeners();
   }
+
+  @override
+  void addListener(VoidCallback listener) {
+    super.addListener(listener);
+    listenerCount++;
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    super.removeListener(listener);
+    listenerCount--;
+  }
   
+  // Implement other methods from the interface
   @override
   Future<void> addOrUpdateContact(Contact contact) async {}
   @override
