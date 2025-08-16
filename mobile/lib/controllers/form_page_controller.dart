@@ -41,17 +41,11 @@ class FormPageController with ChangeNotifier {
     _initialize();
   }
 
-  Future<void> _initialize() async {
-    _setLoading(true);
-    await _loadBirthplaces();
-    if (_initialContact != null) {
-      populateFormFromContact(_initialContact);
+  void clearError() {
+    if (errorMessage != null) {
+      errorMessage = null;
+      notifyListeners();
     }
-    _setLoading(false);
-  }
-
-  Future<void> _loadBirthplaces() async {
-    birthplaces = await _birthplaceService.loadBirthplaces();
   }
 
   void populateFormFromContact(Contact contact) {
@@ -70,7 +64,7 @@ class FormPageController with ChangeNotifier {
     }
 
     _setLoading(true);
-    _clearError();
+    clearError();
 
     try {
       final response = await _taxCodeService.fetchTaxCode(
@@ -110,20 +104,28 @@ class FormPageController with ChangeNotifier {
     }
   }
 
-  void _setLoading(bool value) {
-    isLoading = value;
-    notifyListeners();
+  Future<void> _initialize() async {
+    _setLoading(true);
+    await _loadBirthplaces();
+    if (_initialContact != null) {
+      populateFormFromContact(_initialContact);
+    }
+    _setLoading(false);
   }
 
-  void _clearError() {
-    if (errorMessage != null) {
-      errorMessage = null;
-      notifyListeners();
-    }
+  Future<void> _loadBirthplaces() async {
+    birthplaces = await _birthplaceService.loadBirthplaces();
   }
 
   void _setError(String message) {
     errorMessage = message;
     notifyListeners();
   }
+
+  void _setLoading(bool value) {
+    if (isLoading == value) return;
+    isLoading = value;
+    notifyListeners();
+  }
+
 }

@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
-import 'package:tax_code_flutter/i18n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/screens/barcode_page.dart';
+import 'package:tax_code_flutter/screens/form_page.dart';
 
 import 'contact_card.dart';
 
@@ -72,9 +74,9 @@ final class ContactsList extends StatelessWidget {
       child: ContactCard(
         contact: contact,
         onShare: () => controller.shareContact(contact),
-        onShowBarcode: () => controller.showBarcodeForContact(context, contact),
-        onEdit: () => controller.editContact(context, contact),
-        onDelete: () => controller.deleteContact(context, contact),
+        onShowBarcode: () => _onShowBarcode(context, contact),
+        onEdit: () => _onEdit(context, controller, contact),
+        onDelete: () => _onDelete(context, controller, contact),
       ),
     );
   }
@@ -112,6 +114,47 @@ final class ContactsList extends StatelessWidget {
         final contact = controller.contactsToShow[index];
         return _buildContactCardItem(context, controller, contact);
       },
+    );
+  }
+
+  Future<void> _onEdit(BuildContext context, HomePageController controller, Contact contact) async {
+    final editedContact = await Navigator.push<Contact>(
+      context,
+      MaterialPageRoute(builder: (context) => FormPage(contact: contact)),
+    );
+    if (editedContact != null) {
+      controller.saveContact(editedContact);
+    }
+  }
+
+  Future<void> _onDelete(BuildContext context, HomePageController controller, Contact contact) async {
+    final l10n = AppLocalizations.of(context)!;
+    final bool? isConfirmed = await showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.deleteConfirmation),
+        content: Text(l10n.deleteMessage(contact.taxCode)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (isConfirmed == true) {
+      controller.deleteContact(contact);
+    }
+  }
+
+   void _onShowBarcode(BuildContext context, Contact contact) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => BarcodePage(taxCode: contact.taxCode)),
     );
   }
 }

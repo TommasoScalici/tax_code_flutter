@@ -10,14 +10,12 @@ import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
-import 'package:tax_code_flutter/i18n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/tax_code_service.dart';
-import 'package:tax_code_flutter/services/ocr_service.dart';
+
 import 'camera_page.dart';
 
-/// This widget is responsible for creating and providing the FormPageController
-/// to the widget tree.
 class FormPage extends StatelessWidget {
   final Contact? contact;
   const FormPage({super.key, this.contact});
@@ -37,7 +35,6 @@ class FormPage extends StatelessWidget {
   }
 }
 
-/// This widget is responsible for building the UI and listening to the controller.
 class _FormView extends StatefulWidget {
   const _FormView();
 
@@ -65,6 +62,7 @@ class _FormViewState extends State<_FormView> {
     controller.addListener(() {
       if (controller.errorMessage != null && mounted) {
         _showErrorDialog(context, controller.errorMessage!);
+        controller.clearError(); 
       }
     });
   }
@@ -97,11 +95,7 @@ class _FormViewState extends State<_FormView> {
   Future<void> _openCameraPage(FormPageController controller) async {
     final contact = await Navigator.push<Contact?>(
       context,
-      MaterialPageRoute(builder: (ctx) => CameraPage(
-        logger: ctx.read<Logger>(),
-        ocrService: ctx.read<OCRService>(),
-        )
-      ),
+      MaterialPageRoute(builder: (ctx) => const CameraPage()),
     );
 
     if (contact != null) {
@@ -127,6 +121,8 @@ class _FormViewState extends State<_FormView> {
               child: SingleChildScrollView(
                 child: ReactiveForm(
                   formGroup: controller.form,
+                  // Il resto del codice della UI (Column, ReactiveTextField, etc.)
+                  // rimane identico a prima.
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[

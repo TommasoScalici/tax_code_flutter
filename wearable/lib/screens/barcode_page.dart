@@ -1,6 +1,8 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:screen_brightness/screen_brightness.dart';
+import 'package:provider/provider.dart';
+import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
+import 'package:tax_code_flutter_wear_os/services/brightness_service.dart';
 
 class BarcodePage extends StatefulWidget {
   const BarcodePage({super.key, required this.taxCode});
@@ -12,24 +14,35 @@ class BarcodePage extends StatefulWidget {
 }
 
 class _BarcodePageState extends State<BarcodePage> {
+  late final BrightnessServiceAbstract _brightnessService;
+
   @override
   void initState() {
     super.initState();
-    ScreenBrightness().setApplicationScreenBrightness(1.0);
+    _brightnessService = context.read<BrightnessServiceAbstract>();
+    _brightnessService.setMaxBrightness();
   }
 
   @override
   void dispose() {
-    ScreenBrightness().resetApplicationScreenBrightness();
+    _brightnessService.resetBrightness();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(l10n.barcodePageTitle, style: const TextStyle(fontSize: 14)),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        automaticallyImplyLeading: true,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(16.0),
         child: Center(
           child: BarcodeWidget(
             barcode: Barcode.code39(),

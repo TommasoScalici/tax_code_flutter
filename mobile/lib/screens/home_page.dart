@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/theme_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
-import 'package:tax_code_flutter/i18n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/widgets/contacts_list.dart';
+import 'package:tax_code_flutter/widgets/info_modal.dart';
 
-import '../widgets/contacts_list.dart';
-import '../widgets/info_modal.dart';
+import 'form_page.dart';
 import 'profile_screen.dart';
 
 final class HomePage extends StatelessWidget {
@@ -19,7 +21,6 @@ final class HomePage extends StatelessWidget {
     final authService = context.watch<AuthService>();
     final themeService = context.watch<ThemeService>();
     final homeController = context.read<HomePageController>();
-    
     final currentUser = authService.currentUser;
 
     return Scaffold(
@@ -44,7 +45,8 @@ final class HomePage extends StatelessWidget {
           IconButton(
             icon: Icon(themeService.theme == 'dark'
                 ? Icons.light_mode_sharp
-                : Icons.mode_night_sharp),
+                : Icons.mode_night_sharp
+              ),
             onPressed: themeService.toggleTheme,
           ),
           PopupMenuButton(
@@ -71,7 +73,16 @@ final class HomePage extends StatelessWidget {
       ),
       body: const ContactsList(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => homeController.addNewContact(context),
+        onPressed: () async {
+          final newContact = await Navigator.push<Contact>(
+            context,
+            MaterialPageRoute(builder: (context) => const FormPage()),
+          );
+        
+          if (newContact != null) {
+            homeController.saveContact(newContact);
+          }
+        },
         tooltip: l10n.newItem,
         child: const Icon(Icons.add),
       ),

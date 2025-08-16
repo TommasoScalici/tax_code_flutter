@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -12,7 +11,6 @@ import 'package:shared/services/database_service.dart';
 // --- Mocks ---
 class FakeAuthCredential extends Fake implements AuthCredential {}
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
-class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
 class MockDatabaseService extends Mock implements DatabaseService {}
 class MockLogger extends Mock implements Logger {}
 class MockUser extends Mock implements User {}
@@ -24,7 +22,6 @@ class MockUserCredential extends Mock implements UserCredential {}
 void main() {
   late AuthService authService;
   late MockFirebaseAuth mockAuth;
-  late MockFirebaseFirestore mockFirestore;
   late MockGoogleSignIn mockGoogleSignIn;
   late MockDatabaseService mockDbService;
   late MockLogger mockLogger;
@@ -38,7 +35,6 @@ void main() {
   setUp(() {
     authStreamController = StreamController<User?>.broadcast();
     mockAuth = MockFirebaseAuth();
-    mockFirestore = MockFirebaseFirestore();
     mockGoogleSignIn = MockGoogleSignIn();
     mockDbService = MockDatabaseService();
     mockLogger = MockLogger();
@@ -47,10 +43,10 @@ void main() {
     when(() => mockDbService.saveUserData(any())).thenAnswer((_) async {});
     when(() => mockLogger.e(any(), error: any(named: 'error'), stackTrace: any(named: 'stackTrace'))).thenAnswer((_) {});
     when(() => mockLogger.w(any())).thenAnswer((_) {});
+    when(() => mockLogger.i(any())).thenAnswer((_) {});
 
     authService = AuthService(
       auth: mockAuth,
-      firestore: mockFirestore,
       googleSignIn: mockGoogleSignIn,
       dbService: mockDbService,
       logger: mockLogger,
@@ -88,6 +84,27 @@ void main() {
       await pumpEventQueue();
       expect(authService.isSignedIn, isFalse);
       expect(authService.currentUser, isNull);
+    });
+
+    test('should log an error if saving user data fails after login', () async {
+      // Arrange
+      final mockUser = MockUser();
+      final exception = Exception('Firestore connection failed');
+      when(() => mockDbService.saveUserData(mockUser)).thenThrow(exception);
+
+      // Act
+      authStreamController.add(mockUser);
+      await pumpEventQueue();
+
+      // Assert
+      expect(authService.isSignedIn, isTrue);
+      expect(authService.currentUser, mockUser);
+      
+      verify(() => mockLogger.e(
+        'Error while storing user data',
+        error: exception,
+        stackTrace: any(named: 'stackTrace'),
+      )).called(1);
     });
   });
 
@@ -154,7 +171,70 @@ void main() {
     });
   });
 
+  group('deleteUserAccount', () {
+    final userToDelete = MockUser();
+
+    setUp(() {
+      when(() => userToDelete.uid).thenReturn('test_uid');
+      when(() => mockDbService.deleteAllUserData(any())).thenAnswer((_) async {});
+      when(() => userToDelete.delete()).thenAnswer((_) async {});
+    });
+
+    test('should do nothing if user is not signed in', () async {
+      // Arrange
+      when(() => mockAuth.currentUser).thenReturn(null);
+
+      // Act
+      await authService.deleteUserAccount();
+
+      // Assert
+      verifyNever(() => mockDbService.deleteAllUserData(any()));
+      verifyNever(() => userToDelete.delete());
+    });
+
+    test('should call deleteUserAccount on authService and log success message', () async {
+      // Arrange
+      when(() => mockAuth.currentUser).thenReturn(userToDelete);
+
+      // Act
+      await authService.deleteUserAccount();
+
+      // Assert
+      verify(() => mockDbService.deleteAllUserData('test_uid')).called(1);
+      verify(() => userToDelete.delete()).called(1);
+      verify(() => mockLogger.i('User account and all associated data deleted successfully.')).called(1);
+    });
+
+    test('should rethrow and log error if dbService fails', () async {
+      // Arrange
+      when(() => mockAuth.currentUser).thenReturn(userToDelete);
+      final exception = Exception('Firestore failed');
+      when(() => mockDbService.deleteAllUserData(any())).thenThrow(exception);
+
+      // Act & Assert
+      expect(() => authService.deleteUserAccount(), throwsA(isA<Exception>()));
+      
+      await pumpEventQueue();
+      verify(() => mockLogger.e('Error deleting user account: $exception')).called(1);
+      verifyNever(() => userToDelete.delete());
+    });
+
+    test('should rethrow and log error if user.delete() fails', () async {
+      // Arrange
+      when(() => mockAuth.currentUser).thenReturn(userToDelete);
+      final exception = FirebaseAuthException(code: 'requires-recent-login');
+      when(() => userToDelete.delete()).thenThrow(exception);
+
+      // Act & Assert
+      expect(() => authService.deleteUserAccount(), throwsA(isA<FirebaseAuthException>()));
+      
+      await pumpEventQueue();
+      verify(() => mockLogger.e('Error deleting user account: $exception')).called(1);
+    });
+  });
+
   group('signOut', () {
+
     test('should call sign out on both FirebaseAuth and GoogleSignIn', () async {
       // Arrange
       when(() => mockAuth.signOut()).thenAnswer((_) async {});
@@ -168,6 +248,37 @@ void main() {
       // Assert
       verify(() => mockAuth.signOut()).called(1);
       verify(() => mockGoogleSignIn.signOut()).called(1);
+    });
+
+    test('should log an error if Google Sign-Out fails', () async {
+      // Arrange
+      final exception = Exception('Google Sign-Out failed');
+      when(() => mockGoogleSignIn.signOut()).thenThrow(exception);
+
+      // Act
+      await authService.signOut();
+
+      // Assert
+      verify(() => mockLogger.e(
+        'Error during sign out',
+        error: exception,
+        stackTrace: any(named: 'stackTrace'),
+      )).called(1);
+      
+      verifyNever(() => mockAuth.signOut());
+    });
+
+    test('should log an error if Firebase Auth sign-out fails', () async {
+      // Arrange
+      final exception = Exception('Sign out failed');
+      when(() => mockAuth.signOut()).thenThrow(exception);
+      when(() => mockGoogleSignIn.signOut()).thenAnswer((_) async => null);
+
+      // Act
+      await authService.signOut();
+
+      // Assert
+      verify(() => mockLogger.e('Error during sign out', error: exception, stackTrace: any(named: 'stackTrace'))).called(1);
     });
   });
 }

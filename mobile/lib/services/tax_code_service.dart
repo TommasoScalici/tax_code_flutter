@@ -50,13 +50,23 @@ class TaxCodeService implements TaxCodeServiceAbstract {
     required String birthPlaceState,
     required DateTime birthDate,
   }) async {
-    final baseUri = 'http://api.miocodicefiscale.com/calculate?';
-    final params = 'lname=${lastName.trim()}&fname=${firstName.trim()}&gender=$gender'
-        '&city=$birthPlaceName&state=$birthPlaceState'
-        '&day=${birthDate.day}&month=${birthDate.month}&year=${birthDate.year}'
-        '&access_token=$_accessToken';
-    
-    final uri = Uri.parse('$baseUri$params');
+    final queryParameters = {
+      'lname': lastName.trim(),
+      'fname': firstName.trim(),
+      'gender': gender,
+      'city': birthPlaceName,
+      'state': birthPlaceState,
+      'day': birthDate.day.toString(),
+      'month': birthDate.month.toString(),
+      'year': birthDate.year.toString(),
+      'access_token': _accessToken,
+    };
+
+    final uri = Uri.http(
+      'api.miocodicefiscale.com',
+      '/calculate',
+      queryParameters,
+    );
 
     try {
       final response = await _client.get(uri).timeout(const Duration(seconds: 10));

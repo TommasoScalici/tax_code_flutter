@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
+import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:shared/services/database_service.dart';
 
-import '../models/contact.dart';
-import '../services/database_service.dart';
 
 ///
 /// Manages loading, caching, and modifying user contacts.
@@ -35,9 +35,7 @@ class ContactRepository with ChangeNotifier {
   }) : _authService = authService,
        _dbService = dbService,
        _logger = logger {
-    // Listen to the AuthService to react to login/logout
     _authService.addListener(_onAuthChanged);
-    // Initialize with the current auth state
     _onAuthChanged();
   }
 
@@ -63,15 +61,17 @@ class ContactRepository with ChangeNotifier {
   }
 
   void _listenToRemoteContacts() {
-    if (_userId == null) return;
-
     _contactsSubscription = _dbService
         .getContactsStream(_userId!)
         .listen(
           (remoteContacts) async {
-            _contacts = remoteContacts
+            _contacts = List.from(remoteContacts)
               ..sort((a, b) => a.listIndex.compareTo(b.listIndex));
-            await _saveContactsToLocalCache();
+            try {
+              await _saveContactsToLocalCache();
+            } on Exception catch (e, s) {
+              _logger.e('Error saving contacts to Hive cache', error: e, stackTrace: s);
+            }
             _finishLoading();
           },
           onError: (e, s) async {
@@ -80,7 +80,12 @@ class ContactRepository with ChangeNotifier {
               error: e,
               stackTrace: s,
             );
-            await _loadContactsFromLocalCache();
+            try {
+              await _loadContactsFromLocalCache();
+            } on Exception catch (e, s) {
+              _logger.e('Failed to load contacts from Hive cache as well.', error: e, stackTrace: s);
+              _contacts = [];
+            }
             _finishLoading();
           },
         );
@@ -168,30 +173,15 @@ class ContactRepository with ChangeNotifier {
   }
 
   Future<void> _loadContactsFromLocalCache() async {
-    if (_userId == null) return;
-    try {
-      final box = await Hive.openBox<Contact>('contacts_$_userId');
-      _contacts = box.values.toList();
-      _contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
-    } on Exception catch (e, s) {
-      _logger.e(
-        'Error loading contacts from Hive cache',
-        error: e,
-        stackTrace: s,
-      );
-      _contacts = [];
-    }
+    final box = await Hive.openBox<Contact>('contacts_$_userId');
+    _contacts = box.values.toList();
+    _contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
   }
 
   Future<void> _saveContactsToLocalCache() async {
-    if (_userId == null) return;
-    try {
-      final box = await Hive.openBox<Contact>('contacts_$_userId');
-      await box.clear();
-      await box.putAll({for (var c in _contacts) c.id: c});
-    } on Exception catch (e, s) {
-      _logger.e('Error saving contacts to Hive cache', error: e, stackTrace: s);
-    }
+    final box = await Hive.openBox<Contact>('contacts_$_userId');
+    await box.clear();
+    await box.putAll({for (var c in _contacts) c.id: c});
   }
 
   void _finishLoading() {

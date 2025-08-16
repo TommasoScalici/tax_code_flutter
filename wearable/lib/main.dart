@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,40 +6,38 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart'; // AGGIUNTO
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:shared/providers/app_state.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/database_service.dart';
-import 'package:shared/services/theme_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tax_code_flutter_wear_os/controllers/wearable_home_controller.dart';
+import 'package:tax_code_flutter_wear_os/services/brightness_service.dart';
+import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'screens/auth_gate.dart';
-import 'screens/barcode_page.dart';
+import 'settings.dart';
 
 Future<void> configureApp(Logger logger) async {
   try {
-    if (Platform.isAndroid) {
-      final remoteConfig = FirebaseRemoteConfig.instance;
-      final appCheck = FirebaseAppCheck.instance;
-      final crashlytics = FirebaseCrashlytics.instance;
+    final remoteConfig = FirebaseRemoteConfig.instance;
+    final appCheck = FirebaseAppCheck.instance;
+    final crashlytics = FirebaseCrashlytics.instance;
 
-      await remoteConfig.fetchAndActivate();
+    await remoteConfig.fetchAndActivate();
 
-      final androidProvider =
-          kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity;
-      await appCheck.activate(androidProvider: androidProvider);
+    final androidProvider = kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity;
+    await appCheck.activate(androidProvider: androidProvider);
 
-      FlutterError.onError = crashlytics.recordFlutterFatalError;
-      PlatformDispatcher.instance.onError = (error, stack) {
-        crashlytics.recordError(error, stack, fatal: true);
-        return true;
-      };
-    }
+    FlutterError.onError = crashlytics.recordFlutterFatalError;
+    PlatformDispatcher.instance.onError = (error, stack) {
+      crashlytics.recordError(error, stack, fatal: true);
+      return true;
+    };
   } on Exception catch (e) {
     logger.e('Error while configuring the app with Firebase: $e');
   }
@@ -51,40 +47,44 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final logger = Logger();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await configureApp(logger);
 
   final sharedPreferences = SharedPreferencesAsync();
-  final firebaseAuth = FirebaseAuth.instance;
-  final firestore = FirebaseFirestore.instance;
-  final googleSignIn = GoogleSignIn();
 
   runApp(
     MultiProvider(
       providers: [
+        // --- Level 1: Low level and external instances ---
         Provider<Logger>.value(value: logger),
+        Provider<SharedPreferencesAsync>.value(value: sharedPreferences),
+        Provider<FirebaseAuth>.value(value: FirebaseAuth.instance),
+        Provider<FirebaseFirestore>.value(value: FirebaseFirestore.instance),
+        Provider<GoogleSignIn>.value(value: GoogleSignIn()),
+
+        // --- Level 2: Services ---
         Provider<DatabaseService>(
-          create: (_) => DatabaseService(firestore: firestore),
+          create: (context) => DatabaseService(firestore: context.read<FirebaseFirestore>()),
+        ),
+        Provider<BrightnessServiceAbstract>(
+          create: (context) => BrightnessService(logger: context.read<Logger>()),
+        ),
+        Provider<NativeViewServiceAbstract>(
+          create: (context) => NativeViewService(logger: context.read<Logger>()),
         ),
 
-        ChangeNotifierProvider<ThemeService>(
-          create: (_) => ThemeService(prefs: sharedPreferences)..init(),
-        ),
+        // --- Level 3: State Services ---
+
         ChangeNotifierProvider<AuthService>(
           create: (context) => AuthService(
-            auth: firebaseAuth,
-            firestore: firestore,
-            googleSignIn: googleSignIn,
+            auth: context.read<FirebaseAuth>(),
+            googleSignIn: context.read<GoogleSignIn>(),
             dbService: context.read<DatabaseService>(),
             logger: context.read<Logger>(),
           ),
         ),
-        ChangeNotifierProvider<AppState>(
-          create: (_) => AppState(),
-        ),
 
+        // --- Level 4: Repositories ---
         ChangeNotifierProxyProvider<AuthService, ContactRepository>(
           create: (context) => ContactRepository(
             authService: context.read<AuthService>(),
@@ -92,6 +92,14 @@ Future<void> main() async {
             logger: context.read<Logger>(),
           ),
           update: (_, authService, previousRepo) => previousRepo!,
+        ),
+
+        // --- Level 5: Controllers ---
+        ChangeNotifierProvider<WearableHomeController>(
+          create: (context) => WearableHomeController(
+            contactRepository: context.read<ContactRepository>(),
+            nativeViewService: context.read<NativeViewServiceAbstract>(),
+          ),
         ),
       ],
       child: const TaxCodeApp(),
@@ -102,47 +110,15 @@ Future<void> main() async {
 class TaxCodeApp extends StatelessWidget {
   const TaxCodeApp({super.key});
 
-  Route<dynamic> _onGenerateRoute(RouteSettings settings) {
-    if (settings.name?.startsWith('/barcode') == true) {
-      final uri = Uri.parse(settings.name!);
-      final taxCode = uri.queryParameters['taxCode'];
-
-      if (taxCode != null) {
-        return MaterialPageRoute(
-          builder: (context) => BarcodePage(taxCode: taxCode),
-        );
-      }
-    }
-
-    return MaterialPageRoute(
-      builder: (context) => const Scaffold(
-        body: Center(child: Text('Error: Invalid Route')),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final themeService = context.watch<ThemeService>();
-
     return MaterialApp(
-      onGenerateRoute: _onGenerateRoute,
-      onGenerateTitle: (BuildContext context) =>
-          AppLocalizations.of(context)!.appTitle,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+      localizationsDelegates: const [
+        ...AppLocalizations.localizationsDelegates,
+      ],
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: ThemeData(
-        visualDensity: VisualDensity.compact,
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 38, 128, 0),
-            brightness: themeService.theme == 'dark'
-                ? Brightness.dark
-                : Brightness.light),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[800]),
-        ),
-      ),
+      theme: Settings.getWearTheme(),
       home: const AuthGate(),
     );
   }

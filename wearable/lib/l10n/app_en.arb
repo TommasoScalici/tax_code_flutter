@@ -1,8 +1,42 @@
 {
-    "@@author": "Tommaso Scalici",
-    "@@locale": "en",
-    "appTitle": "Tax Code",
-    "loginError": "Unexpected login error",
-    "welcomeTo": "Welcome to",
-    "noContactsFoundMessage": "No contacts found, you must add one first from your smartphone to see here the list."
+  "@@author": "Tommaso Scalici",
+  "@@locale": "en",
+
+  "@_general": {},
+  "appTitle": "Tax Code",
+  "@appTitle": {
+    "description": "The title of the application, shown in the header."
+  },
+
+  "@_authentication": {},
+  "loginError": "Login failed. Please try again.",
+  "@loginError": {
+    "description": "Error message shown when an unexpected login error occurs."
+  },
+  "signInWithGoogle": "Sign In with Google",
+  "@signInWithGoogle": {
+    "description": "Label for the Google Sign-In button."
+  },
+  "welcomeMessage": "Welcome to {appName}",
+  "@welcomeMessage": {
+    "description": "A welcome message displayed on the login screen.",
+    "placeholders": {
+      "appName": {
+        "type": "String",
+        "example": "Tax Code"
+      }
+    }
+  },
+
+  "@_homeScreen": {},
+  "noContactsFoundMessage": "No contacts found.\nPlease add a contact on your phone to see it here.",
+  "@noContactsFoundMessage": {
+    "description": "Message shown on the main screen when the contact list is empty."
+  },
+
+  "@_pageTitles": {},
+  "barcodePageTitle": "Tax Code Barcode",
+  "@barcodePageTitle": {
+    "description": "Title for the page displaying the barcode."
+  }
 }

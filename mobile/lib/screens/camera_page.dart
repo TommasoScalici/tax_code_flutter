@@ -1,36 +1,35 @@
-// lib/screens/camera_page.dart
-
 import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
+import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/services/camera_service.dart';
 import 'package:tax_code_flutter/services/ocr_service.dart';
-import 'package:tax_code_flutter/i18n/app_localizations.dart';
+import 'package:tax_code_flutter/services/permission_service.dart';
 
+/// This widget is responsible for creating and providing the CameraPageController
+/// to the widget tree. It is clean of constructor dependencies.
 class CameraPage extends StatelessWidget {
-  final OCRService ocrService;
-  final Logger logger;
-
-  const CameraPage({
-    super.key,
-    required this.ocrService,
-    required this.logger,
-  });
+  const CameraPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => CameraPageController(
-        ocrService: ocrService,
-        logger: logger,
+      create: (ctx) => CameraPageController(
+        ocrService: ctx.read<OCRService>(),
+        logger: ctx.read<Logger>(),
+        permissionService: ctx.read<PermissionServiceAbstract>(),
+        cameraService: ctx.read<CameraServiceAbstract>(),
       )..initialize(),
       child: const _CameraView(),
     );
   }
 }
 
+/// This widget is responsible for building the UI and listening to the controller.
 class _CameraView extends StatelessWidget {
   const _CameraView();
 
@@ -46,6 +45,7 @@ class _CameraView extends StatelessWidget {
     );
   }
 
+  /// Builds the main body of the widget based on the controller's status.
   Widget _buildBody(
     BuildContext context,
     CameraPageController controller,
@@ -89,6 +89,7 @@ class _CameraView extends StatelessWidget {
     }
   }
 
+  /// Builds the camera preview or the captured image with action buttons.
   Widget _buildCameraView(
     BuildContext context,
     CameraPageController controller,
@@ -99,7 +100,8 @@ class _CameraView extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        if (controller.cameraController != null && controller.cameraController!.value.isInitialized)
+        if (controller.cameraController != null &&
+            controller.cameraController!.value.isInitialized)
           isPictureTaken
               ? RotatedBox(
                   quarterTurns: controller.quarterTurns,
@@ -111,12 +113,10 @@ class _CameraView extends StatelessWidget {
                   ),
                 )
               : CameraPreview(controller.cameraController!),
-        
         Positioned(
           top: 20,
           right: 20,
           child: IconButton(
-            // ✅ Aggiunto Tooltip
             tooltip: l10n.tooltipToggleFlash,
             icon: Icon(
               controller.flashMode == FlashMode.off ? Icons.flash_off : Icons.flash_on,
@@ -126,7 +126,6 @@ class _CameraView extends StatelessWidget {
             onPressed: controller.toggleFlash,
           ),
         ),
-
         Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
@@ -135,20 +134,19 @@ class _CameraView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FloatingActionButton(
-                  tooltip: isPictureTaken ? l10n.tooltipConfirmPicture : l10n.tooltipTakePicture,
+                  tooltip: isPictureTaken
+                      ? l10n.tooltipConfirmPicture
+                      : l10n.tooltipTakePicture,
                   onPressed: () async {
-                    if (isPictureTaken) {
-                      final contact = await controller.performOcr();
-                      if (context.mounted) Navigator.pop(context, contact);
-                    } else {
-                      await controller.takePicture();
+                    final contact = await controller.onMainButtonPressed();
+                    if (contact != null && context.mounted) {
+                      Navigator.pop(context, contact);
                     }
                   },
                   child: Icon(isPictureTaken ? Icons.check : Icons.camera_alt),
                 ),
                 if (isPictureTaken)
                   FloatingActionButton(
-                    // ✅ Aggiunto Tooltip
                     tooltip: l10n.tooltipRetakePicture,
                     onPressed: controller.resetPicture,
                     backgroundColor: Colors.red,

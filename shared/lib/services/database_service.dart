@@ -34,6 +34,21 @@ class DatabaseService {
     return docRef.set(contact.toJson());
   }
 
+  /// Deletes all contacts and the main user document from Firestore.
+  Future<void> deleteAllUserData(String userId) async {
+    final userDocRef = _firestore.collection('users').doc(userId);
+    final contactsRef = userDocRef.collection('contacts');
+    final querySnapshot = await contactsRef.get();
+
+    final WriteBatch batch = _firestore.batch();
+    for (var doc in querySnapshot.docs) {
+      batch.delete(doc.reference);
+    }
+    batch.delete(userDocRef);
+
+    await batch.commit();
+  }
+
   /// Removes a single contact from Firestore.
   Future<void> removeContact(String userId, String contactId) {
     final docRef = _firestore

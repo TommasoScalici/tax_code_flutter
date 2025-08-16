@@ -98,29 +98,41 @@ abstract class AppLocalizations {
     Locale('it')
   ];
 
-  /// No description provided for @appTitle.
+  /// The title of the application, shown in the header.
   ///
   /// In en, this message translates to:
   /// **'Tax Code'**
   String get appTitle;
 
-  /// No description provided for @loginError.
+  /// Error message shown when an unexpected login error occurs.
   ///
   /// In en, this message translates to:
-  /// **'Unexpected login error'**
+  /// **'Login failed. Please try again.'**
   String get loginError;
 
-  /// No description provided for @welcomeTo.
+  /// Label for the Google Sign-In button.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to'**
-  String get welcomeTo;
+  /// **'Sign In with Google'**
+  String get signInWithGoogle;
 
-  /// No description provided for @noContactsFoundMessage.
+  /// A welcome message displayed on the login screen.
   ///
   /// In en, this message translates to:
-  /// **'No contacts found, you must add one first from your smartphone to see here the list.'**
+  /// **'Welcome to {appName}'**
+  String welcomeMessage(String appName);
+
+  /// Message shown on the main screen when the contact list is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No contacts found.\nPlease add a contact on your phone to see it here.'**
   String get noContactsFoundMessage;
+
+  /// Title for the page displaying the barcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax Code Barcode'**
+  String get barcodePageTitle;
 }
 
 class _AppLocalizationsDelegate

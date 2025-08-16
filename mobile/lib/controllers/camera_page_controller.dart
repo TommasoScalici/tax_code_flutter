@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'dart:convert';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:tax_code_flutter/services/ocr_service.dart';
 import 'package:shared/models/contact.dart';
+import 'package:tax_code_flutter/services/camera_service.dart';
+import 'package:tax_code_flutter/services/ocr_service.dart';
+import 'package:tax_code_flutter/services/permission_service.dart';
 
 enum CameraStatus {
   initializing,
@@ -17,6 +19,8 @@ enum CameraStatus {
 }
 
 class CameraPageController with ChangeNotifier {
+  final CameraServiceAbstract _cameraService;
+  final PermissionServiceAbstract _permissionService;
   final OCRService _ocrService;
   final Logger _logger;
 
@@ -32,20 +36,25 @@ class CameraPageController with ChangeNotifier {
   FlashMode get flashMode => _flashMode;
 
   CameraPageController({
+    required CameraServiceAbstract cameraService,
+    required PermissionServiceAbstract permissionService,
     required OCRService ocrService,
     required Logger logger,
-  })  : _ocrService = ocrService,
+  })  : _cameraService = cameraService,
+        _permissionService = permissionService,
+        _ocrService = ocrService,
         _logger = logger;
 
+  /// Initializes the camera and checks for permission.
   Future<void> initialize() async {
-    var permissionStatus = await Permission.camera.request();
-    if (!permissionStatus.isGranted) {
+    final isGranted = await _permissionService.requestCameraPermission();
+    if (!isGranted) {
       _updateStatus(CameraStatus.permissionDenied);
       return;
     }
 
     try {
-      final cameras = await availableCameras();
+      final cameras = await _cameraService.getAvailableCameras();
       if (cameras.isEmpty) throw Exception('No cameras found');
       
       final camera = cameras.first;
@@ -53,12 +62,52 @@ class CameraPageController with ChangeNotifier {
       await _cameraController!.initialize();
       
       _updateStatus(CameraStatus.readyToScan);
-    } catch (e) {
-      _logger.e('Error initializing camera: $e');
+    } catch (e, s) {
+      _logger.e('Error initializing camera', error: e, stackTrace: s);
       _updateStatus(CameraStatus.error);
     }
   }
 
+  /// Handles the main action button press.
+  /// Takes a picture if in preview mode, or performs OCR if a picture has been taken.
+  /// Returns the scanned [Contact] if OCR is successful, otherwise null.
+  Future<Contact?> onMainButtonPressed() async {
+    if (status == CameraStatus.pictureTaken) {
+      return await performOcr();
+    } else {
+      await takePicture();
+      return null;
+    }
+  }
+
+  /// Opens the app settings via the service.
+  Future<void> openAppSettingsHandler() async {
+    _logger.i('Opening app settings via service...');
+    await _permissionService.openAppSettingsHandler();
+  }
+
+  /// Performs OCR analysis on the taken picture.
+  /// Returns the scanned [Contact] if successful, otherwise null.
+  Future<Contact?> performOcr() async {
+    if (_imagePath == null) return null;
+    
+    try {
+      final imageBytes = await File(_imagePath!).readAsBytes();
+      final base64Image = base64Encode(imageBytes);
+      return await _ocrService.performCardOCR(base64Image);
+    } on Exception catch (e) {
+      _logger.e('Error during OCR analysis: $e');
+      return null;
+    }
+  }
+
+  /// Resets the picture and updates the status to [CameraStatus.readyToScan].
+  void resetPicture() {
+    _imagePath = null;
+    _updateStatus(CameraStatus.readyToScan);
+  }
+
+  /// Takes a picture and updates the status to [CameraStatus.pictureTaken].
   Future<void> takePicture() async {
     if (_cameraController == null || _status != CameraStatus.readyToScan) return;
     
@@ -73,11 +122,7 @@ class CameraPageController with ChangeNotifier {
     }
   }
 
-  void resetPicture() {
-    _imagePath = null;
-    _updateStatus(CameraStatus.readyToScan);
-  }
-
+  /// Toggles the camera flash mode.
   Future<void> toggleFlash() async {
     if (_cameraController == null) return;
     
@@ -86,19 +131,8 @@ class CameraPageController with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Contact?> performOcr() async {
-    if (_imagePath == null) return null;
-    
-    try {
-      final imageBytes = await File(_imagePath!).readAsBytes();
-      final base64Image = base64Encode(imageBytes);
-      return await _ocrService.performCardOCR(base64Image);
-    } on Exception catch (e) {
-      _logger.e('Error during OCR analysis: $e');
-      return null;
-    }
-  }
   
+  /// Returns the current quarter turn value based on the camera's orientation.
   int get quarterTurns {
     switch (_pictureOrientation) {
       case DeviceOrientation.portraitUp: return 0;
@@ -112,10 +146,6 @@ class CameraPageController with ChangeNotifier {
   void _updateStatus(CameraStatus newStatus) {
     _status = newStatus;
     notifyListeners();
-  }
-
-  Future<void> openAppSettingsHandler() async {
-    await openAppSettings();
   }
 
   @override

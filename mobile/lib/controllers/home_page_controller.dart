@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
-import 'package:tax_code_flutter/i18n/app_localizations.dart';
-import 'package:tax_code_flutter/screens/barcode_page.dart';
-import 'package:tax_code_flutter/screens/form_page.dart';
+import 'package:tax_code_flutter/services/sharing_service.dart';
 
 /// Manages the state and business logic for the HomePage.
 class HomePageController with ChangeNotifier {
   final ContactRepository _contactRepository;
+  final SharingServiceAbstract _sharingService;
 
   List<Contact> _allContacts = [];
   List<Contact> _filteredContacts = [];
   String _searchText = '';
   bool _isLoading = true;
 
-
   List<Contact> get contactsToShow => _filteredContacts;
-
   bool get isLoading => _isLoading;
   String get searchText => _searchText;
   bool get isReorderable => _searchText.isEmpty;
 
-  HomePageController({required ContactRepository contactRepository})
-      : _contactRepository = contactRepository {
+  HomePageController({
+    required ContactRepository contactRepository,
+    required SharingServiceAbstract sharingService,
+  })
+      : _contactRepository = contactRepository,
+        _sharingService = sharingService {
     _initialize();
   }
 
@@ -35,77 +35,29 @@ class HomePageController with ChangeNotifier {
 
   /// Reorders the contacts and persists the new order.
   void reorderContacts(int oldIndex, int newIndex) {
-    // Important: Reorder the original list, not the filtered one.
     final reorderedContacts = List<Contact>.from(_allContacts);
     final contact = reorderedContacts.removeAt(oldIndex);
     reorderedContacts.insert(newIndex, contact);
     _contactRepository.updateContacts(reorderedContacts);
   }
 
-  /// Opens the form to add a new contact and saves it upon return.
-  Future<void> addNewContact(BuildContext context) async {
-    final newContact = await Navigator.push<Contact>(
-      context,
-      MaterialPageRoute(builder: (context) => const FormPage()),
-    );
-    if (newContact != null) {
-      _contactRepository.addOrUpdateContact(newContact);
-    }
+  /// Saves a new or updated contact.
+  void saveContact(Contact contact) {
+    _contactRepository.addOrUpdateContact(contact);
   }
 
-  /// Opens the form to edit an existing contact and saves it upon return.
-  Future<void> editContact(BuildContext context, Contact contact) async {
-    final editedContact = await Navigator.push<Contact>(
-      context,
-      MaterialPageRoute(builder: (context) => FormPage(contact: contact)),
-    );
-    if (editedContact != null) {
-      _contactRepository.addOrUpdateContact(editedContact);
-    }
+  /// Deletes a contact.
+  void deleteContact(Contact contact) {
+    _contactRepository.removeContact(contact);
   }
 
-  /// Shows a confirmation dialog and deletes the contact if confirmed.
-  Future<void> deleteContact(BuildContext context, Contact contact) async {
-    final l10n = AppLocalizations.of(context)!;
-    final bool? isConfirmed = await showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.deleteConfirmation),
-        content: Text(l10n.deleteMessage(contact.taxCode)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-
-    if (isConfirmed == true) {
-      _contactRepository.removeContact(contact);
-    }
-  }
-
-  /// Shares the contact's tax code.
+  /// Shares the contact's tax code via the SharingService.
   void shareContact(Contact contact) {
-    SharePlus.instance.share(ShareParams(text: contact.taxCode));
-  }
-
-  /// Navigates to the barcode page for the given contact.
-  void showBarcodeForContact(BuildContext context, Contact contact) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => BarcodePage(taxCode: contact.taxCode)),
-    );
+    _sharingService.share(text: contact.taxCode);
   }
 
   @override
   void dispose() {
-    // 3. È fondamentale smettere di ascoltare per evitare memory leak.
     _contactRepository.removeListener(_onContactsChanged);
     super.dispose();
   }

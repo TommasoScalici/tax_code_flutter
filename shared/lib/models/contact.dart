@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:shared/util/timestamp_converter.dart';
+import 'package:shared/utils/timestamp_converter.dart';
 import 'package:uuid/uuid.dart';
 
 import 'birthplace.dart';
@@ -56,7 +56,7 @@ class Contact extends Equatable {
       lastName: '',
       gender: '',
       taxCode: '',
-      birthPlace: Birthplace(name: '', state: ''),
+      birthPlace: const Birthplace(name: '', state: ''),
       birthDate: DateTime.now(),
       listIndex: 0,
     );

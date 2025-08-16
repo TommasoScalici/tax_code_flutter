@@ -1,8 +1,42 @@
 {
-    "@@author": "Tommaso Scalici",
-    "@@locale": "it",
-    "appTitle": "Codice Fiscale",
-    "loginError": "Errore durante il login",
-    "welcomeTo": "Benvenuto su",
-    "noContactsFoundMessage": "Nessun contatto trovato, aggiungi prima un contatto da smartphone per visualizzare qui la lista."
+  "@@author": "Tommaso Scalici",
+  "@@locale": "it",
+
+  "@_general": {},
+  "appTitle": "Codice Fiscale",
+  "@appTitle": {
+    "description": "The title of the application, shown in the header."
+  },
+
+  "@_authentication": {},
+  "loginError": "Login fallito. Riprova.",
+  "@loginError": {
+    "description": "Error message shown when an unexpected login error occurs."
+  },
+  "signInWithGoogle": "Accedi con Google",
+  "@signInWithGoogle": {
+    "description": "Label for the Google Sign-In button."
+  },
+  "welcomeMessage": "Benvenuto su {appName}",
+  "@welcomeMessage": {
+    "description": "A welcome message displayed on the login screen.",
+    "placeholders": {
+      "appName": {
+        "type": "String",
+        "example": "Codice Fiscale"
+      }
+    }
+  },
+
+  "@_homeScreen": {},
+  "noContactsFoundMessage": "Nessun contatto trovato.\nAggiungi un contatto dal tuo smartphone per visualizzarlo qui.",
+  "@noContactsFoundMessage": {
+    "description": "Message shown on the main screen when the contact list is empty."
+  },
+
+  "@_pageTitles": {},
+  "barcodePageTitle": "Codice a Barre",
+  "@barcodePageTitle": {
+    "description": "Title for the page displaying the barcode."
+  }
 }

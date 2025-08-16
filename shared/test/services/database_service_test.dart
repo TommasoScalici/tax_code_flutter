@@ -14,7 +14,7 @@ void main() {
     late DatabaseService databaseService;
 
     const testUserId = 'test-user-123';
-    final testBirthplace = Birthplace(name: 'Palermo', state: 'PA');
+    final testBirthplace = const Birthplace(name: 'Palermo', state: 'PA');
     final testContact = Contact(
       id: 'contact-id-abc',
       firstName: 'Mario',
@@ -256,6 +256,32 @@ void main() {
           expect(data['createdAt'], existingData['createdAt']);
         },
       );
+    });
+
+    group('deleteAllUserData', () {
+      test('should delete the user document and their contacts subcollection', () async {
+        // Arrange
+        final otherUserId = 'other-user';
+        final contact2 = testContact.copyWith(id: 'contact-id-def');
+
+        await fakeFirestore.collection('users').doc(testUserId).set({'email': 'test@test.com'});
+        await fakeFirestore.collection('users').doc(testUserId).collection('contacts').doc(testContact.id).set(testContact.toJson());
+        await fakeFirestore.collection('users').doc(testUserId).collection('contacts').doc(contact2.id).set(contact2.toJson());
+        await fakeFirestore.collection('users').doc(otherUserId).set({'email': 'other@test.com'});
+
+        // Act
+        await databaseService.deleteAllUserData(testUserId);
+
+        // Assert
+        final userDoc = await fakeFirestore.collection('users').doc(testUserId).get();
+        expect(userDoc.exists, isFalse, reason: 'User document should be deleted');
+
+        final contactsSnapshot = await fakeFirestore.collection('users').doc(testUserId).collection('contacts').get();
+        expect(contactsSnapshot.docs.isEmpty, isTrue, reason: 'Contacts subcollection should be empty');
+
+        final otherUserDoc = await fakeFirestore.collection('users').doc(otherUserId).get();
+        expect(otherUserDoc.exists, isTrue, reason: 'Other user document should not be deleted');
+      });
     });
   });
 }

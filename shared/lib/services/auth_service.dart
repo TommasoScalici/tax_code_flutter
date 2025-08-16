@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -12,7 +11,6 @@ import 'package:shared/services/database_service.dart';
 ///
 class AuthService with ChangeNotifier {
   final FirebaseAuth _auth;
-  final FirebaseFirestore _firestore;
   final GoogleSignIn _googleSignIn;
   final DatabaseService _dbService;
   final Logger _logger;
@@ -35,12 +33,10 @@ class AuthService with ChangeNotifier {
   ///
   AuthService({
     required FirebaseAuth auth,
-    required FirebaseFirestore firestore,
     required GoogleSignIn googleSignIn,
     required DatabaseService dbService,
     required Logger logger,
   })  : _auth = auth,
-        _firestore = firestore,
         _googleSignIn = googleSignIn,
         _dbService = dbService,
         _logger = logger {
@@ -62,22 +58,12 @@ class AuthService with ChangeNotifier {
 
     try {
       final uid = currentUser.uid;
-      final userDocRef = _firestore.collection('users').doc(uid);
-      final contactsRef = userDocRef.collection('contacts');
-      final querySnapshot = await contactsRef.get();
-
-      final batch = _firestore.batch();
-      for (var doc in querySnapshot.docs) {
-        batch.delete(doc.reference);
-      }
-
-      await batch.commit();
-      await userDocRef.delete();
+      
+      await _dbService.deleteAllUserData(uid);
       await currentUser.delete();
       
-      _logger.i('User account deleted successfully.');
-      notifyListeners();
-    } on FirebaseAuthException catch (e) {
+      _logger.i('User account and all associated data deleted successfully.');
+    } catch (e) {
       _logger.e('Error deleting user account: $e');
       rethrow; 
     }
@@ -93,7 +79,6 @@ class AuthService with ChangeNotifier {
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         _logger.w('Google Sign-In was cancelled by the user.');
-        _setLoading(false);
         return;
       }
 

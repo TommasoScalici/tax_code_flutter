@@ -12,12 +12,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Tax Code';
 
   @override
-  String get loginError => 'Unexpected login error';
+  String get loginError => 'Login failed. Please try again.';
 
   @override
-  String get welcomeTo => 'Welcome to';
+  String get signInWithGoogle => 'Sign In with Google';
+
+  @override
+  String welcomeMessage(String appName) {
+    return 'Welcome to $appName';
+  }
 
   @override
   String get noContactsFoundMessage =>
-      'No contacts found, you must add one first from your smartphone to see here the list.';
+      'No contacts found.\nPlease add a contact on your phone to see it here.';
+
+  @override
+  String get barcodePageTitle => 'Tax Code Barcode';
 }

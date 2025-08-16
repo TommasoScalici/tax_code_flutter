@@ -25,6 +25,28 @@ void main() {
       data: expectedData,
     );
 
+    group('Equality', () {
+      test('Data instances with same values should be equal', () {
+        const data1 = Data(fiscalCode: 'ABC', allFiscalCodes: ['123']);
+        const data2 = Data(fiscalCode: 'ABC', allFiscalCodes: ['123']);
+        expect(data1, equals(data2));
+      });
+
+      test('TaxCodeResponse instances with same values should be equal', () {
+        const response1 = TaxCodeResponse(
+          status: true,
+          message: 'OK',
+          data: Data(fiscalCode: 'ABC', allFiscalCodes: ['123']),
+        );
+        const response2 = TaxCodeResponse(
+          status: true,
+          message: 'OK',
+          data: Data(fiscalCode: 'ABC', allFiscalCodes: ['123']),
+        );
+        expect(response1, equals(response2));
+      });
+    });
+
     /// Tests for the Data model
     group('Data Model', () {
       test('fromJson should create a valid model from map', () {

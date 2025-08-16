@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -5,13 +6,13 @@ part 'birthplace.g.dart';
 
 @HiveType(typeId: 1)
 @JsonSerializable()
-class Birthplace {
+class Birthplace extends Equatable {
   @HiveField(0)
-  String name;
+  final String name;
   @HiveField(1)
-  String state;
+  final String state;
 
-  Birthplace({required this.name, required this.state});
+  const Birthplace({required this.name, required this.state});
 
   factory Birthplace.fromJson(Map<String, dynamic> json) =>
       _$BirthplaceFromJson(json);
@@ -19,4 +20,7 @@ class Birthplace {
 
   @override
   String toString() => '$name ($state)';
+
+  @override
+  List<Object?> get props => [name, state];
 }

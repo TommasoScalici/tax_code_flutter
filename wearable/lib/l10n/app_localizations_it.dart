@@ -12,12 +12,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get appTitle => 'Codice Fiscale';
 
   @override
-  String get loginError => 'Errore durante il login';
+  String get loginError => 'Login fallito. Riprova.';
 
   @override
-  String get welcomeTo => 'Benvenuto su';
+  String get signInWithGoogle => 'Accedi con Google';
+
+  @override
+  String welcomeMessage(String appName) {
+    return 'Benvenuto su $appName';
+  }
 
   @override
   String get noContactsFoundMessage =>
-      'Nessun contatto trovato, aggiungi prima un contatto da smartphone per visualizzare qui la lista.';
+      'Nessun contatto trovato.\nAggiungi un contatto dal tuo smartphone per visualizzarlo qui.';
+
+  @override
+  String get barcodePageTitle => 'Codice a Barre';
 }

@@ -7,7 +7,7 @@ void main() {
   /// Tests for the Contact model
   group('Contact Model', () {
     final birthDate = DateTime(1990, 1, 15);
-    final birthplace = Birthplace(name: 'Roma', state: 'RM');
+    final birthplace = const Birthplace(name: 'Roma', state: 'RM');
     final contact = Contact(
       id: '12345',
       firstName: 'Mario',
@@ -74,9 +74,10 @@ void main() {
       /// Tests for the toString method
       test('toString should return a formatted string', () {
         final stringRepresentation = contact.toString();
+        // La formattazione yMd di default in 'en' è M/d/yyyy
+        const expectedString = 'Mario Rossi (M) - 1/15/1990 - Roma (RM)';
 
-        expect(stringRepresentation, contains('Mario Rossi'));
-        expect(stringRepresentation, contains('(M)'));
+        expect(stringRepresentation, equals(expectedString));
       });
 
       /// Tests for the equality operator
