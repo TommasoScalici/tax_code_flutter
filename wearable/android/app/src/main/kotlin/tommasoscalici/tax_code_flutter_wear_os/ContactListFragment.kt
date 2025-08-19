@@ -53,6 +53,46 @@ class ContactListFragment : Fragment() {
         )
     }
 
+    fun updateContacts(newContacts: ArrayList<HashMap<String, Any>>?) {
+        binding ?: return
+
+        binding?.contactsContainer?.removeAllViews()
+
+        val hasContacts = newContacts != null && newContacts.isNotEmpty()
+
+        if (hasContacts) {
+            binding?.emptyMessage?.visibility = View.GONE
+            binding?.contactsContainer?.visibility = View.VISIBLE
+            newContacts!!.forEach { map ->
+                mapToContact(map)?.also { addContactView(it) }
+            }
+        } else {
+            binding?.emptyMessage?.visibility = View.VISIBLE
+            binding?.contactsContainer?.visibility = View.GONE
+        }
+    }
+
+    private fun mapToContact(map: HashMap<String, Any>): Contact? {
+        return try {
+            Contact(
+                id = map["id"] as String,
+                firstName = map["firstName"] as String,
+                lastName = map["lastName"] as String,
+                gender = map["gender"] as String,
+                taxCode = map["taxCode"] as String,
+                birthPlace = BirthPlace(
+                    name = (map["birthPlace"] as Map<*, *>)["name"] as String,
+                    state = (map["birthPlace"] as Map<*, *>)["state"] as String
+                ),
+                birthDate = simpleDateFormat.parse(map["birthDate"] as String) ?: Date(),
+                listIndex = (map["listIndex"] as Number).toInt()
+            )
+        } catch (e: Exception) {
+            Log.e("ContactListFragment", "Error mapping contact: $e")
+            null
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ContactListBinding.bind(view)

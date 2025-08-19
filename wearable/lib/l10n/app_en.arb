@@ -1,14 +1,10 @@
 {
   "@@author": "Tommaso Scalici",
   "@@locale": "en",
-
-  "@_general": {},
   "appTitle": "Tax Code",
   "@appTitle": {
     "description": "The title of the application, shown in the header."
   },
-
-  "@_authentication": {},
   "loginError": "Login failed. Please try again.",
   "@loginError": {
     "description": "Error message shown when an unexpected login error occurs."
@@ -16,6 +12,10 @@
   "signInWithGoogle": "Sign In with Google",
   "@signInWithGoogle": {
     "description": "Label for the Google Sign-In button."
+  },
+  "openOnPhone": "Open on phone",
+  "@openOnPhone": {
+    "description": "Call to action button to open the companion app on the user's phone."
   },
   "welcomeMessage": "Welcome to {appName}",
   "@welcomeMessage": {
@@ -27,14 +27,10 @@
       }
     }
   },
-
-  "@_homeScreen": {},
-  "noContactsFoundMessage": "No contacts found.\nPlease add a contact on your phone to see it here.",
+  "noContactsFoundMessage": "No contacts found. Add them on your phone.",
   "@noContactsFoundMessage": {
     "description": "Message shown on the main screen when the contact list is empty."
   },
-
-  "@_pageTitles": {},
   "barcodePageTitle": "Tax Code Barcode",
   "@barcodePageTitle": {
     "description": "Title for the page displaying the barcode."

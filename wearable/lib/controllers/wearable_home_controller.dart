@@ -26,7 +26,7 @@ class WearableHomeController with ChangeNotifier {
     }
     notifyListeners();
   }
-  
+
   @override
   void dispose() {
     _contactRepository.removeListener(_onContactsChanged);

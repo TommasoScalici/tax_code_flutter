@@ -18,13 +18,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signInWithGoogle => 'Sign In with Google';
 
   @override
+  String get openOnPhone => 'Open on phone';
+
+  @override
   String welcomeMessage(String appName) {
     return 'Welcome to $appName';
   }
 
   @override
   String get noContactsFoundMessage =>
-      'No contacts found.\nPlease add a contact on your phone to see it here.';
+      'No contacts found. Add them on your phone.';
 
   @override
   String get barcodePageTitle => 'Tax Code Barcode';

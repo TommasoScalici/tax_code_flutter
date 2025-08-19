@@ -1,136 +1,112 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
+import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
+import 'package:tax_code_flutter_wear_os/l10n/app_localizations_en.dart';
+import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 import 'package:tax_code_flutter_wear_os/widgets/contacts_list.dart';
 
 import '../fakes/fake_contact_repository.dart';
 
-/// Mocks
-class MockLogger extends Mock implements Logger {}
+// Mocks
+class MockNativeViewService extends Mock implements NativeViewServiceAbstract {}
 
 void main() {
-  final binding = TestWidgetsFlutterBinding.ensureInitialized();
-  final List<MethodCall> log = <MethodCall>[];
-  const channel =
-      MethodChannel('tommasoscalici.tax_code_flutter_wear_os/channel');
-
   late FakeContactRepository fakeContactRepository;
-  late MockLogger mockLogger;
+  late MockNativeViewService mockNativeViewService;
+
+  setUp(() {
+    fakeContactRepository = FakeContactRepository();
+    mockNativeViewService = MockNativeViewService();
+  });
 
   Widget createTestableWidget() {
     return MultiProvider(
       providers: [
-        Provider<Logger>.value(value: mockLogger),
         ChangeNotifierProvider<ContactRepository>.value(
           value: fakeContactRepository,
         ),
+        Provider<NativeViewServiceAbstract>.value(value: mockNativeViewService),
       ],
       child: const MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(body: ContactsList()),
       ),
     );
   }
 
-  setUp(() {
-    fakeContactRepository = FakeContactRepository();
-    mockLogger = MockLogger();
-
-    when(() => mockLogger.i(any())).thenAnswer((_) {});
-    when(() => mockLogger.e(any())).thenAnswer((_) {});
-
-    binding.defaultBinaryMessenger.setMockMethodCallHandler(channel,
-        (MethodCall methodCall) async {
-      log.add(methodCall);
-      return null;
-    });
-    log.clear();
-  });
-
-  tearDown(() {
-    binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
-  });
-
   group('ContactsList', () {
-    testWidgets('should display CircularProgressIndicator when loading',
-        (WidgetTester tester) async {
-      fakeContactRepository.setState(loading: true);
-      await tester.pumpWidget(createTestableWidget());
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    });
-
-    testWidgets('should invoke native method when contacts are available',
-        (WidgetTester tester) async {
-      final testContact = Contact.empty().copyWith(id: '1');
-      await tester.pumpWidget(createTestableWidget());
-      fakeContactRepository.setState(newContacts: [testContact]);
-      await tester.pumpAndSettle();
-
-      expect(log, hasLength(1));
-      expect(log.first.method, 'openNativeContactList');
-      final contactsData =
-          (log.first.arguments as Map)['contacts'] as List<dynamic>;
-      expect(contactsData.first['id'], '1');
-    });
-
-    testWidgets(
-        'should NOT invoke native method again on rebuild if already shown',
-        (WidgetTester tester) async {
-      final testContact = Contact.empty().copyWith(id: '1');
-      fakeContactRepository.setState(newContacts: [testContact]);
-      await tester.pumpWidget(createTestableWidget());
-      await tester.pumpAndSettle();
-      expect(log, hasLength(1));
-      
-      await tester.pump();
-      expect(log, hasLength(1));
-    });
-
-    testWidgets(
-        'should allow showing native view again after contacts are cleared and reloaded',
-        (WidgetTester tester) async {
-      final testContact = Contact.empty().copyWith(id: '1');
-      await tester.pumpWidget(createTestableWidget());
-      
-      fakeContactRepository.setState(newContacts: [testContact]);
-      await tester.pumpAndSettle();
-      expect(log, hasLength(1), reason: 'Should be called on first login');
-
-      fakeContactRepository.setState(newContacts: []);
-      await tester.pump();
-      expect(log, hasLength(1), reason: 'Should not be called on logout');
-
-      fakeContactRepository.setState(newContacts: [testContact]);
-      await tester.pumpAndSettle();
-
-      expect(log, hasLength(2),
-          reason: 'Should be called again on second login');
-    });
-
-    testWidgets('should log an error when native method fails',
-        (WidgetTester tester) async {
+    testWidgets('should display CircularProgressIndicator when loading', (
+      tester,
+    ) async {
       // Arrange
-      final testContact = Contact.empty().copyWith(id: '1');
-      final exception = PlatformException(code: 'ERROR', message: 'Failed');
-
-      binding.defaultBinaryMessenger.setMockMethodCallHandler(channel,
-          (MethodCall methodCall) async {
-        throw exception;
-      });
-
-      fakeContactRepository.setState(newContacts: [testContact]);
+      fakeContactRepository.setState(contacts: [], isLoading: true);
 
       // Act
       await tester.pumpWidget(createTestableWidget());
-      await tester.pumpAndSettle();
 
       // Assert
-      verify(() => mockLogger.e("Failed to invoke native method: '${exception.message}'."))
-          .called(1);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byType(Text), findsNothing);
+      expect(find.byType(ElevatedButton), findsNothing);
+    });
+
+    testWidgets(
+      'should display empty message and button when list is empty and not loading',
+      (tester) async {
+        // Arrange
+        fakeContactRepository.setState(contacts: [], isLoading: false);
+        when(
+          () => mockNativeViewService.showContactList(any()),
+        ).thenAnswer((_) async {});
+        when(
+          () => mockNativeViewService.updateContactList(any()),
+        ).thenAnswer((_) async {});
+
+        // Act
+        await tester.pumpWidget(createTestableWidget());
+        await tester.pump();
+
+        // Assert
+        expect(find.byType(CircularProgressIndicator), findsNothing);
+        expect(
+          find.text(AppLocalizationsEn().noContactsFoundMessage),
+          findsOneWidget,
+        );
+        expect(find.byType(ElevatedButton), findsOneWidget);
+      },
+    );
+
+    testWidgets('should display SizedBox.shrink when contacts are available', (
+      tester,
+    ) async {
+      // Arrange
+      final testContact = Contact.empty().copyWith(id: '1');
+      fakeContactRepository.setState(contacts: [testContact], isLoading: false);
+
+      when(
+        () => mockNativeViewService.showContactList(any()),
+      ).thenAnswer((_) async {});
+      when(
+        () => mockNativeViewService.updateContactList(any()),
+      ).thenAnswer((_) async {});
+
+      // Act
+      await tester.pumpWidget(createTestableWidget());
+      await tester.pump();
+
+      // Assert
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.byType(Text), findsNothing);
+      expect(find.byType(ElevatedButton), findsNothing);
+
+      final sizedBox = tester.widget<SizedBox>(find.byType(SizedBox));
+      expect(sizedBox.width, 0.0);
+      expect(sizedBox.height, 0.0);
     });
   });
 }

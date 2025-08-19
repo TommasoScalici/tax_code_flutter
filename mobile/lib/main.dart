@@ -10,9 +10,12 @@ import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shared/models/birthplace.dart';
+import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/database_service.dart';
@@ -22,10 +25,12 @@ import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
+import 'package:tax_code_flutter/services/camera_service.dart';
 import 'package:tax_code_flutter/services/card_parser_service.dart';
 import 'package:tax_code_flutter/services/google_vision_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/ocr_service.dart';
+import 'package:tax_code_flutter/services/permission_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
 import 'package:tax_code_flutter/services/tax_code_service.dart';
 
@@ -39,11 +44,15 @@ Future<void> configureApp(Logger logger) async {
     if (Platform.isAndroid) {
       await FirebaseRemoteConfig.instance.fetchAndActivate();
 
-      final appCheckProvider =
-          kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity;
-      await FirebaseAppCheck.instance.activate(androidProvider: appCheckProvider);
+      final appCheckProvider = kDebugMode
+          ? AndroidProvider.debug
+          : AndroidProvider.playIntegrity;
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: appCheckProvider,
+      );
 
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
 
       PlatformDispatcher.instance.onError = (error, stack) {
         FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
@@ -51,16 +60,22 @@ Future<void> configureApp(Logger logger) async {
       };
     }
   } on Exception catch (e, s) {
-    logger.e('Error while configuring the app with Firebase', error: e, stackTrace: s);
+    logger.e(
+      'Error while configuring the app with Firebase',
+      error: e,
+      stackTrace: s,
+    );
   }
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(BirthplaceAdapter());
+  Hive.registerAdapter(ContactAdapter());
 
   final logger = Logger();
   final sharedPreferences = SharedPreferencesAsync();
@@ -74,23 +89,37 @@ Future<void> main() async {
         Provider<SharedPreferencesAsync>.value(value: sharedPreferences),
         Provider<FirebaseAuth>.value(value: FirebaseAuth.instance),
         Provider<FirebaseFirestore>.value(value: FirebaseFirestore.instance),
-        Provider<FirebaseRemoteConfig>.value(value: FirebaseRemoteConfig.instance),
+        Provider<FirebaseRemoteConfig>.value(
+          value: FirebaseRemoteConfig.instance,
+        ),
         Provider<GoogleSignIn>.value(value: GoogleSignIn()),
         Provider<http.Client>(create: (_) => http.Client()),
-        Provider<FirebaseCrashlytics>(create: (_) => FirebaseCrashlytics.instance),
+        Provider<FirebaseCrashlytics>(
+          create: (_) => FirebaseCrashlytics.instance,
+        ),
 
         // --- Level 2: Specialized, Self-Contained Services ---
+        Provider<PermissionServiceAbstract>(
+          create: (context) =>
+              PermissionService(logger: context.read<Logger>()),
+        ),
+        Provider<CameraServiceAbstract>(
+          create: (context) => CameraService(logger: context.read<Logger>()),
+        ),
         Provider<DatabaseService>(
-          create: (context) => DatabaseService(firestore: context.read<FirebaseFirestore>()),
+          create: (context) =>
+              DatabaseService(firestore: context.read<FirebaseFirestore>()),
         ),
         Provider<BirthplaceServiceAbstract>(
-          create: (context) => BirthplaceService(logger: context.read<Logger>()),
+          create: (context) =>
+              BirthplaceService(logger: context.read<Logger>()),
         ),
         Provider<InfoServiceAbstract>(
           create: (context) => InfoService(logger: context.read<Logger>()),
         ),
         Provider<BrightnessServiceAbstract>(
-          create: (context) => BrightnessService(logger: context.read<Logger>()),
+          create: (context) =>
+              BrightnessService(logger: context.read<Logger>()),
         ),
         Provider<SharingServiceAbstract>(
           create: (context) => SharingService(logger: context.read<Logger>()),
@@ -102,12 +131,15 @@ Future<void> main() async {
           ),
         ),
         Provider<CardParserServiceAbstract>(
-          create: (_) => CardParserService(),
+          create: (context) =>
+              CardParserService(logger: context.read<Logger>()),
         ),
         Provider<TaxCodeServiceAbstract>(
           create: (context) {
             final remoteConfig = context.read<FirebaseRemoteConfig>();
-            final accessToken = remoteConfig.getString(Settings.mioCodiceFiscaleApiKey);
+            final accessToken = remoteConfig.getString(
+              Settings.mioCodiceFiscaleApiKey,
+            );
             return TaxCodeService(
               client: context.read<http.Client>(),
               logger: context.read<Logger>(),
@@ -125,7 +157,9 @@ Future<void> main() async {
 
         // --- Level 3: State Services ---
         ChangeNotifierProvider<ThemeService>(
-          create: (context) => ThemeService(prefs: context.read<SharedPreferencesAsync>())..init(),
+          create: (context) =>
+              ThemeService(prefs: context.read<SharedPreferencesAsync>())
+                ..init(),
         ),
         ChangeNotifierProvider<AuthService>(
           create: (context) => AuthService(
@@ -137,13 +171,12 @@ Future<void> main() async {
         ),
 
         // --- Level 4: Repositories ---
-        ChangeNotifierProxyProvider<AuthService, ContactRepository>(
+        ChangeNotifierProvider<ContactRepository>(
           create: (context) => ContactRepository(
             authService: context.read<AuthService>(),
             dbService: context.read<DatabaseService>(),
             logger: context.read<Logger>(),
           ),
-          update: (context, authService, previousRepository) => previousRepository!,
         ),
 
         // --- Level 5: View Controllers ---
@@ -171,7 +204,7 @@ final class TaxCodeApp extends StatelessWidget {
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       localizationsDelegates: const [
         ...AppLocalizations.localizationsDelegates,
-        FirebaseUILocalizations.delegate
+        FirebaseUILocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       theme: themeService.theme == 'dark'

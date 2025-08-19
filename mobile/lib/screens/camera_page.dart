@@ -19,7 +19,7 @@ class CameraPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (ctx) => CameraPageController(
-        ocrService: ctx.read<OCRService>(),
+        ocrService: ctx.read<OCRServiceAbstract>(),
         logger: ctx.read<Logger>(),
         permissionService: ctx.read<PermissionServiceAbstract>(),
         cameraService: ctx.read<CameraServiceAbstract>(),
@@ -45,6 +45,35 @@ class _CameraView extends StatelessWidget {
     );
   }
 
+  /// Handles the logic for the main action button (take/confirm picture).
+  Future<void> _onMainButtonPressed(
+    BuildContext context,
+    CameraPageController controller,
+    AppLocalizations l10n,
+  ) async {
+    if (controller.status == CameraStatus.readyToScan) {
+      await controller.takePicture();
+    } else if (controller.status == CameraStatus.pictureTaken) {
+      final contact = await controller.confirmAndProcessPicture();
+
+      if (!context.mounted) return;
+
+      if (contact != null) {
+        Navigator.pop(context, contact);
+      } else {
+        ScaffoldMessenger.of(context)
+          ..clearSnackBars()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(l10n.ocrFailedErrorMessage),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.redAccent,
+            ),
+          );
+      }
+    }
+  }
+
   /// Builds the main body of the widget based on the controller's status.
   Widget _buildBody(
     BuildContext context,
@@ -62,7 +91,11 @@ class _CameraView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.no_photography, size: 50, color: Colors.white70),
+                const Icon(
+                  Icons.no_photography,
+                  size: 50,
+                  color: Colors.white70,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   l10n.cameraPermissionInfo,
@@ -85,6 +118,7 @@ class _CameraView extends StatelessWidget {
 
       case CameraStatus.readyToScan:
       case CameraStatus.pictureTaken:
+      case CameraStatus.processingOCR:
         return _buildCameraView(context, controller, l10n);
     }
   }
@@ -95,7 +129,11 @@ class _CameraView extends StatelessWidget {
     CameraPageController controller,
     AppLocalizations l10n,
   ) {
-    final isPictureTaken = controller.status == CameraStatus.pictureTaken;
+    final isPictureTaken =
+        controller.status == CameraStatus.pictureTaken ||
+        controller.status == CameraStatus.processingOCR;
+
+    final isProcessing = controller.status == CameraStatus.processingOCR;
 
     return Stack(
       alignment: Alignment.center,
@@ -113,49 +151,59 @@ class _CameraView extends StatelessWidget {
                   ),
                 )
               : CameraPreview(controller.cameraController!),
-        Positioned(
-          top: 20,
-          right: 20,
-          child: IconButton(
-            tooltip: l10n.tooltipToggleFlash,
-            icon: Icon(
-              controller.flashMode == FlashMode.off ? Icons.flash_off : Icons.flash_on,
-              color: Colors.white,
-              size: 30,
+        if (!isProcessing)
+          Positioned(
+            top: 20,
+            right: 20,
+            child: IconButton(
+              tooltip: l10n.tooltipToggleFlash,
+              icon: Icon(
+                controller.flashMode == FlashMode.off
+                    ? Icons.flash_off
+                    : Icons.flash_on,
+                color: Colors.white,
+                size: 30,
+              ),
+              onPressed: controller.toggleFlash,
             ),
-            onPressed: controller.toggleFlash,
           ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 50.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FloatingActionButton(
-                  tooltip: isPictureTaken
-                      ? l10n.tooltipConfirmPicture
-                      : l10n.tooltipTakePicture,
-                  onPressed: () async {
-                    final contact = await controller.onMainButtonPressed();
-                    if (contact != null && context.mounted) {
-                      Navigator.pop(context, contact);
-                    }
-                  },
-                  child: Icon(isPictureTaken ? Icons.check : Icons.camera_alt),
-                ),
-                if (isPictureTaken)
+        if (!isProcessing)
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 50.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
                   FloatingActionButton(
-                    tooltip: l10n.tooltipRetakePicture,
-                    onPressed: controller.resetPicture,
-                    backgroundColor: Colors.red,
-                    child: const Icon(Icons.replay),
+                    tooltip: isPictureTaken
+                        ? l10n.tooltipConfirmPicture
+                        : l10n.tooltipTakePicture,
+                    onPressed: () =>
+                        _onMainButtonPressed(context, controller, l10n),
+                    child: Icon(
+                      isPictureTaken ? Icons.check : Icons.camera_alt,
+                    ),
                   ),
-              ],
+                  if (isPictureTaken)
+                    FloatingActionButton(
+                      tooltip: l10n.tooltipRetakePicture,
+                      onPressed: controller.resetPicture,
+                      backgroundColor: Colors.red,
+                      child: const Icon(Icons.replay),
+                    ),
+                ],
+              ),
             ),
           ),
-        ),
+        if (isProcessing)
+          const Stack(
+            alignment: Alignment.center,
+            children: [
+              ModalBarrier(dismissible: false, color: Colors.black54),
+              CircularProgressIndicator(),
+            ],
+          ),
       ],
     );
   }

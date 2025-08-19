@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:logger/logger.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/database_service.dart';
-
 
 ///
 /// Manages loading, caching, and modifying user contacts.
@@ -32,9 +31,9 @@ class ContactRepository with ChangeNotifier {
     required AuthService authService,
     required DatabaseService dbService,
     required Logger logger,
-  }) : _authService = authService,
-       _dbService = dbService,
-       _logger = logger {
+  })  : _authService = authService,
+        _dbService = dbService,
+        _logger = logger {
     _authService.addListener(_onAuthChanged);
     _onAuthChanged();
   }
@@ -61,34 +60,34 @@ class ContactRepository with ChangeNotifier {
   }
 
   void _listenToRemoteContacts() {
-    _contactsSubscription = _dbService
-        .getContactsStream(_userId!)
-        .listen(
-          (remoteContacts) async {
-            _contacts = List.from(remoteContacts)
-              ..sort((a, b) => a.listIndex.compareTo(b.listIndex));
-            try {
-              await _saveContactsToLocalCache();
-            } on Exception catch (e, s) {
-              _logger.e('Error saving contacts to Hive cache', error: e, stackTrace: s);
-            }
-            _finishLoading();
-          },
-          onError: (e, s) async {
-            _logger.e(
-              'Error listening to remote contacts. Loading from cache',
-              error: e,
-              stackTrace: s,
-            );
-            try {
-              await _loadContactsFromLocalCache();
-            } on Exception catch (e, s) {
-              _logger.e('Failed to load contacts from Hive cache as well.', error: e, stackTrace: s);
-              _contacts = [];
-            }
-            _finishLoading();
-          },
+    _contactsSubscription = _dbService.getContactsStream(_userId!).listen(
+      (remoteContacts) async {
+        _contacts = List.from(remoteContacts)
+          ..sort((a, b) => a.listIndex.compareTo(b.listIndex));
+        try {
+          await _saveContactsToLocalCache();
+        } on Exception catch (e, s) {
+          _logger.e('Error saving contacts to Hive cache',
+              error: e, stackTrace: s);
+        }
+        _finishLoading();
+      },
+      onError: (e, s) async {
+        _logger.e(
+          'Error listening to remote contacts. Loading from cache',
+          error: e,
+          stackTrace: s,
         );
+        try {
+          await _loadContactsFromLocalCache();
+        } on Exception catch (e, s) {
+          _logger.e('Failed to load contacts from Hive cache as well.',
+              error: e, stackTrace: s);
+          _contacts = [];
+        }
+        _finishLoading();
+      },
+    );
   }
 
   ///

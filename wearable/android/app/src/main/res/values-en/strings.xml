@@ -4,7 +4,7 @@
     <string name="app_name">Tax Code</string>
 
     <!-- Empty state -->
-    <string name="empty_message">No contacts found, you must add one first from your smartphone to see here the list.</string>
+    <string name="empty_message">No contacts found. Add them on your phone.</string>
     <string name="phone_button">Open on phone</string>
 
     <!-- Contact item -->

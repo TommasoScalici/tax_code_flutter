@@ -8,7 +8,7 @@ part of 'contact.dart';
 
 class ContactAdapter extends TypeAdapter<Contact> {
   @override
-  final int typeId = 0;
+  final typeId = 0;
 
   @override
   Contact read(BinaryReader reader) {
@@ -24,7 +24,7 @@ class ContactAdapter extends TypeAdapter<Contact> {
       taxCode: fields[4] as String,
       birthPlace: fields[5] as Birthplace,
       birthDate: fields[6] as DateTime,
-      listIndex: fields[7] as int,
+      listIndex: (fields[7] as num).toInt(),
     );
   }
 
@@ -66,25 +66,25 @@ class ContactAdapter extends TypeAdapter<Contact> {
 // **************************************************************************
 
 Contact _$ContactFromJson(Map<String, dynamic> json) => Contact(
-      id: json['id'] as String,
-      firstName: json['firstName'] as String,
-      lastName: json['lastName'] as String,
-      gender: json['gender'] as String,
-      taxCode: json['taxCode'] as String,
-      birthPlace:
-          Birthplace.fromJson(json['birthPlace'] as Map<String, dynamic>),
-      birthDate:
-          const TimestampConverter().fromJson(json['birthDate'] as Timestamp),
-      listIndex: (json['listIndex'] as num).toInt(),
-    );
+  id: json['id'] as String,
+  firstName: json['firstName'] as String,
+  lastName: json['lastName'] as String,
+  gender: json['gender'] as String,
+  taxCode: json['taxCode'] as String,
+  birthPlace: Birthplace.fromJson(json['birthPlace'] as Map<String, dynamic>),
+  birthDate: const TimestampConverter().fromJson(
+    json['birthDate'] as Timestamp,
+  ),
+  listIndex: (json['listIndex'] as num).toInt(),
+);
 
 Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
-      'id': instance.id,
-      'firstName': instance.firstName,
-      'lastName': instance.lastName,
-      'gender': instance.gender,
-      'taxCode': instance.taxCode,
-      'birthPlace': instance.birthPlace.toJson(),
-      'birthDate': const TimestampConverter().toJson(instance.birthDate),
-      'listIndex': instance.listIndex,
-    };
+  'id': instance.id,
+  'firstName': instance.firstName,
+  'lastName': instance.lastName,
+  'gender': instance.gender,
+  'taxCode': instance.taxCode,
+  'birthPlace': instance.birthPlace.toJson(),
+  'birthDate': const TimestampConverter().toJson(instance.birthDate),
+  'listIndex': instance.listIndex,
+};

@@ -30,35 +30,43 @@ class _LoginView extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                l10n.welcomeMessage(l10n.appTitle),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 24),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: authService.isLoading
-                        ? null
-                        : () => context.read<AuthService>().signInWithGoogleForWearable(),
-                    icon: const Icon(Icons.login),
-                    label: Text(l10n.signInWithGoogle),
-                  ),
-                  if (authService.isLoading) ...[
-                    const SizedBox(height: 16),
-                    const SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(strokeWidth: 3),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  l10n.welcomeMessage(l10n.appTitle),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 24),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: authService.isLoading
+                          ? null
+                          : () => context
+                                .read<AuthService>()
+                                .signInWithGoogleForWearable(),
+                      icon: const Icon(Icons.login),
+                      label: Text(
+                        l10n.signInWithGoogle,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
+                    if (authService.isLoading) ...[
+                      const SizedBox(height: 16),
+                      const SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(strokeWidth: 3),
+                      ),
+                    ],
                   ],
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

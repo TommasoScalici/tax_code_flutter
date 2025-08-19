@@ -15,13 +15,14 @@ enum CameraStatus {
   permissionDenied,
   readyToScan,
   pictureTaken,
+  processingOCR,
   error,
 }
 
 class CameraPageController with ChangeNotifier {
   final CameraServiceAbstract _cameraService;
   final PermissionServiceAbstract _permissionService;
-  final OCRService _ocrService;
+  final OCRServiceAbstract _ocrService;
   final Logger _logger;
 
   CameraController? _cameraController;
@@ -38,12 +39,12 @@ class CameraPageController with ChangeNotifier {
   CameraPageController({
     required CameraServiceAbstract cameraService,
     required PermissionServiceAbstract permissionService,
-    required OCRService ocrService,
+    required OCRServiceAbstract ocrService,
     required Logger logger,
-  })  : _cameraService = cameraService,
-        _permissionService = permissionService,
-        _ocrService = ocrService,
-        _logger = logger;
+  }) : _cameraService = cameraService,
+       _permissionService = permissionService,
+       _ocrService = ocrService,
+       _logger = logger;
 
   /// Initializes the camera and checks for permission.
   Future<void> initialize() async {
@@ -56,11 +57,15 @@ class CameraPageController with ChangeNotifier {
     try {
       final cameras = await _cameraService.getAvailableCameras();
       if (cameras.isEmpty) throw Exception('No cameras found');
-      
+
       final camera = cameras.first;
-      _cameraController = CameraController(camera, ResolutionPreset.high, enableAudio: false);
+      _cameraController = CameraController(
+        camera,
+        ResolutionPreset.high,
+        enableAudio: false,
+      );
       await _cameraController!.initialize();
-      
+
       _updateStatus(CameraStatus.readyToScan);
     } catch (e, s) {
       _logger.e('Error initializing camera', error: e, stackTrace: s);
@@ -68,14 +73,25 @@ class CameraPageController with ChangeNotifier {
     }
   }
 
-  /// Handles the main action button press.
-  /// Takes a picture if in preview mode, or performs OCR if a picture has been taken.
-  /// Returns the scanned [Contact] if OCR is successful, otherwise null.
-  Future<Contact?> onMainButtonPressed() async {
-    if (status == CameraStatus.pictureTaken) {
-      return await performOcr();
-    } else {
-      await takePicture();
+  /// Processes the taken picture with the OCR service and returns a [Contact].
+  /// This method now handles the internal state change to show a loading indicator
+  /// and ensures animations in the UI are not interrupted.
+  Future<Contact?> confirmAndProcessPicture() async {
+    if (status != CameraStatus.pictureTaken || imagePath == null) return null;
+
+    _updateStatus(CameraStatus.processingOCR);
+
+    try {
+      final imageBytes = await File(imagePath!).readAsBytes();
+      final String base64Image = base64Encode(imageBytes);
+      final contact = await _ocrService.performCardOCR(base64Image);
+
+      _updateStatus(CameraStatus.pictureTaken);
+
+      return contact;
+    } catch (e, s) {
+      _logger.e('OCR processing failed', error: e, stackTrace: s);
+      _updateStatus(CameraStatus.pictureTaken);
       return null;
     }
   }
@@ -90,7 +106,7 @@ class CameraPageController with ChangeNotifier {
   /// Returns the scanned [Contact] if successful, otherwise null.
   Future<Contact?> performOcr() async {
     if (_imagePath == null) return null;
-    
+
     try {
       final imageBytes = await File(_imagePath!).readAsBytes();
       final base64Image = base64Encode(imageBytes);
@@ -109,15 +125,17 @@ class CameraPageController with ChangeNotifier {
 
   /// Takes a picture and updates the status to [CameraStatus.pictureTaken].
   Future<void> takePicture() async {
-    if (_cameraController == null || _status != CameraStatus.readyToScan) return;
-    
+    if (_cameraController == null || _status != CameraStatus.readyToScan) {
+      return;
+    }
+
     try {
       final image = await _cameraController!.takePicture();
       _pictureOrientation = _cameraController!.value.deviceOrientation;
       _imagePath = image.path;
       _updateStatus(CameraStatus.pictureTaken);
-    } catch (e) {
-      _logger.e('Error taking picture: $e');
+    } catch (e, s) {
+      _logger.e('Error taking picture', error: e, stackTrace: s);
       _updateStatus(CameraStatus.error);
     }
   }
@@ -125,31 +143,37 @@ class CameraPageController with ChangeNotifier {
   /// Toggles the camera flash mode.
   Future<void> toggleFlash() async {
     if (_cameraController == null) return;
-    
+
     _flashMode = _flashMode == FlashMode.off ? FlashMode.torch : FlashMode.off;
     await _cameraController!.setFlashMode(_flashMode);
     notifyListeners();
   }
 
-  
   /// Returns the current quarter turn value based on the camera's orientation.
   int get quarterTurns {
     switch (_pictureOrientation) {
-      case DeviceOrientation.portraitUp: return 0;
-      case DeviceOrientation.landscapeRight: return 1;
-      case DeviceOrientation.portraitDown: return 2;
-      case DeviceOrientation.landscapeLeft: return 3;
-      default: return 0;
+      case DeviceOrientation.portraitUp:
+        return 0;
+      case DeviceOrientation.landscapeRight:
+        return 1;
+      case DeviceOrientation.portraitDown:
+        return 2;
+      case DeviceOrientation.landscapeLeft:
+        return 3;
+      default:
+        return 0;
     }
   }
 
   void _updateStatus(CameraStatus newStatus) {
+    if (_status == newStatus) return;
     _status = newStatus;
     notifyListeners();
   }
 
   @override
   void dispose() {
+    _cameraController?.setFlashMode(FlashMode.off);
     _cameraController?.dispose();
     super.dispose();
   }

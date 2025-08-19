@@ -1,11 +1,13 @@
 {
   "@@author": "Tommaso Scalici",
   "@@locale": "it",
-
-  "@_generic": {},
   "appTitle": "Codice Fiscale",
   "@appTitle": {
     "description": "The title of the application, often shown in the app bar."
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "Etichetta per un pulsante di conferma generico, solitamente per chiudere un dialogo informativo."
   },
   "confirm": "Conferma",
   "@confirm": {
@@ -35,8 +37,14 @@
   "@info": {
     "description": "A generic title for an informational dialog or screen."
   },
-
-  "@_authentication": {},
+  "actionRequired": "Azione Richiesta",
+  "@actionRequired": {
+    "description": "Titolo di un dialogo che richiede all'utente di compiere un'azione specifica."
+  },
+  "requiresRecentLoginMessage": "Per motivi di sicurezza, questa operazione richiede un'autenticazione recente. Effettua nuovamente il login e riprova.",
+  "@requiresRecentLoginMessage": {
+    "description": "Messaggio mostrato quando un'operazione sensibile (es. eliminazione account) fallisce perché la sessione di login dell'utente non è abbastanza recente."
+  },
   "pleaseSignIn": "Benvenuto, accedi per continuare.",
   "@pleaseSignIn": {
     "description": "A welcome message on the login screen."
@@ -57,8 +65,6 @@
   "@deleteAccountMessage": {
     "description": "A confirmation message shown to the user before deleting their account."
   },
-
-  "@_pageTitles": {},
   "homePageTitle": "I Miei Contatti",
   "@homePageTitle": {
     "description": "Title for the main home page."
@@ -79,11 +85,13 @@
   "@takePicture": {
     "description": "Title for the camera screen."
   },
-
-  "@_homePageAndContactList": {},
   "newItem": "Aggiungi Contatto",
   "@newItem": {
     "description": "Tooltip for the FloatingActionButton to create a new contact."
+  },
+  "invalidCharacters": "Il campo contiene caratteri non ammessi.",
+  "@invalidCharacters": {
+    "description": "Messaggio di errore mostrato quando un campo del form contiene caratteri non ammessi (come numeri o simboli)."
   },
   "search": "Cerca per nome o codice fiscale...",
   "@search": {
@@ -119,11 +127,13 @@
   "@tooltipDelete": {
     "description": "Tooltip for the delete button on a contact card."
   },
-
-  "@_formPage": {},
-  "scanCard": "Scansiona da Tessera Sanitaria",
+  "scanCard": "Scansiona da CIE / TS",
   "@scanCard": {
     "description": "Label for a button that initiates scanning a card."
+  },
+  "ocrFailedErrorMessage": "Impossibile leggere i dati dalla foto. Prova a scattarne una nuova più a fuoco.",
+  "@ocrFailedErrorMessage": {
+    "description": "Messaggio di errore mostrato in una SnackBar quando l'OCR non riesce a estrarre i dati dalla foto di una carta (CIE/TS). Invita l'utente a riprovare con una foto migliore."
   },
   "firstName": "Nome",
   "@firstName": {
@@ -149,8 +159,6 @@
   "@required": {
     "description": "A validation error message for a required form field."
   },
-
-  "@_dialogsAndMessages": {},
   "deleteConfirmation": "Conferma Eliminazione",
   "@deleteConfirmation": {
     "description": "The title for a dialog asking the user to confirm a delete action."
@@ -185,8 +193,6 @@
   "@genericError": {
     "description": "A user-friendly message for a generic error, asking them to retry."
   },
-
-  "@_cameraPage": {},
   "tooltipToggleFlash": "Attiva/Disattiva flash",
   "@tooltipToggleFlash": {
     "description": "Tooltip for the button that toggles the camera flash on and off."
@@ -203,8 +209,6 @@
   "@tooltipRetakePicture": {
     "description": "Tooltip for the button to discard the current picture and take a new one."
   },
-
-  "@_infoModalAndLegal": {},
   "termsAndCondition": "Procedendo, accetti i nostri Termini e Condizioni.",
   "@termsAndCondition": {
     "description": "A notice about agreeing to terms and conditions."

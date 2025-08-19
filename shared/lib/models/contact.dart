@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shared/utils/timestamp_converter.dart';
@@ -89,8 +89,7 @@ class Contact extends Equatable {
   Map<String, dynamic> toJson() => _$ContactToJson(this);
 
   @override
-  String toString() =>
-      '$firstName $lastName ($gender)'
+  String toString() => '$firstName $lastName ($gender)'
       ' - ${DateFormat.yMd().format(birthDate)}'
       ' - ${birthPlace.toString()}';
 
@@ -100,13 +99,13 @@ class Contact extends Equatable {
 
 extension ContactNativeMapper on Contact {
   Map<String, dynamic> toNativeMap() => {
-    'id': id,
-    'firstName': firstName,
-    'lastName': lastName,
-    'gender': gender,
-    'taxCode': taxCode,
-    'birthPlace': {'name': birthPlace.name, 'state': birthPlace.state},
-    'birthDate': birthDate.toString(),
-    'listIndex': listIndex,
-  };
+        'id': id,
+        'firstName': firstName,
+        'lastName': lastName,
+        'gender': gender,
+        'taxCode': taxCode,
+        'birthPlace': {'name': birthPlace.name, 'state': birthPlace.state},
+        'birthDate': birthDate.toString(),
+        'listIndex': listIndex,
+      };
 }

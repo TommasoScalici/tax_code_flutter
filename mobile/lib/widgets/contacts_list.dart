@@ -10,8 +10,15 @@ import 'package:tax_code_flutter/screens/form_page.dart';
 
 import 'contact_card.dart';
 
-final class ContactsList extends StatelessWidget {
+final class ContactsList extends StatefulWidget {
   const ContactsList({super.key});
+
+  @override
+  State<ContactsList> createState() => _ContactsListState();
+}
+
+class _ContactsListState extends State<ContactsList> {
+  final _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,26 +29,12 @@ final class ContactsList extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (controller.contactsToShow.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            controller.searchText.isEmpty
-                ? l10n.contactsListEmpty
-                : l10n.searchNoResults(controller.searchText),
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
-      );
-    }
-
     return Column(
       children: [
         SizedBox(
           width: 400,
           child: TextField(
+            controller: _searchController,
             onChanged: controller.filterContacts,
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.search),
@@ -50,7 +43,8 @@ final class ContactsList extends StatelessWidget {
                   ? IconButton(
                       onPressed: () {
                         controller.filterContacts('');
-                        FocusScope.of(context).unfocus(); 
+                        _searchController.clear();
+                        FocusScope.of(context).unfocus();
                       },
                       icon: const Icon(Icons.clear),
                     )
@@ -61,14 +55,37 @@ final class ContactsList extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0, bottom: 90.0),
-            child: _buildContactsGrid(context, controller),
+            child: controller.contactsToShow.isEmpty
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        controller.searchText.isEmpty
+                            ? l10n.contactsListEmpty
+                            : l10n.searchNoResults(controller.searchText),
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                  )
+                : _buildContactsGrid(context, controller),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildContactCardItem(BuildContext context, HomePageController controller, Contact contact) {
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildContactCardItem(
+    BuildContext context,
+    HomePageController controller,
+    Contact contact,
+  ) {
     return Center(
       key: ValueKey(contact.id),
       child: ContactCard(
@@ -81,7 +98,10 @@ final class ContactsList extends StatelessWidget {
     );
   }
 
-  Widget _buildContactsGrid(BuildContext context, HomePageController controller) {
+  Widget _buildContactsGrid(
+    BuildContext context,
+    HomePageController controller,
+  ) {
     if (controller.isReorderable) {
       return AnimatedReorderableGridView(
         items: controller.contactsToShow,
@@ -117,7 +137,11 @@ final class ContactsList extends StatelessWidget {
     );
   }
 
-  Future<void> _onEdit(BuildContext context, HomePageController controller, Contact contact) async {
+  Future<void> _onEdit(
+    BuildContext context,
+    HomePageController controller,
+    Contact contact,
+  ) async {
     final editedContact = await Navigator.push<Contact>(
       context,
       MaterialPageRoute(builder: (context) => FormPage(contact: contact)),
@@ -127,7 +151,11 @@ final class ContactsList extends StatelessWidget {
     }
   }
 
-  Future<void> _onDelete(BuildContext context, HomePageController controller, Contact contact) async {
+  Future<void> _onDelete(
+    BuildContext context,
+    HomePageController controller,
+    Contact contact,
+  ) async {
     final l10n = AppLocalizations.of(context)!;
     final bool? isConfirmed = await showDialog(
       context: context,
@@ -151,10 +179,12 @@ final class ContactsList extends StatelessWidget {
     }
   }
 
-   void _onShowBarcode(BuildContext context, Contact contact) {
+  void _onShowBarcode(BuildContext context, Contact contact) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => BarcodePage(taxCode: contact.taxCode)),
+      MaterialPageRoute(
+        builder: (context) => BarcodePage(taxCode: contact.taxCode),
+      ),
     );
   }
 }

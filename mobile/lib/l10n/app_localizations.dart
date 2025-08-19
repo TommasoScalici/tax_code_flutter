@@ -63,7 +63,7 @@ import 'app_localizations_it.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -86,16 +86,16 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('it')
+    Locale('it'),
   ];
 
   /// The title of the application, often shown in the app bar.
@@ -103,6 +103,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tax Code'**
   String get appTitle;
+
+  /// Label for a generic confirmation button, typically to close an informational dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
 
   /// Label for a confirmation button.
   ///
@@ -145,6 +151,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Info'**
   String get info;
+
+  /// Title for a dialog that requires the user to take a specific action.
+  ///
+  /// In en, this message translates to:
+  /// **'Action Required'**
+  String get actionRequired;
+
+  /// Message displayed when a sensitive operation (e.g., account deletion) fails because the user's login session is not recent enough.
+  ///
+  /// In en, this message translates to:
+  /// **'For security reasons, this operation requires recent authentication. Please log in again and retry.'**
+  String get requiresRecentLoginMessage;
 
   /// A welcome message on the login screen.
   ///
@@ -206,11 +224,23 @@ abstract class AppLocalizations {
   /// **'Scan Card'**
   String get takePicture;
 
+  /// Error message shown in a SnackBar when the OCR fails to extract data from a card's photo (e.g., Italian ID or Health Card). It prompts the user to retry with a better, more focused picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not read data from the picture. Please try taking a new, more focused one.'**
+  String get ocrFailedErrorMessage;
+
   /// Tooltip for the FloatingActionButton to create a new contact.
   ///
   /// In en, this message translates to:
   /// **'Add Contact'**
   String get newItem;
+
+  /// Error message shown when a form field contains disallowed characters (like numbers or symbols).
+  ///
+  /// In en, this message translates to:
+  /// **'The field contains invalid characters.'**
+  String get invalidCharacters;
 
   /// Placeholder text inside a search bar.
   ///
@@ -438,8 +468,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

@@ -12,6 +12,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get appTitle => 'Codice Fiscale';
 
   @override
+  String get ok => 'OK';
+
+  @override
   String get confirm => 'Conferma';
 
   @override
@@ -31,6 +34,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get info => 'Informazioni';
+
+  @override
+  String get actionRequired => 'Azione Richiesta';
+
+  @override
+  String get requiresRecentLoginMessage =>
+      'Per motivi di sicurezza, questa operazione richiede un\'autenticazione recente. Effettua nuovamente il login e riprova.';
 
   @override
   String get pleaseSignIn => 'Benvenuto, accedi per continuare.';
@@ -64,7 +74,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get takePicture => 'Scansiona Tessera';
 
   @override
+  String get ocrFailedErrorMessage =>
+      'Impossibile leggere i dati dalla foto. Prova a scattarne una nuova più a fuoco.';
+
+  @override
   String get newItem => 'Aggiungi Contatto';
+
+  @override
+  String get invalidCharacters => 'Il campo contiene caratteri non ammessi.';
 
   @override
   String get search => 'Cerca per nome o codice fiscale...';
@@ -91,7 +108,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tooltipDelete => 'Elimina Contatto';
 
   @override
-  String get scanCard => 'Scansiona da Tessera Sanitaria';
+  String get scanCard => 'Scansiona da CIE / TS';
 
   @override
   String get firstName => 'Nome';

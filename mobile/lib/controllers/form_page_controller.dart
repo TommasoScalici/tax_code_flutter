@@ -8,21 +8,37 @@ import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/tax_code_service.dart';
 import 'package:uuid/uuid.dart';
 
+/// Validator that checks if a control's value contains only letters,
+/// spaces, and apostrophes.
+class OnlyLettersValidator implements Validator<dynamic> {
+  const OnlyLettersValidator();
+
+  @override
+  Map<String, dynamic>? validate(AbstractControl<dynamic> control) {
+    if (control.value == null || control.value.toString().isEmpty) {
+      return null;
+    }
+
+    final hasInvalidCharacters = RegExp(
+      r"[^a-zA-Z\s']",
+    ).hasMatch(control.value.toString());
+
+    return hasInvalidCharacters
+        ? <String, dynamic>{'invalidCharacters': true}
+        : null;
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
 class FormPageController with ChangeNotifier {
   final TaxCodeServiceAbstract _taxCodeService;
   final BirthplaceServiceAbstract _birthplaceService;
   final ContactRepository _contactRepository;
   final Logger _logger;
   final Contact? _initialContact;
-
-  final FormGroup form = FormGroup({
-    'firstName': FormControl<String>(validators: [Validators.required]),
-    'lastName': FormControl<String>(validators: [Validators.required]),
-    'gender': FormControl<String>(validators: [Validators.required]),
-    'birthDate': FormControl<DateTime>(validators: [Validators.required]),
-    'birthPlace': FormControl<Birthplace>(validators: [Validators.required]),
-  });
-
+  late final FormGroup form;
   List<Birthplace> birthplaces = [];
   bool isLoading = false;
   String? errorMessage;
@@ -33,11 +49,11 @@ class FormPageController with ChangeNotifier {
     required ContactRepository contactRepository,
     required Logger logger,
     Contact? initialContact,
-  })  : _taxCodeService = taxCodeService,
-        _birthplaceService = birthplaceService,
-        _contactRepository = contactRepository,
-        _logger = logger,
-        _initialContact = initialContact {
+  }) : _taxCodeService = taxCodeService,
+       _birthplaceService = birthplaceService,
+       _contactRepository = contactRepository,
+       _logger = logger,
+       _initialContact = initialContact {
     _initialize();
   }
 
@@ -49,12 +65,13 @@ class FormPageController with ChangeNotifier {
   }
 
   void populateFormFromContact(Contact contact) {
-    form.control('firstName').value = contact.firstName;
-    form.control('lastName').value = contact.lastName;
-    form.control('gender').value = contact.gender;
-    form.control('birthDate').value = contact.birthDate;
-    form.control('birthPlace').value = contact.birthPlace;
-    form.markAsDirty(); // Segna il form come modificato
+    form.patchValue({
+      'firstName': contact.firstName,
+      'lastName': contact.lastName,
+      'gender': contact.gender,
+      'birthDate': contact.birthDate,
+      'birthPlace': contact.birthPlace,
+    });
   }
 
   Future<Contact?> submitForm() async {
@@ -67,25 +84,32 @@ class FormPageController with ChangeNotifier {
     clearError();
 
     try {
+      final formData = form.value;
+      final firstName = (formData['firstName'] as String).trim();
+      final lastName = (formData['lastName'] as String).trim();
+      final birthPlace = formData['birthPlace'] as Birthplace;
+
       final response = await _taxCodeService.fetchTaxCode(
-        firstName: form.control('firstName').value.trim(),
-        lastName: form.control('lastName').value.trim(),
-        gender: form.control('gender').value,
-        birthDate: form.control('birthDate').value,
-        birthPlaceName: (form.control('birthPlace').value as Birthplace).name,
-        birthPlaceState: (form.control('birthPlace').value as Birthplace).state,
+        firstName: firstName,
+        lastName: lastName,
+        gender: formData['gender'] as String,
+        birthDate: formData['birthDate'] as DateTime,
+        birthPlaceName: birthPlace.name,
+        birthPlaceState: birthPlace.state,
       );
 
       if (response.status) {
         final newContact = Contact(
           id: _initialContact?.id ?? const Uuid().v4(),
-          firstName: form.control('firstName').value.trim(),
-          lastName: form.control('lastName').value.trim(),
-          gender: form.control('gender').value,
+          firstName: firstName,
+          lastName: lastName,
+          gender: formData['gender'] as String,
           taxCode: response.data.fiscalCode,
-          birthPlace: form.control('birthPlace').value,
-          birthDate: form.control('birthDate').value,
-          listIndex: _initialContact?.listIndex ?? _contactRepository.contacts.length + 1,
+          birthPlace: birthPlace,
+          birthDate: formData['birthDate'] as DateTime,
+          listIndex:
+              _initialContact?.listIndex ??
+              _contactRepository.contacts.length + 1,
         );
         _setLoading(false);
         return newContact;
@@ -104,12 +128,38 @@ class FormPageController with ChangeNotifier {
     }
   }
 
+  void _buildForm() {
+    form = fb.group({
+      'firstName': FormControl<String>(
+        value: _initialContact?.firstName,
+        validators: <Validator<dynamic>>[
+          Validators.required,
+          OnlyLettersValidator(),
+        ],
+      ),
+      'lastName': FormControl<String>(
+        value: _initialContact?.lastName,
+        validators: [Validators.required, OnlyLettersValidator()],
+      ),
+      'gender': FormControl<String>(
+        value: _initialContact?.gender,
+        validators: [Validators.required],
+      ),
+      'birthDate': FormControl<DateTime>(
+        value: _initialContact?.birthDate,
+        validators: [Validators.required],
+      ),
+      'birthPlace': FormControl<Birthplace>(
+        value: _initialContact?.birthPlace,
+        validators: [Validators.required],
+      ),
+    });
+  }
+
   Future<void> _initialize() async {
     _setLoading(true);
+    _buildForm();
     await _loadBirthplaces();
-    if (_initialContact != null) {
-      populateFormFromContact(_initialContact);
-    }
     _setLoading(false);
   }
 
@@ -127,5 +177,4 @@ class FormPageController with ChangeNotifier {
     isLoading = value;
     notifyListeners();
   }
-
 }

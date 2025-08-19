@@ -1,14 +1,10 @@
 {
   "@@author": "Tommaso Scalici",
   "@@locale": "it",
-
-  "@_general": {},
   "appTitle": "Codice Fiscale",
   "@appTitle": {
     "description": "The title of the application, shown in the header."
   },
-
-  "@_authentication": {},
   "loginError": "Login fallito. Riprova.",
   "@loginError": {
     "description": "Error message shown when an unexpected login error occurs."
@@ -16,6 +12,10 @@
   "signInWithGoogle": "Accedi con Google",
   "@signInWithGoogle": {
     "description": "Label for the Google Sign-In button."
+  },
+  "openOnPhone": "Apri sul telefono",
+  "@openOnPhone": {
+    "description": "Pulsante di call to action per aprire l'app companion sul telefono dell'utente."
   },
   "welcomeMessage": "Benvenuto su {appName}",
   "@welcomeMessage": {
@@ -27,14 +27,10 @@
       }
     }
   },
-
-  "@_homeScreen": {},
-  "noContactsFoundMessage": "Nessun contatto trovato.\nAggiungi un contatto dal tuo smartphone per visualizzarlo qui.",
+  "noContactsFoundMessage": "Nessun contatto. Aggiungili dal telefono.",
   "@noContactsFoundMessage": {
     "description": "Message shown on the main screen when the contact list is empty."
   },
-
-  "@_pageTitles": {},
   "barcodePageTitle": "Codice a Barre",
   "@barcodePageTitle": {
     "description": "Title for the page displaying the barcode."

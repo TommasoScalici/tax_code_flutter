@@ -1,11 +1,13 @@
 {
   "@@author": "Tommaso Scalici",
   "@@locale": "en",
-
-  "@_generic": {},
   "appTitle": "Tax Code",
   "@appTitle": {
     "description": "The title of the application, often shown in the app bar."
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "Label for a generic confirmation button, typically to close an informational dialog."
   },
   "confirm": "Confirm",
   "@confirm": {
@@ -35,8 +37,14 @@
   "@info": {
     "description": "A generic title for an informational dialog or screen."
   },
-
-  "@_authentication": {},
+  "actionRequired": "Action Required",
+  "@actionRequired": {
+    "description": "Title for a dialog that requires the user to take a specific action."
+  },
+  "requiresRecentLoginMessage": "For security reasons, this operation requires recent authentication. Please log in again and retry.",
+  "@requiresRecentLoginMessage": {
+    "description": "Message displayed when a sensitive operation (e.g., account deletion) fails because the user's login session is not recent enough."
+  },
   "pleaseSignIn": "Welcome, please sign in to continue.",
   "@pleaseSignIn": {
     "description": "A welcome message on the login screen."
@@ -57,8 +65,6 @@
   "@deleteAccountMessage": {
     "description": "A confirmation message shown to the user before deleting their account."
   },
-
-  "@_pageTitles": {},
   "homePageTitle": "My Contacts",
   "@homePageTitle": {
     "description": "Title for the main home page."
@@ -79,11 +85,17 @@
   "@takePicture": {
     "description": "Title for the camera screen."
   },
-
-  "@_homePageAndContactList": {},
+  "ocrFailedErrorMessage": "Could not read data from the picture. Please try taking a new, more focused one.",
+  "@ocrFailedErrorMessage": {
+    "description": "Error message shown in a SnackBar when the OCR fails to extract data from a card's photo (e.g., Italian ID or Health Card). It prompts the user to retry with a better, more focused picture."
+  },
   "newItem": "Add Contact",
   "@newItem": {
     "description": "Tooltip for the FloatingActionButton to create a new contact."
+  },
+  "invalidCharacters": "The field contains invalid characters.",
+  "@invalidCharacters": {
+    "description": "Error message shown when a form field contains disallowed characters (like numbers or symbols)."
   },
   "search": "Search by name or tax code...",
   "@search": {
@@ -119,8 +131,6 @@
   "@tooltipDelete": {
     "description": "Tooltip for the delete button on a contact card."
   },
-
-  "@_formPage": {},
   "scanCard": "Scan from Health Card",
   "@scanCard": {
     "description": "Label for a button that initiates scanning a card."
@@ -149,8 +159,6 @@
   "@required": {
     "description": "A validation error message for a required form field."
   },
-
-  "@_dialogsAndMessages": {},
   "deleteConfirmation": "Confirm Deletion",
   "@deleteConfirmation": {
     "description": "The title for a dialog asking the user to confirm a delete action."
@@ -185,8 +193,6 @@
   "@genericError": {
     "description": "A user-friendly message for a generic error, asking them to retry."
   },
-
-  "@_cameraPage": {},
   "tooltipToggleFlash": "Toggle flash",
   "@tooltipToggleFlash": {
     "description": "Tooltip for the button that toggles the camera flash on and off."
@@ -203,8 +209,6 @@
   "@tooltipRetakePicture": {
     "description": "Tooltip for the button to discard the current picture and take a new one."
   },
-
-  "@_infoModalAndLegal": {},
   "termsAndCondition": "By proceeding, you agree to our Terms and Conditions.",
   "@termsAndCondition": {
     "description": "A notice about agreeing to terms and conditions."

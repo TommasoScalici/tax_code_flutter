@@ -2,7 +2,7 @@
 
 A powerful and user-friendly application to calculate and manage Italian Tax Codes (Codici Fiscali) with advanced features and cross-device synchronization.
 
-![Version](https://img.shields.io/badge/version-1.3.2-blue)
+![Version](https://img.shields.io/badge/version-1.4.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Wear%20OS-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 

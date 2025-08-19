@@ -8,10 +8,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: Colors.black,
-      body: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: ContactsList(),
-      ),
+      body: Padding(padding: EdgeInsets.all(20.0), child: ContactsList()),
     );
   }
 }

@@ -63,7 +63,7 @@ import 'app_localizations_it.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -86,16 +86,16 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('it')
+    Locale('it'),
   ];
 
   /// The title of the application, shown in the header.
@@ -116,6 +116,12 @@ abstract class AppLocalizations {
   /// **'Sign In with Google'**
   String get signInWithGoogle;
 
+  /// Call to action button to open the companion app on the user's phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Open on phone'**
+  String get openOnPhone;
+
   /// A welcome message displayed on the login screen.
   ///
   /// In en, this message translates to:
@@ -125,7 +131,7 @@ abstract class AppLocalizations {
   /// Message shown on the main screen when the contact list is empty.
   ///
   /// In en, this message translates to:
-  /// **'No contacts found.\nPlease add a contact on your phone to see it here.'**
+  /// **'No contacts found. Add them on your phone.'**
   String get noContactsFoundMessage;
 
   /// Title for the page displaying the barcode.
@@ -162,8 +168,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

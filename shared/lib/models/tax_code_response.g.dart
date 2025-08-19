@@ -7,15 +7,16 @@ part of 'tax_code_response.dart';
 // **************************************************************************
 
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
-      fiscalCode: json['cf'] as String,
-      allFiscalCodes:
-          (json['all_cf'] as List<dynamic>).map((e) => e as String).toList(),
-    );
+  fiscalCode: json['cf'] as String,
+  allFiscalCodes: (json['all_cf'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
+);
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-      'cf': instance.fiscalCode,
-      'all_cf': instance.allFiscalCodes,
-    };
+  'cf': instance.fiscalCode,
+  'all_cf': instance.allFiscalCodes,
+};
 
 TaxCodeResponse _$TaxCodeResponseFromJson(Map<String, dynamic> json) =>
     TaxCodeResponse(

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared/models/birthplace.dart';
@@ -15,8 +15,8 @@ import '../fakes/fake_user.dart';
 
 // --- Mocks ---
 class MockDatabaseService extends Mock implements DatabaseService {}
-class MockLogger extends Mock implements Logger {}
 
+class MockLogger extends Mock implements Logger {}
 
 void main() {
   final fakeUser = FakeUser();
@@ -100,7 +100,8 @@ void main() {
     await Hive.close();
   });
 
-  Future<void> loginAndLoadInitialData({List<Contact> initialContacts = const []}) async {
+  Future<void> loginAndLoadInitialData(
+      {List<Contact> initialContacts = const []}) async {
     final completer = Completer<void>();
 
     void listener() {
@@ -108,6 +109,7 @@ void main() {
         completer.complete();
       }
     }
+
     contactRepository.addListener(listener);
     fakeAuthService.login(fakeUser);
     contactsStreamController.add(initialContacts);
@@ -124,7 +126,8 @@ void main() {
       },
     );
 
-    test('should clear contacts and stop loading when user signs out', () async {
+    test('should clear contacts and stop loading when user signs out',
+        () async {
       // Arrange
       await loginAndLoadInitialData(initialContacts: [contact1]);
       expect(contactRepository.contacts, isNotEmpty);
@@ -155,29 +158,32 @@ void main() {
   });
 
   group('Data Loading - Error Path', () {
-    test('should load contacts from cache when Firestore stream fails', () async {
-      // Arrange
-      final box = await Hive.openBox<Contact>('contacts_test_uid');
-      await box.put(contact1.id, contact1);
+    test(
+      'should load contacts from cache when Firestore stream fails',
+      () async {
+        // Arrange
+        final box = await Hive.openBox<Contact>('contacts_test_uid');
+        await box.put(contact1.id, contact1);
 
-      final completer = Completer<void>();
-      contactRepository.addListener(() {
-        if (!contactRepository.isLoading && !completer.isCompleted) {
-          completer.complete();
-        }
-      });
+        final completer = Completer<void>();
+        contactRepository.addListener(() {
+          if (!contactRepository.isLoading && !completer.isCompleted) {
+            completer.complete();
+          }
+        });
 
-      // Act
-      fakeAuthService.login(fakeUser);
-      final exception = Exception('Network failed');
-      contactsStreamController.addError(exception);
-      await completer.future;
+        // Act
+        fakeAuthService.login(fakeUser);
+        final exception = Exception('Network failed');
+        contactsStreamController.addError(exception);
+        await completer.future;
 
-      // Assert
-      expect(contactRepository.isLoading, isFalse);
-      expect(contactRepository.contacts.length, 1);
-      expect(contactRepository.contacts.first, equals(contact1));
-      verify(() => mockLogger.e(any(), error: exception, stackTrace: any(named: 'stackTrace'))).called(1);
+        // Assert
+        expect(contactRepository.isLoading, isFalse);
+        expect(contactRepository.contacts.length, 1);
+        expect(contactRepository.contacts.first, equals(contact1));
+        verify(() => mockLogger.e(any(),
+            error: exception, stackTrace: any(named: 'stackTrace'))).called(1);
       },
     );
   });
@@ -198,7 +204,7 @@ void main() {
         verify(
           () => mockDbService.addOrUpdateContact('test_uid', contact2),
         ).called(1);
-        
+
         final box = await Hive.openBox<Contact>('contacts_test_uid');
         expect(box.length, 2);
       },
@@ -208,7 +214,7 @@ void main() {
       'removeContact should remove contact and call database service',
       () async {
         // Arrange
-        await loginAndLoadInitialData(initialContacts: [contact1]); 
+        await loginAndLoadInitialData(initialContacts: [contact1]);
 
         // Act
         await contactRepository.removeContact(contact1);
@@ -279,11 +285,13 @@ void main() {
       ).called(1);
     });
 
-    test('addOrUpdateContact should log error when database service fails', () async {
+    test('addOrUpdateContact should log error when database service fails',
+        () async {
       // Arrange
       await loginAndLoadInitialData(initialContacts: [contact1]);
       final exception = Exception('Update failed');
-      when(() => mockDbService.addOrUpdateContact(any(), any())).thenThrow(exception);
+      when(() => mockDbService.addOrUpdateContact(any(), any()))
+          .thenThrow(exception);
 
       // Act
       await contactRepository.addOrUpdateContact(contact2);
@@ -291,17 +299,19 @@ void main() {
       // Assert
       expect(contactRepository.contacts.length, 2);
       verify(() => mockLogger.e(
-        'Error adding/updating contact in Firebase',
-        error: exception,
-        stackTrace: any(named: 'stackTrace'),
-      )).called(1);
+            'Error adding/updating contact in Firebase',
+            error: exception,
+            stackTrace: any(named: 'stackTrace'),
+          )).called(1);
     });
 
-    test('removeContact should log error when database service fails', () async {
+    test('removeContact should log error when database service fails',
+        () async {
       // Arrange
       await loginAndLoadInitialData(initialContacts: [contact1]);
       final exception = Exception('Remove failed');
-      when(() => mockDbService.removeContact(any(), any())).thenThrow(exception);
+      when(() => mockDbService.removeContact(any(), any()))
+          .thenThrow(exception);
 
       // Act
       await contactRepository.removeContact(contact1);
@@ -309,10 +319,10 @@ void main() {
       // Assert
       expect(contactRepository.contacts, isEmpty);
       verify(() => mockLogger.e(
-        'Error removing contact from Firebase',
-        error: exception,
-        stackTrace: any(named: 'stackTrace'),
-      )).called(1);
+            'Error removing contact from Firebase',
+            error: exception,
+            stackTrace: any(named: 'stackTrace'),
+          )).called(1);
     });
   });
 
@@ -336,8 +346,9 @@ void main() {
   group('Persistence Error Handling', () {
     test('should log an error when saving to Firebase fails', () async {
       final exception = Exception('Firebase write failed');
-      when(() => mockDbService.saveAllContacts(any(), any())).thenThrow(exception);
-      
+      when(() => mockDbService.saveAllContacts(any(), any()))
+          .thenThrow(exception);
+
       // Arrange
       await loginAndLoadInitialData();
 
@@ -345,7 +356,8 @@ void main() {
       await contactRepository.updateContacts([]);
 
       // Assert
-      verify(() => mockLogger.e('Error while saving contacts to Firebase', error: exception, stackTrace: any(named: 'stackTrace'))).called(1);
+      verify(() => mockLogger.e('Error while saving contacts to Firebase',
+          error: exception, stackTrace: any(named: 'stackTrace'))).called(1);
     });
   });
 }

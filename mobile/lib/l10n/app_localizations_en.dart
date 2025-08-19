@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Tax Code';
 
   @override
+  String get ok => 'OK';
+
+  @override
   String get confirm => 'Confirm';
 
   @override
@@ -31,6 +34,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get info => 'Info';
+
+  @override
+  String get actionRequired => 'Action Required';
+
+  @override
+  String get requiresRecentLoginMessage =>
+      'For security reasons, this operation requires recent authentication. Please log in again and retry.';
 
   @override
   String get pleaseSignIn => 'Welcome, please sign in to continue.';
@@ -64,7 +74,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get takePicture => 'Scan Card';
 
   @override
+  String get ocrFailedErrorMessage =>
+      'Could not read data from the picture. Please try taking a new, more focused one.';
+
+  @override
   String get newItem => 'Add Contact';
+
+  @override
+  String get invalidCharacters => 'The field contains invalid characters.';
 
   @override
   String get search => 'Search by name or tax code...';

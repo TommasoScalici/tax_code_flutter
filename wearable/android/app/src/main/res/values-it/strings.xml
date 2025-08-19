@@ -4,7 +4,7 @@
     <string name="app_name">Codice Fiscale</string>
 
     <!-- Empty state -->
-    <string name="empty_message">Nessun contatto trovato, aggiungi prima un contatto da smartphone per visualizzare qui la lista.</string>
+    <string name="empty_message">Nessun contatto. Aggiungili dal telefono.</string>
     <string name="phone_button">Apri sul telefono</string>
 
     <!-- Contact item -->

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/settings.dart';
+import 'package:tax_code_flutter/widgets/info_modal.dart';
 
-import '../settings.dart';
-import '../widgets/info_modal.dart';
 import 'home_page.dart';
 
 class AuthGate extends StatelessWidget {
@@ -71,8 +71,7 @@ class _LoginHeader extends StatelessWidget {
           Text(
             l10n.appTitle,
             style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: 36),
+                color: Theme.of(context).colorScheme.primary, fontSize: 36),
           ),
         ],
       ),

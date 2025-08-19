@@ -8,7 +8,7 @@ part of 'birthplace.dart';
 
 class BirthplaceAdapter extends TypeAdapter<Birthplace> {
   @override
-  final int typeId = 1;
+  final typeId = 1;
 
   @override
   Birthplace read(BinaryReader reader) {
@@ -16,10 +16,7 @@ class BirthplaceAdapter extends TypeAdapter<Birthplace> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Birthplace(
-      name: fields[0] as String,
-      state: fields[1] as String,
-    );
+    return Birthplace(name: fields[0] as String, state: fields[1] as String);
   }
 
   @override
@@ -47,13 +44,8 @@ class BirthplaceAdapter extends TypeAdapter<Birthplace> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Birthplace _$BirthplaceFromJson(Map<String, dynamic> json) => Birthplace(
-      name: json['name'] as String,
-      state: json['state'] as String,
-    );
+Birthplace _$BirthplaceFromJson(Map<String, dynamic> json) =>
+    Birthplace(name: json['name'] as String, state: json['state'] as String);
 
 Map<String, dynamic> _$BirthplaceToJson(Birthplace instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'state': instance.state,
-    };
+    <String, dynamic>{'name': instance.name, 'state': instance.state};

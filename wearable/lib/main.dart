@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,13 +9,17 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shared/models/birthplace.dart';
+import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/database_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tax_code_flutter_wear_os/controllers/wearable_home_controller.dart';
+import 'package:tax_code_flutter_wear_os/screens/barcode_page.dart';
 import 'package:tax_code_flutter_wear_os/services/brightness_service.dart';
 import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 
@@ -22,35 +28,48 @@ import 'l10n/app_localizations.dart';
 import 'screens/auth_gate.dart';
 import 'settings.dart';
 
+/// Configures Firebase services like Remote Config, AppCheck, and Crashlytics.
 Future<void> configureApp(Logger logger) async {
   try {
-    final remoteConfig = FirebaseRemoteConfig.instance;
-    final appCheck = FirebaseAppCheck.instance;
-    final crashlytics = FirebaseCrashlytics.instance;
+    if (Platform.isAndroid) {
+      await FirebaseRemoteConfig.instance.fetchAndActivate();
 
-    await remoteConfig.fetchAndActivate();
+      final appCheckProvider = kDebugMode
+          ? AndroidProvider.debug
+          : AndroidProvider.playIntegrity;
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: appCheckProvider,
+      );
 
-    final androidProvider = kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity;
-    await appCheck.activate(androidProvider: androidProvider);
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-    FlutterError.onError = crashlytics.recordFlutterFatalError;
-    PlatformDispatcher.instance.onError = (error, stack) {
-      crashlytics.recordError(error, stack, fatal: true);
-      return true;
-    };
-  } on Exception catch (e) {
-    logger.e('Error while configuring the app with Firebase: $e');
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
+    }
+  } on Exception catch (e, s) {
+    logger.e(
+      'Error while configuring the app with Firebase',
+      error: e,
+      stackTrace: s,
+    );
   }
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final logger = Logger();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await configureApp(logger);
 
+  await Hive.initFlutter();
+  Hive.registerAdapter(BirthplaceAdapter());
+  Hive.registerAdapter(ContactAdapter());
+
+  final logger = Logger();
   final sharedPreferences = SharedPreferencesAsync();
+  await configureApp(logger);
 
   runApp(
     MultiProvider(
@@ -64,17 +83,19 @@ Future<void> main() async {
 
         // --- Level 2: Services ---
         Provider<DatabaseService>(
-          create: (context) => DatabaseService(firestore: context.read<FirebaseFirestore>()),
+          create: (context) =>
+              DatabaseService(firestore: context.read<FirebaseFirestore>()),
         ),
         Provider<BrightnessServiceAbstract>(
-          create: (context) => BrightnessService(logger: context.read<Logger>()),
+          create: (context) =>
+              BrightnessService(logger: context.read<Logger>()),
         ),
         Provider<NativeViewServiceAbstract>(
-          create: (context) => NativeViewService(logger: context.read<Logger>()),
+          create: (context) =>
+              NativeViewService(logger: context.read<Logger>()),
         ),
 
         // --- Level 3: State Services ---
-
         ChangeNotifierProvider<AuthService>(
           create: (context) => AuthService(
             auth: context.read<FirebaseAuth>(),
@@ -119,7 +140,28 @@ class TaxCodeApp extends StatelessWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       theme: Settings.getWearTheme(),
-      home: const AuthGate(),
+      onGenerateRoute: _onGenerateRoute,
     );
+  }
+
+  Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
+    if (settings.name == null) return null;
+
+    final uri = Uri.parse(settings.name!);
+
+    switch (uri.path) {
+      case '/barcode':
+        final taxCode = uri.queryParameters['taxCode'];
+
+        if (taxCode != null && taxCode.isNotEmpty) {
+          return MaterialPageRoute(
+            builder: (_) => BarcodePage(taxCode: taxCode),
+            settings: settings,
+          );
+        }
+        break;
+    }
+
+    return MaterialPageRoute(builder: (_) => const AuthGate());
   }
 }

@@ -1,64 +1,46 @@
 name: shared
 description: "Shared code for Tax Code app."
-version: 1.3.2
-publish_to: none # Remove this line if you wish to publish to pub.dev
+version: 1.4.0
+publish_to: none
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
-  flutter: ">=1.17.0"
+  flutter: ">=3.22.0"
 
-#================================================
-# DEPENDENCIES
-#================================================
 dependencies:
   flutter:
     sdk: flutter
 
   # Core & Utilities
-  intl: ^0.20.2 # Required for localization, pinned by Flutter SDK
+  equatable: ^2.0.5
+  hive_ce: ^2.11.0
+  hive_ce_flutter: ^2.3.0
+  intl: ^0.20.0
+  json_annotation: ^4.9.0
   logger: ^2.6.0
-  shared_preferences: ^2.3.2
-  uuid: ^4.5.1
-
-  # UI & Widgets
-  barcode_widget: ^2.0.4
-  screen_brightness: ^2.1.5
+  shared_preferences: ^2.2.3
+  uuid: ^4.4.0
 
   # State Management
-  provider: ^6.1.2
+  provider: ^6.1.0
 
   # Firebase & Backend
   cloud_firestore: ^6.0.0
-  firebase_analytics: ^12.0.0
   firebase_auth: ^6.0.1
   firebase_core: ^4.0.0
-  firebase_remote_config: ^6.0.0
-
-  # Code Generation
-  equatable: ^2.0.7
   google_sign_in: 6.3.0
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  json_annotation: ^4.9.0
 
-#================================================
-# DEV DEPENDENCIES
-#================================================
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  build_runner: ^2.4.9
   fake_cloud_firestore: ^4.0.0
   firebase_auth_mocks: ^0.15.0
   flutter_lints: ^6.0.0
-  hive_generator: ^2.0.1
+  hive_ce_generator: ^1.9.0
   json_serializable: ^6.8.0
   mocktail: ^1.0.4
-  build_runner: ^2.4.13
 
-#================================================
-# FLUTTER CONFIGURATION
-#================================================
 flutter:
   generate: true
-  uses-material-design: true

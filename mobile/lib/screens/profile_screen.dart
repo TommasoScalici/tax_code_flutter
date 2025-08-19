@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
@@ -7,10 +9,42 @@ import 'package:tax_code_flutter/l10n/app_localizations.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  Future<void> _showRequiresRecentLoginDialog(
+    BuildContext context,
+    AuthService authService,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    await showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(l10n.actionRequired),
+          content: Text(l10n.requiresRecentLoginMessage),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await authService.signOut();
+                if (dialogContext.mounted) {
+                  Navigator.of(
+                    dialogContext,
+                  ).popUntil((route) => route.isFirst);
+                }
+              },
+              child: Text(l10n.ok),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _showDeleteUserConfirmDialog(BuildContext context) async {
     final authService = context.read<AuthService>();
+    final logger = context.read<Logger>();
     final l10n = AppLocalizations.of(context)!;
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
 
     await showDialog(
       context: context,
@@ -27,9 +61,31 @@ class ProfileScreen extends StatelessWidget {
               onPressed: () async {
                 try {
                   await authService.deleteUserAccount();
-                  if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-                } catch (e) {
-                  if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                  if (!navigator.mounted) return;
+                  navigator.popUntil((route) => route.isFirst);
+                } on FirebaseAuthException catch (e, s) {
+                  logger.e(
+                    'Error deleting user account: requires-recent-login',
+                    error: e,
+                    stackTrace: s,
+                  );
+                  if (!dialogContext.mounted) return;
+                  Navigator.of(dialogContext).pop();
+                  if (e.code == 'requires-recent-login') {
+                    _showRequiresRecentLoginDialog(context, authService);
+                  } else {
+                    scaffoldMessenger.showSnackBar(
+                      SnackBar(content: Text(l10n.genericError)),
+                    );
+                  }
+                } catch (e, s) {
+                  logger.e(
+                    'Generic error deleting user account',
+                    error: e,
+                    stackTrace: s,
+                  );
+                  if (!dialogContext.mounted) return;
+                  Navigator.of(dialogContext).pop();
                   scaffoldMessenger.showSnackBar(
                     SnackBar(content: Text(l10n.genericError)),
                   );
@@ -74,7 +130,11 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: () async {
                     try {
                       await authService.signOut();
-                      if (context.mounted) Navigator.pop(context);
+                      if (context.mounted) {
+                        Navigator.of(
+                          context,
+                        ).popUntil((route) => route.isFirst);
+                      }
                     } catch (e) {
                       scaffoldMessenger.showSnackBar(
                         SnackBar(content: Text(l10n.genericError)),
@@ -99,7 +159,7 @@ class ProfileScreen extends StatelessWidget {
                     iconColor: Colors.white,
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
