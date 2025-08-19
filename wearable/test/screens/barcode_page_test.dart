@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
+import 'package:tax_code_flutter_wear_os/l10n/app_localizations_en.dart';
 import 'package:tax_code_flutter_wear_os/screens/barcode_page.dart';
 import 'package:tax_code_flutter_wear_os/services/brightness_service.dart';
 
@@ -46,9 +47,15 @@ void main() {
       verify(() => mockBrightnessService.resetBrightness()).called(1);
     });
 
-    testWidgets('should BarcodeWidget correctly', (tester) async {
+    testWidgets('should display AppBar and BarcodeWidget correctly', (
+      tester,
+    ) async {
       const testTaxCode = 'RSSMRA80A01H501U';
       await tester.pumpWidget(createTestableWidget(testTaxCode));
+
+      // Assert UI
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().barcodePageTitle), findsOneWidget);
 
       final barcodeWidgetFinder = find.byType(BarcodeWidget);
       expect(barcodeWidgetFinder, findsOneWidget);
