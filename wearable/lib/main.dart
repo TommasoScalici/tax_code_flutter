@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,9 +16,8 @@ import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/database_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tax_code_flutter_wear_os/controllers/wearable_home_controller.dart';
+import 'package:tax_code_flutter_wear_os/controllers/contacts_list_controller.dart';
 import 'package:tax_code_flutter_wear_os/screens/barcode_page.dart';
-import 'package:tax_code_flutter_wear_os/services/brightness_service.dart';
 import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 
 import 'firebase_options.dart';
@@ -31,24 +28,19 @@ import 'settings.dart';
 /// Configures Firebase services like Remote Config, AppCheck, and Crashlytics.
 Future<void> configureApp(Logger logger) async {
   try {
-    if (Platform.isAndroid) {
-      await FirebaseRemoteConfig.instance.fetchAndActivate();
+    await FirebaseRemoteConfig.instance.fetchAndActivate();
 
-      final appCheckProvider = kDebugMode
-          ? AndroidProvider.debug
-          : AndroidProvider.playIntegrity;
-      await FirebaseAppCheck.instance.activate(
-        androidProvider: appCheckProvider,
-      );
+    final appCheckProvider = kDebugMode
+        ? AndroidProvider.debug
+        : AndroidProvider.playIntegrity;
+    await FirebaseAppCheck.instance.activate(androidProvider: appCheckProvider);
 
-      FlutterError.onError =
-          FirebaseCrashlytics.instance.recordFlutterFatalError;
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-      PlatformDispatcher.instance.onError = (error, stack) {
-        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-        return true;
-      };
-    }
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
   } on Exception catch (e, s) {
     logger.e(
       'Error while configuring the app with Firebase',
@@ -86,10 +78,6 @@ Future<void> main() async {
           create: (context) =>
               DatabaseService(firestore: context.read<FirebaseFirestore>()),
         ),
-        Provider<BrightnessServiceAbstract>(
-          create: (context) =>
-              BrightnessService(logger: context.read<Logger>()),
-        ),
         Provider<NativeViewServiceAbstract>(
           create: (context) =>
               NativeViewService(logger: context.read<Logger>()),
@@ -112,14 +100,19 @@ Future<void> main() async {
             dbService: context.read<DatabaseService>(),
             logger: context.read<Logger>(),
           ),
-          update: (_, authService, previousRepo) => previousRepo!,
+          update: (context, authService, previousRepo) => ContactRepository(
+            authService: authService,
+            dbService: context.read<DatabaseService>(),
+            logger: context.read<Logger>(),
+          ),
         ),
 
         // --- Level 5: Controllers ---
-        ChangeNotifierProvider<WearableHomeController>(
-          create: (context) => WearableHomeController(
+        ChangeNotifierProvider<ContactsListController>(
+          create: (context) => ContactsListController(
             contactRepository: context.read<ContactRepository>(),
             nativeViewService: context.read<NativeViewServiceAbstract>(),
+            logger: context.read<Logger>(),
           ),
         ),
       ],

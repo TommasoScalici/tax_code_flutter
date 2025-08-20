@@ -13,6 +13,7 @@ import androidx.wear.widget.SwipeDismissFrameLayout
 
 class BarcodeFragment : Fragment() {
     private var flutterView: FlutterView? = null
+    private val mainActivity: MainActivity by lazy { requireActivity() as MainActivity }
 
     companion object {
         private const val ARG_TAX_CODE = "tax_code"
@@ -57,8 +58,7 @@ class BarcodeFragment : Fragment() {
             }
         )
         
-        val activity = requireActivity() as MainActivity
-        val flutterEngine = activity.getEngine()
+        val flutterEngine = mainActivity.getEngine()
         
         if (flutterEngine != null) {
             flutterView = FlutterView(requireContext()).apply {
@@ -71,8 +71,6 @@ class BarcodeFragment : Fragment() {
                 addView(flutterView)
             }
 
-            flutterView?.attachToFlutterEngine(flutterEngine)
-
             val taxCode = arguments?.getString(ARG_TAX_CODE) ?: return
             flutterEngine.navigationChannel.pushRoute("/barcode?taxCode=$taxCode")
         }
@@ -80,8 +78,7 @@ class BarcodeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val activity = requireActivity() as MainActivity
-        activity.getEngine()?.let { engine ->
+        mainActivity.getEngine()?.let { engine ->
             flutterView?.attachToFlutterEngine(engine)
         }
     }
@@ -92,8 +89,7 @@ class BarcodeFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        val activity = requireActivity() as MainActivity
-        activity.getEngine()?.let { engine ->
+        mainActivity.getEngine()?.let { engine ->
             engine.navigationChannel.popRoute()
         }
         

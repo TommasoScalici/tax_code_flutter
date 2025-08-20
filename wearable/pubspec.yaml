@@ -29,7 +29,6 @@ dependencies:
 
   # UI & Functionality
   barcode_widget: ^2.0.4
-  screen_brightness: ^2.1.0
 
   # Firebase & Backend
   cloud_firestore: ^6.0.0

@@ -4,8 +4,11 @@ import 'package:shared/models/contact.dart';
 
 abstract class NativeViewServiceAbstract {
   Future<void> launchPhoneApp();
+  Future<void> closeContactList();
   Future<void> showContactList(List<Contact> contacts);
   Future<void> updateContactList(List<Contact> contacts);
+  Future<void> enableHighBrightnessMode();
+  Future<void> disableHighBrightnessMode();
 }
 
 class NativeViewService implements NativeViewServiceAbstract {
@@ -22,7 +25,6 @@ class NativeViewService implements NativeViewServiceAbstract {
 
   @override
   Future<void> launchPhoneApp() async {
-    _logger.i('Invoking native phone app launcher.');
     try {
       await _platform.invokeMethod<String>('launchPhoneApp');
     } on PlatformException catch (e, s) {
@@ -32,6 +34,20 @@ class NativeViewService implements NativeViewServiceAbstract {
         stackTrace: s,
       );
       throw e.message ?? 'Failed to launch app on phone.';
+    }
+  }
+
+  @override
+  Future<void> closeContactList() async {
+    try {
+      await _platform.invokeMethod<void>('closeNativeContactList');
+    } on PlatformException catch (e, s) {
+      _logger.e(
+        "Failed to invoke native closeContactList: '${e.message}'.",
+        error: e,
+        stackTrace: s,
+      );
+      rethrow;
     }
   }
 
@@ -54,7 +70,6 @@ class NativeViewService implements NativeViewServiceAbstract {
 
   @override
   Future<void> updateContactList(List<Contact> contacts) async {
-    _logger.i('Invoking native contact list update.');
     try {
       final contactsData = contacts.map((c) => c.toNativeMap()).toList();
       await _platform.invokeMethod('updateContactList', {
@@ -63,6 +78,40 @@ class NativeViewService implements NativeViewServiceAbstract {
     } on PlatformException catch (e, s) {
       _logger.e(
         'Failed to invoke native method: "${e.message}".',
+        error: e,
+        stackTrace: s,
+      );
+      rethrow;
+    }
+  }
+
+  ///
+  /// Enables the high brightness mode on the native side.
+  ///
+  @override
+  Future<void> enableHighBrightnessMode() async {
+    try {
+      await _platform.invokeMethod<void>('enableHighBrightnessMode');
+    } on PlatformException catch (e, s) {
+      _logger.e(
+        "Failed to invoke enableHighBrightnessMode: '${e.message}'.",
+        error: e,
+        stackTrace: s,
+      );
+      rethrow;
+    }
+  }
+
+  ///
+  /// Disables the high brightness mode on the native side.
+  ///
+  @override
+  Future<void> disableHighBrightnessMode() async {
+    try {
+      await _platform.invokeMethod<void>('disableHighBrightnessMode');
+    } on PlatformException catch (e, s) {
+      _logger.e(
+        "Failed to invoke disableHighBrightnessMode: '${e.message}'.",
         error: e,
         stackTrace: s,
       );

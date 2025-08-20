@@ -3,11 +3,14 @@
     <!-- App Title -->
     <string name="app_name">Codice Fiscale</string>
 
-    <!-- Empty state -->
-    <string name="empty_message">Nessun contatto. Aggiungili dal telefono.</string>
-    <string name="phone_button">Apri sul telefono</string>
-
     <!-- Contact item -->
     <string name="contact_name_format">%1$s %2$s (%3$s)</string>
     <string name="birth_place_format">%1$s (%2$s)</string>
+
+    <!-- Error Messages -->
+    <string name="phone_not_connected">Telefono non connesso</string>
+    <string name="app_opened">App aperta sul telefono</string>
+    <string name="app_not_installed">App non installata sul telefono</string>
+    <string name="unable_to_open">Impossibile aprire l\'app</string>
+    <string name="error_opening_app">Errore durante l\'apertura dell\'app</string>
 </resources>

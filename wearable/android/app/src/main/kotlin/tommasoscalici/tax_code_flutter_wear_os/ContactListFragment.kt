@@ -24,7 +24,7 @@ import java.util.Locale
 class ContactListFragment : Fragment() {
     private var binding: ContactListBinding? = null
     private val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
-    private lateinit var phoneAppLauncher: PhoneAppLauncherService
+    
 
     companion object {
         fun newInstance(contacts: ArrayList<HashMap<String, Any>>?) = ContactListFragment().apply {
@@ -39,37 +39,52 @@ class ContactListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val contacts = arguments?.getSerializable("contacts") as? ArrayList<HashMap<String, Any>>
-        val hasContacts = contacts != null && contacts.isNotEmpty()
-        
-        Log.d("ContactListFragment", "onCreateView - contacts null: ${contacts == null}")
-        Log.d("ContactListFragment", "onCreateView - contacts empty: ${contacts?.isEmpty()}")
-        
-        return inflater.inflate(
-            if (hasContacts) R.layout.fragment_contact_list
-            else R.layout.empty_contact_list,
-            container,
-            false
-        )
+        return inflater.inflate(R.layout.fragment_contact_list, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = ContactListBinding.bind(view)
+
+        setupContactsList()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     fun updateContacts(newContacts: ArrayList<HashMap<String, Any>>?) {
         binding ?: return
+        populateContactsList(newContacts)
+    }
 
-        binding?.contactsContainer?.removeAllViews()
+    private fun addContactView(contact: Contact) {
+        val inflater = LayoutInflater.from(requireContext())
+        val contactView = inflater.inflate(R.layout.item_contact_card, binding?.contactsContainer, false)
+        val holder = ViewHolder(contactView)
 
-        val hasContacts = newContacts != null && newContacts.isNotEmpty()
+        holder.taxCode.text = contact.taxCode
 
-        if (hasContacts) {
-            binding?.emptyMessage?.visibility = View.GONE
-            binding?.contactsContainer?.visibility = View.VISIBLE
-            newContacts!!.forEach { map ->
-                mapToContact(map)?.also { addContactView(it) }
-            }
-        } else {
-            binding?.emptyMessage?.visibility = View.VISIBLE
-            binding?.contactsContainer?.visibility = View.GONE
+        holder.nameGender.text = requireContext().getString(
+            R.string.contact_name_format,
+            contact.firstName, contact.lastName, contact.gender
+        )
+
+        holder.birthPlace.text = requireContext().getString(
+            R.string.birth_place_format,
+            contact.birthPlace.name, contact.birthPlace.state
+        )
+
+        val currentLocale = if (Locale.getDefault().language == "it") Locale.ITALIAN else Locale.US
+        holder.birthDate.text = DateFormat.getDateInstance(DateFormat.MEDIUM, currentLocale).format(contact.birthDate)
+
+        contactView.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            openBarcodeFragment(contact.taxCode)
         }
+
+        binding?.contactsContainer?.addView(contactView)
     }
 
     private fun mapToContact(map: HashMap<String, Any>): Contact? {
@@ -93,142 +108,13 @@ class ContactListFragment : Fragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = ContactListBinding.bind(view)
-        phoneAppLauncher = PhoneAppLauncherService(requireContext())
-
-        val contacts = arguments?.getSerializable("contacts") as? ArrayList<HashMap<String, Any>>
-        val hasContacts = contacts != null && contacts.isNotEmpty()
-        
-        if (hasContacts) {
-            setupContactsList()
-        } else {
-            setupEmptyState()
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }
-
-    private fun setupContactsList() {
-        binding?.apply {
-            scrollView?.apply {
-                requestFocus()
-                isVerticalScrollBarEnabled = true
-            }
-            loadContacts()
-        }
-    }
-
-    private fun setupEmptyState() {
-        val isItalian = Locale.getDefault().language == "it"
-        binding?.apply {
-            scrollView?.apply {
-                requestFocus()
-                isVerticalScrollBarEnabled = true
-            }
-            
-            emptyMessage?.text = getString(R.string.empty_message)
-            phoneButtonText?.text = getString(R.string.phone_button)
-            
-            phoneButtonCard?.setOnClickListener { v ->
-                v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                launchPhoneApp()
+    private fun populateContactsList(contacts: List<HashMap<String, Any>>?) {
+        binding?.contactsContainer?.removeAllViews()
+        if (contacts != null && contacts.isNotEmpty()) {
+            contacts.forEach { map ->
+                mapToContact(map)?.also { addContactView(it) }
             }
         }
-    }
-
-    private fun launchPhoneApp() {
-        binding?.apply {
-            phoneButtonCard?.isEnabled = false
-            progressIndicator?.visibility = View.VISIBLE
-        }
-        
-        lifecycleScope.launch {
-            val result = phoneAppLauncher.launchPhoneApp("tommasoscalici.taxcode")
-
-            when (result) {
-                is PhoneAppLauncherService.LaunchResult.Success -> {
-                    showToast(result.message)
-                }
-                is PhoneAppLauncherService.LaunchResult.Error -> {
-                    showToast(result.message)
-                }
-            }
-
-            binding?.apply {
-                phoneButtonCard?.isEnabled = true
-                progressIndicator?.visibility = View.GONE
-            }
-        }
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun loadContacts() {
-        (arguments?.getSerializable("contacts") as? ArrayList<HashMap<String, Any>>)?.forEach { map ->
-            try {
-                Contact(
-                    id = map["id"] as String,
-                    firstName = map["firstName"] as String,
-                    lastName = map["lastName"] as String,
-                    gender = map["gender"] as String,
-                    taxCode = map["taxCode"] as String,
-                    birthPlace = BirthPlace(
-                        name = (map["birthPlace"] as Map<*, *>)["name"] as String,
-                        state = (map["birthPlace"] as Map<*, *>)["state"] as String
-                    ),
-                    birthDate = simpleDateFormat.parse(map["birthDate"] as String) ?: Date(),
-                    listIndex = (map["listIndex"] as Number).toInt()
-                ).also { addContactView(it) }
-            } catch (e: Exception) {
-                Log.e("ContactListFragment", "Error mapping contact: $e")
-            }
-        }
-    }
-
-    private fun addContactView(contact: Contact) {
-        val contactView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.item_contact_card, binding?.contactsContainer, false)
-
-        contactView.apply {
-            findViewById<TextView>(R.id.tax_code).text = contact.taxCode
-
-            findViewById<TextView>(R.id.name_gender).text = context.getString(
-                R.string.contact_name_format,
-                contact.firstName,
-                contact.lastName,
-                contact.gender
-            )
-
-            findViewById<TextView>(R.id.birth_place).text = context.getString(
-                R.string.birth_place_format,
-                contact.birthPlace.name,
-                contact.birthPlace.state
-            )
-
-            val currentLocale = if (Locale.getDefault().language == "it") {
-                Locale.ITALIAN
-            } else {
-                Locale.US
-            }
-
-            findViewById<TextView>(R.id.birth_date).text = 
-                DateFormat.getDateInstance(DateFormat.MEDIUM, currentLocale)
-                    .format(contact.birthDate)
-
-            setOnClickListener {
-                it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                openBarcodeFragment(contact.taxCode)
-            }
-        }
-
-        binding?.contactsContainer?.addView(contactView)
     }
 
     private fun openBarcodeFragment(taxCode: String) {
@@ -237,27 +123,29 @@ class ContactListFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
+    private fun setupContactsList() {
+        binding?.scrollView?.requestFocus()
+        binding?.scrollView?.isVerticalScrollBarEnabled = true
+        val initialContacts = arguments?.getSerializable("contacts") as? ArrayList<HashMap<String, Any>>
+        populateContactsList(initialContacts)
+    }
 }
 
-private class ContactListBinding private constructor(view: View, private val isEmpty: Boolean) {
-    val scrollView = if (isEmpty) {
-        view.findViewById<ScrollView>(R.id.empty_contact_list)
-    } else {
-        view.findViewById<ScrollView>(R.id.contact_list_view)
-    }
-
-    val circularProgress = view.findViewById<CircularProgressLayout>(R.id.circular_progress)
-    val contactsContainer = view.findViewById<LinearLayout>(R.id.contacts_container)
-
-    val emptyMessage = if (isEmpty) view.findViewById<TextView>(R.id.empty_message) else null
-    val phoneButtonText = if (isEmpty) view.findViewById<TextView>(R.id.phone_button_text) else null
-    val phoneButtonCard = if (isEmpty) view.findViewById<CardView>(R.id.phone_button_card) else null
-    val progressIndicator = if (isEmpty) view.findViewById<ProgressBar>(R.id.progress_indicator) else null
+private class ContactListBinding private constructor(view: View) {
+    val scrollView: ScrollView = view.findViewById(R.id.contact_list_view)
+    val contactsContainer: LinearLayout = view.findViewById(R.id.contacts_container)
 
     companion object {
         fun bind(view: View): ContactListBinding {
-            val isEmpty = view.findViewById<ScrollView>(R.id.empty_contact_list) != null
-            return ContactListBinding(view, isEmpty)
+            return ContactListBinding(view)
         }
     }
+}
+
+private class ViewHolder(view: View) {
+    val taxCode: TextView = view.findViewById(R.id.tax_code)
+    val nameGender: TextView = view.findViewById(R.id.name_gender)
+    val birthPlace: TextView = view.findViewById(R.id.birth_place)
+    val birthDate: TextView = view.findViewById(R.id.birth_date)
 }

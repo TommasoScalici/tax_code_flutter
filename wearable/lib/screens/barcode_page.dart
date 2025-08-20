@@ -1,7 +1,7 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tax_code_flutter_wear_os/services/brightness_service.dart';
+import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 
 class BarcodePage extends StatefulWidget {
   const BarcodePage({super.key, required this.taxCode});
@@ -13,18 +13,18 @@ class BarcodePage extends StatefulWidget {
 }
 
 class _BarcodePageState extends State<BarcodePage> {
-  late final BrightnessServiceAbstract _brightnessService;
+  late final NativeViewServiceAbstract _nativeViewService;
 
   @override
   void initState() {
     super.initState();
-    _brightnessService = context.read<BrightnessServiceAbstract>();
-    _brightnessService.setMaxBrightness();
+    _nativeViewService = context.read<NativeViewServiceAbstract>();
+    _enableBrightness();
   }
 
   @override
   void dispose() {
-    _brightnessService.resetBrightness();
+    _disableBrightness();
     super.dispose();
   }
 
@@ -39,15 +39,19 @@ class _BarcodePageState extends State<BarcodePage> {
             barcode: Barcode.code39(),
             data: widget.taxCode,
             width: double.infinity,
-            height: 80,
-            style: const TextStyle(
-              color: Colors.black,
-              fontFamily: 'Roboto',
-              fontSize: 14,
-            ),
+            height: 60,
+            style: const TextStyle(color: Colors.black, fontSize: 12),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _enableBrightness() async {
+    await _nativeViewService.enableHighBrightnessMode();
+  }
+
+  Future<void> _disableBrightness() async {
+    await _nativeViewService.disableHighBrightnessMode();
   }
 }

@@ -67,13 +67,6 @@ private class ContactDiffCallback : DiffUtil.ItemCallback<Contact>() {
     }
 
     override fun areContentsTheSame(oldItem: Contact, newItem: Contact): Boolean {
-        return oldItem == newItem || (
-            oldItem.firstName == newItem.firstName &&
-            oldItem.lastName == newItem.lastName &&
-            oldItem.gender == newItem.gender &&
-            oldItem.taxCode == newItem.taxCode &&
-            oldItem.birthPlace == newItem.birthPlace &&
-            oldItem.birthDate == newItem.birthDate
-        )
+        return oldItem == newItem
     }
 }

@@ -3,6 +3,7 @@ package tommasoscalici.tax_code_flutter_wear_os
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +16,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+import android.util.Log
+
 private const val CONTACT_LIST_FRAGMENT_TAG = "CONTACT_LIST_FRAGMENT"
 
 class MainActivity : FlutterFragmentActivity() {
@@ -22,10 +25,33 @@ class MainActivity : FlutterFragmentActivity() {
     private lateinit var methodChannel: MethodChannel
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+          Log.d("MainActivityLifecycle", ">>> CONFIGURE FLUTTER ENGINE CALLED <<<") // <-- AGGIUNGI QUESTA RIGA
         super.configureFlutterEngine(flutterEngine)
         methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName)
         methodChannel.setMethodCallHandler { call, result ->
             when (call.method) {
+                "enableHighBrightnessMode" -> {
+                    try {
+                        val window = this.window
+                        val layoutParams = window.attributes
+                        layoutParams.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_FULL
+                        window.attributes = layoutParams
+                        result.success(null)
+                    } catch (e: Exception) {
+                        result.error("ERROR", "Failed to enable high brightness", e.message)
+                    }
+                }
+                "disableHighBrightnessMode" -> {
+                    try {
+                        val window = this.window
+                        val layoutParams = window.attributes
+                        layoutParams.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+                        window.attributes = layoutParams
+                        result.success(null)
+                    } catch (e: Exception) {
+                        result.error("ERROR", "Failed to disable high brightness", e.message)
+                    }
+                }
                 "launchPhoneApp" -> {
                     lifecycleScope.launch {
                         val launcher = PhoneAppLauncherService(this@MainActivity)
@@ -56,6 +82,17 @@ class MainActivity : FlutterFragmentActivity() {
                         }
                     }
                 }
+                "closeNativeContactList" -> {
+                     try {
+                        val fragment = supportFragmentManager.findFragmentByTag(CONTACT_LIST_FRAGMENT_TAG)
+                        if (fragment != null) {
+                            supportFragmentManager.beginTransaction().remove(fragment).commit()
+                        }
+                        result.success(null)
+                    } catch (e: Exception) {
+                        result.error("ERROR", "Error closing contact list", e.message)
+                    }
+                }
                 "openNativeContactList" -> {
                     try {
                         val contacts = call.argument<ArrayList<HashMap<String, Any>>>("contacts")
@@ -78,8 +115,6 @@ class MainActivity : FlutterFragmentActivity() {
                 else -> result.notImplemented()
             }
         }
-
-        flutterEngine.navigationChannel.setInitialRoute("/barcode")
     }
 
     fun getEngine(): FlutterEngine? {
