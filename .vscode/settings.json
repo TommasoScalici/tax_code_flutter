@@ -1,0 +1,27 @@
+{
+  // --- IMPOSTAZIONI GLOBALI PER TUTTO IL PROGETTO ---
+  "eslint.workingDirectories": ["./functions"],
+  "files.eol": "\n", // Mantiene le fini di riga LF (Unix), una buona pratica per tutti i file
+
+  // --- IMPOSTAZIONI APPLICATE SOLO AI FILE DART (Progetti Flutter) ---
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "Dart-Code.dart-code"
+  },
+
+  // --- IMPOSTAZIONI APPLICATE SOLO AI FILE TYPESCRIPT E JAVASCRIPT (Progetto Functions) ---
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  }
+}
