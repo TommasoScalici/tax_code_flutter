@@ -31,25 +31,11 @@ class ContactRepository with ChangeNotifier {
     required AuthService authService,
     required DatabaseService dbService,
     required Logger logger,
-  })  : _authService = authService,
-        _dbService = dbService,
-        _logger = logger {
+  }) : _authService = authService,
+       _dbService = dbService,
+       _logger = logger {
     _authService.addListener(_onAuthChanged);
     _onAuthChanged();
-  }
-
-  void _onAuthChanged() {
-    _contactsSubscription?.cancel();
-
-    if (_authService.isSignedIn) {
-      _isLoading = true;
-      notifyListeners();
-      _listenToRemoteContacts();
-    } else {
-      _contacts = [];
-      _isLoading = false;
-      notifyListeners();
-    }
   }
 
   @override
@@ -57,37 +43,6 @@ class ContactRepository with ChangeNotifier {
     _authService.removeListener(_onAuthChanged);
     _contactsSubscription?.cancel();
     super.dispose();
-  }
-
-  void _listenToRemoteContacts() {
-    _contactsSubscription = _dbService.getContactsStream(_userId!).listen(
-      (remoteContacts) async {
-        _contacts = List.from(remoteContacts)
-          ..sort((a, b) => a.listIndex.compareTo(b.listIndex));
-        try {
-          await _saveContactsToLocalCache();
-        } on Exception catch (e, s) {
-          _logger.e('Error saving contacts to Hive cache',
-              error: e, stackTrace: s);
-        }
-        _finishLoading();
-      },
-      onError: (e, s) async {
-        _logger.e(
-          'Error listening to remote contacts. Loading from cache',
-          error: e,
-          stackTrace: s,
-        );
-        try {
-          await _loadContactsFromLocalCache();
-        } on Exception catch (e, s) {
-          _logger.e('Failed to load contacts from Hive cache as well.',
-              error: e, stackTrace: s);
-          _contacts = [];
-        }
-        _finishLoading();
-      },
-    );
   }
 
   ///
@@ -171,6 +126,71 @@ class ContactRepository with ChangeNotifier {
     await _saveContactsToLocalCache();
   }
 
+  Future<void> _onAuthChanged() async {
+    await _contactsSubscription?.cancel();
+
+    if (_authService.isSignedIn && _userId != null) {
+      _isLoading = true;
+      notifyListeners();
+
+      try {
+        final initialContacts = await _dbService
+            .getContactsStream(_userId!)
+            .first
+            .timeout(const Duration(seconds: 10));
+
+        await _processContactsUpdate(initialContacts);
+        _listenToRemoteContacts();
+      } catch (e, s) {
+        _logger.e(
+          'Could not get initial contacts or timed out. Falling back to cache.',
+          error: e,
+          stackTrace: s,
+        );
+        await _loadContactsFromLocalCache();
+        _isLoading = false;
+        notifyListeners();
+      }
+    } else {
+      _contacts = [];
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void _listenToRemoteContacts() {
+    _contactsSubscription = _dbService
+        .getContactsStream(_userId!)
+        .listen(
+          (remoteContacts) async {
+            await _processContactsUpdate(remoteContacts);
+          },
+          onError: (e, s) {
+            _logger.e(
+              'Error on contacts stream after initial load.',
+              error: e,
+              stackTrace: s,
+            );
+          },
+        );
+  }
+
+  Future<void> _processContactsUpdate(List<Contact> remoteContacts) async {
+    _contacts = List.from(remoteContacts)
+      ..sort((a, b) => a.listIndex.compareTo(b.listIndex));
+
+    try {
+      await _saveContactsToLocalCache();
+    } on Exception catch (e, s) {
+      _logger.e('Error saving contacts to Hive cache', error: e, stackTrace: s);
+    }
+
+    if (_isLoading) {
+      _isLoading = false;
+    }
+    notifyListeners();
+  }
+
   Future<void> _loadContactsFromLocalCache() async {
     final box = await Hive.openBox<Contact>('contacts_$_userId');
     _contacts = box.values.toList();
@@ -181,10 +201,5 @@ class ContactRepository with ChangeNotifier {
     final box = await Hive.openBox<Contact>('contacts_$_userId');
     await box.clear();
     await box.putAll({for (var c in _contacts) c.id: c});
-  }
-
-  void _finishLoading() {
-    if (_isLoading) _isLoading = false;
-    notifyListeners();
   }
 }

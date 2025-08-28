@@ -3,11 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">@android:color/transparent</color>
-    <color name="primary">#90EE90</color>
     <color name="on_surface">@android:color/white</color>
     <color name="text_primary">#1B5D00</color>
     <color name="text_secondary">#333333</color>
     <color name="background">@android:color/black</color>
     <color name="background_card">#B8E5B4</color>
-    <color name="surface">#3C3C3C</color>
 </resources>

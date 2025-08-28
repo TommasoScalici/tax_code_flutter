@@ -24,7 +24,7 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
     _isSignedIn = false;
     notifyListeners();
   }
-  
+
   @override
   Future<void> deleteUserAccount() async {}
   @override
@@ -33,4 +33,8 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
   Future<void> signOut() async {}
   @override
   bool get isLoading => false;
+
+  // TODO to check
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

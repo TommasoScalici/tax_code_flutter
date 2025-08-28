@@ -17,6 +17,7 @@ class AuthService with ChangeNotifier {
 
   StreamSubscription? _authSubscription;
   User? _currentUser;
+  String? _errorMessage;
   bool _isLoading = false;
 
   /// The currently signed-in user, or null if none.
@@ -28,6 +29,9 @@ class AuthService with ChangeNotifier {
   /// Returns true if an authentication operation is in progress.
   bool get isLoading => _isLoading;
 
+  /// An error message resulting from a failed authentication attempt, or null.
+  String? get errorMessage => _errorMessage;
+
   ///
   /// The main constructor for the authentication service.
   ///
@@ -36,10 +40,10 @@ class AuthService with ChangeNotifier {
     required GoogleSignIn googleSignIn,
     required DatabaseService dbService,
     required Logger logger,
-  })  : _auth = auth,
-        _googleSignIn = googleSignIn,
-        _dbService = dbService,
-        _logger = logger {
+  }) : _auth = auth,
+       _googleSignIn = googleSignIn,
+       _dbService = dbService,
+       _logger = logger {
     _authSubscription = _auth.authStateChanges().listen(_onAuthStateChanged);
   }
 
@@ -58,14 +62,14 @@ class AuthService with ChangeNotifier {
 
     try {
       final uid = currentUser.uid;
-      
+
       await _dbService.deleteAllUserData(uid);
       await currentUser.delete();
-      
+
       _logger.i('User account and all associated data deleted successfully.');
     } catch (e) {
       _logger.e('Error deleting user account: $e');
-      rethrow; 
+      rethrow;
     }
   }
 
@@ -79,6 +83,7 @@ class AuthService with ChangeNotifier {
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         _logger.w('Google Sign-In was cancelled by the user.');
+        _setLoading(false);
         return;
       }
 
@@ -91,6 +96,7 @@ class AuthService with ChangeNotifier {
       await _auth.signInWithCredential(credential);
     } on Exception catch (e, s) {
       _logger.e('Error during Google Sign-In', error: e, stackTrace: s);
+      _errorMessage = 'An unexpected error occurred. Please try again.';
     } finally {
       _setLoading(false);
     }
@@ -138,7 +144,15 @@ class AuthService with ChangeNotifier {
   /// Private helper to manage the loading state and notify listeners.
   ///
   void _setLoading(bool loading) {
-    if (_isLoading == loading) return;
+    if (loading) {
+      _errorMessage = null;
+    }
+
+    if (_isLoading == loading) {
+      notifyListeners();
+      return;
+    }
+
     _isLoading = loading;
     notifyListeners();
   }

@@ -25,21 +25,24 @@ class _LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     final authService = context.watch<AuthService>();
     final l10n = AppLocalizations.of(context)!;
+    final textTheme = Theme.of(context).textTheme;
+    final errorColor = Theme.of(context).colorScheme.error;
 
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   l10n.welcomeMessage(l10n.appTitle),
-                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.center,
+                  style: textTheme.titleMedium,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 12),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -65,6 +68,14 @@ class _LoginView extends StatelessWidget {
                     ],
                   ],
                 ),
+                if (authService.errorMessage != null) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.loginError,
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodySmall?.copyWith(color: errorColor),
+                  ),
+                ],
               ],
             ),
           ),
