@@ -224,11 +224,11 @@ abstract class AppLocalizations {
   /// **'Scan Card'**
   String get takePicture;
 
-  /// Error message shown in a SnackBar when the OCR fails to extract data from a card's photo (e.g., Italian ID or Health Card). It prompts the user to retry with a better, more focused picture.
+  /// Error message shown when the scan fails to extract data from a document photo. It prompts the user to retry with a better picture.
   ///
   /// In en, this message translates to:
   /// **'Could not read data from the picture. Please try taking a new, more focused one.'**
-  String get ocrFailedErrorMessage;
+  String get scanFailedErrorMessage;
 
   /// Tooltip for the FloatingActionButton to create a new contact.
   ///

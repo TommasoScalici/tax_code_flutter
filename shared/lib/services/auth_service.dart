@@ -62,13 +62,12 @@ class AuthService with ChangeNotifier {
 
     try {
       final uid = currentUser.uid;
-
       await _dbService.deleteAllUserData(uid);
       await currentUser.delete();
 
       _logger.i('User account and all associated data deleted successfully.');
-    } catch (e) {
-      _logger.e('Error deleting user account: $e');
+    } catch (e, s) {
+      _logger.e('Error deleting user account', error: e, stackTrace: s);
       rethrow;
     }
   }
@@ -83,7 +82,6 @@ class AuthService with ChangeNotifier {
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         _logger.w('Google Sign-In was cancelled by the user.');
-        _setLoading(false);
         return;
       }
 
@@ -103,14 +101,20 @@ class AuthService with ChangeNotifier {
   }
 
   ///
-  /// Signs the current user out from Firebase and Google.
+  /// Signs the current user out from Firebase and Google. This method attempts
+  /// both sign-outs and logs errors individually without stopping the process.
   ///
   Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();
+    } catch (e, s) {
+      _logger.e('Error during Google sign out', error: e, stackTrace: s);
+    }
+
+    try {
       await _auth.signOut();
-    } on Exception catch (e, s) {
-      _logger.e('Error during sign out', error: e, stackTrace: s);
+    } catch (e, s) {
+      _logger.e('Error during Firebase sign out', error: e, stackTrace: s);
     }
   }
 
@@ -123,9 +127,6 @@ class AuthService with ChangeNotifier {
       await _saveUserData(user);
     }
 
-    if (_isLoading) {
-      _isLoading = false;
-    }
     notifyListeners();
   }
 
@@ -144,16 +145,13 @@ class AuthService with ChangeNotifier {
   /// Private helper to manage the loading state and notify listeners.
   ///
   void _setLoading(bool loading) {
+    if (_isLoading == loading) return;
+
+    _isLoading = loading;
     if (loading) {
       _errorMessage = null;
     }
 
-    if (_isLoading == loading) {
-      notifyListeners();
-      return;
-    }
-
-    _isLoading = loading;
     notifyListeners();
   }
 }

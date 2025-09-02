@@ -5,9 +5,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:shared/models/contact.dart';
+import 'package:tax_code_flutter/models/scanned_data.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
-import 'package:tax_code_flutter/services/ocr_service.dart';
+import 'package:tax_code_flutter/services/gemini_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 
 enum CameraStatus {
@@ -15,14 +15,14 @@ enum CameraStatus {
   permissionDenied,
   readyToScan,
   pictureTaken,
-  processingOCR,
+  processing,
   error,
 }
 
 class CameraPageController with ChangeNotifier {
   final CameraServiceAbstract _cameraService;
+  final GeminiServiceAbstract _geminiService;
   final PermissionServiceAbstract _permissionService;
-  final OCRServiceAbstract _ocrService;
   final Logger _logger;
 
   CameraController? _cameraController;
@@ -38,12 +38,12 @@ class CameraPageController with ChangeNotifier {
 
   CameraPageController({
     required CameraServiceAbstract cameraService,
+    required GeminiServiceAbstract geminiService,
     required PermissionServiceAbstract permissionService,
-    required OCRServiceAbstract ocrService,
     required Logger logger,
   }) : _cameraService = cameraService,
+       _geminiService = geminiService,
        _permissionService = permissionService,
-       _ocrService = ocrService,
        _logger = logger;
 
   /// Initializes the camera and checks for permission.
@@ -73,24 +73,24 @@ class CameraPageController with ChangeNotifier {
     }
   }
 
-  /// Processes the taken picture with the OCR service and returns a [Contact].
-  /// This method now handles the internal state change to show a loading indicator
-  /// and ensures animations in the UI are not interrupted.
-  Future<Contact?> confirmAndProcessPicture() async {
+  /// Processes the taken picture with the Gemini service and returns [ScannedData].
+  Future<ScannedData?> confirmAndProcessPicture() async {
     if (status != CameraStatus.pictureTaken || imagePath == null) return null;
 
-    _updateStatus(CameraStatus.processingOCR);
+    _updateStatus(CameraStatus.processing);
 
     try {
       final imageBytes = await File(imagePath!).readAsBytes();
       final String base64Image = base64Encode(imageBytes);
-      final contact = await _ocrService.performCardOCR(base64Image);
+      final scannedData = await _geminiService.extractDataFromDocument(
+        base64Image,
+      );
 
       _updateStatus(CameraStatus.pictureTaken);
 
-      return contact;
+      return scannedData;
     } catch (e, s) {
-      _logger.e('OCR processing failed', error: e, stackTrace: s);
+      _logger.e('Gemini processing failed', error: e, stackTrace: s);
       _updateStatus(CameraStatus.pictureTaken);
       return null;
     }
@@ -102,24 +102,12 @@ class CameraPageController with ChangeNotifier {
     await _permissionService.openAppSettingsHandler();
   }
 
-  /// Performs OCR analysis on the taken picture.
-  /// Returns the scanned [Contact] if successful, otherwise null.
-  Future<Contact?> performOcr() async {
-    if (_imagePath == null) return null;
-
-    try {
-      final imageBytes = await File(_imagePath!).readAsBytes();
-      final base64Image = base64Encode(imageBytes);
-      return await _ocrService.performCardOCR(base64Image);
-    } on Exception catch (e) {
-      _logger.e('Error during OCR analysis: $e');
-      return null;
-    }
-  }
-
   /// Resets the picture and updates the status to [CameraStatus.readyToScan].
-  void resetPicture() {
+  Future<void> resetPicture() async {
+    if (_cameraController == null) return;
+
     _imagePath = null;
+    await _cameraController!.resumePreview();
     _updateStatus(CameraStatus.readyToScan);
   }
 
@@ -131,6 +119,7 @@ class CameraPageController with ChangeNotifier {
 
     try {
       final image = await _cameraController!.takePicture();
+      await _cameraController!.pausePreview();
       _pictureOrientation = _cameraController!.value.deviceOrientation;
       _imagePath = image.path;
       _updateStatus(CameraStatus.pictureTaken);

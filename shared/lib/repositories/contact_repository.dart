@@ -128,6 +128,7 @@ class ContactRepository with ChangeNotifier {
 
   Future<void> _onAuthChanged() async {
     await _contactsSubscription?.cancel();
+    _contactsSubscription = null;
 
     if (_authService.isSignedIn && _userId != null) {
       _isLoading = true;
@@ -140,7 +141,6 @@ class ContactRepository with ChangeNotifier {
             .timeout(const Duration(seconds: 10));
 
         await _processContactsUpdate(initialContacts);
-        _listenToRemoteContacts();
       } catch (e, s) {
         _logger.e(
           'Could not get initial contacts or timed out. Falling back to cache.',
@@ -151,10 +151,18 @@ class ContactRepository with ChangeNotifier {
         _isLoading = false;
         notifyListeners();
       }
+      if (_contactsSubscription == null) {
+        _listenToRemoteContacts();
+      }
     } else {
       _contacts = [];
       _isLoading = false;
       notifyListeners();
+
+      if (_userId != null) {
+        final box = await Hive.openBox<Contact>('contacts_$_userId');
+        await box.clear();
+      }
     }
   }
 

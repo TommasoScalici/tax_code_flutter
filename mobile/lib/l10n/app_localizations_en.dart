@@ -74,7 +74,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get takePicture => 'Scan Card';
 
   @override
-  String get ocrFailedErrorMessage =>
+  String get scanFailedErrorMessage =>
       'Could not read data from the picture. Please try taking a new, more focused one.';
 
   @override

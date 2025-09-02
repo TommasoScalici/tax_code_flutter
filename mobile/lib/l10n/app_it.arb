@@ -131,9 +131,9 @@
   "@scanCard": {
     "description": "Label for a button that initiates scanning a card."
   },
-  "ocrFailedErrorMessage": "Impossibile leggere i dati dalla foto. Prova a scattarne una nuova più a fuoco.",
-  "@ocrFailedErrorMessage": {
-    "description": "Messaggio di errore mostrato in una SnackBar quando l'OCR non riesce a estrarre i dati dalla foto di una carta (CIE/TS). Invita l'utente a riprovare con una foto migliore."
+  "scanFailedErrorMessage": "Impossibile leggere i dati dalla foto. Prova a scattarne una nuova più a fuoco.",
+  "@scanFailedErrorMessage": {
+    "description": "Messaggio di errore mostrato quando la scansione non riesce a estrarre i dati dalla foto di un documento. Invita l'utente a riprovare con una foto migliore."
   },
   "firstName": "Nome",
   "@firstName": {

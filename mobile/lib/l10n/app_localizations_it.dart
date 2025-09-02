@@ -74,7 +74,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get takePicture => 'Scansiona Tessera';
 
   @override
-  String get ocrFailedErrorMessage =>
+  String get scanFailedErrorMessage =>
       'Impossibile leggere i dati dalla foto. Prova a scattarne una nuova più a fuoco.';
 
   @override

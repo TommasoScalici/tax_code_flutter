@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,10 +27,8 @@ import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
-import 'package:tax_code_flutter/services/card_parser_service.dart';
-import 'package:tax_code_flutter/services/google_vision_service.dart';
+import 'package:tax_code_flutter/services/gemini_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
-import 'package:tax_code_flutter/services/ocr_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
 import 'package:tax_code_flutter/services/tax_code_service.dart';
@@ -85,17 +84,20 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         // --- Level 1: Low-level and External Instances ---
+        Provider<http.Client>(create: (_) => http.Client()),
         Provider<Logger>.value(value: logger),
+        Provider<GoogleSignIn>.value(value: GoogleSignIn()),
         Provider<SharedPreferencesAsync>.value(value: sharedPreferences),
         Provider<FirebaseAuth>.value(value: FirebaseAuth.instance),
-        Provider<FirebaseFirestore>.value(value: FirebaseFirestore.instance),
-        Provider<FirebaseRemoteConfig>.value(
-          value: FirebaseRemoteConfig.instance,
-        ),
-        Provider<GoogleSignIn>.value(value: GoogleSignIn()),
-        Provider<http.Client>(create: (_) => http.Client()),
         Provider<FirebaseCrashlytics>(
           create: (_) => FirebaseCrashlytics.instance,
+        ),
+        Provider<FirebaseFirestore>.value(value: FirebaseFirestore.instance),
+        Provider<FirebaseFunctions>.value(
+          value: FirebaseFunctions.instanceFor(region: 'europe-west1'),
+        ),
+        Provider<FirebaseRemoteConfig>.value(
+          value: FirebaseRemoteConfig.instance,
         ),
 
         // --- Level 2: Specialized, Self-Contained Services ---
@@ -124,15 +126,11 @@ Future<void> main() async {
         Provider<SharingServiceAbstract>(
           create: (context) => SharingService(logger: context.read<Logger>()),
         ),
-        Provider<GoogleVisionServiceAbstract>(
-          create: (context) => GoogleVisionService(
-            remoteConfig: context.read<FirebaseRemoteConfig>(),
+        Provider<GeminiServiceAbstract>(
+          create: (context) => GeminiService(
+            functions: context.read<FirebaseFunctions>(),
             logger: context.read<Logger>(),
           ),
-        ),
-        Provider<CardParserServiceAbstract>(
-          create: (context) =>
-              CardParserService(logger: context.read<Logger>()),
         ),
         Provider<TaxCodeServiceAbstract>(
           create: (context) {
@@ -146,13 +144,6 @@ Future<void> main() async {
               accessToken: accessToken,
             );
           },
-        ),
-        Provider<OCRServiceAbstract>(
-          create: (context) => OCRService(
-            visionService: context.read<GoogleVisionServiceAbstract>(),
-            parserService: context.read<CardParserServiceAbstract>(),
-            logger: context.read<Logger>(),
-          ),
         ),
 
         // --- Level 3: State Services ---

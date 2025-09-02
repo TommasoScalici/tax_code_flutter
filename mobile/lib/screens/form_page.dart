@@ -11,6 +11,7 @@ import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/models/scanned_data.dart';
 import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/tax_code_service.dart';
 
@@ -93,13 +94,13 @@ class _FormViewState extends State<_FormView> {
   }
 
   Future<void> _openCameraPage(FormPageController controller) async {
-    final contact = await Navigator.push<Contact?>(
+    final scannedData = await Navigator.push<ScannedData?>(
       context,
       MaterialPageRoute(builder: (ctx) => const CameraPage()),
     );
 
-    if (contact != null) {
-      controller.populateFormFromContact(contact);
+    if (scannedData != null) {
+      controller.populateFormFromScannedData(scannedData);
     }
   }
 
@@ -288,12 +289,14 @@ class _FormViewState extends State<_FormView> {
                                         suffixIcon: IconButton(
                                           icon: const Icon(Icons.clear),
                                           onPressed: () {
-                                            textEditingController.clear();
-                                            context
+                                            final control = context
                                                 .read<FormPageController>()
                                                 .form
-                                                .control('birthPlace')
-                                                .reset();
+                                                .control('birthPlace');
+                                            textEditingController.clear();
+                                            control.value = null;
+                                            control.markAsTouched();
+                                            FocusScope.of(context).unfocus();
                                           },
                                         ),
                                       ),

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
-import 'package:tax_code_flutter/services/ocr_service.dart';
+import 'package:tax_code_flutter/services/gemini_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 
 /// This widget is responsible for creating and providing the CameraPageController
@@ -19,10 +19,10 @@ class CameraPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (ctx) => CameraPageController(
-        ocrService: ctx.read<OCRServiceAbstract>(),
-        logger: ctx.read<Logger>(),
-        permissionService: ctx.read<PermissionServiceAbstract>(),
         cameraService: ctx.read<CameraServiceAbstract>(),
+        geminiService: ctx.read<GeminiServiceAbstract>(),
+        permissionService: ctx.read<PermissionServiceAbstract>(),
+        logger: ctx.read<Logger>(),
       )..initialize(),
       child: const _CameraView(),
     );
@@ -54,18 +54,18 @@ class _CameraView extends StatelessWidget {
     if (controller.status == CameraStatus.readyToScan) {
       await controller.takePicture();
     } else if (controller.status == CameraStatus.pictureTaken) {
-      final contact = await controller.confirmAndProcessPicture();
+      final scannedData = await controller.confirmAndProcessPicture();
 
       if (!context.mounted) return;
 
-      if (contact != null) {
-        Navigator.pop(context, contact);
+      if (scannedData != null) {
+        Navigator.pop(context, scannedData);
       } else {
         ScaffoldMessenger.of(context)
           ..clearSnackBars()
           ..showSnackBar(
             SnackBar(
-              content: Text(l10n.ocrFailedErrorMessage),
+              content: Text(l10n.scanFailedErrorMessage),
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.redAccent,
             ),
@@ -118,7 +118,7 @@ class _CameraView extends StatelessWidget {
 
       case CameraStatus.readyToScan:
       case CameraStatus.pictureTaken:
-      case CameraStatus.processingOCR:
+      case CameraStatus.processing:
         return _buildCameraView(context, controller, l10n);
     }
   }
@@ -131,9 +131,9 @@ class _CameraView extends StatelessWidget {
   ) {
     final isPictureTaken =
         controller.status == CameraStatus.pictureTaken ||
-        controller.status == CameraStatus.processingOCR;
+        controller.status == CameraStatus.processing;
 
-    final isProcessing = controller.status == CameraStatus.processingOCR;
+    final isProcessing = controller.status == CameraStatus.processing;
 
     return Stack(
       alignment: Alignment.center,

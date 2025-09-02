@@ -1,3 +1,5 @@
+// auth_service_test.dart
+
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,13 +12,22 @@ import 'package:shared/services/database_service.dart';
 
 // --- Mocks ---
 class FakeAuthCredential extends Fake implements AuthCredential {}
+
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
 class MockDatabaseService extends Mock implements DatabaseService {}
+
 class MockLogger extends Mock implements Logger {}
+
 class MockUser extends Mock implements User {}
+
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
+
 class MockGoogleSignInAccount extends Mock implements GoogleSignInAccount {}
-class MockGoogleSignInAuthentication extends Mock implements GoogleSignInAuthentication {}
+
+class MockGoogleSignInAuthentication extends Mock
+    implements GoogleSignInAuthentication {}
+
 class MockUserCredential extends Mock implements UserCredential {}
 
 void main() {
@@ -39,9 +50,17 @@ void main() {
     mockDbService = MockDatabaseService();
     mockLogger = MockLogger();
 
-    when(() => mockAuth.authStateChanges()).thenAnswer((_) => authStreamController.stream);
+    when(
+      () => mockAuth.authStateChanges(),
+    ).thenAnswer((_) => authStreamController.stream);
     when(() => mockDbService.saveUserData(any())).thenAnswer((_) async {});
-    when(() => mockLogger.e(any(), error: any(named: 'error'), stackTrace: any(named: 'stackTrace'))).thenAnswer((_) {});
+    when(
+      () => mockLogger.e(
+        any(),
+        error: any(named: 'error'),
+        stackTrace: any(named: 'stackTrace'),
+      ),
+    ).thenAnswer((_) {});
     when(() => mockLogger.w(any())).thenAnswer((_) {});
     when(() => mockLogger.i(any())).thenAnswer((_) {});
 
@@ -65,21 +84,24 @@ void main() {
       expect(authService.isLoading, isFalse);
     });
 
-    test('should update user and state when auth state changes to a new user', () async {
-      // Arrange
-      final mockUser = MockUser();
+    test(
+      'should update user and state when auth state changes to a new user',
+      () async {
+        // Arrange
+        final mockUser = MockUser();
 
-      // Act
-      authStreamController.add(mockUser);
-      await pumpEventQueue();
+        // Act
+        authStreamController.add(mockUser);
+        await pumpEventQueue();
 
-      // Assert
-      expect(authService.isSignedIn, isTrue);
-      expect(authService.currentUser, mockUser);
-      verify(() => mockDbService.saveUserData(mockUser)).called(1);
-    });
+        // Assert
+        expect(authService.isSignedIn, isTrue);
+        expect(authService.currentUser, mockUser);
+        verify(() => mockDbService.saveUserData(mockUser)).called(1);
+      },
+    );
 
-     test('should clear user when auth state changes to null', () async {
+    test('should clear user when auth state changes to null', () async {
       authStreamController.add(null);
       await pumpEventQueue();
       expect(authService.isSignedIn, isFalse);
@@ -99,12 +121,14 @@ void main() {
       // Assert
       expect(authService.isSignedIn, isTrue);
       expect(authService.currentUser, mockUser);
-      
-      verify(() => mockLogger.e(
-        'Error while storing user data',
-        error: exception,
-        stackTrace: any(named: 'stackTrace'),
-      )).called(1);
+
+      verify(
+        () => mockLogger.e(
+          'Error while storing user data',
+          error: exception,
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
     });
   });
 
@@ -114,31 +138,40 @@ void main() {
     final mockCredential = MockUserCredential();
 
     setUp(() {
-      when(() => mockGoogleAccount.authentication).thenAnswer((_) async => mockGoogleAuth);
+      when(
+        () => mockGoogleAccount.authentication,
+      ).thenAnswer((_) async => mockGoogleAuth);
       when(() => mockGoogleAuth.accessToken).thenReturn('test_access_token');
       when(() => mockGoogleAuth.idToken).thenReturn('test_id_token');
-      when(() => mockAuth.signInWithCredential(any())).thenAnswer((_) async => mockCredential);
+      when(
+        () => mockAuth.signInWithCredential(any()),
+      ).thenAnswer((_) async => mockCredential);
     });
 
-    test('should complete sign-in flow and update loading state on success', () async {
-      // Arrange
-      when(() => mockGoogleSignIn.signIn()).thenAnswer((_) async => mockGoogleAccount);
-      final loadingStates = <bool>[];
-      authService.addListener(() {
-        loadingStates.add(authService.isLoading);
-      });
+    test(
+      'should complete sign-in flow and update loading state on success',
+      () async {
+        // Arrange
+        when(
+          () => mockGoogleSignIn.signIn(),
+        ).thenAnswer((_) async => mockGoogleAccount);
+        final loadingStates = <bool>[];
+        authService.addListener(() {
+          loadingStates.add(authService.isLoading);
+        });
 
-      // Act
-      await authService.signInWithGoogleForWearable();
+        // Act
+        await authService.signInWithGoogleForWearable();
 
-      // Assert
-      verify(() => mockAuth.signInWithCredential(any())).called(1);
-      expect(loadingStates, [true, false]);
-    });
+        // Assert
+        verify(() => mockAuth.signInWithCredential(any())).called(1);
+        expect(loadingStates, [true, false]);
+      },
+    );
 
     test('should handle user cancelling the sign-in flow', () async {
       // Arrange
-      when(() => mockGoogleSignIn.signIn()).thenAnswer((_) async => null); // L'utente annulla
+      when(() => mockGoogleSignIn.signIn()).thenAnswer((_) async => null);
       final loadingStates = <bool>[];
       authService.addListener(() {
         loadingStates.add(authService.isLoading);
@@ -149,15 +182,17 @@ void main() {
 
       // Assert
       verifyNever(() => mockAuth.signInWithCredential(any()));
-      verify(() => mockLogger.w('Google Sign-In was cancelled by the user.')).called(1);
+      verify(
+        () => mockLogger.w('Google Sign-In was cancelled by the user.'),
+      ).called(1);
       expect(loadingStates, [true, false]);
     });
 
-     test('should handle and log exceptions during sign-in', () async {
+    test('should handle and log exceptions during sign-in', () async {
       // Arrange
       final exception = Exception('Network Error');
       when(() => mockGoogleSignIn.signIn()).thenThrow(exception);
-       final loadingStates = <bool>[];
+      final loadingStates = <bool>[];
       authService.addListener(() {
         loadingStates.add(authService.isLoading);
       });
@@ -166,8 +201,15 @@ void main() {
       await authService.signInWithGoogleForWearable();
 
       // Assert
-      verify(() => mockLogger.e('Error during Google Sign-In', error: exception, stackTrace: any(named: 'stackTrace'))).called(1);
+      verify(
+        () => mockLogger.e(
+          'Error during Google Sign-In',
+          error: exception,
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
       expect(loadingStates, [true, false]);
+      expect(authService.errorMessage, isNotNull);
     });
   });
 
@@ -176,7 +218,9 @@ void main() {
 
     setUp(() {
       when(() => userToDelete.uid).thenReturn('test_uid');
-      when(() => mockDbService.deleteAllUserData(any())).thenAnswer((_) async {});
+      when(
+        () => mockDbService.deleteAllUserData(any()),
+      ).thenAnswer((_) async {});
       when(() => userToDelete.delete()).thenAnswer((_) async {});
     });
 
@@ -192,18 +236,27 @@ void main() {
       verifyNever(() => userToDelete.delete());
     });
 
-    test('should call deleteUserAccount on authService and log success message', () async {
-      // Arrange
-      when(() => mockAuth.currentUser).thenReturn(userToDelete);
+    test(
+      'should call deleteAllUserData and user.delete, then log success',
+      () async {
+        // Arrange
+        when(() => mockAuth.currentUser).thenReturn(userToDelete);
 
-      // Act
-      await authService.deleteUserAccount();
+        // Act
+        await authService.deleteUserAccount();
 
-      // Assert
-      verify(() => mockDbService.deleteAllUserData('test_uid')).called(1);
-      verify(() => userToDelete.delete()).called(1);
-      verify(() => mockLogger.i('User account and all associated data deleted successfully.')).called(1);
-    });
+        // Assert
+        verifyInOrder([
+          () => mockDbService.deleteAllUserData('test_uid'),
+          () => userToDelete.delete(),
+        ]);
+        verify(
+          () => mockLogger.i(
+            'User account and all associated data deleted successfully.',
+          ),
+        ).called(1);
+      },
+    );
 
     test('should rethrow and log error if dbService fails', () async {
       // Arrange
@@ -211,11 +264,18 @@ void main() {
       final exception = Exception('Firestore failed');
       when(() => mockDbService.deleteAllUserData(any())).thenThrow(exception);
 
-      // Act & Assert
-      expect(() => authService.deleteUserAccount(), throwsA(isA<Exception>()));
-      
-      await pumpEventQueue();
-      verify(() => mockLogger.e('Error deleting user account: $exception')).called(1);
+      // Act
+      final future = authService.deleteUserAccount();
+
+      // Assert
+      await expectLater(future, throwsA(isA<Exception>()));
+      verify(
+        () => mockLogger.e(
+          'Error deleting user account',
+          error: exception,
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
       verifyNever(() => userToDelete.delete());
     });
 
@@ -225,60 +285,87 @@ void main() {
       final exception = FirebaseAuthException(code: 'requires-recent-login');
       when(() => userToDelete.delete()).thenThrow(exception);
 
-      // Act & Assert
-      expect(() => authService.deleteUserAccount(), throwsA(isA<FirebaseAuthException>()));
-      
-      await pumpEventQueue();
-      verify(() => mockLogger.e('Error deleting user account: $exception')).called(1);
+      // Act
+      final future = authService.deleteUserAccount();
+
+      // Assert
+      await expectLater(future, throwsA(isA<FirebaseAuthException>()));
+      verify(
+        () => mockLogger.e(
+          'Error deleting user account',
+          error: exception,
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
     });
   });
 
   group('signOut', () {
+    test(
+      'should call sign out on both FirebaseAuth and GoogleSignIn',
+      () async {
+        // Arrange
+        when(() => mockAuth.signOut()).thenAnswer((_) async {});
+        when(() => mockGoogleSignIn.signOut()).thenAnswer((_) async {
+          return null;
+        });
 
-    test('should call sign out on both FirebaseAuth and GoogleSignIn', () async {
-      // Arrange
-      when(() => mockAuth.signOut()).thenAnswer((_) async {});
-      when(() => mockGoogleSignIn.signOut()).thenAnswer((_) async {
-        return null;
-      });
+        // Act
+        await authService.signOut();
 
-      // Act
-      await authService.signOut();
+        // Assert
+        verify(() => mockAuth.signOut()).called(1);
+        verify(() => mockGoogleSignIn.signOut()).called(1);
+      },
+    );
 
-      // Assert
-      verify(() => mockAuth.signOut()).called(1);
-      verify(() => mockGoogleSignIn.signOut()).called(1);
-    });
+    test(
+      'should attempt Firebase sign-out even if Google sign-out fails',
+      () async {
+        // Arrange
+        final exception = Exception('Google Sign-Out failed');
+        when(() => mockGoogleSignIn.signOut()).thenThrow(exception);
+        when(() => mockAuth.signOut()).thenAnswer((_) async {});
 
-    test('should log an error if Google Sign-Out fails', () async {
-      // Arrange
-      final exception = Exception('Google Sign-Out failed');
-      when(() => mockGoogleSignIn.signOut()).thenThrow(exception);
+        // Act
+        await authService.signOut();
 
-      // Act
-      await authService.signOut();
+        // Assert
+        verify(
+          () => mockLogger.e(
+            'Error during Google sign out',
+            error: exception,
+            stackTrace: any(named: 'stackTrace'),
+          ),
+        ).called(1);
 
-      // Assert
-      verify(() => mockLogger.e(
-        'Error during sign out',
-        error: exception,
-        stackTrace: any(named: 'stackTrace'),
-      )).called(1);
-      
-      verifyNever(() => mockAuth.signOut());
-    });
+        verify(() => mockAuth.signOut()).called(1);
+      },
+    );
 
-    test('should log an error if Firebase Auth sign-out fails', () async {
-      // Arrange
-      final exception = Exception('Sign out failed');
-      when(() => mockAuth.signOut()).thenThrow(exception);
-      when(() => mockGoogleSignIn.signOut()).thenAnswer((_) async => null);
+    test(
+      'should attempt Google sign-out even if Firebase sign-out fails',
+      () async {
+        // Arrange
+        final exception = Exception('Firebase Sign-Out failed');
+        when(() => mockAuth.signOut()).thenThrow(exception);
+        when(() => mockGoogleSignIn.signOut()).thenAnswer((_) async {
+          return null;
+        });
 
-      // Act
-      await authService.signOut();
+        // Act
+        await authService.signOut();
 
-      // Assert
-      verify(() => mockLogger.e('Error during sign out', error: exception, stackTrace: any(named: 'stackTrace'))).called(1);
-    });
+        // Assert
+        verify(
+          () => mockLogger.e(
+            'Error during Firebase sign out',
+            error: exception,
+            stackTrace: any(named: 'stackTrace'),
+          ),
+        ).called(1);
+        verify(() => mockGoogleSignIn.signOut()).called(1);
+      },
+    );
   });
 }

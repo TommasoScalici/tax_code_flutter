@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
+import 'package:tax_code_flutter/models/scanned_data.dart';
 import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/tax_code_service.dart';
 import 'package:uuid/uuid.dart';
@@ -36,9 +39,11 @@ class FormPageController with ChangeNotifier {
   final TaxCodeServiceAbstract _taxCodeService;
   final BirthplaceServiceAbstract _birthplaceService;
   final ContactRepository _contactRepository;
+  StreamSubscription? _formStatusSubscription;
   final Logger _logger;
   final Contact? _initialContact;
   late final FormGroup form;
+
   List<Birthplace> birthplaces = [];
   bool isLoading = false;
   String? errorMessage;
@@ -57,6 +62,70 @@ class FormPageController with ChangeNotifier {
     _initialize();
   }
 
+  @override
+  void dispose() {
+    _formStatusSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _buildForm() {
+    form = fb.group({
+      'firstName': FormControl<String>(
+        value: _initialContact?.firstName,
+        validators: <Validator<dynamic>>[
+          Validators.required,
+          OnlyLettersValidator(),
+        ],
+      ),
+      'lastName': FormControl<String>(
+        value: _initialContact?.lastName,
+        validators: [Validators.required, OnlyLettersValidator()],
+      ),
+      'gender': FormControl<String>(
+        value: _initialContact?.gender,
+        validators: [Validators.required],
+      ),
+      'birthDate': FormControl<DateTime>(
+        value: _initialContact?.birthDate,
+        validators: [Validators.required],
+      ),
+      'birthPlace': FormControl<Birthplace>(
+        value: _initialContact?.birthPlace,
+        validators: [Validators.required],
+      ),
+    });
+
+    _listenToFormStatus();
+  }
+
+  Future<void> _initialize() async {
+    _setLoading(true);
+    _buildForm();
+    await _loadBirthplaces();
+    _setLoading(false);
+  }
+
+  void _listenToFormStatus() {
+    _formStatusSubscription = form.statusChanged.listen((status) {
+      notifyListeners();
+    });
+  }
+
+  Future<void> _loadBirthplaces() async {
+    birthplaces = await _birthplaceService.loadBirthplaces();
+  }
+
+  void _setError(String message) {
+    errorMessage = message;
+    notifyListeners();
+  }
+
+  void _setLoading(bool value) {
+    if (isLoading == value) return;
+    isLoading = value;
+    notifyListeners();
+  }
+
   void clearError() {
     if (errorMessage != null) {
       errorMessage = null;
@@ -64,13 +133,14 @@ class FormPageController with ChangeNotifier {
     }
   }
 
-  void populateFormFromContact(Contact contact) {
+  /// Populates the form fields using data from a document scan.
+  void populateFormFromScannedData(ScannedData data) {
     form.patchValue({
-      'firstName': contact.firstName,
-      'lastName': contact.lastName,
-      'gender': contact.gender,
-      'birthDate': contact.birthDate,
-      'birthPlace': contact.birthPlace,
+      'firstName': data.firstName,
+      'lastName': data.lastName,
+      'gender': data.gender,
+      'birthDate': data.birthDate,
+      'birthPlace': data.birthPlace,
     });
   }
 
@@ -126,55 +196,5 @@ class FormPageController with ChangeNotifier {
       _setLoading(false);
       return null;
     }
-  }
-
-  void _buildForm() {
-    form = fb.group({
-      'firstName': FormControl<String>(
-        value: _initialContact?.firstName,
-        validators: <Validator<dynamic>>[
-          Validators.required,
-          OnlyLettersValidator(),
-        ],
-      ),
-      'lastName': FormControl<String>(
-        value: _initialContact?.lastName,
-        validators: [Validators.required, OnlyLettersValidator()],
-      ),
-      'gender': FormControl<String>(
-        value: _initialContact?.gender,
-        validators: [Validators.required],
-      ),
-      'birthDate': FormControl<DateTime>(
-        value: _initialContact?.birthDate,
-        validators: [Validators.required],
-      ),
-      'birthPlace': FormControl<Birthplace>(
-        value: _initialContact?.birthPlace,
-        validators: [Validators.required],
-      ),
-    });
-  }
-
-  Future<void> _initialize() async {
-    _setLoading(true);
-    _buildForm();
-    await _loadBirthplaces();
-    _setLoading(false);
-  }
-
-  Future<void> _loadBirthplaces() async {
-    birthplaces = await _birthplaceService.loadBirthplaces();
-  }
-
-  void _setError(String message) {
-    errorMessage = message;
-    notifyListeners();
-  }
-
-  void _setLoading(bool value) {
-    if (isLoading == value) return;
-    isLoading = value;
-    notifyListeners();
   }
 }

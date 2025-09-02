@@ -85,9 +85,9 @@
   "@takePicture": {
     "description": "Title for the camera screen."
   },
-  "ocrFailedErrorMessage": "Could not read data from the picture. Please try taking a new, more focused one.",
-  "@ocrFailedErrorMessage": {
-    "description": "Error message shown in a SnackBar when the OCR fails to extract data from a card's photo (e.g., Italian ID or Health Card). It prompts the user to retry with a better, more focused picture."
+  "scanFailedErrorMessage": "Could not read data from the picture. Please try taking a new, more focused one.",
+  "@scanFailedErrorMessage": {
+    "description": "Error message shown when the scan fails to extract data from a document photo. It prompts the user to retry with a better picture."
   },
   "newItem": "Add Contact",
   "@newItem": {
