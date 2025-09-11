@@ -1,0 +1,54 @@
+# === Regola Generale ===
+# Tratta la maggior parte dei file come testo, ma permetti a regole
+# più specifiche di sovrascriverla. Usa sempre LF.
+* text=auto eol=lf
+
+# === Codice Dart e file specifici di Flutter ===
+*.dart    text eol=lf
+*.arb     text eol=lf
+
+# === File di configurazione e metadati ===
+.gitignore      text eol=lf
+.gitattributes  text eol=lf
+.metadata       text eol=lf
+.packages       text eol=lf
+*.yaml          text eol=lf
+*.yml           text eol=lf
+*.json          text eol=lf
+*.md            text eol=lf
+*.iml           text eol=lf
+analysis_options.yaml text eol=lf
+
+# === Piattaforme native (Android/iOS) ===
+# Android
+*.java      text eol=lf
+*.kt        text eol=lf
+*.gradle    text eol=lf
+*.properties text eol=lf
+*.xml       text eol=lf
+
+# iOS
+*.h         text eol=lf
+*.m         text eol=lf
+*.swift     text eol=lf
+*.pbxproj   text eol=lf
+*.xcworkspace text eol=lf
+*.xcscheme text eol=lf
+Podfile     text eol=lf
+
+# === File binari da escludere dalla conversione ===
+# Assicurati che Git non modifichi mai questi file
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.webp    binary
+*.ico     binary
+*.svg     binary
+*.ttf     binary
+*.otf     binary
+*.eot     binary
+*.woff    binary
+*.woff2   binary
+*.keystore binary
+*.jks     binary
