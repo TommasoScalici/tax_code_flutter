@@ -8,12 +8,14 @@ import 'home_page.dart';
 /// Acts as a gate, showing HomePage if the user is signed in,
 /// otherwise showing the login screen.
 class AuthGate extends StatelessWidget {
-  const AuthGate({super.key});
+  final Widget homePage;
+
+  const AuthGate({super.key, this.homePage = const HomePage()});
 
   @override
   Widget build(BuildContext context) {
     final authService = context.watch<AuthService>();
-    return authService.isSignedIn ? const HomePage() : const _LoginView();
+    return authService.isSignedIn ? homePage : const _LoginView();
   }
 }
 

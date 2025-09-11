@@ -10,6 +10,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
@@ -80,6 +81,15 @@ Future<void> main() async {
   final sharedPreferences = SharedPreferencesAsync();
   await configureApp(logger);
 
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent,
+    ),
+  );
+
   runApp(
     MultiProvider(
       providers: [
@@ -102,8 +112,10 @@ Future<void> main() async {
 
         // --- Level 2: Specialized, Self-Contained Services ---
         Provider<PermissionServiceAbstract>(
-          create: (context) =>
-              PermissionService(logger: context.read<Logger>()),
+          create: (context) => PermissionService(
+            logger: context.read<Logger>(),
+            permissionHandler: AppPermissionHandlerAdapter(),
+          ),
         ),
         Provider<CameraServiceAbstract>(
           create: (context) => CameraService(logger: context.read<Logger>()),
@@ -124,7 +136,10 @@ Future<void> main() async {
               BrightnessService(logger: context.read<Logger>()),
         ),
         Provider<SharingServiceAbstract>(
-          create: (context) => SharingService(logger: context.read<Logger>()),
+          create: (context) => SharingService(
+            logger: context.read<Logger>(),
+            shareAdapter: AppShareAdapter(),
+          ),
         ),
         Provider<GeminiServiceAbstract>(
           create: (context) => GeminiService(

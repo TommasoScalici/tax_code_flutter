@@ -26,7 +26,7 @@ class NativeViewService implements NativeViewServiceAbstract {
   @override
   Future<void> launchPhoneApp() async {
     try {
-      await _platform.invokeMethod<String>('launchPhoneApp');
+      await _platform.invokeMethod<bool>('launchPhoneApp');
     } on PlatformException catch (e, s) {
       _logger.e(
         "Failed to invoke native launchPhoneApp: '${e.message}'.",

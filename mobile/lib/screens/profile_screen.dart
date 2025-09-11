@@ -72,7 +72,7 @@ class ProfileScreen extends StatelessWidget {
                   if (!dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                   if (e.code == 'requires-recent-login') {
-                    _showRequiresRecentLoginDialog(context, authService);
+                    await _showRequiresRecentLoginDialog(context, authService);
                   } else {
                     scaffoldMessenger.showSnackBar(
                       SnackBar(content: Text(l10n.genericError)),
@@ -114,53 +114,58 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(l10n.profilePageTitle),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              const UserAvatar(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Text(displayName, style: const TextStyle(fontSize: 24)),
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    try {
-                      await authService.signOut();
-                      if (context.mounted) {
-                        Navigator.of(
-                          context,
-                        ).popUntil((route) => route.isFirst);
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                const UserAvatar(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Text(
+                    displayName,
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      try {
+                        await authService.signOut();
+                        if (context.mounted) {
+                          Navigator.of(
+                            context,
+                          ).popUntil((route) => route.isFirst);
+                        }
+                      } catch (e) {
+                        scaffoldMessenger.showSnackBar(
+                          SnackBar(content: Text(l10n.genericError)),
+                        );
                       }
-                    } catch (e) {
-                      scaffoldMessenger.showSnackBar(
-                        SnackBar(content: Text(l10n.genericError)),
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.logout),
-                  label: Text(l10n.signOut),
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () => _showDeleteUserConfirmDialog(context),
-                  icon: const Icon(Icons.delete),
-                  label: Text(
-                    l10n.deleteAccount,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    iconColor: Colors.white,
+                    },
+                    icon: const Icon(Icons.logout),
+                    label: Text(l10n.signOut),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _showDeleteUserConfirmDialog(context),
+                    icon: const Icon(Icons.delete),
+                    label: Text(
+                      l10n.deleteAccount,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      iconColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

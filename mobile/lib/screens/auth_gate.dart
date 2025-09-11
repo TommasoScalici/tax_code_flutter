@@ -23,27 +23,29 @@ class AuthGate extends StatelessWidget {
       return const HomePage();
     }
 
-    return SignInScreen(
-      showAuthActionSwitch: false,
-      resizeToAvoidBottomInset: true,
-      providers: [
-        GoogleProvider(
-          clientId: remoteConfig.getString(Settings.googleProviderClientId),
-        )
-      ],
-      headerMaxExtent: screenWidth < 300 ? 0 : null,
-      headerBuilder: (context, constraints, shrinkOffset) {
-        return const _LoginHeader();
-      },
-      subtitleBuilder: (context, action) {
-        return _LoginSubtitle(action: action, screenWidth: screenWidth);
-      },
-      footerBuilder: (context, action) {
-        return _LoginFooter(screenWidth: screenWidth);
-      },
-      sideBuilder: (context, shrinkOffset) {
-        return const _LoginSideImage();
-      },
+    return SafeArea(
+      child: SignInScreen(
+        showAuthActionSwitch: false,
+        resizeToAvoidBottomInset: true,
+        providers: [
+          GoogleProvider(
+            clientId: remoteConfig.getString(Settings.googleProviderClientId),
+          ),
+        ],
+        headerMaxExtent: screenWidth < 300 ? 0 : null,
+        headerBuilder: (context, constraints, shrinkOffset) {
+          return const _LoginHeader();
+        },
+        subtitleBuilder: (context, action) {
+          return _LoginSubtitle(action: action, screenWidth: screenWidth);
+        },
+        footerBuilder: (context, action) {
+          return _LoginFooter(screenWidth: screenWidth);
+        },
+        sideBuilder: (context, shrinkOffset) {
+          return const _LoginSideImage();
+        },
+      ),
     );
   }
 }
@@ -71,7 +73,9 @@ class _LoginHeader extends StatelessWidget {
           Text(
             l10n.appTitle,
             style: TextStyle(
-                color: Theme.of(context).colorScheme.primary, fontSize: 36),
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 36,
+            ),
           ),
         ],
       ),
@@ -145,9 +149,7 @@ class _LoginSideImage extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.0),
         child: const AspectRatio(
           aspectRatio: 1,
-          child: Image(
-            image: AssetImage('assets/images/app_icon_512x512.png'),
-          ),
+          child: Image(image: AssetImage('assets/images/app_icon_512x512.png')),
         ),
       ),
     );

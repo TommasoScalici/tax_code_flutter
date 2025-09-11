@@ -1,5 +1,3 @@
-// lib/services/info_service.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:logger/logger.dart';
@@ -39,7 +37,11 @@ class InfoService implements InfoServiceAbstract {
     try {
       return await rootBundle.loadString(htmlPath);
     } catch (e, s) {
-      _logger.e('Failed to load terms HTML from $htmlPath', error: e, stackTrace: s);
+      _logger.e(
+        'Failed to load terms HTML from $htmlPath',
+        error: e,
+        stackTrace: s,
+      );
       return '<h1>Error</h1><p>Could not load terms and conditions.</p>';
     }
   }

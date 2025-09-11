@@ -1,4 +1,3 @@
-// in lib/services/gemini_service.dart
 import 'dart:async';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:logger/logger.dart';

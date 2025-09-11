@@ -39,13 +39,15 @@ class _BarcodePageState extends State<BarcodePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(l10n.barcodePageTitle),
       ),
-      body: Center(
-        child: BarcodeWidget(
-          barcode: Barcode.code39(),
-          style: const TextStyle(color: Colors.black),
-          data: widget.taxCode,
-          height: 150,
-          width: MediaQuery.of(context).size.width * .8,
+      body: SafeArea(
+        child: Center(
+          child: BarcodeWidget(
+            barcode: Barcode.code39(),
+            style: const TextStyle(color: Colors.black),
+            data: widget.taxCode,
+            height: 150,
+            width: MediaQuery.of(context).size.width * .8,
+          ),
         ),
       ),
     );

@@ -74,12 +74,12 @@ class FormPageController with ChangeNotifier {
         value: _initialContact?.firstName,
         validators: <Validator<dynamic>>[
           Validators.required,
-          OnlyLettersValidator(),
+          const OnlyLettersValidator(),
         ],
       ),
       'lastName': FormControl<String>(
         value: _initialContact?.lastName,
-        validators: [Validators.required, OnlyLettersValidator()],
+        validators: [Validators.required, const OnlyLettersValidator()],
       ),
       'gender': FormControl<String>(
         value: _initialContact?.gender,

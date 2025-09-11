@@ -43,10 +43,11 @@ final class HomePage extends StatelessWidget {
                 : const Icon(Symbols.account_circle_filled),
           ),
           IconButton(
-            icon: Icon(themeService.theme == 'dark'
-                ? Icons.light_mode_sharp
-                : Icons.mode_night_sharp
-              ),
+            icon: Icon(
+              themeService.theme == 'dark'
+                  ? Icons.light_mode_sharp
+                  : Icons.mode_night_sharp,
+            ),
             onPressed: themeService.toggleTheme,
           ),
           PopupMenuButton(
@@ -71,14 +72,14 @@ final class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: const ContactsList(),
+      body: const SafeArea(child: ContactsList()),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final newContact = await Navigator.push<Contact>(
             context,
             MaterialPageRoute(builder: (context) => const FormPage()),
           );
-        
+
           if (newContact != null) {
             homeController.saveContact(newContact);
           }

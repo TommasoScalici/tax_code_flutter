@@ -11,7 +11,9 @@ import 'package:tax_code_flutter/screens/form_page.dart';
 import 'contact_card.dart';
 
 final class ContactsList extends StatefulWidget {
-  const ContactsList({super.key});
+  final double? cardHeight;
+
+  const ContactsList({super.key, this.cardHeight});
 
   @override
   State<ContactsList> createState() => _ContactsListState();
@@ -102,14 +104,24 @@ class _ContactsListState extends State<ContactsList> {
     BuildContext context,
     HomePageController controller,
   ) {
+    const fixedGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
+      crossAxisSpacing: 50,
+      mainAxisExtent: 280,
+      maxCrossAxisExtent: 800,
+    );
+
+    final gridDelegate = widget.cardHeight != null
+        ? SliverGridDelegateWithMaxCrossAxisExtent(
+            crossAxisSpacing: 50,
+            mainAxisExtent: widget.cardHeight!,
+            maxCrossAxisExtent: 800,
+          )
+        : fixedGridDelegate;
+
     if (controller.isReorderable) {
       return AnimatedReorderableGridView(
         items: controller.contactsToShow,
-        sliverGridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          crossAxisSpacing: 50,
-          mainAxisExtent: 280,
-          maxCrossAxisExtent: 800,
-        ),
+        sliverGridDelegate: gridDelegate,
         shrinkWrap: true,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
@@ -125,11 +137,7 @@ class _ContactsListState extends State<ContactsList> {
     return GridView.builder(
       itemCount: controller.contactsToShow.length,
       shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        crossAxisSpacing: 50,
-        mainAxisExtent: 280,
-        maxCrossAxisExtent: 800,
-      ),
+      gridDelegate: gridDelegate,
       itemBuilder: (context, index) {
         final contact = controller.contactsToShow[index];
         return _buildContactCardItem(context, controller, contact);

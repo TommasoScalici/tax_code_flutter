@@ -2,7 +2,7 @@
 
 A powerful and user-friendly application to calculate and manage Italian Tax Codes (Codici Fiscali) with advanced features and cross-device synchronization.
 
-![Version](https://img.shields.io/badge/version-1.4.0-blue)
+![Version](https://img.shields.io/badge/version-1.5.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Wear%20OS-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
@@ -56,7 +56,7 @@ A powerful and user-friendly application to calculate and manage Italian Tax Cod
   - Analytics and Crashlytics
 
 - 🔌 **APIs Integration**
-  - Google Vision API
+  - Google Vertex API
   - miocodicefiscale.com API
 
 ## 📱 Supported Platforms
@@ -78,7 +78,7 @@ A powerful and user-friendly application to calculate and manage Italian Tax Cod
 
 1. Clone the repository
 2. Configure Firebase project
-3. Set up Google Vision API credentials, Google SSO and Remote Config settings
+3. Set up Google SSO / provider client and Remote Config settings
 4. Run `dart pub global activate flutterfire_cli` and `flutterfire configure`
 5. Run `flutter pub get` to install dependencies
 6. Launch the app using `flutter run`

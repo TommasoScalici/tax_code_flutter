@@ -4,45 +4,52 @@ import 'package:tax_code_flutter/settings.dart';
 
 void main() {
   group('Settings', () {
-    group('Configuration Values', () {
-      test('mioCodiceFiscaleApiKey returns correct value', () {
-        expect(Settings.mioCodiceFiscaleApiKey, 'miocodicefiscale_access_token');
-      });
+    const seedColor = Color.fromARGB(255, 38, 128, 0);
 
-      test('cloudVisionApiKey returns correct value', () {
-        expect(Settings.cloudVisionApiKey, 'tax_code_flutter_vision');
-      });
-
-      test('projectIdNumber returns correct value', () {
-        expect(Settings.projectIdNumber, 'project_id');
-      });
-
-      test('googleProviderClientId returns correct value', () {
-        expect(Settings.googleProviderClientId, 'google_provider_client_id');
-      });
-    });
-  });
-
-  group('Themes', () {
-    const expectedLightPrimaryColor = Color(0xff436833);
-    const expectedDarkPrimaryColor = Color(0xffA8D293);
-
-    test('getLightTheme returns a ThemeData with correct light properties', () {
-      final theme = Settings.getLightTheme();
-
-      expect(theme, isA<ThemeData>());
-      expect(theme.useMaterial3, isTrue);
-      expect(theme.brightness, Brightness.light);
-      expect(theme.colorScheme.primary, expectedLightPrimaryColor);
+    test('API key getters return correct constant values', () {
+      // Act & Assert
+      expect(Settings.mioCodiceFiscaleApiKey, 'miocodicefiscale_access_token');
+      expect(Settings.googleProviderClientId, 'google_provider_client_id');
     });
 
-    test('getDarkTheme returns a ThemeData with correct dark properties', () {
-      final theme = Settings.getDarkTheme();
+    test(
+      'getLightTheme returns a ThemeData object with correct light properties',
+      () {
+        // Arrange
+        final expectedColorScheme = ColorScheme.fromSeed(
+          seedColor: seedColor,
+          brightness: Brightness.light,
+        );
 
-      expect(theme, isA<ThemeData>());
-      expect(theme.useMaterial3, isTrue);
-      expect(theme.brightness, Brightness.dark);
-      expect(theme.colorScheme.primary, expectedDarkPrimaryColor);
-    });
+        // Act
+        final theme = Settings.getLightTheme();
+
+        // Assert
+        expect(theme, isA<ThemeData>());
+        expect(theme.useMaterial3, isTrue);
+        expect(theme.colorScheme.brightness, Brightness.light);
+        expect(theme.colorScheme.primary, expectedColorScheme.primary);
+      },
+    );
+
+    test(
+      'getDarkTheme returns a ThemeData object with correct dark properties',
+      () {
+        // Arrange
+        final expectedColorScheme = ColorScheme.fromSeed(
+          seedColor: seedColor,
+          brightness: Brightness.dark,
+        );
+
+        // Act
+        final theme = Settings.getDarkTheme();
+
+        // Assert
+        expect(theme, isA<ThemeData>());
+        expect(theme.useMaterial3, isTrue);
+        expect(theme.colorScheme.brightness, Brightness.dark);
+        expect(theme.colorScheme.primary, expectedColorScheme.primary);
+      },
+    );
   });
 }

@@ -27,8 +27,6 @@ final class ContactsList extends StatelessWidget {
     AppLocalizations l10n,
     ContactsListController controller,
   ) {
-    final controller = context.read<ContactsListController>();
-
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),

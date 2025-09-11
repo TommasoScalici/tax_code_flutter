@@ -82,39 +82,43 @@ class _CameraView extends StatelessWidget {
   ) {
     switch (controller.status) {
       case CameraStatus.initializing:
-        return const Center(child: CircularProgressIndicator());
+        return const SafeArea(
+          child: Center(child: CircularProgressIndicator()),
+        );
 
       case CameraStatus.permissionDenied:
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.no_photography,
-                  size: 50,
-                  color: Colors.white70,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  l10n.cameraPermissionInfo,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.settings),
-                  label: Text(l10n.openSettings),
-                  onPressed: controller.openAppSettingsHandler,
-                ),
-              ],
+        return SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.no_photography,
+                    size: 50,
+                    color: Colors.white70,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.cameraPermissionInfo,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.settings),
+                    label: Text(l10n.openSettings),
+                    onPressed: controller.openAppSettingsHandler,
+                  ),
+                ],
+              ),
             ),
           ),
         );
 
       case CameraStatus.error:
-        return Center(child: Text(l10n.genericError));
+        return SafeArea(child: Center(child: Text(l10n.genericError)));
 
       case CameraStatus.readyToScan:
       case CameraStatus.pictureTaken:
@@ -129,6 +133,8 @@ class _CameraView extends StatelessWidget {
     CameraPageController controller,
     AppLocalizations l10n,
   ) {
+    final safeAreaPadding = MediaQuery.of(context).padding;
+
     final isPictureTaken =
         controller.status == CameraStatus.pictureTaken ||
         controller.status == CameraStatus.processing;
@@ -153,7 +159,7 @@ class _CameraView extends StatelessWidget {
               : CameraPreview(controller.cameraController!),
         if (!isProcessing)
           Positioned(
-            top: 20,
+            top: safeAreaPadding.top + 20,
             right: 20,
             child: IconButton(
               tooltip: l10n.tooltipToggleFlash,
@@ -171,7 +177,7 @@ class _CameraView extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 50.0),
+              padding: EdgeInsets.only(bottom: safeAreaPadding.bottom + 50.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

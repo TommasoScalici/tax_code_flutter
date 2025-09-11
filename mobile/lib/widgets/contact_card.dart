@@ -25,9 +25,10 @@ final class ContactCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final valueTextStyle = const TextStyle(fontWeight: FontWeight.w600);
     final taxCodeTextStyle = TextStyle(
-        color: Theme.of(context).colorScheme.surface,
-        fontSize: 22,
-        fontWeight: FontWeight.w700);
+      color: Theme.of(context).colorScheme.surface,
+      fontSize: 22,
+      fontWeight: FontWeight.w700,
+    );
 
     return SizedBox(
       width: 400,
@@ -47,10 +48,7 @@ final class ContactCard extends StatelessWidget {
               ),
               tileColor: Theme.of(context).colorScheme.primary,
               title: Center(
-                child: Text(
-                  contact.taxCode,
-                  style: taxCodeTextStyle,
-                ),
+                child: Text(contact.taxCode, style: taxCodeTextStyle),
               ),
             ),
             ListTile(
@@ -64,7 +62,7 @@ final class ContactCard extends StatelessWidget {
                         Text('${l10n.firstName}: '),
                         Flexible(
                           child: Text(contact.firstName, style: valueTextStyle),
-                        )
+                        ),
                       ],
                     ),
                     Row(
@@ -72,7 +70,7 @@ final class ContactCard extends StatelessWidget {
                         Text('${l10n.lastName}: '),
                         Flexible(
                           child: Text(contact.lastName, style: valueTextStyle),
-                        )
+                        ),
                       ],
                     ),
                     Row(
@@ -80,7 +78,7 @@ final class ContactCard extends StatelessWidget {
                         Text('${l10n.gender}: '),
                         Flexible(
                           child: Text(contact.gender, style: valueTextStyle),
-                        )
+                        ),
                       ],
                     ),
                     Row(
@@ -88,8 +86,9 @@ final class ContactCard extends StatelessWidget {
                         Text('${l10n.birthDate}: '),
                         Flexible(
                           child: Text(
-                            DateFormat.yMd(Localizations.localeOf(context).toString())
-                                .format(contact.birthDate),
+                            DateFormat.yMd(
+                              Localizations.localeOf(context).toString(),
+                            ).format(contact.birthDate),
                             style: valueTextStyle,
                           ),
                         ),
@@ -105,7 +104,7 @@ final class ContactCard extends StatelessWidget {
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -116,28 +115,28 @@ final class ContactCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IconButton(
-                    onPressed: onShare, // ✅ Chiama la callback
+                    onPressed: onShare,
                     icon: const Icon(Icons.share),
                     tooltip: l10n.tooltipShare,
                   ),
                   IconButton(
-                    onPressed: onShowBarcode, // ✅ Chiama la callback
+                    onPressed: onShowBarcode,
                     icon: const Icon(Symbols.barcode),
                     tooltip: l10n.tooltipShowBarcode,
                   ),
                   IconButton(
-                    onPressed: onEdit, // ✅ Chiama la callback
+                    onPressed: onEdit,
                     icon: const Icon(Icons.edit),
                     tooltip: l10n.tooltipEdit,
                   ),
                   IconButton(
-                    onPressed: onDelete, // ✅ Chiama la callback
+                    onPressed: onDelete,
                     icon: const Icon(Icons.delete),
                     tooltip: l10n.tooltipDelete,
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

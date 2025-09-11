@@ -134,6 +134,27 @@ void main() {
       },
     );
 
+    test(
+      'should initialize correctly when created with an existing user',
+      () async {
+        // Arrange
+        final preAuthService = FakeAuthService();
+        preAuthService.login(fakeUser);
+
+        // Act
+        final repo = ContactRepository(
+          authService: preAuthService,
+          dbService: mockDbService,
+          logger: mockLogger,
+        );
+        await pumpEventQueue();
+
+        // Assert
+        verify(() => mockDbService.getContactsStream(fakeUser.uid)).called(1);
+        expect(repo.isLoading, isTrue);
+      },
+    );
+
     test('should load contacts when a user signs in', () async {
       // Assert initial state
       expect(contactRepository.isLoading, isFalse);
@@ -214,7 +235,7 @@ void main() {
         expect(contactRepository.contacts.single, equals(contact1));
         verify(
           () => mockLogger.e(
-            any(that: contains('Falling back to cache')),
+            any(that: contains('falling back to cache')),
             error: exception,
             stackTrace: any(named: 'stackTrace'),
           ),
@@ -432,6 +453,46 @@ void main() {
         ),
       ).called(1);
     });
+  });
+
+  group('Disposed State', () {
+    test(
+      'should not perform actions or call services after being disposed',
+      () async {
+        // Arrange
+        await waitForLoading(() async {
+          fakeAuthService.login(fakeUser);
+          await pumpEventQueue();
+          contactsStreamController.add([contact1]);
+        });
+
+        verify(() => mockDbService.getContactsStream(fakeUser.uid)).called(2);
+
+        // Act
+        contactRepository.dispose();
+
+        clearInteractions(mockDbService);
+
+        // Act 2
+        await contactRepository.addOrUpdateContact(contact2);
+        await contactRepository.removeContact(contact1);
+        await contactRepository.updateContacts([]);
+
+        contactsStreamController.add([contact1, contact2]);
+        await pumpEventQueue();
+
+        fakeAuthService.login(fakeUser);
+        await pumpEventQueue();
+        fakeAuthService.logout();
+        await pumpEventQueue();
+
+        // Assert
+        verifyNever(() => mockDbService.addOrUpdateContact(any(), any()));
+        verifyNever(() => mockDbService.removeContact(any(), any()));
+        verifyNever(() => mockDbService.saveAllContacts(any(), any()));
+        verifyNever(() => mockDbService.getContactsStream(any()));
+      },
+    );
   });
 
   group('Guard Clauses', () {

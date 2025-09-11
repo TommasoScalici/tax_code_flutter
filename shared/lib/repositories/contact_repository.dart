@@ -15,8 +15,10 @@ class ContactRepository with ChangeNotifier {
   final DatabaseService _dbService;
   final Logger _logger;
 
+  String? _cachedUserId;
   StreamSubscription? _contactsSubscription;
   List<Contact> _contacts = [];
+  bool _isDisposed = false;
   bool _isLoading = true;
 
   List<Contact> get contacts => _contacts;
@@ -35,11 +37,19 @@ class ContactRepository with ChangeNotifier {
        _dbService = dbService,
        _logger = logger {
     _authService.addListener(_onAuthChanged);
-    _onAuthChanged();
+
+    final initialUser = _authService.currentUser;
+    if (initialUser != null) {
+      _cachedUserId = initialUser.uid;
+      _initializeUserData(initialUser.uid);
+    } else {
+      _isLoading = false;
+    }
   }
 
   @override
   void dispose() {
+    _isDisposed = true;
     _authService.removeListener(_onAuthChanged);
     _contactsSubscription?.cancel();
     super.dispose();
@@ -59,6 +69,8 @@ class ContactRepository with ChangeNotifier {
       _contacts.add(contact);
     }
     _contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
+
+    if (_isDisposed) return;
     notifyListeners();
 
     try {
@@ -81,6 +93,8 @@ class ContactRepository with ChangeNotifier {
     if (_userId == null) return;
 
     _contacts.removeWhere((c) => c.id == contact.id);
+
+    if (_isDisposed) return;
     notifyListeners();
 
     try {
@@ -104,7 +118,10 @@ class ContactRepository with ChangeNotifier {
     for (var i = 0; i < _contacts.length; i++) {
       _contacts[i] = _contacts[i].copyWith(listIndex: i);
     }
+
+    if (_isDisposed) return;
     notifyListeners();
+
     await saveContacts();
   }
 
@@ -126,49 +143,87 @@ class ContactRepository with ChangeNotifier {
     await _saveContactsToLocalCache();
   }
 
-  Future<void> _onAuthChanged() async {
-    await _contactsSubscription?.cancel();
-    _contactsSubscription = null;
-
-    if (_authService.isSignedIn && _userId != null) {
-      _isLoading = true;
-      notifyListeners();
-
+  ///
+  /// Clears user data from the state and local cache on logout.
+  ///
+  Future<void> _clearUserData() async {
+    final userIdToClear = _cachedUserId;
+    if (userIdToClear != null) {
       try {
-        final initialContacts = await _dbService
-            .getContactsStream(_userId!)
-            .first
-            .timeout(const Duration(seconds: 10));
-
-        await _processContactsUpdate(initialContacts);
-      } catch (e, s) {
+        final box = await Hive.openBox<Contact>('contacts_$userIdToClear');
+        await box.clear();
+        _logger.i('Local cache for user $userIdToClear has been cleared.');
+      } on Exception catch (e, s) {
         _logger.e(
-          'Could not get initial contacts or timed out. Falling back to cache.',
+          'Failed to clear local cache for user $userIdToClear',
           error: e,
           stackTrace: s,
         );
-        await _loadContactsFromLocalCache();
-        _isLoading = false;
-        notifyListeners();
       }
-      if (_contactsSubscription == null) {
-        _listenToRemoteContacts();
-      }
-    } else {
-      _contacts = [];
-      _isLoading = false;
-      notifyListeners();
+    }
 
-      if (_userId != null) {
-        final box = await Hive.openBox<Contact>('contacts_$_userId');
-        await box.clear();
+    _contacts = [];
+    _isLoading = false;
+    _cachedUserId = null;
+    if (_isDisposed) return;
+    notifyListeners();
+  }
+
+  ///
+  /// Loads initial contacts from remote or cache and sets up the listener.
+  ///
+  Future<void> _initializeUserData(String userId) async {
+    _isLoading = true;
+    if (_isDisposed) return;
+    notifyListeners();
+
+    try {
+      final initialContacts = await _dbService
+          .getContactsStream(userId)
+          .first
+          .timeout(const Duration(seconds: 10));
+      // This method already sets isLoading = false and notifies listeners
+      await _processContactsUpdate(initialContacts);
+    } catch (e, s) {
+      _logger.e(
+        'Could not get initial contacts, falling back to cache.',
+        error: e,
+        stackTrace: s,
+      );
+      await _loadContactsFromLocalCache();
+      _isLoading = false;
+      if (_isDisposed) return;
+      notifyListeners();
+    }
+
+    _listenToRemoteContacts(userId);
+  }
+
+  ///
+  /// Listens to authentication changes and dispatches to the appropriate handler.
+  ///
+  Future<void> _onAuthChanged() async {
+    final user = _authService.currentUser;
+
+    // Act only if the user state has actually changed
+    if (user?.uid != _cachedUserId) {
+      await _contactsSubscription?.cancel();
+      _contactsSubscription = null;
+
+      if (user != null) {
+        // A user has logged in or switched
+        _cachedUserId = user.uid;
+        await _initializeUserData(user.uid);
+      } else {
+        // The user has logged out
+        await _clearUserData();
       }
     }
   }
 
-  void _listenToRemoteContacts() {
+  void _listenToRemoteContacts(String userId) {
     _contactsSubscription = _dbService
-        .getContactsStream(_userId!)
+        .getContactsStream(userId)
         .listen(
           (remoteContacts) async {
             await _processContactsUpdate(remoteContacts);
@@ -196,17 +251,19 @@ class ContactRepository with ChangeNotifier {
     if (_isLoading) {
       _isLoading = false;
     }
+
+    if (_isDisposed) return;
     notifyListeners();
   }
 
   Future<void> _loadContactsFromLocalCache() async {
-    final box = await Hive.openBox<Contact>('contacts_$_userId');
+    final box = await Hive.openBox<Contact>('contacts_$_cachedUserId');
     _contacts = box.values.toList();
     _contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
   }
 
   Future<void> _saveContactsToLocalCache() async {
-    final box = await Hive.openBox<Contact>('contacts_$_userId');
+    final box = await Hive.openBox<Contact>('contacts_$_cachedUserId');
     await box.clear();
     await box.putAll({for (var c in _contacts) c.id: c});
   }
