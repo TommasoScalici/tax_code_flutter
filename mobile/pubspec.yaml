@@ -68,11 +68,14 @@ dev_dependencies:
     sdk: flutter
 
   camera_platform_interface: ^2.10.0
+  firebase_auth_mocks: ^0.15.0
+  firebase_core_platform_interface: ^6.0.0
   flutter_lints: ^6.0.0
   mocktail: ^1.0.4
   package_info_plus_platform_interface: ^3.2.1
   plugin_platform_interface: ^2.1.8
   screen_brightness_platform_interface: ^2.1.0
+  network_image_mock: ^2.1.1
 
 flutter:
   generate: true

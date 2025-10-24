@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' hide ProfileScreen;
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
@@ -11,7 +12,9 @@ import 'package:tax_code_flutter/widgets/info_modal.dart';
 import 'home_page.dart';
 
 class AuthGate extends StatelessWidget {
-  const AuthGate({super.key});
+  final FirebaseAuth? auth;
+
+  const AuthGate({super.key, this.auth});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +28,7 @@ class AuthGate extends StatelessWidget {
 
     return SafeArea(
       child: SignInScreen(
+        auth: auth,
         showAuthActionSwitch: false,
         resizeToAvoidBottomInset: true,
         providers: [

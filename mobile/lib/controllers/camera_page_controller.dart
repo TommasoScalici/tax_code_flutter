@@ -19,7 +19,15 @@ enum CameraStatus {
   error,
 }
 
+typedef CameraControllerFactory =
+    CameraController Function(
+      CameraDescription description,
+      ResolutionPreset preset, {
+      bool enableAudio,
+    });
+
 class CameraPageController with ChangeNotifier {
+  final CameraControllerFactory _cameraControllerFactory;
   final CameraServiceAbstract _cameraService;
   final GeminiServiceAbstract _geminiService;
   final PermissionServiceAbstract _permissionService;
@@ -41,10 +49,13 @@ class CameraPageController with ChangeNotifier {
     required GeminiServiceAbstract geminiService,
     required PermissionServiceAbstract permissionService,
     required Logger logger,
+    CameraControllerFactory? cameraControllerFactory,
   }) : _cameraService = cameraService,
        _geminiService = geminiService,
        _permissionService = permissionService,
-       _logger = logger;
+       _logger = logger,
+       _cameraControllerFactory =
+           cameraControllerFactory ?? CameraController.new;
 
   /// Initializes the camera and checks for permission.
   Future<void> initialize() async {
@@ -59,7 +70,7 @@ class CameraPageController with ChangeNotifier {
       if (cameras.isEmpty) throw Exception('No cameras found');
 
       final camera = cameras.first;
-      _cameraController = CameraController(
+      _cameraController = _cameraControllerFactory(
         camera,
         ResolutionPreset.high,
         enableAudio: false,
