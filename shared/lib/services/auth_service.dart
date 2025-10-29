@@ -6,6 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:shared/services/database_service.dart';
 
+enum AuthStatus { initializing, authenticated, unauthenticated }
+
 ///
 /// Manages the application's authentication state and actions.
 ///
@@ -15,16 +17,20 @@ class AuthService with ChangeNotifier {
   final DatabaseService _dbService;
   final Logger _logger;
 
+  AuthStatus _status = AuthStatus.initializing;
   StreamSubscription? _authSubscription;
   User? _currentUser;
   String? _errorMessage;
   bool _isLoading = false;
 
+  /// The current authentication status.
+  AuthStatus get status => _status;
+
   /// The currently signed-in user, or null if none.
   User? get currentUser => _currentUser;
 
   /// Returns true if a user is currently signed in.
-  bool get isSignedIn => _currentUser != null;
+  bool get isSignedIn => _status == AuthStatus.authenticated;
 
   /// Returns true if an authentication operation is in progress.
   bool get isLoading => _isLoading;
@@ -69,6 +75,49 @@ class AuthService with ChangeNotifier {
     } catch (e, s) {
       _logger.e('Error deleting user account', error: e, stackTrace: s);
       rethrow;
+    }
+  }
+
+  ///
+  /// Re-authenticates the current user with Google.
+  /// This is needed for sensitive operations like account deletion.
+  ///
+  Future<bool> reauthenticateWithGoogle() async {
+    _setLoading(true);
+    _errorMessage = null;
+
+    try {
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        _logger.w('Google Re-authentication was cancelled by the user.');
+        return false;
+      }
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final user = _auth.currentUser;
+      if (user == null) {
+        _logger.w('User is null, cannot re-authenticate.');
+        return false;
+      }
+
+      await user.reauthenticateWithCredential(credential);
+      _logger.i('User re-authenticated successfully.');
+      return true;
+    } on Exception catch (e, s) {
+      _logger.e(
+        'Error during Google Re-authentication',
+        error: e,
+        stackTrace: s,
+      );
+      _errorMessage = 'An unexpected error occurred. Please try again.';
+      return false;
+    } finally {
+      _setLoading(false);
     }
   }
 
@@ -122,9 +171,37 @@ class AuthService with ChangeNotifier {
   /// Listens to authentication state changes from Firebase.
   ///
   Future<void> _onAuthStateChanged(User? user) async {
-    _currentUser = user;
-    if (user != null) {
-      await _saveUserData(user);
+    if (user == null) {
+      _currentUser = null;
+      _status = AuthStatus.unauthenticated;
+      notifyListeners();
+      return;
+    }
+
+    try {
+      _logger.i('User detected, validating with server...');
+      await user.reload();
+      final freshUser = _auth.currentUser;
+      if (freshUser == null) {
+        throw Exception('User disappeared immediately after reload.');
+      }
+
+      _currentUser = freshUser;
+
+      await _saveUserData(freshUser);
+
+      _logger.i('User validation successful.');
+      _status = AuthStatus.authenticated;
+    } catch (e, s) {
+      _logger.w(
+        'User validation failed (reload or save). Assuming deleted/disabled. Forcing sign out.',
+        error: e,
+        stackTrace: s,
+      );
+      _currentUser = null;
+      _status = AuthStatus.unauthenticated;
+
+      await _auth.signOut();
     }
 
     notifyListeners();
@@ -138,6 +215,7 @@ class AuthService with ChangeNotifier {
       await _dbService.saveUserData(user);
     } on Exception catch (e, s) {
       _logger.e('Error while storing user data', error: e, stackTrace: s);
+      rethrow;
     }
   }
 

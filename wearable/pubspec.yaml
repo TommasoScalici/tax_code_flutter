@@ -1,7 +1,7 @@
 name: tax_code_flutter_wear_os
 description: "App for Italian Tax Code calculation, made for Wear OS."
 publish_to: "none"
-version: 1.5.0+39
+version: 1.5.1+43
 
 environment:
   sdk: ">=3.8.0 <4.0.0"

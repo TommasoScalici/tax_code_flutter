@@ -1,6 +1,7 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/screens/auth_gate.dart';
 import 'package:tax_code_flutter/screens/home_page.dart';
 
@@ -17,7 +18,11 @@ void main() {
   group('AuthGate Widget Tests', () {
     testWidgets('displays HomePage when user is signed in', (tester) async {
       // Arrange & Act
-      await pumpApp(tester, const AuthGate(), isSignedIn: true);
+      await pumpApp(
+        tester,
+        const AuthGate(),
+        authStatus: AuthStatus.authenticated,
+      );
 
       await tester.pumpAndSettle();
 
@@ -30,7 +35,11 @@ void main() {
       tester,
     ) async {
       // Arrange & Act
-      await pumpApp(tester, const AuthGate());
+      await pumpApp(
+        tester,
+        const AuthGate(),
+        authStatus: AuthStatus.unauthenticated,
+      );
       await tester.pumpAndSettle();
 
       // Assert
@@ -47,7 +56,11 @@ void main() {
       addTearDown(() => tester.view.reset());
 
       // Act
-      await pumpApp(tester, const AuthGate());
+      await pumpApp(
+        tester,
+        const AuthGate(),
+        authStatus: AuthStatus.unauthenticated,
+      );
       await tester.pumpAndSettle();
 
       // Assert
@@ -66,7 +79,11 @@ void main() {
       addTearDown(() => tester.view.reset());
 
       // Act
-      await pumpApp(tester, const AuthGate());
+      await pumpApp(
+        tester,
+        const AuthGate(),
+        authStatus: AuthStatus.unauthenticated,
+      );
       await tester.pumpAndSettle();
 
       // Assert

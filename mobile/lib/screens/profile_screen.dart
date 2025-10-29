@@ -9,34 +9,68 @@ import 'package:tax_code_flutter/l10n/app_localizations.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  Future<void> _showRequiresRecentLoginDialog(
-    BuildContext context,
-    AuthService authService,
-  ) async {
-    final l10n = AppLocalizations.of(context)!;
+  /// Handles the full account deletion flow, including re-authentication.
+  Future<void> _performDeleteAccount({
+    required NavigatorState navigator,
+    required AuthService authService,
+    required Logger logger,
+    required ScaffoldMessengerState scaffoldMessenger,
+    required AppLocalizations l10n,
+  }) async {
+    if (navigator.canPop()) {
+      navigator.pop();
+    }
 
-    await showDialog(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: Text(l10n.actionRequired),
-          content: Text(l10n.requiresRecentLoginMessage),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                await authService.signOut();
-                if (dialogContext.mounted) {
-                  Navigator.of(
-                    dialogContext,
-                  ).popUntil((route) => route.isFirst);
-                }
-              },
-              child: Text(l10n.ok),
-            ),
-          ],
+    try {
+      await authService.deleteUserAccount();
+
+      if (!navigator.mounted) return;
+      navigator.popUntil((route) => route.isFirst);
+    } on FirebaseAuthException catch (e, s) {
+      if (e.code == 'requires-recent-login') {
+        logger.w('Requires recent login. Prompting for re-auth.');
+
+        final reauthenticated = await authService.reauthenticateWithGoogle();
+
+        if (reauthenticated) {
+          try {
+            await authService.deleteUserAccount();
+            if (!navigator.mounted) return;
+            navigator.popUntil((route) => route.isFirst);
+          } catch (e2, s2) {
+            logger.e(
+              'Failed to delete account AFTER re-auth',
+              error: e2,
+              stackTrace: s2,
+            );
+            scaffoldMessenger.showSnackBar(
+              SnackBar(content: Text(l10n.genericError)),
+            );
+          }
+        } else {
+          logger.w('Re-authentication cancelled or failed.');
+          if (authService.errorMessage != null && scaffoldMessenger.mounted) {
+            scaffoldMessenger.showSnackBar(
+              SnackBar(content: Text(authService.errorMessage!)),
+            );
+          }
+        }
+      } else {
+        logger.e(
+          'FirebaseAuthException while deleting',
+          error: e,
+          stackTrace: s,
         );
-      },
-    );
+        scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text(l10n.genericError)),
+        );
+      }
+    } catch (e, s) {
+      logger.e('Generic error deleting user account', error: e, stackTrace: s);
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text(l10n.genericError)),
+      );
+    }
   }
 
   Future<void> _showDeleteUserConfirmDialog(BuildContext context) async {
@@ -58,39 +92,13 @@ class ProfileScreen extends StatelessWidget {
               child: Text(l10n.cancel),
             ),
             TextButton(
-              onPressed: () async {
-                try {
-                  await authService.deleteUserAccount();
-                  if (!navigator.mounted) return;
-                  navigator.popUntil((route) => route.isFirst);
-                } on FirebaseAuthException catch (e, s) {
-                  logger.e(
-                    'Error deleting user account: requires-recent-login',
-                    error: e,
-                    stackTrace: s,
-                  );
-                  if (!dialogContext.mounted) return;
-                  Navigator.of(dialogContext).pop();
-                  if (e.code == 'requires-recent-login') {
-                    await _showRequiresRecentLoginDialog(context, authService);
-                  } else {
-                    scaffoldMessenger.showSnackBar(
-                      SnackBar(content: Text(l10n.genericError)),
-                    );
-                  }
-                } catch (e, s) {
-                  logger.e(
-                    'Generic error deleting user account',
-                    error: e,
-                    stackTrace: s,
-                  );
-                  if (!dialogContext.mounted) return;
-                  Navigator.of(dialogContext).pop();
-                  scaffoldMessenger.showSnackBar(
-                    SnackBar(content: Text(l10n.genericError)),
-                  );
-                }
-              },
+              onPressed: () => _performDeleteAccount(
+                navigator: navigator,
+                authService: authService,
+                logger: logger,
+                scaffoldMessenger: scaffoldMessenger,
+                l10n: l10n,
+              ),
               child: Text(
                 l10n.delete,
                 style: const TextStyle(color: Colors.red),

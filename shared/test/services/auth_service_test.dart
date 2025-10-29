@@ -90,14 +90,24 @@ void main() {
         // Arrange
         final mockUser = MockUser();
 
+        when(() => mockUser.reload()).thenAnswer((_) async {});
+        when(() => mockAuth.currentUser).thenReturn(mockUser);
+        when(
+          () => mockDbService.saveUserData(mockUser),
+        ).thenAnswer((_) async {});
+
         // Act
         authStreamController.add(mockUser);
         await pumpEventQueue();
 
         // Assert
+        expect(authService.status, AuthStatus.authenticated);
         expect(authService.isSignedIn, isTrue);
         expect(authService.currentUser, mockUser);
+
+        verify(() => mockUser.reload()).called(1);
         verify(() => mockDbService.saveUserData(mockUser)).called(1);
+        verifyNever(() => mockAuth.signOut());
       },
     );
 
@@ -108,23 +118,32 @@ void main() {
       expect(authService.currentUser, isNull);
     });
 
-    test('should log an error if saving user data fails after login', () async {
+    test('should force logout if saving user data fails after login', () async {
       // Arrange
       final mockUser = MockUser();
       final exception = Exception('Firestore connection failed');
+
+      when(() => mockUser.reload()).thenAnswer((_) async {});
+      when(() => mockAuth.currentUser).thenReturn(mockUser);
       when(() => mockDbService.saveUserData(mockUser)).thenThrow(exception);
+      when(() => mockAuth.signOut()).thenAnswer((_) async {});
 
       // Act
       authStreamController.add(mockUser);
       await pumpEventQueue();
 
       // Assert
-      expect(authService.isSignedIn, isTrue);
-      expect(authService.currentUser, mockUser);
+      expect(authService.status, AuthStatus.unauthenticated);
+      expect(authService.isSignedIn, isFalse);
+      expect(authService.currentUser, isNull);
 
+      verify(() => mockUser.reload()).called(1);
+      verify(() => mockDbService.saveUserData(mockUser)).called(1);
+
+      verify(() => mockAuth.signOut()).called(1);
       verify(
-        () => mockLogger.e(
-          'Error while storing user data',
+        () => mockLogger.w(
+          'User validation failed (reload or save). Assuming deleted/disabled. Forcing sign out.',
           error: exception,
           stackTrace: any(named: 'stackTrace'),
         ),

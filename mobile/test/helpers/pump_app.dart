@@ -44,7 +44,7 @@ Future<void> pumpApp(
   MockCameraService? mockCameraService,
   MockGeminiService? mockGeminiService,
   MockPermissionService? mockPermissionService,
-  bool isSignedIn = false,
+  AuthStatus? authStatus,
 }) async {
   final authService = mockAuthService ?? MockAuthService();
   final themeService = mockThemeService ?? MockThemeService();
@@ -68,7 +68,11 @@ Future<void> pumpApp(
   final brightnessService = MockBrightnessService();
   final sharingService = MockSharingService();
 
-  when(() => authService.isSignedIn).thenReturn(isSignedIn);
+  final currentStatus = authStatus ?? AuthStatus.unauthenticated;
+  when(() => authService.status).thenReturn(currentStatus);
+  when(
+    () => authService.isSignedIn,
+  ).thenReturn(currentStatus == AuthStatus.authenticated);
 
   when(() => birthplaceService.loadBirthplaces()).thenAnswer((_) async => []);
   when(() => contactRepository.isLoading).thenReturn(false);

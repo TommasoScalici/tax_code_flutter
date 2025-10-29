@@ -3,6 +3,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart' hide ProfileScreen;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/screens/profile_screen.dart';
 
 import '../helpers/mocks.dart';
@@ -41,7 +42,7 @@ void main() {
       await pumpApp(
         tester,
         const ProfileScreen(),
-        isSignedIn: true,
+        authStatus: AuthStatus.authenticated,
         mockAuthService: mockAuthService,
       );
 
@@ -61,7 +62,7 @@ void main() {
       await pumpApp(
         tester,
         const ProfileScreen(),
-        isSignedIn: true,
+        authStatus: AuthStatus.authenticated,
         mockAuthService: mockAuthService,
       );
 
@@ -81,7 +82,7 @@ void main() {
       await pumpApp(
         tester,
         const ProfileScreen(),
-        isSignedIn: true,
+        authStatus: AuthStatus.authenticated,
         mockAuthService: mockAuthService,
       );
 
@@ -102,7 +103,7 @@ void main() {
       await pumpApp(
         tester,
         const ProfileScreen(),
-        isSignedIn: true,
+        authStatus: AuthStatus.authenticated,
         mockAuthService: mockAuthService,
       );
 
@@ -123,7 +124,7 @@ void main() {
       await pumpApp(
         tester,
         const ProfileScreen(),
-        isSignedIn: true,
+        authStatus: AuthStatus.authenticated,
         mockAuthService: mockAuthService,
       );
 
@@ -150,7 +151,7 @@ void main() {
       await pumpApp(
         tester,
         const ProfileScreen(),
-        isSignedIn: true,
+        authStatus: AuthStatus.authenticated,
         mockAuthService: mockAuthService,
       );
 
@@ -176,7 +177,7 @@ void main() {
       await pumpApp(
         tester,
         const ProfileScreen(),
-        isSignedIn: true,
+        authStatus: AuthStatus.authenticated,
         mockAuthService: mockAuthService,
       );
 
@@ -187,32 +188,45 @@ void main() {
       expect(find.byType(SnackBar), findsOneWidget);
     });
 
-    testWidgets('shows recent login dialog if delete fails', (tester) async {
-      // Arrange
-      when(() => mockUser.displayName).thenReturn('');
-      when(
-        () => mockAuthService.deleteUserAccount(),
-      ).thenThrow(MockFirebaseAuthException(code: 'requires-recent-login'));
-      when(() => mockAuthService.signOut()).thenAnswer((_) async {});
+    testWidgets(
+      'calls reauthenticateWithGoogle if delete fails with requires-recent-login',
+      (tester) async {
+        // Arrange
+        when(() => mockUser.displayName).thenReturn('');
 
-      // Act
-      await pumpApp(
-        tester,
-        const ProfileScreen(),
-        isSignedIn: true,
-        mockAuthService: mockAuthService,
-      );
+        var deleteCallCount = 0;
+        when(() => mockAuthService.deleteUserAccount()).thenAnswer((_) async {
+          deleteCallCount++;
+          if (deleteCallCount == 1) {
+            throw MockFirebaseAuthException(code: 'requires-recent-login');
+          }
+        });
 
-      await tester.tap(find.text('Delete Account'));
-      await tester.pumpAndSettle();
+        when(
+          () => mockAuthService.reauthenticateWithGoogle(),
+        ).thenAnswer((_) async => true);
 
-      await tester.tap(find.text('Delete'));
-      await tester.pumpAndSettle();
+        // Act
+        await pumpApp(
+          tester,
+          const ProfileScreen(),
+          authStatus: AuthStatus.authenticated,
+          mockAuthService: mockAuthService,
+        );
 
-      // Assert
-      expect(find.text('Delete Confirmation'), findsNothing);
-      expect(find.byType(AlertDialog), findsOneWidget);
-      expect(find.text('Action Required'), findsOneWidget);
-    });
+        await tester.tap(find.text('Delete Account'));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Delete'));
+        await tester.pumpAndSettle();
+
+        // Assert
+        expect(find.text('Delete Confirmation'), findsNothing);
+        expect(find.byType(AlertDialog), findsNothing);
+
+        verify(() => mockAuthService.reauthenticateWithGoogle()).called(1);
+        verify(() => mockAuthService.deleteUserAccount()).called(2);
+      },
+    );
   });
 }

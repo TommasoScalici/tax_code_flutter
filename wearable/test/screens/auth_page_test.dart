@@ -42,12 +42,31 @@ void main() {
     when(
       () => mockAuthService.signInWithGoogleForWearable(),
     ).thenAnswer((_) async {});
+
+    when(() => mockAuthService.status).thenReturn(AuthStatus.unauthenticated);
+    when(() => mockAuthService.isLoading).thenReturn(false);
+    when(() => mockAuthService.errorMessage).thenReturn(null);
   });
 
   group('AuthGate Widget', () {
+    testWidgets('displays loading indicator when status is initializing', (
+      tester,
+    ) async {
+      // Arrange
+      when(() => mockAuthService.status).thenReturn(AuthStatus.initializing);
+
+      // Act
+      await pumpWidget(tester);
+
+      // Assert
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byType(FakeHomePage), findsNothing);
+      expect(find.text('Welcome to Tax Code'), findsNothing);
+    });
+
     testWidgets('displays HomePage when user is signed in', (tester) async {
       // Arrange
-      when(() => mockAuthService.isSignedIn).thenReturn(true);
+      when(() => mockAuthService.status).thenReturn(AuthStatus.authenticated);
 
       // Act
       await pumpWidget(tester);
@@ -60,7 +79,7 @@ void main() {
       tester,
     ) async {
       // Arrange
-      when(() => mockAuthService.isSignedIn).thenReturn(false);
+      when(() => mockAuthService.status).thenReturn(AuthStatus.unauthenticated);
       when(() => mockAuthService.isLoading).thenReturn(false);
       when(() => mockAuthService.errorMessage).thenReturn(null);
 
@@ -79,7 +98,7 @@ void main() {
       tester,
     ) async {
       // Arrange
-      when(() => mockAuthService.isSignedIn).thenReturn(false);
+      when(() => mockAuthService.status).thenReturn(AuthStatus.unauthenticated);
       when(() => mockAuthService.isLoading).thenReturn(true);
       when(() => mockAuthService.errorMessage).thenReturn(null);
 
@@ -97,7 +116,7 @@ void main() {
       tester,
     ) async {
       // Arrange
-      when(() => mockAuthService.isSignedIn).thenReturn(false);
+      when(() => mockAuthService.status).thenReturn(AuthStatus.unauthenticated);
       when(() => mockAuthService.isLoading).thenReturn(false);
       when(() => mockAuthService.errorMessage).thenReturn('An error occurred');
 
@@ -116,7 +135,7 @@ void main() {
       tester,
     ) async {
       // Arrange
-      when(() => mockAuthService.isSignedIn).thenReturn(false);
+      when(() => mockAuthService.status).thenReturn(AuthStatus.unauthenticated);
       when(() => mockAuthService.isLoading).thenReturn(false);
       when(() => mockAuthService.errorMessage).thenReturn(null);
       when(

@@ -31602,5 +31602,905 @@
   {
     "name": "Moransengo-Tonengo",
     "state": "AT"
+  },
+  {
+    "name": "Afghanistan",
+    "state": "EE"
+  },
+  {
+    "name": "Albania",
+    "state": "EE"
+  },
+  {
+    "name": "Algeria",
+    "state": "EE"
+  },
+  {
+    "name": "Andorra",
+    "state": "EE"
+  },
+  {
+    "name": "Angola",
+    "state": "EE"
+  },
+  {
+    "name": "Anguilla",
+    "state": "EE"
+  },
+  {
+    "name": "Antigua e Barbuda",
+    "state": "EE"
+  },
+  {
+    "name": "Arabia Saudita",
+    "state": "EE"
+  },
+  {
+    "name": "Argentina",
+    "state": "EE"
+  },
+  {
+    "name": "Armenia",
+    "state": "EE"
+  },
+  {
+    "name": "Aruba",
+    "state": "EE"
+  },
+  {
+    "name": "Australia",
+    "state": "EE"
+  },
+  {
+    "name": "Austria",
+    "state": "EE"
+  },
+  {
+    "name": "Azerbaigian",
+    "state": "EE"
+  },
+  {
+    "name": "Bahamas",
+    "state": "EE"
+  },
+  {
+    "name": "Bahrein",
+    "state": "EE"
+  },
+  {
+    "name": "Bangladesh",
+    "state": "EE"
+  },
+  {
+    "name": "Barbados",
+    "state": "EE"
+  },
+  {
+    "name": "Belgio",
+    "state": "EE"
+  },
+  {
+    "name": "Belize",
+    "state": "EE"
+  },
+  {
+    "name": "Benin",
+    "state": "EE"
+  },
+  {
+    "name": "Bermuda",
+    "state": "EE"
+  },
+  {
+    "name": "Bhutan",
+    "state": "EE"
+  },
+  {
+    "name": "Bielorussia",
+    "state": "EE"
+  },
+  {
+    "name": "Bolivia",
+    "state": "EE"
+  },
+  {
+    "name": "Bosnia-Erzegovina",
+    "state": "EE"
+  },
+  {
+    "name": "Botswana",
+    "state": "EE"
+  },
+  {
+    "name": "Brasile",
+    "state": "EE"
+  },
+  {
+    "name": "Brunei Darussalam",
+    "state": "EE"
+  },
+  {
+    "name": "Bulgaria",
+    "state": "EE"
+  },
+  {
+    "name": "Burkina Faso",
+    "state": "EE"
+  },
+  {
+    "name": "Burundi",
+    "state": "EE"
+  },
+  {
+    "name": "Cambogia",
+    "state": "EE"
+  },
+  {
+    "name": "Camerun",
+    "state": "EE"
+  },
+  {
+    "name": "Canada",
+    "state": "EE"
+  },
+  {
+    "name": "Capo Verde",
+    "state": "EE"
+  },
+  {
+    "name": "Ciad",
+    "state": "EE"
+  },
+  {
+    "name": "Cile",
+    "state": "EE"
+  },
+  {
+    "name": "Cina",
+    "state": "EE"
+  },
+  {
+    "name": "Cipro",
+    "state": "EE"
+  },
+  {
+    "name": "Colombia",
+    "state": "EE"
+  },
+  {
+    "name": "Comore",
+    "state": "EE"
+  },
+  {
+    "name": "Congo",
+    "state": "EE"
+  },
+  {
+    "name": "Corea del Nord",
+    "state": "EE"
+  },
+  {
+    "name": "Corea del Sud",
+    "state": "EE"
+  },
+  {
+    "name": "Costa Rica",
+    "state": "EE"
+  },
+  {
+    "name": "Costa d'Avorio",
+    "state": "EE"
+  },
+  {
+    "name": "Croazia",
+    "state": "EE"
+  },
+  {
+    "name": "Cuba",
+    "state": "EE"
+  },
+  {
+    "name": "Curaçao",
+    "state": "EE"
+  },
+  {
+    "name": "Danimarca",
+    "state": "EE"
+  },
+  {
+    "name": "Dominica",
+    "state": "EE"
+  },
+  {
+    "name": "Ecuador",
+    "state": "EE"
+  },
+  {
+    "name": "Egitto",
+    "state": "EE"
+  },
+  {
+    "name": "El Salvador",
+    "state": "EE"
+  },
+  {
+    "name": "Emirati Arabi Uniti",
+    "state": "EE"
+  },
+  {
+    "name": "Eritrea",
+    "state": "EE"
+  },
+  {
+    "name": "Estonia",
+    "state": "EE"
+  },
+  {
+    "name": "Eswatini",
+    "state": "EE"
+  },
+  {
+    "name": "Etiopia",
+    "state": "EE"
+  },
+  {
+    "name": "Federazione russa",
+    "state": "EE"
+  },
+  {
+    "name": "Figi",
+    "state": "EE"
+  },
+  {
+    "name": "Filippine",
+    "state": "EE"
+  },
+  {
+    "name": "Finlandia",
+    "state": "EE"
+  },
+  {
+    "name": "Francia",
+    "state": "EE"
+  },
+  {
+    "name": "Gabon",
+    "state": "EE"
+  },
+  {
+    "name": "Gambia",
+    "state": "EE"
+  },
+  {
+    "name": "Georgia",
+    "state": "EE"
+  },
+  {
+    "name": "Germania",
+    "state": "EE"
+  },
+  {
+    "name": "Ghana",
+    "state": "EE"
+  },
+  {
+    "name": "Giamaica",
+    "state": "EE"
+  },
+  {
+    "name": "Giappone",
+    "state": "EE"
+  },
+  {
+    "name": "Gibilterra",
+    "state": "EE"
+  },
+  {
+    "name": "Gibuti",
+    "state": "EE"
+  },
+  {
+    "name": "Giordania",
+    "state": "EE"
+  },
+  {
+    "name": "Grecia",
+    "state": "EE"
+  },
+  {
+    "name": "Grenada",
+    "state": "EE"
+  },
+  {
+    "name": "Groenlandia",
+    "state": "EE"
+  },
+  {
+    "name": "Guatemala",
+    "state": "EE"
+  },
+  {
+    "name": "Guernsey",
+    "state": "EE"
+  },
+  {
+    "name": "Guinea",
+    "state": "EE"
+  },
+  {
+    "name": "Guinea equatoriale",
+    "state": "EE"
+  },
+  {
+    "name": "Guinea-Bissau",
+    "state": "EE"
+  },
+  {
+    "name": "Guyana",
+    "state": "EE"
+  },
+  {
+    "name": "Haiti",
+    "state": "EE"
+  },
+  {
+    "name": "Honduras",
+    "state": "EE"
+  },
+  {
+    "name": "India",
+    "state": "EE"
+  },
+  {
+    "name": "Indonesia",
+    "state": "EE"
+  },
+  {
+    "name": "Iran",
+    "state": "EE"
+  },
+  {
+    "name": "Iraq",
+    "state": "EE"
+  },
+  {
+    "name": "Irlanda",
+    "state": "EE"
+  },
+  {
+    "name": "Islanda",
+    "state": "EE"
+  },
+  {
+    "name": "Isola di Man",
+    "state": "EE"
+  },
+  {
+    "name": "Isole Cayman",
+    "state": "EE"
+  },
+  {
+    "name": "Isole Cook (NZ)",
+    "state": "EE"
+  },
+  {
+    "name": "Isole Falkland (Malvine)",
+    "state": "EE"
+  },
+  {
+    "name": "Isole Fær Øer",
+    "state": "EE"
+  },
+  {
+    "name": "Isole Marshall",
+    "state": "EE"
+  },
+  {
+    "name": "Isole Pitcairn",
+    "state": "EE"
+  },
+  {
+    "name": "Isole Salomone",
+    "state": "EE"
+  },
+  {
+    "name": "Isole Turks e Caicos",
+    "state": "EE"
+  },
+  {
+    "name": "Isole Vergini britanniche",
+    "state": "EE"
+  },
+  {
+    "name": "Israele",
+    "state": "EE"
+  },
+  {
+    "name": "Italia",
+    "state": "EE"
+  },
+  {
+    "name": "Jersey",
+    "state": "EE"
+  },
+  {
+    "name": "Kazakhstan",
+    "state": "EE"
+  },
+  {
+    "name": "Kenya",
+    "state": "EE"
+  },
+  {
+    "name": "Kirghizistan",
+    "state": "EE"
+  },
+  {
+    "name": "Kiribati",
+    "state": "EE"
+  },
+  {
+    "name": "Kosovo",
+    "state": "EE"
+  },
+  {
+    "name": "Kuwait",
+    "state": "EE"
+  },
+  {
+    "name": "Laos",
+    "state": "EE"
+  },
+  {
+    "name": "Lesotho",
+    "state": "EE"
+  },
+  {
+    "name": "Lettonia",
+    "state": "EE"
+  },
+  {
+    "name": "Libano",
+    "state": "EE"
+  },
+  {
+    "name": "Liberia",
+    "state": "EE"
+  },
+  {
+    "name": "Libia",
+    "state": "EE"
+  },
+  {
+    "name": "Liechtenstein",
+    "state": "EE"
+  },
+  {
+    "name": "Lituania",
+    "state": "EE"
+  },
+  {
+    "name": "Lussemburgo",
+    "state": "EE"
+  },
+  {
+    "name": "Macedonia del Nord",
+    "state": "EE"
+  },
+  {
+    "name": "Madagascar",
+    "state": "EE"
+  },
+  {
+    "name": "Malawi",
+    "state": "EE"
+  },
+  {
+    "name": "Malaysia",
+    "state": "EE"
+  },
+  {
+    "name": "Maldive",
+    "state": "EE"
+  },
+  {
+    "name": "Mali",
+    "state": "EE"
+  },
+  {
+    "name": "Malta",
+    "state": "EE"
+  },
+  {
+    "name": "Marocco",
+    "state": "EE"
+  },
+  {
+    "name": "Mauritania",
+    "state": "EE"
+  },
+  {
+    "name": "Maurizio",
+    "state": "EE"
+  },
+  {
+    "name": "Messico",
+    "state": "EE"
+  },
+  {
+    "name": "Moldova",
+    "state": "EE"
+  },
+  {
+    "name": "Monaco",
+    "state": "EE"
+  },
+  {
+    "name": "Mongolia",
+    "state": "EE"
+  },
+  {
+    "name": "Montenegro",
+    "state": "EE"
+  },
+  {
+    "name": "Montserrat",
+    "state": "EE"
+  },
+  {
+    "name": "Mozambico",
+    "state": "EE"
+  },
+  {
+    "name": "Myanmar\/Birmania",
+    "state": "EE"
+  },
+  {
+    "name": "Namibia",
+    "state": "EE"
+  },
+  {
+    "name": "Nauru",
+    "state": "EE"
+  },
+  {
+    "name": "Nepal",
+    "state": "EE"
+  },
+  {
+    "name": "Nicaragua",
+    "state": "EE"
+  },
+  {
+    "name": "Niger",
+    "state": "EE"
+  },
+  {
+    "name": "Nigeria",
+    "state": "EE"
+  },
+  {
+    "name": "Norvegia",
+    "state": "EE"
+  },
+  {
+    "name": "Nuova Caledonia",
+    "state": "EE"
+  },
+  {
+    "name": "Nuova Zelanda",
+    "state": "EE"
+  },
+  {
+    "name": "Oman",
+    "state": "EE"
+  },
+  {
+    "name": "Paesi Bassi",
+    "state": "EE"
+  },
+  {
+    "name": "Pakistan",
+    "state": "EE"
+  },
+  {
+    "name": "Palau",
+    "state": "EE"
+  },
+  {
+    "name": "Palestina",
+    "state": "EE"
+  },
+  {
+    "name": "Panama",
+    "state": "EE"
+  },
+  {
+    "name": "Papua Nuova Guinea",
+    "state": "EE"
+  },
+  {
+    "name": "Paraguay",
+    "state": "EE"
+  },
+  {
+    "name": "Perù",
+    "state": "EE"
+  },
+  {
+    "name": "Polinesia francese",
+    "state": "EE"
+  },
+  {
+    "name": "Polonia",
+    "state": "EE"
+  },
+  {
+    "name": "Portogallo",
+    "state": "EE"
+  },
+  {
+    "name": "Qatar",
+    "state": "EE"
+  },
+  {
+    "name": "Regno Unito",
+    "state": "EE"
+  },
+  {
+    "name": "Repubblica Centrafricana",
+    "state": "EE"
+  },
+  {
+    "name": "Repubblica Democratica del Congo",
+    "state": "EE"
+  },
+  {
+    "name": "Repubblica Dominicana",
+    "state": "EE"
+  },
+  {
+    "name": "Repubblica ceca",
+    "state": "EE"
+  },
+  {
+    "name": "Romania",
+    "state": "EE"
+  },
+  {
+    "name": "Ruanda",
+    "state": "EE"
+  },
+  {
+    "name": "Sahara occidentale",
+    "state": "EE"
+  },
+  {
+    "name": "Saint Kitts e Nevis",
+    "state": "EE"
+  },
+  {
+    "name": "Saint Pierre e Miquelon",
+    "state": "EE"
+  },
+  {
+    "name": "Saint Vincent e Grenadine",
+    "state": "EE"
+  },
+  {
+    "name": "Saint-Barthélemy",
+    "state": "EE"
+  },
+  {
+    "name": "Saint-Martin (FR)",
+    "state": "EE"
+  },
+  {
+    "name": "Samoa",
+    "state": "EE"
+  },
+  {
+    "name": "San Marino",
+    "state": "EE"
+  },
+  {
+    "name": "Sant'Elena",
+    "state": "EE"
+  },
+  {
+    "name": "Santa Lucia",
+    "state": "EE"
+  },
+  {
+    "name": "Sao Tomé e Principe",
+    "state": "EE"
+  },
+  {
+    "name": "Sark",
+    "state": "EE"
+  },
+  {
+    "name": "Senegal",
+    "state": "EE"
+  },
+  {
+    "name": "Serbia",
+    "state": "EE"
+  },
+  {
+    "name": "Seychelles",
+    "state": "EE"
+  },
+  {
+    "name": "Sierra Leone",
+    "state": "EE"
+  },
+  {
+    "name": "Singapore",
+    "state": "EE"
+  },
+  {
+    "name": "Sint Maarten (NL)",
+    "state": "EE"
+  },
+  {
+    "name": "Siria",
+    "state": "EE"
+  },
+  {
+    "name": "Slovacchia",
+    "state": "EE"
+  },
+  {
+    "name": "Slovenia",
+    "state": "EE"
+  },
+  {
+    "name": "Somalia",
+    "state": "EE"
+  },
+  {
+    "name": "Spagna",
+    "state": "EE"
+  },
+  {
+    "name": "Sri Lanka",
+    "state": "EE"
+  },
+  {
+    "name": "Stati Federati di Micronesia",
+    "state": "EE"
+  },
+  {
+    "name": "Stati Uniti d'America",
+    "state": "EE"
+  },
+  {
+    "name": "Stato della Città del Vaticano",
+    "state": "EE"
+  },
+  {
+    "name": "Sud Sudan",
+    "state": "EE"
+  },
+  {
+    "name": "Sudafrica",
+    "state": "EE"
+  },
+  {
+    "name": "Sudan",
+    "state": "EE"
+  },
+  {
+    "name": "Suriname",
+    "state": "EE"
+  },
+  {
+    "name": "Svezia",
+    "state": "EE"
+  },
+  {
+    "name": "Svizzera",
+    "state": "EE"
+  },
+  {
+    "name": "Tagikistan",
+    "state": "EE"
+  },
+  {
+    "name": "Taiwan",
+    "state": "EE"
+  },
+  {
+    "name": "Tanzania",
+    "state": "EE"
+  },
+  {
+    "name": "Terre australi e antartiche francesi",
+    "state": "EE"
+  },
+  {
+    "name": "Thailandia",
+    "state": "EE"
+  },
+  {
+    "name": "Timor Leste",
+    "state": "EE"
+  },
+  {
+    "name": "Togo",
+    "state": "EE"
+  },
+  {
+    "name": "Tonga",
+    "state": "EE"
+  },
+  {
+    "name": "Trinidad e Tobago",
+    "state": "EE"
+  },
+  {
+    "name": "Tunisia",
+    "state": "EE"
+  },
+  {
+    "name": "Turchia",
+    "state": "EE"
+  },
+  {
+    "name": "Turkmenistan",
+    "state": "EE"
+  },
+  {
+    "name": "Tuvalu",
+    "state": "EE"
+  },
+  {
+    "name": "Ucraina",
+    "state": "EE"
+  },
+  {
+    "name": "Uganda",
+    "state": "EE"
+  },
+  {
+    "name": "Ungheria",
+    "state": "EE"
+  },
+  {
+    "name": "Uruguay",
+    "state": "EE"
+  },
+  {
+    "name": "Uzbekistan",
+    "state": "EE"
+  },
+  {
+    "name": "Vanuatu",
+    "state": "EE"
+  },
+  {
+    "name": "Venezuela",
+    "state": "EE"
+  },
+  {
+    "name": "Vietnam",
+    "state": "EE"
+  },
+  {
+    "name": "Wallis e Futuna",
+    "state": "EE"
+  },
+  {
+    "name": "Yemen",
+    "state": "EE"
+  },
+  {
+    "name": "Zambia",
+    "state": "EE"
+  },
+  {
+    "name": "Zimbabwe",
+    "state": "EE"
   }
 ]

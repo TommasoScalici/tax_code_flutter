@@ -15,7 +15,20 @@ class AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = context.watch<AuthService>();
-    return authService.isSignedIn ? homePage : const _LoginView();
+
+    switch (authService.status) {
+      case AuthStatus.authenticated:
+        return homePage;
+
+      case AuthStatus.unauthenticated:
+        return const _LoginView();
+
+      case AuthStatus.initializing:
+        return const Scaffold(
+          backgroundColor: Colors.black,
+          body: Center(child: CircularProgressIndicator()),
+        );
+    }
   }
 }
 

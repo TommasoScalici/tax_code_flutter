@@ -19,38 +19,46 @@ class AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = context.watch<AuthService>();
-    final remoteConfig = context.read<FirebaseRemoteConfig>();
-    final screenWidth = MediaQuery.of(context).size.width;
 
-    if (authService.isSignedIn) {
-      return const HomePage();
-    }
+    switch (authService.status) {
+      case AuthStatus.authenticated:
+        return const HomePage();
 
-    return SafeArea(
-      child: SignInScreen(
-        auth: auth,
-        showAuthActionSwitch: false,
-        resizeToAvoidBottomInset: true,
-        providers: [
-          GoogleProvider(
-            clientId: remoteConfig.getString(Settings.googleProviderClientId),
+      case AuthStatus.unauthenticated:
+        final remoteConfig = context.read<FirebaseRemoteConfig>();
+        final screenWidth = MediaQuery.of(context).size.width;
+
+        return SafeArea(
+          child: SignInScreen(
+            auth: auth,
+            showAuthActionSwitch: false,
+            resizeToAvoidBottomInset: true,
+            providers: [
+              GoogleProvider(
+                clientId: remoteConfig.getString(
+                  Settings.googleProviderClientId,
+                ),
+              ),
+            ],
+            headerMaxExtent: screenWidth < 300 ? 0 : null,
+            headerBuilder: (context, constraints, shrinkOffset) {
+              return const _LoginHeader();
+            },
+            subtitleBuilder: (context, action) {
+              return _LoginSubtitle(action: action, screenWidth: screenWidth);
+            },
+            footerBuilder: (context, action) {
+              return _LoginFooter(screenWidth: screenWidth);
+            },
+            sideBuilder: (context, shrinkOffset) {
+              return const _LoginSideImage();
+            },
           ),
-        ],
-        headerMaxExtent: screenWidth < 300 ? 0 : null,
-        headerBuilder: (context, constraints, shrinkOffset) {
-          return const _LoginHeader();
-        },
-        subtitleBuilder: (context, action) {
-          return _LoginSubtitle(action: action, screenWidth: screenWidth);
-        },
-        footerBuilder: (context, action) {
-          return _LoginFooter(screenWidth: screenWidth);
-        },
-        sideBuilder: (context, shrinkOffset) {
-          return const _LoginSideImage();
-        },
-      ),
-    );
+        );
+
+      case AuthStatus.initializing:
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
   }
 }
 

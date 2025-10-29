@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:network_image_mock/network_image_mock.dart';
+import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/screens/home_page.dart';
 import 'package:tax_code_flutter/widgets/contacts_list.dart';
 import 'package:tax_code_flutter/widgets/info_modal.dart';
@@ -31,7 +32,11 @@ void main() {
   group('HomePage Widget Tests', () {
     testWidgets('renders correctly with default state', (tester) async {
       // Arrange & Act
-      await pumpApp(tester, const HomePage(), isSignedIn: true);
+      await pumpApp(
+        tester,
+        const HomePage(),
+        authStatus: AuthStatus.authenticated,
+      );
 
       expect(find.byType(Scaffold), findsOneWidget);
       expect(find.byType(AppBar), findsOneWidget);
@@ -54,7 +59,7 @@ void main() {
         await pumpApp(
           tester,
           const HomePage(),
-          isSignedIn: true,
+          authStatus: AuthStatus.authenticated,
           mockAuthService: mockAuthService,
         );
 
@@ -75,7 +80,7 @@ void main() {
       await pumpApp(
         tester,
         const HomePage(),
-        isSignedIn: true,
+        authStatus: AuthStatus.authenticated,
         mockAuthService: mockAuthService,
       );
 
@@ -95,7 +100,7 @@ void main() {
       await pumpApp(
         tester,
         const HomePage(),
-        isSignedIn: true,
+        authStatus: AuthStatus.authenticated,
         mockThemeService: mockThemeService,
       );
 
@@ -110,7 +115,11 @@ void main() {
       tester,
     ) async {
       // Act
-      await pumpApp(tester, const HomePage(), isSignedIn: true);
+      await pumpApp(
+        tester,
+        const HomePage(),
+        authStatus: AuthStatus.authenticated,
+      );
 
       await tester.tap(find.byIcon(Icons.more_vert));
       await tester.pumpAndSettle();
