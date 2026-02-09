@@ -13,7 +13,7 @@ import 'package:uuid/uuid.dart';
 
 /// Validator that checks if a control's value contains only letters,
 /// spaces, and apostrophes.
-class OnlyLettersValidator implements Validator<dynamic> {
+class OnlyLettersValidator extends Validator<dynamic> {
   const OnlyLettersValidator();
 
   @override
@@ -30,9 +30,6 @@ class OnlyLettersValidator implements Validator<dynamic> {
         ? <String, dynamic>{'invalidCharacters': true}
         : null;
   }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 class FormPageController with ChangeNotifier {

@@ -55,7 +55,7 @@ void main() {
     Hive.registerAdapter(ContactAdapter());
     Hive.registerAdapter(BirthplaceAdapter());
 
-    registerFallbackValue(Contact.empty());
+    registerFallbackValue(Contact.create());
     registerFallbackValue(<Contact>[]);
   });
 

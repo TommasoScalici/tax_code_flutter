@@ -44,7 +44,7 @@ final class HomePage extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(
-              themeService.theme == 'dark'
+              themeService.theme == ThemeMode.dark
                   ? Icons.light_mode_sharp
                   : Icons.mode_night_sharp,
             ),

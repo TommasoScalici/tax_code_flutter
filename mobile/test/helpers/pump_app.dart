@@ -78,7 +78,7 @@ Future<void> pumpApp(
   when(() => contactRepository.isLoading).thenReturn(false);
   when(() => contactRepository.contacts).thenReturn(<Contact>[]);
 
-  when(() => themeService.theme).thenReturn('light');
+  when(() => themeService.theme).thenReturn(ThemeMode.light);
   when(() => remoteConfig.getString(any())).thenReturn('');
 
   when(

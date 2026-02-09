@@ -48,9 +48,9 @@ void main() {
 
     /// Grouping tests for model logic and extensions
     group('Model Logic', () {
-      /// Tests for the empty factory constructor
-      test('empty factory should create a contact with default values', () {
-        final emptyContact = Contact.empty();
+      /// Tests for the create factory constructor
+      test('create factory should create a contact with default values', () {
+        final emptyContact = Contact.create();
 
         expect(emptyContact.id, isNotEmpty);
         expect(emptyContact.firstName, '');

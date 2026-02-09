@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared/services/theme_service.dart';
@@ -18,7 +19,7 @@ void main() {
 
     test('should have light theme as default', () {
       // Assert
-      expect(themeService.theme, 'light');
+      expect(themeService.theme, ThemeMode.light);
     });
 
     test('should initialize with theme from preferences', () async {
@@ -29,7 +30,7 @@ void main() {
       await themeService.init();
 
       // Assert
-      expect(themeService.theme, 'dark');
+      expect(themeService.theme, ThemeMode.dark);
       verify(() => mockPrefs.getString('theme')).called(1);
     });
 
@@ -43,7 +44,7 @@ void main() {
       themeService.toggleTheme();
 
       // Assert
-      expect(themeService.theme, 'dark');
+      expect(themeService.theme, ThemeMode.dark);
       verify(() => mockPrefs.setString('theme', 'dark')).called(1);
     });
 
@@ -59,7 +60,7 @@ void main() {
       themeService.toggleTheme();
 
       // Assert
-      expect(themeService.theme, 'light');
+      expect(themeService.theme, ThemeMode.light);
       verify(() => mockPrefs.setString('theme', 'light')).called(1);
     });
   });

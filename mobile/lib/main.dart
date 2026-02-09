@@ -16,12 +16,12 @@ import 'package:hive_ce_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:shared/models/birthplace.dart';
-import 'package:shared/models/contact.dart';
+import 'package:shared/hive_registrar.g.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/database_service.dart';
 import 'package:shared/services/theme_service.dart';
+import 'package:shared/utils/app_bootstrap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
@@ -38,48 +38,39 @@ import 'firebase_options.dart';
 import 'screens/auth_gate.dart';
 import 'settings.dart';
 
-/// Configures Firebase services like Remote Config, AppCheck, and Crashlytics.
-Future<void> configureApp(Logger logger) async {
-  try {
-    if (Platform.isAndroid) {
-      await FirebaseRemoteConfig.instance.fetchAndActivate();
-
-      final appCheckProvider = kDebugMode
-          ? AndroidProvider.debug
-          : AndroidProvider.playIntegrity;
-      await FirebaseAppCheck.instance.activate(
-        androidProvider: appCheckProvider,
-      );
-
-      FlutterError.onError =
-          FirebaseCrashlytics.instance.recordFlutterFatalError;
-
-      PlatformDispatcher.instance.onError = (error, stack) {
-        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-        return true;
-      };
-    }
-  } on Exception catch (e, s) {
-    logger.e(
-      'Error while configuring the app with Firebase',
-      error: e,
-      stackTrace: s,
-    );
-  }
-}
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   await Hive.initFlutter();
-  Hive.registerAdapter(BirthplaceAdapter());
-  Hive.registerAdapter(ContactAdapter());
+  Hive.registerAdapters();
 
   final logger = Logger();
   final sharedPreferences = SharedPreferencesAsync();
-  await configureApp(logger);
+  await configureApp(
+    logger: logger,
+    configure: () async {
+      if (Platform.isAndroid) {
+        await FirebaseRemoteConfig.instance.fetchAndActivate();
+
+        final appCheckProvider = kDebugMode
+            ? const AndroidDebugProvider()
+            : const AndroidPlayIntegrityProvider();
+        await FirebaseAppCheck.instance.activate(
+          providerAndroid: appCheckProvider,
+        );
+
+        FlutterError.onError =
+            FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+        PlatformDispatcher.instance.onError = (error, stack) {
+          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+          return true;
+        };
+      }
+    },
+  );
 
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
@@ -206,7 +197,7 @@ final class TaxCodeApp extends StatelessWidget {
         FirebaseUILocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: themeService.theme == 'dark'
+      theme: themeService.theme == ThemeMode.dark
           ? Settings.getDarkTheme()
           : Settings.getLightTheme(),
       home: const AuthGate(),

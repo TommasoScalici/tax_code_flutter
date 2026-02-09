@@ -8,6 +8,7 @@ import 'package:shared/models/tax_code_response.dart';
 
 /// Exception for network errors during tax code fetching.
 class TaxCodeApiNetworkException implements Exception {}
+
 /// Exception for server errors during tax code fetching.
 class TaxCodeApiServerException implements Exception {
   final int statusCode;
@@ -37,9 +38,9 @@ class TaxCodeService implements TaxCodeServiceAbstract {
     required http.Client client,
     required Logger logger,
     required String accessToken,
-  })  : _client = client,
-        _logger = logger,
-        _accessToken = accessToken;
+  }) : _client = client,
+       _logger = logger,
+       _accessToken = accessToken;
 
   @override
   Future<TaxCodeResponse> fetchTaxCode({
@@ -62,23 +63,31 @@ class TaxCodeService implements TaxCodeServiceAbstract {
       'access_token': _accessToken,
     };
 
-    final uri = Uri.http(
+    final uri = Uri.https(
       'api.miocodicefiscale.com',
       '/calculate',
       queryParameters,
     );
 
     try {
-      final response = await _client.get(uri).timeout(const Duration(seconds: 10));
+      final response = await _client
+          .get(uri)
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return TaxCodeResponse.fromJson(jsonDecode(response.body));
       } else {
-        _logger.w('TaxCode API returned a server error: ${response.statusCode}');
+        _logger.w(
+          'TaxCode API returned a server error: ${response.statusCode}',
+        );
         throw TaxCodeApiServerException(response.statusCode);
       }
     } on SocketException catch (e, s) {
-      _logger.w('Network error during tax code fetch.', error: e, stackTrace: s);
+      _logger.w(
+        'Network error during tax code fetch.',
+        error: e,
+        stackTrace: s,
+      );
       throw TaxCodeApiNetworkException();
     } on TimeoutException catch (e, s) {
       _logger.w('Timeout during tax code fetch.', error: e, stackTrace: s);

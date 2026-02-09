@@ -49,7 +49,9 @@ class Contact extends Equatable {
     required this.listIndex,
   });
 
-  factory Contact.empty() {
+  /// Creates a new [Contact] with a generated UUID, current timestamp,
+  /// and blank fields, ready to be filled in by the user.
+  factory Contact.create() {
     return Contact(
       id: const Uuid().v4(),
       firstName: '',
@@ -89,23 +91,28 @@ class Contact extends Equatable {
   Map<String, dynamic> toJson() => _$ContactToJson(this);
 
   @override
-  String toString() => '$firstName $lastName ($gender)'
+  String toString() =>
+      '$firstName $lastName ($gender)'
       ' - ${DateFormat.yMd().format(birthDate)}'
       ' - ${birthPlace.toString()}';
 
+  /// Equality is based on [id] only. This is intentional — two contacts
+  /// with the same ID are considered the same entity regardless of field
+  /// differences. This supports list identity checks (e.g. reorderable lists)
+  /// and Firestore document identity.
   @override
   List<Object?> get props => [id];
 }
 
 extension ContactNativeMapper on Contact {
   Map<String, dynamic> toNativeMap() => {
-        'id': id,
-        'firstName': firstName,
-        'lastName': lastName,
-        'gender': gender,
-        'taxCode': taxCode,
-        'birthPlace': {'name': birthPlace.name, 'state': birthPlace.state},
-        'birthDate': birthDate.toString(),
-        'listIndex': listIndex,
-      };
+    'id': id,
+    'firstName': firstName,
+    'lastName': lastName,
+    'gender': gender,
+    'taxCode': taxCode,
+    'birthPlace': {'name': birthPlace.name, 'state': birthPlace.state},
+    'birthDate': birthDate.toString(),
+    'listIndex': listIndex,
+  };
 }

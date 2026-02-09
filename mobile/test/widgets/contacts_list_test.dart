@@ -48,7 +48,7 @@ void main() {
 
   setUp(() {
     mockController = MockHomePageController();
-    registerFallbackValue(Contact.empty());
+    registerFallbackValue(Contact.create());
   });
 
   group('ContactsList', () {

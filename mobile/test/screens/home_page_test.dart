@@ -93,7 +93,7 @@ void main() {
       tester,
     ) async {
       // Arrange
-      when(() => mockThemeService.theme).thenReturn('light');
+      when(() => mockThemeService.theme).thenReturn(ThemeMode.light);
       when(() => mockThemeService.toggleTheme()).thenAnswer((_) async {});
 
       // Act

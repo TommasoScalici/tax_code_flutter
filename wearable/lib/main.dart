@@ -10,11 +10,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:shared/models/birthplace.dart';
-import 'package:shared/models/contact.dart';
+import 'package:shared/hive_registrar.g.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/database_service.dart';
+import 'package:shared/utils/app_bootstrap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tax_code_flutter_wear_os/controllers/contacts_list_controller.dart';
 import 'package:tax_code_flutter_wear_os/screens/barcode_page.dart';
@@ -25,43 +25,37 @@ import 'l10n/app_localizations.dart';
 import 'screens/auth_gate.dart';
 import 'settings.dart';
 
-/// Configures Firebase services like Remote Config, AppCheck, and Crashlytics.
-Future<void> configureApp(Logger logger) async {
-  try {
-    await FirebaseRemoteConfig.instance.fetchAndActivate();
-
-    final appCheckProvider = kDebugMode
-        ? AndroidProvider.debug
-        : AndroidProvider.playIntegrity;
-    await FirebaseAppCheck.instance.activate(androidProvider: appCheckProvider);
-
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-
-    PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      return true;
-    };
-  } on Exception catch (e, s) {
-    logger.e(
-      'Error while configuring the app with Firebase',
-      error: e,
-      stackTrace: s,
-    );
-  }
-}
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   await Hive.initFlutter();
-  Hive.registerAdapter(BirthplaceAdapter());
-  Hive.registerAdapter(ContactAdapter());
+  Hive.registerAdapters();
 
   final logger = Logger();
   final sharedPreferences = SharedPreferencesAsync();
-  await configureApp(logger);
+  await configureApp(
+    logger: logger,
+    configure: () async {
+      await FirebaseRemoteConfig.instance.fetchAndActivate();
+
+      final appCheckProvider = kDebugMode
+          ? const AndroidDebugProvider()
+          : const AndroidPlayIntegrityProvider();
+      await FirebaseAppCheck.instance.activate(
+        providerAndroid: appCheckProvider,
+      );
+
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
+    },
+  );
 
   runApp(
     MultiProvider(
@@ -94,14 +88,9 @@ Future<void> main() async {
         ),
 
         // --- Level 4: Repositories ---
-        ChangeNotifierProxyProvider<AuthService, ContactRepository>(
+        ChangeNotifierProvider<ContactRepository>(
           create: (context) => ContactRepository(
             authService: context.read<AuthService>(),
-            dbService: context.read<DatabaseService>(),
-            logger: context.read<Logger>(),
-          ),
-          update: (context, authService, previousRepo) => ContactRepository(
-            authService: authService,
             dbService: context.read<DatabaseService>(),
             logger: context.read<Logger>(),
           ),
