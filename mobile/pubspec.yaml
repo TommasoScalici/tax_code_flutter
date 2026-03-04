@@ -1,7 +1,7 @@
 name: tax_code_flutter
 description: "App for Italian Tax Code calculation."
 publish_to: none
-version: 1.5.1+42
+version: 1.5.1+44
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
@@ -19,16 +19,7 @@ dependencies:
     path: ../shared
 
   # Core & Utilities
-  change_case: ^2.0.1
-  hive_ce_flutter: ^2.3.0
   http: ^1.2.1
-  intl: ^0.20.0
-  logger: ^2.6.0
-  shared_preferences: ^2.2.3
-  uuid: ^4.4.0
-
-  # State Management
-  provider: ^6.1.0
 
   # UI & Widgets (Mobile specific)
   animated_reorderable_list: ^1.1.1
@@ -40,28 +31,21 @@ dependencies:
   reactive_raw_autocomplete: ^2.1.1
 
   # Platform Plugins (Mobile specific)
-  camera: ^0.11.0+2
+  camera: ^0.12.0
   screen_brightness: ^2.1.0
-  share_plus: ^11.0.0
-  package_info_plus: ^8.0.0
+  share_plus: ^12.0.1
+  package_info_plus: ^9.0.0
   permission_handler: ^12.0.1
   url_launcher: ^6.3.0
 
   # Firebase (Mobile specific UI/Services)
-  cloud_firestore: ^6.0.0
   cloud_functions: ^6.0.1
-  firebase_analytics: ^12.0.0
   firebase_app_check: ^0.4.0
-  firebase_auth: ^6.0.1
-  firebase_core: ^4.0.0
   firebase_crashlytics: ^5.0.0
   firebase_remote_config: ^6.0.0
-  firebase_ui_auth: ^3.0.0
+  firebase_ui_auth: ^3.0.1
   firebase_ui_localizations: ^2.0.0
-  firebase_ui_oauth_google: ^2.0.0
-  googleapis: ^14.0.0
-  googleapis_auth: ^2.0.0
-  google_sign_in: ^6.0.0
+  firebase_ui_oauth_google: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -74,7 +58,6 @@ dev_dependencies:
   mocktail: ^1.0.4
   package_info_plus_platform_interface: ^3.2.1
   plugin_platform_interface: ^2.1.8
-  screen_brightness_platform_interface: ^2.1.0
   network_image_mock: ^2.1.1
 
 flutter:

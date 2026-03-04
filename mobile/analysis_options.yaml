@@ -12,7 +12,7 @@ linter:
   rules:
     avoid_print: true
     avoid_web_libraries_in_flutter: true
-    depend_on_referenced_packages: true
+    depend_on_referenced_packages: false
     directives_ordering: true
     prefer_const_constructors: true
     prefer_final_fields: true

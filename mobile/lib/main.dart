@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -25,6 +23,7 @@ import 'package:shared/utils/app_bootstrap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
@@ -35,7 +34,6 @@ import 'package:tax_code_flutter/services/sharing_service.dart';
 import 'package:tax_code_flutter/services/tax_code_service.dart';
 
 import 'firebase_options.dart';
-import 'screens/auth_gate.dart';
 import 'settings.dart';
 
 Future<void> main() async {
@@ -51,24 +49,24 @@ Future<void> main() async {
   await configureApp(
     logger: logger,
     configure: () async {
-      if (Platform.isAndroid) {
-        await FirebaseRemoteConfig.instance.fetchAndActivate();
+      await FirebaseRemoteConfig.instance.fetchAndActivate();
 
-        final appCheckProvider = kDebugMode
+      await FirebaseAppCheck.instance.activate(
+        providerAndroid: kDebugMode
             ? const AndroidDebugProvider()
-            : const AndroidPlayIntegrityProvider();
-        await FirebaseAppCheck.instance.activate(
-          providerAndroid: appCheckProvider,
-        );
+            : const AndroidPlayIntegrityProvider(),
+        providerApple: kDebugMode
+            ? const AppleDebugProvider()
+            : const AppleAppAttestProvider(),
+      );
 
-        FlutterError.onError =
-            FirebaseCrashlytics.instance.recordFlutterFatalError;
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-        PlatformDispatcher.instance.onError = (error, stack) {
-          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-          return true;
-        };
-      }
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
     },
   );
 
@@ -132,17 +130,10 @@ Future<void> main() async {
           ),
         ),
         Provider<TaxCodeServiceAbstract>(
-          create: (context) {
-            final remoteConfig = context.read<FirebaseRemoteConfig>();
-            final accessToken = remoteConfig.getString(
-              Settings.mioCodiceFiscaleApiKey,
-            );
-            return TaxCodeService(
-              client: context.read<http.Client>(),
-              logger: context.read<Logger>(),
-              accessToken: accessToken,
-            );
-          },
+          create: (context) => TaxCodeService(
+            functions: context.read<FirebaseFunctions>(),
+            logger: context.read<Logger>(),
+          ),
         ),
 
         // --- Level 3: State Services ---
@@ -192,7 +183,7 @@ final class TaxCodeApp extends StatelessWidget {
 
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      localizationsDelegates: const [
+      localizationsDelegates: [
         ...AppLocalizations.localizationsDelegates,
         FirebaseUILocalizations.delegate,
       ],
@@ -200,7 +191,8 @@ final class TaxCodeApp extends StatelessWidget {
       theme: themeService.theme == ThemeMode.dark
           ? Settings.getDarkTheme()
           : Settings.getLightTheme(),
-      home: const AuthGate(),
+      onGenerateRoute: Routes.generateRoute,
+      initialRoute: Routes.home,
     );
   }
 }

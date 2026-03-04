@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:logger/logger.dart';
 import 'package:shared/models/tax_code_response.dart';
 
@@ -30,17 +28,12 @@ abstract class TaxCodeServiceAbstract {
 /// Implementation of the TaxCodeService.
 /// This class is responsible for fetching tax codes from the TaxCode API.
 class TaxCodeService implements TaxCodeServiceAbstract {
-  final http.Client _client;
+  final FirebaseFunctions _functions;
   final Logger _logger;
-  final String _accessToken;
 
-  TaxCodeService({
-    required http.Client client,
-    required Logger logger,
-    required String accessToken,
-  }) : _client = client,
-       _logger = logger,
-       _accessToken = accessToken;
+  TaxCodeService({required FirebaseFunctions functions, required Logger logger})
+    : _functions = functions,
+      _logger = logger;
 
   @override
   Future<TaxCodeResponse> fetchTaxCode({
@@ -51,47 +44,26 @@ class TaxCodeService implements TaxCodeServiceAbstract {
     required String birthPlaceState,
     required DateTime birthDate,
   }) async {
-    final queryParameters = {
-      'lname': lastName.trim(),
-      'fname': firstName.trim(),
-      'gender': gender,
-      'city': birthPlaceName,
-      'state': birthPlaceState,
-      'day': birthDate.day.toString(),
-      'month': birthDate.month.toString(),
-      'year': birthDate.year.toString(),
-      'access_token': _accessToken,
-    };
-
-    final uri = Uri.https(
-      'api.miocodicefiscale.com',
-      '/calculate',
-      queryParameters,
-    );
-
     try {
-      final response = await _client
-          .get(uri)
-          .timeout(const Duration(seconds: 10));
+      final response = await _functions.httpsCallable('calculateTaxCode').call({
+        'fname': firstName.trim(),
+        'lname': lastName.trim(),
+        'gender': gender,
+        'city': birthPlaceName,
+        'state': birthPlaceState,
+        'day': birthDate.day.toString(),
+        'month': birthDate.month.toString(),
+        'year': birthDate.year.toString(),
+      });
 
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return TaxCodeResponse.fromJson(jsonDecode(response.body));
-      } else {
-        _logger.w(
-          'TaxCode API returned a server error: ${response.statusCode}',
-        );
-        throw TaxCodeApiServerException(response.statusCode);
-      }
-    } on SocketException catch (e, s) {
+      return TaxCodeResponse.fromJson(Map<String, dynamic>.from(response.data));
+    } on FirebaseFunctionsException catch (e, s) {
       _logger.w(
-        'Network error during tax code fetch.',
+        'TaxCode Cloud Function error: ${e.code}',
         error: e,
         stackTrace: s,
       );
-      throw TaxCodeApiNetworkException();
-    } on TimeoutException catch (e, s) {
-      _logger.w('Timeout during tax code fetch.', error: e, stackTrace: s);
-      throw TaxCodeApiNetworkException();
+      throw TaxCodeApiServerException(500); // Map to internal server error
     } catch (e, s) {
       _logger.e('Unexpected error in TaxCodeService.', error: e, stackTrace: s);
       rethrow;

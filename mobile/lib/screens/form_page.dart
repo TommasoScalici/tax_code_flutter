@@ -12,10 +12,9 @@ import 'package:shared/repositories/contact_repository.dart';
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/models/scanned_data.dart';
+import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/tax_code_service.dart';
-
-import 'camera_page.dart';
 
 class FormPage extends StatelessWidget {
   final Contact? contact;
@@ -94,9 +93,9 @@ class _FormViewState extends State<_FormView> {
   }
 
   Future<void> _openCameraPage(FormPageController controller) async {
-    final scannedData = await Navigator.push<ScannedData?>(
+    final scannedData = await Navigator.pushNamed<ScannedData?>(
       context,
-      MaterialPageRoute(builder: (ctx) => const CameraPage()),
+      Routes.camera,
     );
 
     if (scannedData != null) {

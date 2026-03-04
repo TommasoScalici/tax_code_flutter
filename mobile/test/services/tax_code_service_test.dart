@@ -1,44 +1,44 @@
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared/models/tax_code_response.dart';
 import 'package:tax_code_flutter/services/tax_code_service.dart';
 
 // --- Mocks ---
-class MockHttpClient extends Mock implements http.Client {}
+class MockFirebaseFunctions extends Mock implements FirebaseFunctions {}
+
+class MockHttpsCallable extends Mock implements HttpsCallable {}
+
+class MockHttpsCallableResult extends Mock implements HttpsCallableResult {}
 
 class MockLogger extends Mock implements Logger {}
 
 void main() {
   late TaxCodeService taxCodeService;
-  late MockHttpClient mockHttpClient;
+  late MockFirebaseFunctions mockFunctions;
+  late MockHttpsCallable mockHttpsCallable;
+  late MockHttpsCallableResult mockResult;
   late MockLogger mockLogger;
 
   setUp(() {
-    mockHttpClient = MockHttpClient();
+    mockFunctions = MockFirebaseFunctions();
+    mockHttpsCallable = MockHttpsCallable();
+    mockResult = MockHttpsCallableResult();
     mockLogger = MockLogger();
 
-    registerFallbackValue(Uri.parse('http://fake.url'));
-    registerFallbackValue(StackTrace.current);
-    registerFallbackValue(Object());
-
     taxCodeService = TaxCodeService(
-      client: mockHttpClient,
+      functions: mockFunctions,
       logger: mockLogger,
-      accessToken: 'test_token',
     );
   });
 
   // Dummy data for the service call
-  final tFirstName = 'Mario';
-  final tLastName = 'Rossi';
-  final tGender = 'M';
-  final tBirthPlaceName = 'Roma';
-  final tBirthPlaceState = 'RM';
+  const tFirstName = 'Mario';
+  const tLastName = 'Rossi';
+  const tGender = 'M';
+  const tBirthPlaceName = 'Roma';
+  const tBirthPlaceState = 'RM';
   final tBirthDate = DateTime(1980, 1, 1);
 
   Future<TaxCodeResponse> callFetchTaxCode() {
@@ -53,49 +53,46 @@ void main() {
   }
 
   group('TaxCodeService', () {
-    final fakeJsonResponse = '''
-      {
-        "status": true,
-        "message": "OK",
-        "data": {
-          "cf": "RSSMRA80A01H501U",
-          "all_cf": ["RSSMRA80A01H501U"]
-        }
-      }
-    ''';
+    final Map<String, dynamic> fakeResponseData = {
+      'status': true,
+      'message': 'OK',
+      'data': {
+        'cf': 'RSSMRA80A01H501U',
+        'all_cf': ['RSSMRA80A01H501U'],
+      },
+    };
 
     test(
-      'should return TaxCodeResponse when the response code is 200 (success)',
+      'should return TaxCodeResponse when the Cloud Function succeeds',
       () async {
         // Arrange
-        final expectedResponse = TaxCodeResponse.fromJson(
-          jsonDecode(fakeJsonResponse),
-        );
-
-        when(() => mockHttpClient.get(any())).thenAnswer(
-          (_) async => http.Response(
-            fakeJsonResponse,
-            200,
-            headers: {'content-type': 'application/json; charset=utf-8'},
-          ),
-        );
+        when(
+          () => mockFunctions.httpsCallable(any()),
+        ).thenReturn(mockHttpsCallable);
+        when(
+          () => mockHttpsCallable.call(any()),
+        ).thenAnswer((_) async => mockResult);
+        when(() => mockResult.data).thenReturn(fakeResponseData);
 
         // Act
         final result = await callFetchTaxCode();
 
         // Assert
-        expect(result, equals(expectedResponse));
         expect(result.data.fiscalCode, 'RSSMRA80A01H501U');
+        verify(() => mockFunctions.httpsCallable('calculateTaxCode')).called(1);
       },
     );
 
     test(
-      'should throw a TaxCodeApiServerException when the response code is not 200',
+      'should throw a TaxCodeApiServerException when the Cloud Function throws',
       () async {
         // Arrange
         when(
-          () => mockHttpClient.get(any()),
-        ).thenAnswer((_) async => http.Response('Not Found', 404));
+          () => mockFunctions.httpsCallable(any()),
+        ).thenReturn(mockHttpsCallable);
+        when(() => mockHttpsCallable.call(any())).thenThrow(
+          FirebaseFunctionsException(message: 'Error', code: 'internal'),
+        );
 
         // Act & Assert
         try {
@@ -103,45 +100,15 @@ void main() {
           fail('should have thrown a TaxCodeApiServerException');
         } catch (e) {
           expect(e, isA<TaxCodeApiServerException>());
-          verify(() => mockLogger.w(any())).called(1);
+          verify(
+            () => mockLogger.w(
+              any(),
+              error: any(named: 'error'),
+              stackTrace: any(named: 'stackTrace'),
+            ),
+          ).called(1);
         }
       },
     );
-
-    test(
-      'should throw a TaxCodeApiNetworkException on SocketException',
-      () async {
-        // Arrange
-        when(
-          () => mockHttpClient.get(any()),
-        ).thenThrow(const SocketException('No internet'));
-
-        // Act
-        final call = callFetchTaxCode;
-
-        // Assert
-        expect(call, throwsA(isA<TaxCodeApiNetworkException>()));
-      },
-    );
-
-    test('should call the client with the correct URI', () async {
-      // Arrange
-      when(() => mockHttpClient.get(any())).thenAnswer(
-        (_) async => http.Response(
-          fakeJsonResponse,
-          200,
-          headers: {'content-type': 'application/json; charset=utf-8'},
-        ),
-      );
-
-      // Act
-      await callFetchTaxCode();
-
-      // Assert
-      final capturedUri =
-          verify(() => mockHttpClient.get(captureAny())).captured.first as Uri;
-      expect(capturedUri.host, 'api.miocodicefiscale.com');
-      expect(capturedUri.queryParameters['fname'], tFirstName);
-    });
   });
 }

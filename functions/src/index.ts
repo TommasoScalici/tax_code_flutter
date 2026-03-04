@@ -1,4 +1,5 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { defineString } from "firebase-functions/params";
 import { logger } from "firebase-functions";
 import {
   VertexAI,
@@ -6,14 +7,127 @@ import {
   HarmCategory,
   HarmBlockThreshold,
 } from "@google-cloud/vertexai";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { initializeApp } from "firebase-admin/app";
 
-const LOCATION = "europe-west1";
-const PROJECT_ID = "tax-code-flutter";
-const SERVICE_ACCOUNT =
-  "vertex-ai-invoker@tax-code-flutter.iam.gserviceaccount.com";
+initializeApp();
+
+const LOCATION = process.env.LOCATION || "europe-west1";
+const PROJECT_ID = process.env.GCLOUD_PROJECT;
+if (!PROJECT_ID) {
+  throw new Error("GCLOUD_PROJECT environment variable is not set.");
+}
+const SERVICE_ACCOUNT = `vertex-ai-invoker@${PROJECT_ID}.iam.gserviceaccount.com`;
 
 let vertexAI: VertexAI;
 let generativeModel: GenerativeModel;
+
+const MIO_CODICE_FISCALE_API_KEY = defineString("MIO_CODICE_FISCALE_API_KEY");
+
+export const calculateTaxCode = onCall(
+  { region: LOCATION },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated.",
+      );
+    }
+
+    const uid = request.auth.uid;
+    const db = getFirestore();
+    const rateLimitRef = db.collection("rateLimitsTaxCode").doc(uid);
+    const MAX_CALLS_PER_DAY = 50;
+    const today = new Date().toISOString().split("T")[0];
+
+    try {
+      await db.runTransaction(async (t) => {
+        const doc = await t.get(rateLimitRef);
+        const data = doc.data() || {};
+        let callsToday = 0;
+
+        if (data.date === today) {
+          callsToday = data.count || 0;
+        }
+
+        if (callsToday >= MAX_CALLS_PER_DAY) {
+          logger.warn(`User ${uid} exceeded daily tax code limit.`);
+          throw new HttpsError(
+            "resource-exhausted",
+            "Daily limit for tax code calculations reached.",
+          );
+        }
+
+        t.set(
+          rateLimitRef,
+          {
+            date: today,
+            count: callsToday + 1,
+            lastUpdated: FieldValue.serverTimestamp(),
+          },
+          { merge: true },
+        );
+      });
+    } catch (error) {
+      if (error instanceof HttpsError) throw error;
+      logger.error("Rate limit error", { error, uid });
+      throw new HttpsError("internal", "Error enforcing rate limit.");
+    }
+
+    const { fname, lname, gender, day, month, year, city, state } =
+      request.data;
+
+    if (
+      !fname ||
+      !lname ||
+      !gender ||
+      !day ||
+      !month ||
+      !year ||
+      !city ||
+      !state
+    ) {
+      throw new HttpsError(
+        "invalid-argument",
+        "The function must be called with all required birth data.",
+      );
+    }
+
+    const queryParams = new URLSearchParams({
+      fname,
+      lname,
+      gender,
+      day,
+      month,
+      year,
+      city,
+      state,
+      access_token: MIO_CODICE_FISCALE_API_KEY.value(),
+    });
+
+    const url = `https://api.miocodicefiscale.com/calculate?${queryParams.toString()}`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        logger.error("TaxCode API error", {
+          status: response.status,
+          uid: request.auth.uid,
+        });
+        throw new HttpsError("internal", "TaxCode API returned an error.");
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (error instanceof HttpsError) throw error;
+      logger.error("Unexpected error calling TaxCode API", {
+        error,
+        uid: request.auth.uid,
+      });
+      throw new HttpsError("internal", "Failed to calculate tax code.");
+    }
+  },
+);
 
 export const extractDataFromDocument = onCall(
   { region: LOCATION, serviceAccount: SERVICE_ACCOUNT },
@@ -30,7 +144,7 @@ export const extractDataFromDocument = onCall(
       vertexAI = new VertexAI({ project: PROJECT_ID, location: LOCATION });
 
       generativeModel = vertexAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
+        model: "gemini-flash-latest",
         safetySettings: [
           {
             category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
@@ -50,6 +164,50 @@ export const extractDataFromDocument = onCall(
         "unauthenticated",
         "The function must be called while authenticated.",
       );
+    }
+
+    const uid = request.auth.uid;
+    const db = getFirestore();
+    const rateLimitRef = db.collection("rateLimits").doc(uid);
+    const MAX_CALLS_PER_DAY = 15; // Set quota rate limit
+    const today = new Date().toISOString().split("T")[0];
+
+    try {
+      await db.runTransaction(async (t) => {
+        const doc = await t.get(rateLimitRef);
+        const data = doc.data() || {};
+        let callsToday = 0;
+
+        if (data.date === today) {
+          callsToday = data.count || 0;
+        }
+
+        if (callsToday >= MAX_CALLS_PER_DAY) {
+          logger.warn(
+            `User ${uid} exceeded daily limit of ${MAX_CALLS_PER_DAY} for the Gemini API.`,
+          );
+          throw new HttpsError(
+            "resource-exhausted",
+            "You have exceeded your daily limit for document processing.",
+          );
+        }
+
+        t.set(
+          rateLimitRef,
+          {
+            date: today,
+            count: callsToday + 1,
+            lastUpdated: FieldValue.serverTimestamp(),
+          },
+          { merge: true },
+        );
+      });
+    } catch (error) {
+      if (error instanceof HttpsError) {
+        throw error;
+      }
+      logger.error("Error executing rate limit transaction", { error, uid });
+      throw new HttpsError("internal", "Error enforcing rate limit.");
     }
 
     if (!request.data.image) {

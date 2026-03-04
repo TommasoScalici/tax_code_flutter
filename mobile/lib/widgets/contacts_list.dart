@@ -5,8 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
-import 'package:tax_code_flutter/screens/barcode_page.dart';
-import 'package:tax_code_flutter/screens/form_page.dart';
+import 'package:tax_code_flutter/routes.dart';
 
 import 'contact_card.dart';
 
@@ -150,9 +149,10 @@ class _ContactsListState extends State<ContactsList> {
     HomePageController controller,
     Contact contact,
   ) async {
-    final editedContact = await Navigator.push<Contact>(
+    final editedContact = await Navigator.pushNamed<Contact>(
       context,
-      MaterialPageRoute(builder: (context) => FormPage(contact: contact)),
+      Routes.form,
+      arguments: contact,
     );
     if (editedContact != null) {
       controller.saveContact(editedContact);
@@ -188,11 +188,6 @@ class _ContactsListState extends State<ContactsList> {
   }
 
   void _onShowBarcode(BuildContext context, Contact contact) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BarcodePage(taxCode: contact.taxCode),
-      ),
-    );
+    Navigator.pushNamed(context, Routes.barcode, arguments: contact.taxCode);
   }
 }

@@ -40,13 +40,25 @@ class DatabaseService {
     final contactsRef = userDocRef.collection('contacts');
     final querySnapshot = await contactsRef.get();
 
-    final WriteBatch batch = _firestore.batch();
+    var batch = _firestore.batch();
+    var count = 0;
+
     for (var doc in querySnapshot.docs) {
       batch.delete(doc.reference);
+      count++;
+      if (count >= 500) {
+        await batch.commit();
+        batch = _firestore.batch();
+        count = 0;
+      }
     }
-    batch.delete(userDocRef);
 
-    await batch.commit();
+    if (count < 500) {
+      batch.delete(userDocRef);
+      await batch.commit();
+    } else {
+      await _firestore.collection('users').doc(userId).delete();
+    }
   }
 
   /// Removes a single contact from Firestore.
@@ -68,7 +80,8 @@ class DatabaseService {
         .doc(userId)
         .collection('contacts');
 
-    final WriteBatch batch = _firestore.batch();
+    var batch = _firestore.batch();
+    var count = 0;
 
     // 1. Get all existing documents from Firestore
     final remoteSnapshot = await collection.get();
@@ -78,16 +91,30 @@ class DatabaseService {
     for (final doc in remoteSnapshot.docs) {
       if (!localIds.contains(doc.id)) {
         batch.delete(doc.reference);
+        count++;
+        if (count >= 500) {
+          await batch.commit();
+          batch = _firestore.batch();
+          count = 0;
+        }
       }
     }
 
     // 3. Schedule writes for all current contacts (to add new ones or update existing ones)
     for (final contact in contacts) {
       batch.set(collection.doc(contact.id), contact.toJson());
+      count++;
+      if (count >= 500) {
+        await batch.commit();
+        batch = _firestore.batch();
+        count = 0;
+      }
     }
 
-    // 4. Commit all operations as a single atomic transaction
-    await batch.commit();
+    // 4. Commit remaining operations
+    if (count > 0) {
+      await batch.commit();
+    }
   }
 
   /// Saves user metadata to the 'users' collection.
