@@ -84,10 +84,8 @@ final class HomePage extends StatelessWidget {
       body: const SafeArea(child: ContactsList()),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final newContact = await Navigator.pushNamed<Contact>(
-            context,
-            Routes.form,
-          );
+          final newContact =
+              await Navigator.pushNamed(context, Routes.form) as Contact?;
 
           if (newContact != null) {
             homeController.saveContact(newContact);

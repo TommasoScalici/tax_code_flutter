@@ -240,5 +240,21 @@
   "installerStore": "Installer Store",
   "@installerStore": {
     "description": "Label for the installer store field in an info screen."
+  },
+  "citiesDownloadTitle": "Updating Database",
+  "@citiesDownloadTitle": {
+    "description": "Title for the modal showing the cities database download progress."
+  },
+  "stepDownloading": "Downloading cities data...",
+  "@stepDownloading": {
+    "description": "Progress step indicating data is being downloaded."
+  },
+  "stepGenerating": "Generating cities data. This might take a minute...",
+  "@stepGenerating": {
+    "description": "Progress step indicating data is being generated on the server."
+  },
+  "stepParsing": "Reading database...",
+  "@stepParsing": {
+    "description": "Progress step indicating data is being parsed."
   }
 }

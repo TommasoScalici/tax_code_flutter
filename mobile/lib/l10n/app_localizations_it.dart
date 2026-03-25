@@ -188,4 +188,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get installerStore => 'Store di Installazione';
+
+  @override
+  String get citiesDownloadTitle => 'Aggiornamento Database';
+
+  @override
+  String get stepDownloading => 'Download dei dati dei comuni in corso...';
+
+  @override
+  String get stepGenerating =>
+      'Generazione dati in corso. Potrebbe volerci un minuto...';
+
+  @override
+  String get stepParsing => 'Lettura del database in corso...';
 }

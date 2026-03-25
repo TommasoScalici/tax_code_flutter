@@ -42,8 +42,11 @@ class FormPageController with ChangeNotifier {
   late final FormGroup form;
 
   List<Birthplace> birthplaces = [];
+  bool _isDisposed = false;
   bool isLoading = false;
   String? errorMessage;
+  double? downloadProgress;
+  String? downloadStep;
 
   FormPageController({
     required TaxCodeServiceAbstract taxCodeService,
@@ -61,6 +64,7 @@ class FormPageController with ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _formStatusSubscription?.cancel();
     super.dispose();
   }
@@ -109,7 +113,14 @@ class FormPageController with ChangeNotifier {
   }
 
   Future<void> _loadBirthplaces() async {
-    birthplaces = await _birthplaceService.loadBirthplaces();
+    birthplaces = await _birthplaceService.loadBirthplaces(
+      onProgress: (progress, step) {
+        if (_isDisposed) return;
+        downloadProgress = progress;
+        downloadStep = step;
+        notifyListeners();
+      },
+    );
   }
 
   void _setError(String message) {
@@ -120,7 +131,13 @@ class FormPageController with ChangeNotifier {
   void _setLoading(bool value) {
     if (isLoading == value) return;
     isLoading = value;
-    notifyListeners();
+    if (value) {
+      downloadProgress = null;
+      downloadStep = null;
+    }
+    if (!_isDisposed) {
+      notifyListeners();
+    }
   }
 
   void clearError() {

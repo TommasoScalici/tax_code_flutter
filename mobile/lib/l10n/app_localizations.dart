@@ -439,6 +439,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Installer Store'**
   String get installerStore;
+
+  /// Title for the modal showing the cities database download progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Updating Database'**
+  String get citiesDownloadTitle;
+
+  /// Progress step indicating data is being downloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading cities data...'**
+  String get stepDownloading;
+
+  /// Progress step indicating data is being generated on the server.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating cities data. This might take a minute...'**
+  String get stepGenerating;
+
+  /// Progress step indicating data is being parsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading database...'**
+  String get stepParsing;
 }
 
 class _AppLocalizationsDelegate

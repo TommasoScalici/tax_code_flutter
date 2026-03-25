@@ -46,6 +46,8 @@ dependencies:
   firebase_ui_auth: ^3.0.1
   firebase_ui_localizations: ^2.0.0
   firebase_ui_oauth_google: ^2.0.1
+  firebase_storage: ^13.1.0
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:
@@ -67,4 +69,3 @@ flutter:
     - assets/html/en/terms.html
     - assets/html/it/terms.html
     - assets/images/app_icon_512x512.png
-    - assets/json/cities.json

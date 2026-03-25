@@ -188,4 +188,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get installerStore => 'Installer Store';
+
+  @override
+  String get citiesDownloadTitle => 'Updating Database';
+
+  @override
+  String get stepDownloading => 'Downloading cities data...';
+
+  @override
+  String get stepGenerating =>
+      'Generating cities data. This might take a minute...';
+
+  @override
+  String get stepParsing => 'Reading database...';
 }
