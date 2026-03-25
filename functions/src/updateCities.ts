@@ -186,7 +186,21 @@ export const updateCitiesJsonScheduled = onSchedule(
 
 export const generateCitiesJson = onCall(
   { timeoutSeconds: 300, memory: "512MiB" },
-  async () => {
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated.",
+      );
+    }
+
+    if (request.auth.token.admin !== true) {
+      throw new HttpsError(
+        "permission-denied",
+        "The function must be called by an administrator.",
+      );
+    }
+
     try {
       const count = await downloadAndParseIstatData();
       return { success: true, count };

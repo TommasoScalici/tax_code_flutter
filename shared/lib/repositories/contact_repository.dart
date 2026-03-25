@@ -202,7 +202,17 @@ class ContactRepository with ChangeNotifier {
   ///
   /// Listens to authentication changes and dispatches to the appropriate handler.
   ///
-  Future<void> _onAuthChanged() async {
+  void _onAuthChanged() {
+    _processAuthChange().catchError((Object error, StackTrace stackTrace) {
+      _logger.e(
+        'Unhandled error during auth change processing',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    });
+  }
+
+  Future<void> _processAuthChange() async {
     final user = _authService.currentUser;
 
     // Act only if the user state has actually changed
