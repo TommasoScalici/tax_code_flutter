@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/services/in_app_review_service.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -157,6 +158,17 @@ class ProfileScreen extends StatelessWidget {
                     label: Text(l10n.signOut),
                   ),
                 ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      context.read<InAppReviewService>().openStoreListing();
+                    },
+                    icon: const Icon(Icons.star_rate_rounded),
+                    label: Text(l10n.rateThisApp),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(

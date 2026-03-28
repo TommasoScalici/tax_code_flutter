@@ -1,7 +1,7 @@
 name: tax_code_flutter
 description: "App for Italian Tax Code calculation."
 publish_to: none
-version: 1.5.1+44
+version: 1.6.0+44
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
@@ -48,6 +48,7 @@ dependencies:
   firebase_ui_oauth_google: ^2.0.1
   firebase_storage: ^13.1.0
   path_provider: ^2.1.5
+  in_app_review: ^2.0.11
 
 dev_dependencies:
   flutter_test:

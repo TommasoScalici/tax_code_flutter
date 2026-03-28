@@ -493,6 +493,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reading database...'**
   String get stepParsing;
+
+  /// Label for a button in the profile screen that opens the Play Store for the user to leave a review.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate this App'**
+  String get rateThisApp;
 }
 
 class _AppLocalizationsDelegate

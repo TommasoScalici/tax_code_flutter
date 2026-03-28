@@ -221,4 +221,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get stepParsing => 'Lettura del database in corso...';
+
+  @override
+  String get rateThisApp => 'Valuta l\'App';
 }

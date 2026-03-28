@@ -276,5 +276,9 @@
   "stepParsing": "Lettura del database in corso...",
   "@stepParsing": {
     "description": "Progress step indicating data is being parsed."
+  },
+  "rateThisApp": "Valuta l'App",
+  "@rateThisApp": {
+    "description": "Etichetta per un pulsante nella schermata del profilo che apre il Play Store per lasciare una recensione."
   }
 }

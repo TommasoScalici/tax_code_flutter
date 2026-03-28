@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
+import 'package:shared/services/review_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/routes.dart';
+import 'package:tax_code_flutter/services/in_app_review_service.dart';
 
 import 'contact_card.dart';
 
@@ -156,6 +158,14 @@ class _ContactsListState extends State<ContactsList> {
     );
     if (editedContact != null) {
       controller.saveContact(editedContact);
+
+      if (!context.mounted) return;
+      final reviewService = context.read<ReviewService>();
+      await reviewService.incrementSuccessfulCalculations();
+
+      if (!context.mounted) return;
+      final inAppReviewService = context.read<InAppReviewService>();
+      await inAppReviewService.maybeRequestReview();
     }
   }
 

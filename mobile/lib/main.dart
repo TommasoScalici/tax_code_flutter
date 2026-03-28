@@ -18,6 +18,7 @@ import 'package:shared/hive_registrar.g.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/database_service.dart';
+import 'package:shared/services/review_service.dart';
 import 'package:shared/services/theme_service.dart';
 import 'package:shared/utils/app_bootstrap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +29,7 @@ import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
 import 'package:tax_code_flutter/services/gemini_service.dart';
+import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
@@ -69,6 +71,10 @@ Future<void> main() async {
       };
     },
   );
+
+  final reviewService = ReviewService(prefs: sharedPreferences);
+  await reviewService.recordFirstLaunchIfNeeded();
+  await reviewService.incrementAppOpenCount();
 
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
@@ -134,6 +140,13 @@ Future<void> main() async {
         Provider<TaxCodeServiceAbstract>(
           create: (context) => TaxCodeService(
             functions: context.read<FirebaseFunctions>(),
+            logger: context.read<Logger>(),
+          ),
+        ),
+        Provider<ReviewService>.value(value: reviewService),
+        Provider<InAppReviewService>(
+          create: (context) => InAppReviewService(
+            reviewService: context.read<ReviewService>(),
             logger: context.read<Logger>(),
           ),
         ),
