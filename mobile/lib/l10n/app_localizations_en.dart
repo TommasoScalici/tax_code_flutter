@@ -153,6 +153,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get genericError => 'Something went wrong. Please try again.';
 
   @override
+  String get rateLimitExceeded =>
+      'Daily limit reached. Please try again tomorrow.';
+
+  @override
+  String get serviceUnavailable =>
+      'The service is temporarily unavailable. Please try again later.';
+
+  @override
+  String get deadlineExceeded =>
+      'The request took too long. Please check your connection or try again later.';
+
+  @override
+  String get networkError =>
+      'No internet connection. Please check your network and try again.';
+
+  @override
+  String get sessionExpired =>
+      'Your session has expired. Please sign in again.';
+
+  @override
   String get tooltipToggleFlash => 'Toggle flash';
 
   @override

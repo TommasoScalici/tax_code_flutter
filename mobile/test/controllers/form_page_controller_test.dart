@@ -83,7 +83,9 @@ void main() {
 
       // Default stubbing for methods called during initialization or submission
       when(
-        () => mockBirthplaceService.loadBirthplaces(),
+        () => mockBirthplaceService.loadBirthplaces(
+          onProgress: any(named: 'onProgress'),
+        ),
       ).thenAnswer((_) async => [sampleBirthplace]);
       when(() => mockContactRepository.contacts).thenReturn([]);
       when(
@@ -109,7 +111,11 @@ void main() {
       await createController();
 
       // Assert
-      verify(() => mockBirthplaceService.loadBirthplaces()).called(1);
+      verify(
+        () => mockBirthplaceService.loadBirthplaces(
+          onProgress: any(named: 'onProgress'),
+        ),
+      ).called(1);
       expect(formPageController.birthplaces, isNotEmpty);
       expect(formPageController.form, isA<FormGroup>());
       expect(formPageController.isLoading, isFalse);
@@ -224,12 +230,12 @@ void main() {
         expect(result, isA<Contact>());
         expect(result?.firstName, 'Guido');
         expect(result?.taxCode, 'NEWTAXCODE123');
-        expect(formPageController.errorMessage, isNull);
+        expect(formPageController.errorKey, isNull);
         expect(formPageController.isLoading, isFalse);
       });
 
       test(
-        'sets network error message on TaxCodeApiNetworkException',
+        'sets network error key on TaxCodeApiNetworkException',
         () async {
           // Arrange
           await createController();
@@ -256,11 +262,11 @@ void main() {
 
           // Assert
           expect(result, isNull);
-          expect(formPageController.errorMessage, contains('Connection Error'));
+          expect(formPageController.errorKey, 'networkError');
         },
       );
 
-      test('sets generic error message on TaxCodeApiServerException', () async {
+      test('sets rate limit error key on resource-exhausted error', () async {
         // Arrange
         await createController();
         formPageController.form.patchValue({
@@ -279,32 +285,31 @@ void main() {
             birthPlaceName: any(named: 'birthPlaceName'),
             birthPlaceState: any(named: 'birthPlaceState'),
           ),
-        ).thenThrow(TaxCodeApiServerException(500)); // Simulate a server error
+        ).thenThrow(TaxCodeApiServerException('resource-exhausted'));
 
         // Act
         final result = await formPageController.submitForm();
 
         // Assert
         expect(result, isNull);
-        expect(formPageController.errorMessage, contains('unexpected error'));
-        verify(() => mockLogger.e(any(), error: any(named: 'error'))).called(1);
+        expect(formPageController.errorKey, 'rateLimitExceeded');
       });
     });
 
-    test('clearError resets error message and notifies listeners', () async {
+    test('clearError resets error key and notifies listeners', () async {
       // Arrange
       await createController();
       var listenerCallCount = 0;
       formPageController.addListener(() => listenerCallCount++);
 
       // Manually set an error state to test clearing it
-      formPageController.errorMessage = 'An old error';
+      formPageController.errorKey = 'networkError';
 
       // Act
       formPageController.clearError();
 
       // Assert
-      expect(formPageController.errorMessage, isNull);
+      expect(formPageController.errorKey, isNull);
       expect(listenerCallCount, greaterThan(0));
     });
 
@@ -315,8 +320,7 @@ void main() {
       // Act
       formPageController.dispose();
 
-      // Assert: The main purpose of this test is to ensure `dispose` can be called
-      // without throwing an error, implicitly testing that the subscription is handled.
+      // Assert: Ensure no error thrown
     });
   });
 }

@@ -107,8 +107,10 @@ Future<void> main() async {
               DatabaseService(firestore: context.read<FirebaseFirestore>()),
         ),
         Provider<BirthplaceServiceAbstract>(
-          create: (context) =>
-              BirthplaceService(logger: context.read<Logger>()),
+          create: (context) => BirthplaceService(
+            functions: context.read<FirebaseFunctions>(),
+            logger: context.read<Logger>(),
+          ),
         ),
         Provider<InfoServiceAbstract>(
           create: (context) => InfoService(logger: context.read<Logger>()),

@@ -43,7 +43,7 @@ class PhoneAppLauncherService(private val context: Context) {
             }
             
             val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = "app://$packageName".toUri()
+                data = "app://$packageName/".toUri()
                 addCategory(Intent.CATEGORY_DEFAULT)
                 addCategory(Intent.CATEGORY_BROWSABLE)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

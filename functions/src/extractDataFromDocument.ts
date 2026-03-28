@@ -15,16 +15,24 @@ const SERVICE_ACCOUNT = `vertex-ai-invoker@${PROJECT_ID}.iam.gserviceaccount.com
 let vertexAI: VertexAI;
 let generativeModel: GenerativeModel;
 
-export const extractDataFromDocument = onCall(
+interface ExtractDataRequest {
+  image: string;
+}
+
+interface ExtractDataResponse {
+  firstName: string | null;
+  lastName: string | null;
+  gender: string | null;
+  birthPlace: {
+    name: string | null;
+    state: string | null;
+  } | null;
+  birthDate: string | null;
+}
+
+export const extractDataFromDocument = onCall<ExtractDataRequest>(
   { region: LOCATION, serviceAccount: SERVICE_ACCOUNT },
   async (request) => {
-    /**
-     * Analyzes an image of an Italian ID or health card to extract personal data.
-     * @param {object} request The request object from the client.
-     * @param {string} request.data.image The Base64 encoded image string.
-     * @returns {Promise<object>} A JSON object structured like the 'Contact' Dart model.
-     */
-
     if (!vertexAI) {
       logger.info("Initializing Vertex AI client for the first time.");
       vertexAI = new VertexAI({ project: PROJECT_ID, location: LOCATION });
@@ -88,10 +96,26 @@ export const extractDataFromDocument = onCall(
           { merge: true },
         );
       });
-    } catch (error) {
-      if (error instanceof HttpsError) {
-        throw error;
+    } catch (error: unknown) {
+      if (error instanceof HttpsError) throw error;
+
+      const errorCode = (error as { code?: string | number })?.code;
+      const errorMessage = (error as { message?: string })?.message;
+
+      if (errorCode === 7 || errorCode === "permission-denied") {
+        logger.error(
+          "Firestore Permission Denied in document scan limit check.",
+          {
+            uid,
+            detail: errorMessage,
+          },
+        );
+        throw new HttpsError(
+          "permission-denied",
+          "Permesso negato durante il controllo dei limiti di scansione.",
+        );
       }
+
       logger.error("Error executing rate limit transaction", { error, uid });
       throw new HttpsError("internal", "Error enforcing rate limit.");
     }
@@ -135,9 +159,7 @@ export const extractDataFromDocument = onCall(
   `;
 
     try {
-      logger.info("Sending request to Gemini Vision API.", {
-        uid: request.auth.uid,
-      });
+      logger.info("Sending request to Gemini Vision API.", { uid });
 
       const geminiRequest = {
         contents: [{ role: "user", parts: [imagePart, { text: prompt }] }],
@@ -148,7 +170,7 @@ export const extractDataFromDocument = onCall(
 
       if (!content || !content.parts[0]?.text) {
         logger.error("Gemini API returned an empty or invalid response.", {
-          uid: request.auth.uid,
+          uid,
         });
         throw new HttpsError(
           "internal",
@@ -160,11 +182,13 @@ export const extractDataFromDocument = onCall(
         .replace(/```json|```/g, "")
         .trim();
       logger.info("Successfully received and parsed response from Gemini.", {
-        uid: request.auth.uid,
+        uid,
       });
 
-      return JSON.parse(jsonResponseText);
-    } catch (error) {
+      return JSON.parse(jsonResponseText) as ExtractDataResponse;
+    } catch (error: unknown) {
+      if (error instanceof HttpsError) throw error;
+
       logger.error("An error occurred while calling the Gemini API.", {
         error,
         uid: request.auth.uid,

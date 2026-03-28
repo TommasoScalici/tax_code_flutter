@@ -9,8 +9,8 @@ class TaxCodeApiNetworkException implements Exception {}
 
 /// Exception for server errors during tax code fetching.
 class TaxCodeApiServerException implements Exception {
-  final int statusCode;
-  TaxCodeApiServerException(this.statusCode);
+  final String code;
+  TaxCodeApiServerException(this.code);
 }
 
 /// Abstract class for the TaxCodeService.
@@ -51,22 +51,42 @@ class TaxCodeService implements TaxCodeServiceAbstract {
         'gender': gender,
         'city': birthPlaceName,
         'state': birthPlaceState,
-        'day': birthDate.day.toString(),
-        'month': birthDate.month.toString(),
-        'year': birthDate.year.toString(),
+        'day': birthDate.day,
+        'month': birthDate.month,
+        'year': birthDate.year,
       });
 
-      return TaxCodeResponse.fromJson(Map<String, dynamic>.from(response.data));
+      final sanitizedData = _sanitizeMap(response.data as Map?);
+      return TaxCodeResponse.fromJson(sanitizedData);
     } on FirebaseFunctionsException catch (e, s) {
-      _logger.w(
-        'TaxCode Cloud Function error: ${e.code}',
-        error: e,
-        stackTrace: s,
-      );
-      throw TaxCodeApiServerException(500); // Map to internal server error
+      _logger.w('TaxCode Cloud Function error: ${e.code}', error: e, stackTrace: s);
+      if (e.code == 'unavailable') {
+        throw TaxCodeApiNetworkException();
+      }
+      throw TaxCodeApiServerException(e.code);
     } catch (e, s) {
-      _logger.e('Unexpected error in TaxCodeService.', error: e, stackTrace: s);
-      rethrow;
+      _logger.e('Unexpected error in TaxCodeService: $e', error: e, stackTrace: s);
+      throw TaxCodeApiNetworkException();
     }
+  }
+
+  Map<String, dynamic> _sanitizeMap(Map? map) {
+    if (map == null) return {};
+
+    return map.map((key, value) {
+      final sanitizedKey = key.toString();
+      dynamic sanitizedValue = value;
+
+      if (value is Map) {
+        sanitizedValue = _sanitizeMap(value);
+      } else if (value is List) {
+        sanitizedValue = value.map((e) {
+          if (e is Map) return _sanitizeMap(e);
+          return e;
+        }).toList();
+      }
+
+      return MapEntry(sanitizedKey, sanitizedValue);
+    });
   }
 }

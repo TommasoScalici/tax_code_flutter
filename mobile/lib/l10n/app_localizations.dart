@@ -368,6 +368,36 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again.'**
   String get genericError;
 
+  /// Error message when the user has exceeded their daily limit of tax code calculations.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily limit reached. Please try again tomorrow.'**
+  String get rateLimitExceeded;
+
+  /// Error message when the backend service is down or returning an error.
+  ///
+  /// In en, this message translates to:
+  /// **'The service is temporarily unavailable. Please try again later.'**
+  String get serviceUnavailable;
+
+  /// Error message when the request times out.
+  ///
+  /// In en, this message translates to:
+  /// **'The request took too long. Please check your connection or try again later.'**
+  String get deadlineExceeded;
+
+  /// Error message when there is no internet connectivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Please check your network and try again.'**
+  String get networkError;
+
+  /// Error message when the user's authentication token is invalid or expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please sign in again.'**
+  String get sessionExpired;
+
   /// Tooltip for the button that toggles the camera flash on and off.
   ///
   /// In en, this message translates to:

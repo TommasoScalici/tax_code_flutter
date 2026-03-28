@@ -153,6 +153,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get genericError => 'Qualcosa è andato storto. Riprova.';
 
   @override
+  String get rateLimitExceeded =>
+      'Limite giornaliero raggiunto. Riprova domani.';
+
+  @override
+  String get serviceUnavailable =>
+      'Il servizio è temporaneamente non disponibile. Riprova più tardi.';
+
+  @override
+  String get deadlineExceeded =>
+      'La richiesta ha impiegato troppo tempo. Controlla la tua connessione o riprova più tardi.';
+
+  @override
+  String get networkError =>
+      'Nessuna connessione internet. Controlla la tua rete e riprova.';
+
+  @override
+  String get sessionExpired =>
+      'La tua sessione è scaduta. Effettua nuovamente l\'accesso.';
+
+  @override
   String get tooltipToggleFlash => 'Attiva/Disattiva flash';
 
   @override

@@ -15,22 +15,35 @@ final class Routes {
   static const String camera = '/camera';
   static const String barcode = '/barcode';
 
-  static Route<dynamic> generateRoute(RouteSettings settings) {
-    switch (settings.name) {
+  static Route<Object?> generateRoute(RouteSettings settings) {
+    var routeName = settings.name;
+
+    if (routeName != null) {
+      final uri = Uri.tryParse(routeName);
+      if (uri != null && uri.scheme == 'app') {
+        routeName = uri.path.isEmpty ? home : uri.path;
+      }
+    }
+
+    switch (routeName) {
       case home:
-        return MaterialPageRoute(builder: (_) => const AuthGate());
+        return MaterialPageRoute<void>(builder: (_) => const AuthGate());
       case profile:
-        return MaterialPageRoute(builder: (_) => const ProfileScreen());
+        return MaterialPageRoute<void>(builder: (_) => const ProfileScreen());
       case form:
         final contact = settings.arguments as Contact?;
-        return MaterialPageRoute(builder: (_) => FormPage(contact: contact));
+        return MaterialPageRoute<Contact?>(
+          builder: (_) => FormPage(contact: contact),
+        );
       case camera:
-        return MaterialPageRoute(builder: (_) => const CameraPage());
+        return MaterialPageRoute<void>(builder: (_) => const CameraPage());
       case barcode:
         final taxCode = settings.arguments as String;
-        return MaterialPageRoute(builder: (_) => BarcodePage(taxCode: taxCode));
+        return MaterialPageRoute<void>(
+          builder: (_) => BarcodePage(taxCode: taxCode),
+        );
       default:
-        return MaterialPageRoute(
+        return MaterialPageRoute<void>(
           builder: (_) => Scaffold(
             body: Center(child: Text('No route defined for ${settings.name}')),
           ),

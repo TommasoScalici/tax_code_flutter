@@ -193,6 +193,26 @@
   "@genericError": {
     "description": "A user-friendly message for a generic error, asking them to retry."
   },
+  "rateLimitExceeded": "Limite giornaliero raggiunto. Riprova domani.",
+  "@rateLimitExceeded": {
+    "description": "Error message when the user has exceeded their daily limit of tax code calculations."
+  },
+  "serviceUnavailable": "Il servizio è temporaneamente non disponibile. Riprova più tardi.",
+  "@serviceUnavailable": {
+    "description": "Error message when the backend service is down or returning an error."
+  },
+  "deadlineExceeded": "La richiesta ha impiegato troppo tempo. Controlla la tua connessione o riprova più tardi.",
+  "@deadlineExceeded": {
+    "description": "Error message when the request times out."
+  },
+  "networkError": "Nessuna connessione internet. Controlla la tua rete e riprova.",
+  "@networkError": {
+    "description": "Error message when there is no internet connectivity."
+  },
+  "sessionExpired": "La tua sessione è scaduta. Effettua nuovamente l'accesso.",
+  "@sessionExpired": {
+    "description": "Error message when the user's authentication token is invalid or expired."
+  },
   "tooltipToggleFlash": "Attiva/Disattiva flash",
   "@tooltipToggleFlash": {
     "description": "Tooltip for the button that toggles the camera flash on and off."

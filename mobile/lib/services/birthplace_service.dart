@@ -17,13 +17,16 @@ abstract class BirthplaceServiceAbstract {
 /// The concrete implementation of [BirthplaceService] that loads data
 /// from Firebase Storage and caches it locally.
 class BirthplaceService implements BirthplaceServiceAbstract {
+  final FirebaseFunctions _functions;
   final Logger _logger;
   final String _storagePath;
-
+ 
   BirthplaceService({
+    required FirebaseFunctions functions,
     required Logger logger,
     String storagePath = 'public/cities.json',
-  }) : _logger = logger,
+  }) : _functions = functions,
+       _logger = logger,
        _storagePath = storagePath;
 
   @override
@@ -69,8 +72,8 @@ class BirthplaceService implements BirthplaceServiceAbstract {
             onProgress?.call(null, 'generating');
             // The JSON does not exist on storage yet, let's call the function
             try {
-              final result = await FirebaseFunctions.instance
-                  .httpsCallable('generateCitiesJson')
+              final result = await _functions
+                  .httpsCallable('updateCities')
                   .call();
               if (result.data['success'] == true) {
                 // Now try nicely to download it again

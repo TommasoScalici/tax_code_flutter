@@ -44,7 +44,7 @@ class FormPageController with ChangeNotifier {
   List<Birthplace> birthplaces = [];
   bool _isDisposed = false;
   bool isLoading = false;
-  String? errorMessage;
+  String? errorKey;
   double? downloadProgress;
   String? downloadStep;
 
@@ -123,11 +123,6 @@ class FormPageController with ChangeNotifier {
     );
   }
 
-  void _setError(String message) {
-    errorMessage = message;
-    notifyListeners();
-  }
-
   void _setLoading(bool value) {
     if (isLoading == value) return;
     isLoading = value;
@@ -140,14 +135,18 @@ class FormPageController with ChangeNotifier {
     }
   }
 
+  void _setErrorKey(String key) {
+    errorKey = key;
+    notifyListeners();
+  }
+
   void clearError() {
-    if (errorMessage != null) {
-      errorMessage = null;
+    if (errorKey != null) {
+      errorKey = null;
       notifyListeners();
     }
   }
 
-  /// Populates the form fields using data from a document scan.
   void populateFormFromScannedData(ScannedData data) {
     form.patchValue({
       'firstName': data.firstName,
@@ -201,12 +200,27 @@ class FormPageController with ChangeNotifier {
         throw Exception('API returned status false.');
       }
     } on TaxCodeApiNetworkException {
-      _setError('Connection Error. Please check your internet connection.');
+      _setErrorKey('networkError');
+      _setLoading(false);
+      return null;
+    } on TaxCodeApiServerException catch (e) {
+      _logger.e('Server error during form submission: ${e.code}');
+      if (e.code == 'resource-exhausted') {
+        _setErrorKey('rateLimitExceeded');
+      } else if (e.code == 'unauthenticated' || e.code == 'permission-denied') {
+        _setErrorKey('sessionExpired');
+      } else if (e.code == 'deadline-exceeded') {
+        _setErrorKey('deadlineExceeded');
+      } else if (e.code == 'unavailable' || e.code == 'failed-precondition') {
+        _setErrorKey('serviceUnavailable');
+      } else {
+        _setErrorKey('serviceUnavailable');
+      }
       _setLoading(false);
       return null;
     } catch (e) {
       _logger.e('An error occurred during form submission', error: e);
-      _setError('An unexpected error occurred.');
+      _setErrorKey('genericError');
       _setLoading(false);
       return null;
     }

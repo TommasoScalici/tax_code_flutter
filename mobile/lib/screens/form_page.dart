@@ -60,8 +60,8 @@ class _FormViewState extends State<_FormView> {
     });
 
     controller.addListener(() {
-      if (controller.errorMessage != null && mounted) {
-        _showErrorDialog(context, controller.errorMessage!);
+      if (controller.errorKey != null && mounted) {
+        _showErrorKey(context, controller.errorKey!);
         controller.clearError();
       }
     });
@@ -73,8 +73,29 @@ class _FormViewState extends State<_FormView> {
     super.dispose();
   }
 
-  void _showErrorDialog(BuildContext context, String message) {
+  void _showErrorKey(BuildContext context, String errorKey) {
     final l10n = AppLocalizations.of(context)!;
+    String message;
+
+    switch (errorKey) {
+      case 'rateLimitExceeded':
+        message = l10n.rateLimitExceeded;
+        break;
+      case 'serviceUnavailable':
+        message = l10n.serviceUnavailable;
+        break;
+      case 'networkError':
+        message = l10n.networkError;
+        break;
+      case 'sessionExpired':
+        message = l10n.sessionExpired;
+        break;
+      case 'genericError':
+      default:
+        message = l10n.genericError;
+        break;
+    }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {

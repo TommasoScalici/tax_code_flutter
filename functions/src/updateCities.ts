@@ -5,7 +5,7 @@ import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 
 // Function to perform the actual download and parse
-export const downloadAndParseIstatData = async () => {
+const downloadAndParseIstatData = async () => {
   logger.info("Starting ISTAT data fetch");
   const baseUrl =
     "https://www.istat.it/classificazione/codici-dei-comuni-delle-province-e-delle-regioni/";
@@ -184,7 +184,7 @@ export const updateCitiesJsonScheduled = onSchedule(
   },
 );
 
-export const generateCitiesJson = onCall(
+export const updateCities = onCall<void>(
   { timeoutSeconds: 300, memory: "512MiB" },
   async (request) => {
     if (!request.auth) {
@@ -194,7 +194,9 @@ export const generateCitiesJson = onCall(
       );
     }
 
-    if (request.auth.token.admin !== true) {
+    // Access custom claim with type safety
+    const isAdmin = !!request.auth.token.admin;
+    if (!isAdmin) {
       throw new HttpsError(
         "permission-denied",
         "The function must be called by an administrator.",
@@ -205,7 +207,7 @@ export const generateCitiesJson = onCall(
       const count = await downloadAndParseIstatData();
       return { success: true, count };
     } catch (error: unknown) {
-      logger.error("Error updating cities.json", error);
+      logger.error("Error updating cities.json", { error });
       const message = error instanceof Error ? error.message : "Unknown error";
       throw new HttpsError("internal", message);
     }

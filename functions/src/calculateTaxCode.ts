@@ -1,14 +1,31 @@
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { logger } from "firebase-functions";
-import { defineString } from "firebase-functions/params";
+import { defineSecret } from "firebase-functions/params";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 
 const LOCATION = process.env.LOCATION || "europe-west1";
 
-const MIO_CODICE_FISCALE_API_KEY = defineString("MIO_CODICE_FISCALE_API_KEY");
+const MIO_CODICE_FISCALE_API_KEY = defineSecret("MIO_CODICE_FISCALE_API_KEY");
 
-export const calculateTaxCode = onCall(
-  { region: LOCATION },
+interface CalculateTaxCodeRequest {
+  fname: string;
+  lname: string;
+  gender: "M" | "F";
+  day: number;
+  month: number;
+  year: number;
+  city: string;
+  state: string;
+}
+
+interface CalculateTaxCodeResponse {
+  tax_code: string;
+  // Add other fields from the API if known, otherwise use unknown or specific types
+  [key: string]: unknown;
+}
+
+export const calculateTaxCode = onCall<CalculateTaxCodeRequest>(
+  { region: LOCATION, secrets: [MIO_CODICE_FISCALE_API_KEY] },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError(
@@ -20,16 +37,15 @@ export const calculateTaxCode = onCall(
     const uid = request.auth.uid;
     const db = getFirestore();
     const rateLimitRef = db.collection("rateLimitsTaxCode").doc(uid);
-    const MAX_CALLS_PER_DAY = 50;
-    const today = new Date().toISOString().split("T")[0];
-
     try {
       await db.runTransaction(async (t) => {
         const doc = await t.get(rateLimitRef);
         const data = doc.data() || {};
-        let callsToday = 0;
+        const MAX_CALLS_PER_DAY = 50;
+        const todayStr = new Date().toISOString().split("T")[0];
 
-        if (data.date === today) {
+        let callsToday = 0;
+        if (data.date === todayStr) {
           callsToday = data.count || 0;
         }
 
@@ -44,16 +60,31 @@ export const calculateTaxCode = onCall(
         t.set(
           rateLimitRef,
           {
-            date: today,
+            date: todayStr,
             count: callsToday + 1,
             lastUpdated: FieldValue.serverTimestamp(),
           },
           { merge: true },
         );
       });
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof HttpsError) throw error;
-      logger.error("Rate limit error", { error, uid });
+
+      const errorCode = (error as { code?: string | number })?.code;
+      const errorMessage = (error as { message?: string })?.message;
+
+      if (errorCode === 7 || errorCode === "permission-denied") {
+        logger.error("Firestore Permission Denied in tax code limit check.", {
+          uid,
+          detail: errorMessage,
+        });
+        throw new HttpsError(
+          "failed-precondition",
+          "Internal service error while checking permissions.",
+        );
+      }
+
+      logger.error("Rate limit check internal error", { error, uid });
       throw new HttpsError("internal", "Error enforcing rate limit.");
     }
 
@@ -76,38 +107,102 @@ export const calculateTaxCode = onCall(
       );
     }
 
+    let apiKey: string;
+    try {
+      apiKey = MIO_CODICE_FISCALE_API_KEY.value();
+    } catch (error: unknown) {
+      logger.error("Failed to access API Key secret", { error, uid });
+      throw new HttpsError("internal", "Service configuration error.");
+    }
+
     const queryParams = new URLSearchParams({
       fname,
       lname,
       gender,
-      day,
-      month,
-      year,
+      day: String(day),
+      month: String(month),
+      year: String(year),
       city,
       state,
-      access_token: MIO_CODICE_FISCALE_API_KEY.value(),
+      access_token: apiKey,
     });
 
-    const url = `https://api.miocodicefiscale.com/calculate?${queryParams.toString()}`;
+    const url = `https://api.miocodicefiscale.it/calculate?${queryParams.toString()}`;
 
     try {
-      const response = await fetch(url);
+      // 10s timeout for external API calls
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      const maskedUrl = url.replace(apiKey, "REDACTED");
+      logger.info(`Fetching tax code from: ${maskedUrl}`, { uid });
+
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent": "TaxCodeApp/1.1.0",
+          Accept: "application/json",
+        },
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
       if (!response.ok) {
-        logger.error("TaxCode API error", {
+        const errorBody = await response.text();
+        logger.error("TaxCode API returned non-OK status", {
           status: response.status,
-          uid: request.auth.uid,
+          statusText: response.statusText,
+          body: errorBody,
+          uid,
         });
-        throw new HttpsError("internal", "TaxCode API returned an error.");
+
+        if (response.status === 429) {
+          throw new HttpsError(
+            "resource-exhausted",
+            "Too many requests to the tax code service provider.",
+          );
+        }
+
+        if (response.status >= 500) {
+          throw new HttpsError(
+            "unavailable",
+            "The tax code service provider is currently unavailable.",
+          );
+        }
+
+        throw new HttpsError(
+          "internal",
+          `TaxCode API error: ${response.status}`,
+        );
       }
 
-      return await response.json();
-    } catch (error) {
+      const data = (await response.json()) as CalculateTaxCodeResponse;
+      return data;
+    } catch (error: unknown) {
       if (error instanceof HttpsError) throw error;
-      logger.error("Unexpected error calling TaxCode API", {
-        error,
-        uid: request.auth.uid,
+
+      const err = error instanceof Error ? error : new Error(String(error));
+
+      if (err.name === "AbortError") {
+        logger.warn("TaxCode API request timed out.", { uid });
+        throw new HttpsError("deadline-exceeded", "The request took too long.");
+      }
+
+      // Safe access to 'cause'
+      const cause = (err as { cause?: unknown })?.cause;
+
+      logger.error("Unexpected error in TaxCode API fetch logic", {
+        name: err.name,
+        message: err.message,
+        stack: err.stack,
+        cause: cause,
+        uid,
       });
-      throw new HttpsError("internal", "Failed to calculate tax code.");
+
+      throw new HttpsError(
+        "unavailable",
+        "Unable to reach the calculation service.",
+      );
     }
   },
 );
