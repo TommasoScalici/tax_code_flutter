@@ -50,7 +50,7 @@ class InAppReviewService {
   /// Used for the permanent "Rate this app" button.
   Future<void> openStoreListing() async {
     try {
-      await _inAppReview.openStoreListing(appStoreId: 'tommasoscalici.taxcode');
+      await _inAppReview.openStoreListing();
     } catch (e, s) {
       _logger.w('Failed to open store listing', error: e, stackTrace: s);
     }
