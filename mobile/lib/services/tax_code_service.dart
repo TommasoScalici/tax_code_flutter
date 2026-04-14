@@ -56,7 +56,12 @@ class TaxCodeService implements TaxCodeServiceAbstract {
         'year': birthDate.year,
       });
 
-      final sanitizedData = _sanitizeMap(response.data as Map?);
+      final data = response.data;
+      if (data == null || data is! Map) {
+         throw TaxCodeApiServerException('invalid-response');
+      }
+
+      final sanitizedData = _sanitizeMap(data);
       return TaxCodeResponse.fromJson(sanitizedData);
     } on FirebaseFunctionsException catch (e, s) {
       _logger.w('TaxCode Cloud Function error: ${e.code}', error: e, stackTrace: s);
@@ -70,23 +75,25 @@ class TaxCodeService implements TaxCodeServiceAbstract {
     }
   }
 
-  Map<String, dynamic> _sanitizeMap(Map? map) {
-    if (map == null) return {};
+  Map<String, dynamic> _sanitizeMap(Map<dynamic, dynamic>? map) {
+    if (map == null) return <String, dynamic>{};
 
-    return map.map((key, value) {
-      final sanitizedKey = key.toString();
-      dynamic sanitizedValue = value;
+    return Map<String, dynamic>.from(
+      map.map((key, value) {
+        final sanitizedKey = key.toString();
+        dynamic sanitizedValue = value;
 
-      if (value is Map) {
-        sanitizedValue = _sanitizeMap(value);
-      } else if (value is List) {
-        sanitizedValue = value.map((e) {
-          if (e is Map) return _sanitizeMap(e);
-          return e;
-        }).toList();
-      }
+        if (value is Map) {
+          sanitizedValue = _sanitizeMap(value);
+        } else if (value is List) {
+          sanitizedValue = value.map((e) {
+            if (e is Map) return _sanitizeMap(e);
+            return e;
+          }).toList();
+        }
 
-      return MapEntry(sanitizedKey, sanitizedValue);
-    });
+        return MapEntry(sanitizedKey, sanitizedValue);
+      }),
+    );
   }
 }

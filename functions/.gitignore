@@ -9,3 +9,9 @@ typings/
 node_modules/
 *.local
 .env
+
+# Coverage directory
+coverage/
+
+# Scratch files
+scratch/

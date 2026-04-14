@@ -193,9 +193,21 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
         error,
         uid: request.auth.uid,
       });
+
+      // Handle common Vertex AI / Gemini API errors
+      if (typeof error === "object" && error !== null && "status" in error) {
+        const status = (error as { status: number }).status;
+        if (status === 429) {
+          throw new HttpsError(
+            "unavailable",
+            "The service is currently overloaded. Please try again later.",
+          );
+        }
+      }
+
       throw new HttpsError(
         "internal",
-        "An error occurred while processing the image.",
+        "The function encountered an error during processing.",
       );
     }
   },

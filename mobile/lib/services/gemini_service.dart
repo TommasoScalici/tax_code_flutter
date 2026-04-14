@@ -21,13 +21,18 @@ class GeminiService implements GeminiServiceAbstract {
     _logger.i("Calling 'extractDataFromDocument' Firebase Function.");
     try {
       final callable = _functions.httpsCallable('extractDataFromDocument');
-      final result = await callable.call<Map<String, dynamic>>({
+      final result = await callable.call({
         'image': base64Image,
       });
 
       _logger.i('Successfully received data from Gemini Function.');
 
-      final correctlyTypedData = Map<String, dynamic>.from(result.data);
+      final data = result.data;
+      if (data == null || data is! Map) {
+        throw Exception('Function returned invalid or null data.');
+      }
+
+      final correctlyTypedData = Map<String, dynamic>.from(data);
       return ScannedData.fromJson(correctlyTypedData);
     } on FirebaseFunctionsException catch (e, s) {
       _logger.e(

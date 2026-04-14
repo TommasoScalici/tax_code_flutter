@@ -75,7 +75,7 @@ class BirthplaceService implements BirthplaceServiceAbstract {
               final result = await _functions
                   .httpsCallable('updateCities')
                   .call();
-              if (result.data['success'] == true) {
+              if (result.data != null && result.data['success'] == true) {
                 // Now try nicely to download it again
                 _logger.i(
                   'Cloud function completed, downloading newly generated file...',

@@ -13,18 +13,18 @@ import 'package:uuid/uuid.dart';
 
 /// Validator that checks if a control's value contains only letters,
 /// spaces, and apostrophes.
-class OnlyLettersValidator extends Validator<dynamic> {
+class OnlyLettersValidator extends Validator<String> {
   const OnlyLettersValidator();
 
   @override
-  Map<String, dynamic>? validate(AbstractControl<dynamic> control) {
-    if (control.value == null || control.value.toString().isEmpty) {
+  Map<String, dynamic>? validate(AbstractControl<String> control) {
+    if (control.value == null || control.value!.isEmpty) {
       return null;
     }
 
     final hasInvalidCharacters = RegExp(
       r"[^a-zA-Z\s']",
-    ).hasMatch(control.value.toString());
+    ).hasMatch(control.value!);
 
     return hasInvalidCharacters
         ? <String, dynamic>{'invalidCharacters': true}
@@ -148,13 +148,14 @@ class FormPageController with ChangeNotifier {
   }
 
   void populateFormFromScannedData(ScannedData data) {
-    form.patchValue({
-      'firstName': data.firstName,
-      'lastName': data.lastName,
-      'gender': data.gender,
-      'birthDate': data.birthDate,
-      'birthPlace': data.birthPlace,
-    });
+    final Map<String, dynamic> patch = {
+      if (data.firstName != null) 'firstName': data.firstName,
+      if (data.lastName != null) 'lastName': data.lastName,
+      if (data.gender != null) 'gender': data.gender,
+      if (data.birthDate != null) 'birthDate': data.birthDate,
+      if (data.birthPlace != null) 'birthPlace': data.birthPlace,
+    };
+    form.patchValue(patch);
   }
 
   Future<Contact?> submitForm() async {
