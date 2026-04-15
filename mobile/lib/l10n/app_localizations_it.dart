@@ -210,17 +210,23 @@ class AppLocalizationsIt extends AppLocalizations {
   String get installerStore => 'Store di Installazione';
 
   @override
-  String get citiesDownloadTitle => 'Aggiornamento Database';
+  String get birthplacesDownloadTitle =>
+      'Aggiornamento Database Luoghi di Nascita';
 
   @override
-  String get stepDownloading => 'Download dei dati dei comuni in corso...';
+  String get stepBirthplacesChecking =>
+      'Controllo del database dei luoghi di nascita...';
 
   @override
-  String get stepGenerating =>
-      'Generazione dati in corso. Potrebbe volerci un minuto...';
+  String get stepBirthplacesDownloading =>
+      'Download dei luoghi di nascita in corso...';
 
   @override
-  String get stepParsing => 'Lettura del database in corso...';
+  String get stepBirthplacesGenerating =>
+      'Generazione dei luoghi di nascita in corso. Potrebbe volerci qualche minuto...';
+
+  @override
+  String get stepBirthplacesParsing => 'Lettura del database in corso...';
 
   @override
   String get rateThisApp => 'Valuta l\'App';

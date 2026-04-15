@@ -3,7 +3,7 @@ import { logger } from "firebase-functions";
 import { defineSecret } from "firebase-functions/params";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 
-const LOCATION = process.env.LOCATION || "europe-west1";
+const LOCATION = "us-central1";
 
 const MIO_CODICE_FISCALE_API_KEY = defineSecret("MIO_CODICE_FISCALE_API_KEY");
 
@@ -25,7 +25,12 @@ interface CalculateTaxCodeResponse {
 }
 
 export const calculateTaxCode = onCall<CalculateTaxCodeRequest>(
-  { region: LOCATION, secrets: [MIO_CODICE_FISCALE_API_KEY] },
+  {
+    region: LOCATION,
+    secrets: [MIO_CODICE_FISCALE_API_KEY],
+    memory: "512MiB",
+    maxInstances: 10,
+  },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError(
@@ -128,31 +133,26 @@ export const calculateTaxCode = onCall<CalculateTaxCodeRequest>(
     });
 
     const url = `https://api.miocodicefiscale.it/calculate?${queryParams.toString()}`;
+    logger.info("Full request data for TaxCode calculation", {
+      params: { fname, lname, gender, day, month, year, city, state },
+      uid,
+    });
 
     try {
-      // 10s timeout for external API calls
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
 
       const maskedUrl = url.replace(apiKey, "REDACTED");
       logger.info(`Fetching tax code from: ${maskedUrl}`, { uid });
 
-      const response = await fetch(url, {
-        headers: {
-          "User-Agent": "TaxCodeApp/1.1.0",
-          Accept: "application/json",
-        },
-        signal: controller.signal,
-      });
+      const response = await fetch(url, { signal: controller.signal });
 
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        const errorBody = await response.text();
         logger.error("TaxCode API returned non-OK status", {
           status: response.status,
           statusText: response.statusText,
-          body: errorBody,
           uid,
         });
 
@@ -184,7 +184,7 @@ export const calculateTaxCode = onCall<CalculateTaxCodeRequest>(
       const err = error instanceof Error ? error : new Error(String(error));
 
       if (err.name === "AbortError") {
-        logger.warn("TaxCode API request timed out.", { uid });
+        logger.warn("TaxCode API request timed out after 10s limit.", { uid });
         throw new HttpsError("deadline-exceeded", "The request took too long.");
       }
 

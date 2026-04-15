@@ -44,6 +44,7 @@ class FormPageController with ChangeNotifier {
   List<Birthplace> birthplaces = [];
   bool _isDisposed = false;
   bool isLoading = false;
+  bool isLoadingBirthplaces = false;
   String? errorKey;
   double? downloadProgress;
   String? downloadStep;
@@ -59,7 +60,7 @@ class FormPageController with ChangeNotifier {
        _contactRepository = contactRepository,
        _logger = logger,
        _initialContact = initialContact {
-    _initialize();
+    initialize();
   }
 
   @override
@@ -99,7 +100,7 @@ class FormPageController with ChangeNotifier {
     _listenToFormStatus();
   }
 
-  Future<void> _initialize() async {
+  Future<void> initialize() async {
     _setLoading(true);
     _buildForm();
     await _loadBirthplaces();
@@ -113,23 +114,34 @@ class FormPageController with ChangeNotifier {
   }
 
   Future<void> _loadBirthplaces() async {
-    birthplaces = await _birthplaceService.loadBirthplaces(
-      onProgress: (progress, step) {
-        if (_isDisposed) return;
-        downloadProgress = progress;
-        downloadStep = step;
+    isLoadingBirthplaces = true;
+    _birthplaceService.downloadProgress.addListener(_onSyncProgressChanged);
+    _birthplaceService.downloadStep.addListener(_onSyncProgressChanged);
+
+    try {
+      birthplaces = await _birthplaceService.loadBirthplaces();
+    } finally {
+      isLoadingBirthplaces = false;
+      _birthplaceService.downloadProgress.removeListener(
+        _onSyncProgressChanged,
+      );
+      _birthplaceService.downloadStep.removeListener(_onSyncProgressChanged);
+      if (!_isDisposed) {
         notifyListeners();
-      },
-    );
+      }
+    }
+  }
+
+  void _onSyncProgressChanged() {
+    if (_isDisposed) return;
+    downloadProgress = _birthplaceService.downloadProgress.value;
+    downloadStep = _birthplaceService.downloadStep.value;
+    notifyListeners();
   }
 
   void _setLoading(bool value) {
     if (isLoading == value) return;
     isLoading = value;
-    if (value) {
-      downloadProgress = null;
-      downloadStep = null;
-    }
     if (!_isDisposed) {
       notifyListeners();
     }
@@ -168,6 +180,10 @@ class FormPageController with ChangeNotifier {
     clearError();
 
     try {
+      if (birthplaces.isEmpty) {
+        birthplaces = await _birthplaceService.loadBirthplaces();
+      }
+
       final formData = form.value;
       final firstName = (formData['firstName'] as String).trim();
       final lastName = (formData['lastName'] as String).trim();

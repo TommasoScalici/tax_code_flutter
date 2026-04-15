@@ -261,21 +261,25 @@
   "@installerStore": {
     "description": "Label for the installer store field in an info screen."
   },
-  "citiesDownloadTitle": "Updating Database",
-  "@citiesDownloadTitle": {
-    "description": "Title for the modal showing the cities database download progress."
+  "birthplacesDownloadTitle": "Updating Birthplaces Database",
+  "@birthplacesDownloadTitle": {
+    "description": "Title for the modal showing the birthplaces database download progress."
   },
-  "stepDownloading": "Downloading cities data...",
-  "@stepDownloading": {
-    "description": "Progress step indicating data is being downloaded."
+  "stepBirthplacesChecking": "Checking birthplaces database...",
+  "@stepBirthplacesChecking": {
+    "description": "Initial step indicating the service is checking whether birthplace data needs to be downloaded."
   },
-  "stepGenerating": "Generating cities data. This might take a minute...",
-  "@stepGenerating": {
-    "description": "Progress step indicating data is being generated on the server."
+  "stepBirthplacesDownloading": "Downloading birthplaces data...",
+  "@stepBirthplacesDownloading": {
+    "description": "Progress step indicating birthplace data is being downloaded from storage."
   },
-  "stepParsing": "Reading database...",
-  "@stepParsing": {
-    "description": "Progress step indicating data is being parsed."
+  "stepBirthplacesGenerating": "Generating birthplaces data. This might take a minute...",
+  "@stepBirthplacesGenerating": {
+    "description": "Progress step indicating birthplace data is being generated on the server for the first time."
+  },
+  "stepBirthplacesParsing": "Reading database...",
+  "@stepBirthplacesParsing": {
+    "description": "Progress step indicating birthplace data is being parsed from the local JSON file."
   },
   "rateThisApp": "Rate this App",
   "@rateThisApp": {

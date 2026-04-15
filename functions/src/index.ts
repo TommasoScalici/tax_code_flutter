@@ -4,4 +4,4 @@ initializeApp();
 
 export * from "./calculateTaxCode";
 export * from "./extractDataFromDocument";
-export * from "./updateCities";
+export * from "./updateBirthplaces";

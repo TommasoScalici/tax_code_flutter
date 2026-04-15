@@ -43,7 +43,7 @@ void main() {
         when(() => mockResult.data).thenReturn(fakeResponseData);
 
         when(
-          () => mockCallable.call<Map<String, dynamic>>(any()),
+          () => mockCallable.call(any()),
         ).thenAnswer((_) async => mockResult);
 
         // Act
@@ -58,14 +58,14 @@ void main() {
 
         verify(() => mockFunctions.httpsCallable(functionName)).called(1);
         final captured = verify(
-          () => mockCallable.call<Map<String, dynamic>>(captureAny()),
+          () => mockCallable.call(captureAny()),
         ).captured;
         expect(captured.first['image'], testBase64Image);
 
         verify(() => mockLogger.i(any(that: contains('Calling')))).called(1);
         verify(
-          () => mockLogger.i(any(that: contains('Successfully received'))),
-        ).called(1);
+            () => mockLogger.i(any(that: contains('Successfully received'))))
+            .called(1);
         verifyNever(() => mockLogger.e(any()));
       },
     );
@@ -80,7 +80,7 @@ void main() {
         );
 
         when(
-          () => mockCallable.call<Map<String, dynamic>>(any()),
+          () => mockCallable.call(any()),
         ).thenThrow(exception);
 
         // Act
@@ -95,7 +95,6 @@ void main() {
             any(that: contains('Firebase Function failed')),
             error: exception,
             stackTrace: any(named: 'stackTrace'),
-            time: any(named: 'time'),
           ),
         ).called(1);
       },
@@ -106,7 +105,7 @@ void main() {
       final exception = Exception('A generic error');
 
       when(
-        () => mockCallable.call<Map<String, dynamic>>(any()),
+        () => mockCallable.call(any()),
       ).thenThrow(exception);
 
       // Act

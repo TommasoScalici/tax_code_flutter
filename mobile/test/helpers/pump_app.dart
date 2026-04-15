@@ -20,6 +20,7 @@ import 'package:shared/services/theme_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
@@ -149,6 +150,7 @@ Future<void> pumpApp(
           create: (_) => HomePageController(
             contactRepository: contactRepository,
             sharingService: sharingService,
+            birthplaceService: birthplaceService,
           ),
         ),
       ],
@@ -160,6 +162,7 @@ Future<void> pumpApp(
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: widget,
+        onGenerateRoute: Routes.generateRoute,
       ),
     ),
   );

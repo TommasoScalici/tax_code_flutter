@@ -1,9 +1,26 @@
+import { DecodedIdToken } from "firebase-admin/auth";
+import { CallableRequest } from "firebase-functions/v2/https";
 import fft from "firebase-functions-test";
 import { describe, expect, it, vi } from "vitest";
 
 import { extractDataFromDocument } from "../src/extractDataFromDocument.js";
 
 const testEnv = fft();
+
+// Mock logger to silence verbose output during tests
+vi.mock("firebase-functions", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("firebase-functions")>();
+  return {
+    ...actual,
+    logger: {
+      ...actual.logger,
+      info: vi.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
+      debug: vi.fn(),
+    },
+  };
+});
 
 // Mock Vertex AI
 const mockGenerateContent = vi.fn();
@@ -40,9 +57,11 @@ vi.mock("firebase-admin/firestore", () => ({
 describe("extractDataFromDocument", () => {
   it("should throw unauthenticated error if no auth context", async () => {
     const wrapped = testEnv.wrap(extractDataFromDocument);
-    await expect(wrapped({ data: { image: "base64" } })).rejects.toThrow(
-      "The function must be called while authenticated.",
-    );
+    await expect(
+      wrapped({
+        data: { image: "base64" },
+      } as unknown as CallableRequest<unknown>),
+    ).rejects.toThrow("The function must be called while authenticated.");
   });
 
   it("should extract data correctly from Gemini response", async () => {
@@ -77,8 +96,11 @@ describe("extractDataFromDocument", () => {
     const wrapped = testEnv.wrap(extractDataFromDocument);
     const result = await wrapped({
       data: { image: "valid-base64-string" },
-      auth: { uid: "test-user" },
-    });
+      auth: {
+        uid: "test-user",
+        token: {} as unknown as DecodedIdToken,
+      },
+    } as unknown as CallableRequest<unknown>);
 
     expect(result.firstName).toBe("MARIO");
     expect(result.birthPlace.name).toBe("ROMA");
@@ -93,8 +115,11 @@ describe("extractDataFromDocument", () => {
     await expect(
       wrapped({
         data: {}, // No image
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("The function must be called with an 'image' argument.");
   });
 
@@ -112,8 +137,11 @@ describe("extractDataFromDocument", () => {
     await expect(
       wrapped({
         data: { image: "valid-base64-string" },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow(
       "The service is currently overloaded. Please try again later.",
     );
@@ -130,8 +158,11 @@ describe("extractDataFromDocument", () => {
     await expect(
       wrapped({
         data: { image: "valid-base64-string" },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("The function encountered an error during processing.");
   });
 
@@ -145,8 +176,11 @@ describe("extractDataFromDocument", () => {
     await expect(
       wrapped({
         data: { image: "base64" },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow(
       "Permesso negato durante il controllo dei limiti di scansione.",
     );
@@ -159,8 +193,11 @@ describe("extractDataFromDocument", () => {
     await expect(
       wrapped({
         data: { image: "base64" },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("Error enforcing rate limit.");
   });
 
@@ -179,8 +216,11 @@ describe("extractDataFromDocument", () => {
     await expect(
       wrapped({
         data: { image: "base64" },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("Failed to extract data from the document.");
   });
 
@@ -201,8 +241,11 @@ describe("extractDataFromDocument", () => {
     await expect(
       wrapped({
         data: { image: "base64" },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow(
       "You have exceeded your daily limit for document processing.",
     );

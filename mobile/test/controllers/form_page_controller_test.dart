@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
@@ -14,7 +15,12 @@ import 'package:tax_code_flutter/services/tax_code_service.dart';
 // Mocks for dependencies that have logic
 class MockTaxCodeService extends Mock implements TaxCodeServiceAbstract {}
 
-class MockBirthplaceService extends Mock implements BirthplaceServiceAbstract {}
+class MockBirthplaceService extends Mock implements BirthplaceServiceAbstract {
+  @override
+  final downloadProgress = ValueNotifier<double?>(null);
+  @override
+  final downloadStep = ValueNotifier<String?>(null);
+}
 
 class MockContactRepository extends Mock implements ContactRepository {}
 
@@ -83,9 +89,7 @@ void main() {
 
       // Default stubbing for methods called during initialization or submission
       when(
-        () => mockBirthplaceService.loadBirthplaces(
-          onProgress: any(named: 'onProgress'),
-        ),
+        () => mockBirthplaceService.loadBirthplaces(),
       ).thenAnswer((_) async => [sampleBirthplace]);
       when(() => mockContactRepository.contacts).thenReturn([]);
       when(
@@ -112,9 +116,7 @@ void main() {
 
       // Assert
       verify(
-        () => mockBirthplaceService.loadBirthplaces(
-          onProgress: any(named: 'onProgress'),
-        ),
+        () => mockBirthplaceService.loadBirthplaces(),
       ).called(1);
       expect(formPageController.birthplaces, isNotEmpty);
       expect(formPageController.form, isA<FormGroup>());

@@ -539,7 +539,7 @@ void main() {
       // Assert
       expect(find.byType(AlertDialog), findsOneWidget);
       expect(
-        find.text('Connection Error. Please check your internet connection.'),
+        find.text('No internet connection. Please check your network and try again.'),
         findsOneWidget,
       );
 
@@ -584,7 +584,7 @@ void main() {
 
         // Assert
         expect(find.byType(AlertDialog), findsOneWidget);
-        expect(find.text('An unexpected error occurred.'), findsOneWidget);
+        expect(find.text('Something went wrong. Please try again.'), findsOneWidget);
       },
     );
 
@@ -631,7 +631,7 @@ void main() {
 
       // Assert
       expect(find.byType(AlertDialog), findsOneWidget);
-      expect(find.text('An unexpected error occurred.'), findsOneWidget);
+      expect(find.text('Something went wrong. Please try again.'), findsOneWidget);
     });
   });
 }

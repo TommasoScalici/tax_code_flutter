@@ -89,7 +89,7 @@ Future<void> main() async {
         ),
         Provider<FirebaseFirestore>.value(value: FirebaseFirestore.instance),
         Provider<FirebaseFunctions>.value(
-          value: FirebaseFunctions.instanceFor(region: 'europe-west1'),
+          value: FirebaseFunctions.instanceFor(region: 'us-central1'),
         ),
         Provider<FirebaseRemoteConfig>.value(
           value: FirebaseRemoteConfig.instance,
@@ -177,6 +177,7 @@ Future<void> main() async {
           create: (context) => HomePageController(
             contactRepository: context.read<ContactRepository>(),
             sharingService: context.read<SharingServiceAbstract>(),
+            birthplaceService: context.read<BirthplaceServiceAbstract>(),
           ),
         ),
       ],

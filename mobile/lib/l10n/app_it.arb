@@ -261,21 +261,25 @@
   "@installerStore": {
     "description": "Label for the installer store field in an info screen."
   },
-  "citiesDownloadTitle": "Aggiornamento Database",
-  "@citiesDownloadTitle": {
-    "description": "Title for the modal showing the cities database download progress."
+  "birthplacesDownloadTitle": "Aggiornamento Database Luoghi di Nascita",
+  "@birthplacesDownloadTitle": {
+    "description": "Titolo per il modal che mostra il progresso del download del database dei luoghi di nascita."
   },
-  "stepDownloading": "Download dei dati dei comuni in corso...",
-  "@stepDownloading": {
-    "description": "Progress step indicating data is being downloaded."
+  "stepBirthplacesChecking": "Controllo del database dei luoghi di nascita...",
+  "@stepBirthplacesChecking": {
+    "description": "Passaggio iniziale che indica che il servizio sta verificando se i dati dei luoghi di nascita devono essere scaricati."
   },
-  "stepGenerating": "Generazione dati in corso. Potrebbe volerci un minuto...",
-  "@stepGenerating": {
-    "description": "Progress step indicating data is being generated on the server."
+  "stepBirthplacesDownloading": "Download dei luoghi di nascita in corso...",
+  "@stepBirthplacesDownloading": {
+    "description": "Passaggio che indica che i dati dei luoghi di nascita sono in fase di download dallo storage."
   },
-  "stepParsing": "Lettura del database in corso...",
-  "@stepParsing": {
-    "description": "Progress step indicating data is being parsed."
+  "stepBirthplacesGenerating": "Generazione dei luoghi di nascita in corso. Potrebbe volerci qualche minuto...",
+  "@stepBirthplacesGenerating": {
+    "description": "Passaggio che indica che i dati dei luoghi di nascita sono in fase di generazione sul server per la prima volta."
+  },
+  "stepBirthplacesParsing": "Lettura del database in corso...",
+  "@stepBirthplacesParsing": {
+    "description": "Passaggio che indica che i dati dei luoghi di nascita sono in fase di lettura dal file JSON locale."
   },
   "rateThisApp": "Valuta l'App",
   "@rateThisApp": {

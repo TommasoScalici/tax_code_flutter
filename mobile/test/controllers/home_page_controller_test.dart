@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -6,11 +7,19 @@ import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
+import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
 
 class MockContactRepository extends Mock implements ContactRepository {}
 
 class MockSharingService extends Mock implements SharingServiceAbstract {}
+
+class MockBirthplaceService extends Mock implements BirthplaceServiceAbstract {
+  @override
+  final downloadProgress = ValueNotifier<double?>(null);
+  @override
+  final downloadStep = ValueNotifier<String?>(null);
+}
 
 class FakeContact extends Fake implements Contact {}
 
@@ -20,6 +29,7 @@ void main() {
   late HomePageController homePageController;
   late MockContactRepository mockContactRepository;
   late MockSharingService mockSharingService;
+  late MockBirthplaceService mockBirthplaceService;
 
   final sampleContacts = [
     Contact(
@@ -51,16 +61,21 @@ void main() {
 
     mockContactRepository = MockContactRepository();
     mockSharingService = MockSharingService();
+    mockBirthplaceService = MockBirthplaceService();
 
     // Stub the initial behavior of the repository
     when(() => mockContactRepository.isLoading).thenReturn(false);
     when(() => mockContactRepository.contacts).thenReturn([]);
     when(() => mockContactRepository.addListener(any())).thenAnswer((_) {});
     when(() => mockContactRepository.removeListener(any())).thenAnswer((_) {});
+    when(
+      () => mockBirthplaceService.loadBirthplaces(),
+    ).thenAnswer((_) async => []);
 
     homePageController = HomePageController(
       contactRepository: mockContactRepository,
       sharingService: mockSharingService,
+      birthplaceService: mockBirthplaceService,
     );
   });
 
@@ -226,6 +241,7 @@ void main() {
       final localController = HomePageController(
         contactRepository: mockContactRepository,
         sharingService: mockSharingService,
+        birthplaceService: mockBirthplaceService,
       );
 
       // Act

@@ -8,7 +8,7 @@ import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { logger } from "firebase-functions";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 
-const LOCATION = process.env.LOCATION || "europe-west1";
+const LOCATION = "us-central1";
 const PROJECT_ID = process.env.GCLOUD_PROJECT || "tax-code-flutter";
 const SERVICE_ACCOUNT = `vertex-ai-invoker@${PROJECT_ID}.iam.gserviceaccount.com`;
 
@@ -31,7 +31,11 @@ interface ExtractDataResponse {
 }
 
 export const extractDataFromDocument = onCall<ExtractDataRequest>(
-  { region: LOCATION, serviceAccount: SERVICE_ACCOUNT },
+  {
+    region: LOCATION,
+    serviceAccount: SERVICE_ACCOUNT,
+    maxInstances: 10,
+  },
   async (request) => {
     if (!vertexAI) {
       logger.info("Initializing Vertex AI client for the first time.");

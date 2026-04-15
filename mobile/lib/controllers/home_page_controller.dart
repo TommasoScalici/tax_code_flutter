@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
+import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
 
 /// Manages the state and business logic for the HomePage.
 class HomePageController with ChangeNotifier {
   final ContactRepository _contactRepository;
   final SharingServiceAbstract _sharingService;
+  final BirthplaceServiceAbstract _birthplaceService;
 
   List<Contact> _allContacts = [];
   List<Contact> _filteredContacts = [];
@@ -21,9 +23,11 @@ class HomePageController with ChangeNotifier {
   HomePageController({
     required ContactRepository contactRepository,
     required SharingServiceAbstract sharingService,
+    required BirthplaceServiceAbstract birthplaceService,
   })
       : _contactRepository = contactRepository,
-        _sharingService = sharingService {
+        _sharingService = sharingService,
+        _birthplaceService = birthplaceService {
     _initialize();
   }
 
@@ -80,6 +84,8 @@ class HomePageController with ChangeNotifier {
   void _initialize() {
     _contactRepository.addListener(_onContactsChanged);
     _onContactsChanged();
+    // Start birthplace sync in background as soon as app opens
+    _birthplaceService.loadBirthplaces();
   }
 
   /// Called whenever the ContactRepository notifies of a change.

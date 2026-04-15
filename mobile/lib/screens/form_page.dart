@@ -45,6 +45,7 @@ class _FormView extends StatefulWidget {
 class _FormViewState extends State<_FormView> {
   final _birthplaceFocusNode = FocusNode();
   bool _shouldPushForm = false;
+  late Future<void> _initFuture;
 
   @override
   void initState() {
@@ -58,6 +59,8 @@ class _FormViewState extends State<_FormView> {
         });
       }
     });
+
+    _initFuture = controller.initialize();
 
     controller.addListener(() {
       if (controller.errorKey != null && mounted) {
@@ -129,13 +132,31 @@ class _FormViewState extends State<_FormView> {
     final controller = context.watch<FormPageController>();
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(l10n.formPageTitle),
-      ),
-      body: Stack(
-        children: [
+    return FutureBuilder<void>(
+      future: _initFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              title: Text(l10n.formPageTitle),
+            ),
+            body: Center(
+              child: _SyncProgressOverlay(
+                controller: controller,
+                l10n: l10n,
+              ),
+            ),
+          );
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: Text(l10n.formPageTitle),
+          ),
+          body: Stack(
+            children: [
           SafeArea(
             child: Padding(
               padding: EdgeInsets.only(
@@ -270,15 +291,19 @@ class _FormViewState extends State<_FormView> {
                             ValidationMessage.required: (error) =>
                                 l10n.required,
                           },
-                          optionsBuilder: (value) => value.text.isEmpty
-                              ? controller.birthplaces
-                              : controller.birthplaces
-                                    .where(
-                                      (b) => b.name.toLowerCase().contains(
-                                        value.text.toLowerCase(),
-                                      ),
-                                    )
-                                    .toList(),
+                          optionsBuilder: (value) {
+                            if (value.text.length < 2) {
+                              return const Iterable<Birthplace>.empty();
+                            }
+                            return controller.birthplaces
+                                .where(
+                                  (b) => b.name.toLowerCase().contains(
+                                    value.text.toLowerCase(),
+                                  ),
+                                )
+                                .take(20)
+                                .toList();
+                          },
                           fieldViewBuilder:
                               (
                                 BuildContext context,
@@ -395,50 +420,73 @@ class _FormViewState extends State<_FormView> {
               ),
             ),
           ),
-          if (controller.isLoading)
+          if (controller.isLoading ||
+              (controller.downloadStep != null &&
+                  _birthplaceFocusNode.hasFocus))
             Container(
               color: Colors.black54,
               child: Center(
-                child: controller.downloadStep != null
-                    ? Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 32),
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                l10n.citiesDownloadTitle,
-                                style: Theme.of(context).textTheme.titleLarge,
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                controller.downloadStep == 'downloading'
-                                    ? l10n.stepDownloading
-                                    : controller.downloadStep == 'generating'
-                                    ? l10n.stepGenerating
-                                    : controller.downloadStep == 'parsing'
-                                    ? l10n.stepParsing
-                                    : '',
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 16),
-                              if (controller.downloadProgress != null)
-                                LinearProgressIndicator(
-                                  value: controller.downloadProgress,
-                                )
-                              else
-                                const LinearProgressIndicator(),
-                            ],
-                          ),
-                        ),
-                      )
-                    : const CircularProgressIndicator(),
+                child: _SyncProgressOverlay(
+                  controller: controller,
+                  l10n: l10n,
+                ),
               ),
             ),
         ],
-      ),
+          ),
+        );
+      },
     );
+  }
+}
+class _SyncProgressOverlay extends StatelessWidget {
+  final FormPageController controller;
+  final AppLocalizations l10n;
+
+  const _SyncProgressOverlay({
+    required this.controller,
+    required this.l10n,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (controller.isLoadingBirthplaces) {
+      return Card(
+        margin: const EdgeInsets.symmetric(horizontal: 32),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                l10n.birthplacesDownloadTitle,
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                controller.downloadStep == 'checking'
+                    ? l10n.stepBirthplacesChecking
+                    : controller.downloadStep == 'downloading'
+                    ? l10n.stepBirthplacesDownloading
+                    : controller.downloadStep == 'generating'
+                    ? l10n.stepBirthplacesGenerating
+                    : controller.downloadStep == 'parsing'
+                    ? l10n.stepBirthplacesParsing
+                    : l10n.stepBirthplacesChecking,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              if (controller.downloadProgress != null)
+                LinearProgressIndicator(value: controller.downloadProgress)
+              else
+                const LinearProgressIndicator(),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return const CircularProgressIndicator();
   }
 }

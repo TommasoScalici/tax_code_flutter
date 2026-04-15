@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["lib/", "generated/", "coverage/", "node_modules/"],
+    ignores: ["lib/", "generated/", "coverage/", "node_modules/", "scratch/"],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,

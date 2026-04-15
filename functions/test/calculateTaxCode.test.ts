@@ -1,9 +1,26 @@
+import { DecodedIdToken } from "firebase-admin/auth";
+import { CallableRequest } from "firebase-functions/v2/https";
 import fft from "firebase-functions-test";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import { calculateTaxCode } from "../src/calculateTaxCode.js";
 
 const testEnv = fft();
+
+// Mock logger to silence verbose output during tests
+vi.mock("firebase-functions", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("firebase-functions")>();
+  return {
+    ...actual,
+    logger: {
+      ...actual.logger,
+      info: vi.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
+      debug: vi.fn(),
+    },
+  };
+});
 
 // Mock Firestore
 const mockSet = vi.fn();
@@ -42,9 +59,9 @@ describe("calculateTaxCode", () => {
 
   it("should throw unauthenticated error if no auth context", async () => {
     const wrapped = testEnv.wrap(calculateTaxCode);
-    await expect(wrapped({ data: {} })).rejects.toThrow(
-      "The function must be called while authenticated.",
-    );
+    await expect(
+      wrapped({ data: {} } as unknown as CallableRequest<unknown>),
+    ).rejects.toThrow("The function must be called while authenticated.");
   });
 
   it("should calculate tax code correctly with valid data", async () => {
@@ -81,8 +98,11 @@ describe("calculateTaxCode", () => {
 
     const result = await wrapped({
       data,
-      auth: { uid: "test-user" },
-    });
+      auth: {
+        uid: "test-user",
+        token: {} as unknown as DecodedIdToken,
+      },
+    } as unknown as CallableRequest<unknown>);
 
     expect(result.tax_code).toBe("RSSMRA80A01H501U");
     expect(global.fetch).toHaveBeenCalledWith(
@@ -100,8 +120,11 @@ describe("calculateTaxCode", () => {
     await expect(
       wrapped({
         data: { fname: "Mario" }, // Missing other fields
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow(
       "The function must be called with all required birth data.",
     );
@@ -132,8 +155,11 @@ describe("calculateTaxCode", () => {
           city: "R",
           state: "R",
         },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("Too many requests to the tax code service provider.");
   });
 
@@ -162,8 +188,11 @@ describe("calculateTaxCode", () => {
           city: "R",
           state: "R",
         },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow(
       "The tax code service provider is currently unavailable.",
     );
@@ -191,8 +220,11 @@ describe("calculateTaxCode", () => {
           city: "R",
           state: "R",
         },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("The request took too long.");
   });
 
@@ -221,8 +253,11 @@ describe("calculateTaxCode", () => {
           city: "R",
           state: "R",
         },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("TaxCode API error: 400");
   });
 
@@ -246,8 +281,11 @@ describe("calculateTaxCode", () => {
           city: "R",
           state: "R",
         },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("Unable to reach the calculation service.");
   });
 
@@ -270,8 +308,11 @@ describe("calculateTaxCode", () => {
           city: "R",
           state: "R",
         },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("Internal service error while checking permissions.");
   });
 
@@ -291,8 +332,11 @@ describe("calculateTaxCode", () => {
           city: "R",
           state: "R",
         },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("Error enforcing rate limit.");
   });
 
@@ -317,8 +361,11 @@ describe("calculateTaxCode", () => {
           city: "R",
           state: "R",
         },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("Service configuration error.");
 
     // Reset for other tests
@@ -351,8 +398,11 @@ describe("calculateTaxCode", () => {
           city: "R",
           state: "R",
         },
-        auth: { uid: "test-user" },
-      }),
+        auth: {
+          uid: "test-user",
+          token: {} as unknown as DecodedIdToken,
+        },
+      } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("Daily limit for tax code calculations reached.");
   });
 });

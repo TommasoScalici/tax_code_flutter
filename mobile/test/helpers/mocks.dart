@@ -4,6 +4,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -55,7 +56,12 @@ class MockCameraService extends Mock implements CameraServiceAbstract {}
 
 class MockDatabaseService extends Mock implements DatabaseService {}
 
-class MockBirthplaceService extends Mock implements BirthplaceServiceAbstract {}
+class MockBirthplaceService extends Mock implements BirthplaceServiceAbstract {
+  @override
+  final downloadProgress = ValueNotifier<double?>(null);
+  @override
+  final downloadStep = ValueNotifier<String?>(null);
+}
 
 class MockInfoService extends Mock implements InfoServiceAbstract {}
 

@@ -470,29 +470,35 @@ abstract class AppLocalizations {
   /// **'Installer Store'**
   String get installerStore;
 
-  /// Title for the modal showing the cities database download progress.
+  /// Title for the modal showing the birthplaces database download progress.
   ///
   /// In en, this message translates to:
-  /// **'Updating Database'**
-  String get citiesDownloadTitle;
+  /// **'Updating Birthplaces Database'**
+  String get birthplacesDownloadTitle;
 
-  /// Progress step indicating data is being downloaded.
+  /// Initial step indicating the service is checking whether birthplace data needs to be downloaded.
   ///
   /// In en, this message translates to:
-  /// **'Downloading cities data...'**
-  String get stepDownloading;
+  /// **'Checking birthplaces database...'**
+  String get stepBirthplacesChecking;
 
-  /// Progress step indicating data is being generated on the server.
+  /// Progress step indicating birthplace data is being downloaded from storage.
   ///
   /// In en, this message translates to:
-  /// **'Generating cities data. This might take a minute...'**
-  String get stepGenerating;
+  /// **'Downloading birthplaces data...'**
+  String get stepBirthplacesDownloading;
 
-  /// Progress step indicating data is being parsed.
+  /// Progress step indicating birthplace data is being generated on the server for the first time.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating birthplaces data. This might take a minute...'**
+  String get stepBirthplacesGenerating;
+
+  /// Progress step indicating birthplace data is being parsed from the local JSON file.
   ///
   /// In en, this message translates to:
   /// **'Reading database...'**
-  String get stepParsing;
+  String get stepBirthplacesParsing;
 
   /// Label for a button in the profile screen that opens the Play Store for the user to leave a review.
   ///
