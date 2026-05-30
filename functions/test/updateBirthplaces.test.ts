@@ -110,10 +110,10 @@ describe("updateBirthplaces", () => {
       // Verify "EE" state for foreign countries
       const savedData = JSON.parse(mockSave.mock.calls[0][0]);
       const francia = savedData.find(
-        (b: { name: string }) => b.name === "FRANCIA",
+        (b: { name: string }) => b.name === "Francia",
       );
       expect(francia.state).toBe("EE");
-      const roma = savedData.find((b: { name: string }) => b.name === "ROMA");
+      const roma = savedData.find((b: { name: string }) => b.name === "Roma");
       expect(roma.state).toBe("RM");
     });
 

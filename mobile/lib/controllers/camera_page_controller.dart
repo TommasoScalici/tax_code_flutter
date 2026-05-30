@@ -5,9 +5,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:tax_code_flutter/models/scanned_data.dart';
+import 'package:shared/models/scanned_data.dart';
+import 'package:shared/services/gemini_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
-import 'package:tax_code_flutter/services/gemini_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 
 enum CameraStatus {
@@ -151,7 +151,7 @@ class CameraPageController with ChangeNotifier {
 
   /// Returns the current quarter turn value based on the camera's orientation.
   int get quarterTurns {
-    switch (_pictureOrientation) {
+    switch (_pictureOrientation ?? DeviceOrientation.portraitUp) {
       case DeviceOrientation.portraitUp:
         return 0;
       case DeviceOrientation.landscapeRight:
@@ -160,8 +160,6 @@ class CameraPageController with ChangeNotifier {
         return 2;
       case DeviceOrientation.landscapeLeft:
         return 3;
-      default:
-        return 0;
     }
   }
 

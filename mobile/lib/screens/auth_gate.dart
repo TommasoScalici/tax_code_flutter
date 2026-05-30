@@ -137,7 +137,7 @@ class _LoginFooter extends StatelessWidget {
           if (screenWidth >= 300)
             TextButton(
               onPressed: () {
-                showDialog(
+                showDialog<void>(
                   context: context,
                   builder: (context) => const InfoModal(),
                 );

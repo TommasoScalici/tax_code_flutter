@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared/models/birthplace.dart';
-import 'package:tax_code_flutter/models/scanned_data.dart';
+import 'package:shared/models/scanned_data.dart';
 
 void main() {
   group('ScannedData', () {

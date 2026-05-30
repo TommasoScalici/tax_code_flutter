@@ -45,7 +45,9 @@ class TaxCodeService implements TaxCodeServiceAbstract {
     required DateTime birthDate,
   }) async {
     try {
-      final response = await _functions.httpsCallable('calculateTaxCode').call({
+      final response = await _functions
+          .httpsCallable('calculateTaxCode')
+          .call<dynamic>({
         'fname': firstName.trim(),
         'lname': lastName.trim(),
         'gender': gender,

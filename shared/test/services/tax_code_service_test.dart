@@ -3,14 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared/models/tax_code_response.dart';
-import 'package:tax_code_flutter/services/tax_code_service.dart';
+import 'package:shared/services/tax_code_service.dart';
 
 // --- Mocks ---
 class MockFirebaseFunctions extends Mock implements FirebaseFunctions {}
 
 class MockHttpsCallable extends Mock implements HttpsCallable {}
 
-class MockHttpsCallableResult extends Mock implements HttpsCallableResult {}
+class MockHttpsCallableResult extends Mock implements HttpsCallableResult<Object?> {}
 
 class MockLogger extends Mock implements Logger {}
 
@@ -67,10 +67,10 @@ void main() {
       () async {
         // Arrange
         when(
-          () => mockFunctions.httpsCallable(any()),
+          () => mockFunctions.httpsCallable(any<String>()),
         ).thenReturn(mockHttpsCallable);
         when(
-          () => mockHttpsCallable.call(any()),
+          () => mockHttpsCallable.call<dynamic>(any<Object?>()),
         ).thenAnswer((_) async => mockResult);
         when(() => mockResult.data).thenReturn(fakeResponseData);
 
@@ -88,9 +88,9 @@ void main() {
       () async {
         // Arrange
         when(
-          () => mockFunctions.httpsCallable(any()),
+          () => mockFunctions.httpsCallable(any<String>()),
         ).thenReturn(mockHttpsCallable);
-        when(() => mockHttpsCallable.call(any())).thenThrow(
+        when(() => mockHttpsCallable.call<dynamic>(any<Object?>())).thenThrow(
           FirebaseFunctionsException(message: 'Error', code: 'internal'),
         );
 
@@ -102,9 +102,9 @@ void main() {
           expect(e, isA<TaxCodeApiServerException>());
           verify(
             () => mockLogger.w(
-              any(),
-              error: any(named: 'error'),
-              stackTrace: any(named: 'stackTrace'),
+              any<Object?>(),
+              error: any<Object?>(named: 'error'),
+              stackTrace: any<StackTrace?>(named: 'stackTrace'),
             ),
           ).called(1);
         }

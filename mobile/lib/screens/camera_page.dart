@@ -1,14 +1,14 @@
-import 'dart:io';
-
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shared/services/gemini_service.dart';
+
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
-import 'package:tax_code_flutter/services/gemini_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
+import 'package:tax_code_flutter/widgets/camera/camera_controls_widget.dart';
+import 'package:tax_code_flutter/widgets/camera/camera_preview_overlay.dart';
 
 /// This widget is responsible for creating and providing the CameraPageController
 /// to the widget tree. It is clean of constructor dependencies.
@@ -133,83 +133,13 @@ class _CameraView extends StatelessWidget {
     CameraPageController controller,
     AppLocalizations l10n,
   ) {
-    final safeAreaPadding = MediaQuery.of(context).padding;
-
-    final isPictureTaken =
-        controller.status == CameraStatus.pictureTaken ||
-        controller.status == CameraStatus.processing;
-
-    final isProcessing = controller.status == CameraStatus.processing;
-
     return Stack(
       alignment: Alignment.center,
       children: [
-        if (controller.cameraController != null &&
-            controller.cameraController!.value.isInitialized)
-          isPictureTaken
-              ? RotatedBox(
-                  quarterTurns: controller.quarterTurns,
-                  child: Image.file(
-                    File(controller.imagePath!),
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                  ),
-                )
-              : CameraPreview(controller.cameraController!),
-        if (!isProcessing)
-          Positioned(
-            top: safeAreaPadding.top + 20,
-            right: 20,
-            child: IconButton(
-              tooltip: l10n.tooltipToggleFlash,
-              icon: Icon(
-                controller.flashMode == FlashMode.off
-                    ? Icons.flash_off
-                    : Icons.flash_on,
-                color: Colors.white,
-                size: 30,
-              ),
-              onPressed: controller.toggleFlash,
-            ),
-          ),
-        if (!isProcessing)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: safeAreaPadding.bottom + 50.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FloatingActionButton(
-                    tooltip: isPictureTaken
-                        ? l10n.tooltipConfirmPicture
-                        : l10n.tooltipTakePicture,
-                    onPressed: () =>
-                        _onMainButtonPressed(context, controller, l10n),
-                    child: Icon(
-                      isPictureTaken ? Icons.check : Icons.camera_alt,
-                    ),
-                  ),
-                  if (isPictureTaken)
-                    FloatingActionButton(
-                      tooltip: l10n.tooltipRetakePicture,
-                      onPressed: controller.resetPicture,
-                      backgroundColor: Colors.red,
-                      child: const Icon(Icons.replay),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        if (isProcessing)
-          const Stack(
-            alignment: Alignment.center,
-            children: [
-              ModalBarrier(dismissible: false, color: Colors.black54),
-              CircularProgressIndicator(),
-            ],
-          ),
+        const CameraPreviewOverlay(),
+        CameraControlsWidget(
+          onMainButtonPressed: () => _onMainButtonPressed(context, controller, l10n),
+        ),
       ],
     );
   }

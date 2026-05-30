@@ -5,10 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared/models/scanned_data.dart';
+import 'package:shared/services/gemini_service.dart';
+
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
-import 'package:tax_code_flutter/models/scanned_data.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
-import 'package:tax_code_flutter/services/gemini_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 
 import '../helpers/mocks.dart';
@@ -56,12 +57,12 @@ void main() {
 
     when(
       () => mockLogger.e(
-        any(),
-        error: any(named: 'error'),
-        stackTrace: any(named: 'stackTrace'),
+        any<Object?>(),
+        error: any<Object?>(named: 'error'),
+        stackTrace: any<StackTrace?>(named: 'stackTrace'),
       ),
     ).thenAnswer((_) {});
-    when(() => mockLogger.i(any())).thenAnswer((_) {});
+    when(() => mockLogger.i(any<Object?>())).thenAnswer((_) {});
 
     when(() => mockCameraController.dispose()).thenAnswer((_) async {});
     when(
@@ -118,9 +119,9 @@ void main() {
         expect(cameraPageController.status, CameraStatus.error);
         verify(
           () => mockLogger.e(
-            any(),
-            error: any(named: 'error'),
-            stackTrace: any(named: 'stackTrace'),
+            any<Object?>(),
+            error: any<Object?>(named: 'error'),
+            stackTrace: any<StackTrace?>(named: 'stackTrace'),
           ),
         ).called(1);
       });

@@ -38,7 +38,7 @@ void main() {
                 return null;
               });
           await brightnessService.setMaxBrightness();
-          verifyNever(() => mockLogger.e(any()));
+          verifyNever(() => mockLogger.e(any<Object?>()));
         },
       );
 
@@ -57,9 +57,9 @@ void main() {
         verify(
           () => mockLogger.e(
             'Failed to set max brightness',
-            error: any(named: 'error', that: isA<PlatformException>()),
-            stackTrace: any(named: 'stackTrace'),
-            time: any(named: 'time'),
+            error: any<Object?>(named: 'error', that: isA<PlatformException>()),
+            stackTrace: any<StackTrace?>(named: 'stackTrace'),
+            time: any<DateTime?>(named: 'time'),
           ),
         ).called(1);
       });
@@ -75,7 +75,7 @@ void main() {
                 return null;
               });
           await brightnessService.resetBrightness();
-          verifyNever(() => mockLogger.e(any()));
+          verifyNever(() => mockLogger.e(any<Object?>()));
         },
       );
 
@@ -94,9 +94,9 @@ void main() {
         verify(
           () => mockLogger.e(
             'Failed to reset brightness',
-            error: any(named: 'error', that: isA<PlatformException>()),
-            stackTrace: any(named: 'stackTrace'),
-            time: any(named: 'time'),
+            error: any<Object?>(named: 'error', that: isA<PlatformException>()),
+            stackTrace: any<StackTrace?>(named: 'stackTrace'),
+            time: any<DateTime?>(named: 'time'),
           ),
         ).called(1);
       });

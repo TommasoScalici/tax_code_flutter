@@ -14,7 +14,7 @@ void main() {
     late DatabaseService databaseService;
 
     const testUserId = 'test-user-123';
-    final testBirthplace = const Birthplace(name: 'Palermo', state: 'PA');
+    const testBirthplace = Birthplace(name: 'Palermo', state: 'PA');
     final testContact = Contact(
       id: 'contact-id-abc',
       firstName: 'Mario',
@@ -97,11 +97,11 @@ void main() {
             stream,
             emitsInOrder([
               // 1. Appena ci si sottoscrive, lo stream emette lo stato attuale: una lista vuota.
-              [],
+              <Contact>[],
               // 2. Dopo aver aggiunto un contatto, emette una lista contenente quel contatto.
-              [testContact],
+              <Contact>[testContact],
               // 3. Dopo averlo rimosso, emette di nuovo una lista vuota.
-              [],
+              <Contact>[],
             ]),
           ),
         );
@@ -259,29 +259,68 @@ void main() {
     });
 
     group('deleteAllUserData', () {
-      test('should delete the user document and their contacts subcollection', () async {
-        // Arrange
-        final otherUserId = 'other-user';
-        final contact2 = testContact.copyWith(id: 'contact-id-def');
+      test(
+        'should delete the user document and their contacts subcollection',
+        () async {
+          // Arrange
+          const otherUserId = 'other-user';
+          final contact2 = testContact.copyWith(id: 'contact-id-def');
 
-        await fakeFirestore.collection('users').doc(testUserId).set({'email': 'test@test.com'});
-        await fakeFirestore.collection('users').doc(testUserId).collection('contacts').doc(testContact.id).set(testContact.toJson());
-        await fakeFirestore.collection('users').doc(testUserId).collection('contacts').doc(contact2.id).set(contact2.toJson());
-        await fakeFirestore.collection('users').doc(otherUserId).set({'email': 'other@test.com'});
+          await fakeFirestore.collection('users').doc(testUserId).set({
+            'email': 'test@test.com',
+          });
+          await fakeFirestore
+              .collection('users')
+              .doc(testUserId)
+              .collection('contacts')
+              .doc(testContact.id)
+              .set(testContact.toJson());
+          await fakeFirestore
+              .collection('users')
+              .doc(testUserId)
+              .collection('contacts')
+              .doc(contact2.id)
+              .set(contact2.toJson());
+          await fakeFirestore.collection('users').doc(otherUserId).set({
+            'email': 'other@test.com',
+          });
 
-        // Act
-        await databaseService.deleteAllUserData(testUserId);
+          // Act
+          await databaseService.deleteAllUserData(testUserId);
 
-        // Assert
-        final userDoc = await fakeFirestore.collection('users').doc(testUserId).get();
-        expect(userDoc.exists, isFalse, reason: 'User document should be deleted');
+          // Assert
+          final userDoc = await fakeFirestore
+              .collection('users')
+              .doc(testUserId)
+              .get();
+          expect(
+            userDoc.exists,
+            isFalse,
+            reason: 'User document should be deleted',
+          );
 
-        final contactsSnapshot = await fakeFirestore.collection('users').doc(testUserId).collection('contacts').get();
-        expect(contactsSnapshot.docs.isEmpty, isTrue, reason: 'Contacts subcollection should be empty');
+          final contactsSnapshot = await fakeFirestore
+              .collection('users')
+              .doc(testUserId)
+              .collection('contacts')
+              .get();
+          expect(
+            contactsSnapshot.docs.isEmpty,
+            isTrue,
+            reason: 'Contacts subcollection should be empty',
+          );
 
-        final otherUserDoc = await fakeFirestore.collection('users').doc(otherUserId).get();
-        expect(otherUserDoc.exists, isTrue, reason: 'Other user document should not be deleted');
-      });
+          final otherUserDoc = await fakeFirestore
+              .collection('users')
+              .doc(otherUserId)
+              .get();
+          expect(
+            otherUserDoc.exists,
+            isTrue,
+            reason: 'Other user document should not be deleted',
+          );
+        },
+      );
     });
   });
 }

@@ -6,23 +6,23 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/database_service.dart';
+import 'package:shared/services/gemini_service.dart';
+import 'package:shared/services/tax_code_service.dart';
 import 'package:shared/services/theme_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
-import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
-import 'package:tax_code_flutter/services/gemini_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
-import 'package:tax_code_flutter/services/tax_code_service.dart';
 
 class MockAuthService extends Mock implements AuthService {}
 
@@ -31,8 +31,6 @@ class MockThemeService extends Mock implements ThemeService {}
 class MockHomePageController extends Mock implements HomePageController {}
 
 class MockContactRepository extends Mock implements ContactRepository {}
-
-class MockHttpClient extends Mock implements http.Client {}
 
 class MockLogger extends Mock implements Logger {}
 

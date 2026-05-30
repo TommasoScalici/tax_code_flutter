@@ -98,215 +98,29 @@ abstract class AppLocalizations {
     Locale('it'),
   ];
 
+  /// Label for the app name field in an info screen.
+  ///
+  /// In en, this message translates to:
+  /// **'App Name'**
+  String get appName;
+
   /// The title of the application, often shown in the app bar.
   ///
   /// In en, this message translates to:
   /// **'Tax Code'**
   String get appTitle;
 
-  /// Label for a generic confirmation button, typically to close an informational dialog.
+  /// Label for the app version field in an info screen.
   ///
   /// In en, this message translates to:
-  /// **'OK'**
-  String get ok;
-
-  /// Label for a confirmation button.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm'**
-  String get confirm;
-
-  /// Label for a button to cancel an action.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
-  String get cancel;
-
-  /// Label for a button to close a screen or dialog.
-  ///
-  /// In en, this message translates to:
-  /// **'Close'**
-  String get close;
-
-  /// Label for a delete button.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete'**
-  String get delete;
-
-  /// Label for an edit button.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit'**
-  String get edit;
-
-  /// Label for a share button.
-  ///
-  /// In en, this message translates to:
-  /// **'Share'**
-  String get share;
-
-  /// A generic title for an informational dialog or screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Info'**
-  String get info;
-
-  /// Title for a dialog that requires the user to take a specific action.
-  ///
-  /// In en, this message translates to:
-  /// **'Action Required'**
-  String get actionRequired;
-
-  /// Message displayed when a sensitive operation (e.g., account deletion) fails because the user's login session is not recent enough.
-  ///
-  /// In en, this message translates to:
-  /// **'For security reasons, this operation requires recent authentication. Please log in again and retry.'**
-  String get requiresRecentLoginMessage;
-
-  /// A welcome message on the login screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome, please sign in to continue.'**
-  String get pleaseSignIn;
-
-  /// A welcome message on the registration screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome, please create an account to continue.'**
-  String get pleaseSignUp;
-
-  /// Label for a button to sign out of the application.
-  ///
-  /// In en, this message translates to:
-  /// **'Sign Out'**
-  String get signOut;
-
-  /// Label for a button to delete the user's account.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete Account'**
-  String get deleteAccount;
-
-  /// A confirmation message shown to the user before deleting their account.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to delete your account? All your data will be permanently lost. This action is irreversible.'**
-  String get deleteAccountMessage;
-
-  /// Title for the main home page.
-  ///
-  /// In en, this message translates to:
-  /// **'My Contacts'**
-  String get homePageTitle;
-
-  /// Title for the user profile screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Profile'**
-  String get profilePageTitle;
-
-  /// Title for the page where user enters contact details.
-  ///
-  /// In en, this message translates to:
-  /// **'Contact Details'**
-  String get formPageTitle;
+  /// **'Version'**
+  String get appVersion;
 
   /// Title for the page displaying the barcode.
   ///
   /// In en, this message translates to:
   /// **'Tax Code Barcode'**
   String get barcodePageTitle;
-
-  /// Title for the camera screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Scan Card'**
-  String get takePicture;
-
-  /// Error message shown when the scan fails to extract data from a document photo. It prompts the user to retry with a better picture.
-  ///
-  /// In en, this message translates to:
-  /// **'Could not read data from the picture. Please try taking a new, more focused one.'**
-  String get scanFailedErrorMessage;
-
-  /// Tooltip for the FloatingActionButton to create a new contact.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Contact'**
-  String get newItem;
-
-  /// Error message shown when a form field contains disallowed characters (like numbers or symbols).
-  ///
-  /// In en, this message translates to:
-  /// **'The field contains invalid characters.'**
-  String get invalidCharacters;
-
-  /// Placeholder text inside a search bar.
-  ///
-  /// In en, this message translates to:
-  /// **'Search by name or tax code...'**
-  String get search;
-
-  /// Message displayed when the contact list is empty.
-  ///
-  /// In en, this message translates to:
-  /// **'No contacts yet.\nTap the \'+\' button to add your first one!'**
-  String get contactsListEmpty;
-
-  /// Message displayed when a search yields no results.
-  ///
-  /// In en, this message translates to:
-  /// **'No results found for \'{searchText}\''**
-  String searchNoResults(String searchText);
-
-  /// Tooltip for the share button on a contact card.
-  ///
-  /// In en, this message translates to:
-  /// **'Share Tax Code'**
-  String get tooltipShare;
-
-  /// Tooltip for the barcode button on a contact card.
-  ///
-  /// In en, this message translates to:
-  /// **'Show Barcode'**
-  String get tooltipShowBarcode;
-
-  /// Tooltip for the edit button on a contact card.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit Contact'**
-  String get tooltipEdit;
-
-  /// Tooltip for the delete button on a contact card.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete Contact'**
-  String get tooltipDelete;
-
-  /// Label for a button that initiates scanning a card.
-  ///
-  /// In en, this message translates to:
-  /// **'Scan from Health Card'**
-  String get scanCard;
-
-  /// Label for the first name input field.
-  ///
-  /// In en, this message translates to:
-  /// **'First Name'**
-  String get firstName;
-
-  /// Label for the last name input field.
-  ///
-  /// In en, this message translates to:
-  /// **'Last Name'**
-  String get lastName;
-
-  /// Label for the gender input field.
-  ///
-  /// In en, this message translates to:
-  /// **'Gender'**
-  String get gender;
 
   /// Label for the birth date input field.
   ///
@@ -320,137 +134,11 @@ abstract class AppLocalizations {
   /// **'Place of Birth'**
   String get birthPlace;
 
-  /// A validation error message for a required form field.
+  /// Title for the modal showing the birthplaces database download progress.
   ///
   /// In en, this message translates to:
-  /// **'This field is required'**
-  String get required;
-
-  /// The title for a dialog asking the user to confirm a delete action.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm Deletion'**
-  String get deleteConfirmation;
-
-  /// A confirmation message for deleting a specific contact.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to permanently delete the contact for \'{taxCode}\'?'**
-  String deleteMessage(String taxCode);
-
-  /// Title for a dialog informing the user that a permission is required.
-  ///
-  /// In en, this message translates to:
-  /// **'Permission Required'**
-  String get permissionRequired;
-
-  /// An informational message explaining how to grant camera permission.
-  ///
-  /// In en, this message translates to:
-  /// **'To scan cards, this app needs access to your camera. Please go to your device settings and grant camera permission.'**
-  String get cameraPermissionInfo;
-
-  /// Label for a button that navigates the user to the app's settings page.
-  ///
-  /// In en, this message translates to:
-  /// **'Open Settings'**
-  String get openSettings;
-
-  /// A generic title for an error dialog.
-  ///
-  /// In en, this message translates to:
-  /// **'Error'**
-  String get error;
-
-  /// A user-friendly message for a generic error, asking them to retry.
-  ///
-  /// In en, this message translates to:
-  /// **'Something went wrong. Please try again.'**
-  String get genericError;
-
-  /// Error message when the user has exceeded their daily limit of tax code calculations.
-  ///
-  /// In en, this message translates to:
-  /// **'Daily limit reached. Please try again tomorrow.'**
-  String get rateLimitExceeded;
-
-  /// Error message when the backend service is down or returning an error.
-  ///
-  /// In en, this message translates to:
-  /// **'The service is temporarily unavailable. Please try again later.'**
-  String get serviceUnavailable;
-
-  /// Error message when the request times out.
-  ///
-  /// In en, this message translates to:
-  /// **'The request took too long. Please check your connection or try again later.'**
-  String get deadlineExceeded;
-
-  /// Error message when there is no internet connectivity.
-  ///
-  /// In en, this message translates to:
-  /// **'No internet connection. Please check your network and try again.'**
-  String get networkError;
-
-  /// Error message when the user's authentication token is invalid or expired.
-  ///
-  /// In en, this message translates to:
-  /// **'Your session has expired. Please sign in again.'**
-  String get sessionExpired;
-
-  /// Tooltip for the button that toggles the camera flash on and off.
-  ///
-  /// In en, this message translates to:
-  /// **'Toggle flash'**
-  String get tooltipToggleFlash;
-
-  /// Tooltip for the button to capture a picture.
-  ///
-  /// In en, this message translates to:
-  /// **'Take picture'**
-  String get tooltipTakePicture;
-
-  /// Tooltip for the button to confirm the captured picture and proceed.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm picture'**
-  String get tooltipConfirmPicture;
-
-  /// Tooltip for the button to discard the current picture and take a new one.
-  ///
-  /// In en, this message translates to:
-  /// **'Retake picture'**
-  String get tooltipRetakePicture;
-
-  /// A notice about agreeing to terms and conditions.
-  ///
-  /// In en, this message translates to:
-  /// **'By proceeding, you agree to our Terms and Conditions.'**
-  String get termsAndCondition;
-
-  /// Label for a button to display the terms and conditions.
-  ///
-  /// In en, this message translates to:
-  /// **'View Terms & Conditions'**
-  String get showTerms;
-
-  /// Label for the app name field in an info screen.
-  ///
-  /// In en, this message translates to:
-  /// **'App Name'**
-  String get appName;
-
-  /// Label for the package name field in an info screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Package Name'**
-  String get packageName;
-
-  /// Label for the app version field in an info screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Version'**
-  String get appVersion;
+  /// **'Updating Birthplaces Database'**
+  String get birthplacesDownloadTitle;
 
   /// Label for the build number field in an info screen.
   ///
@@ -464,17 +152,245 @@ abstract class AppLocalizations {
   /// **'Build Signature'**
   String get buildSignature;
 
+  /// An informational message explaining how to grant camera permission.
+  ///
+  /// In en, this message translates to:
+  /// **'To scan cards, this app needs access to your camera. Please go to your device settings and grant camera permission.'**
+  String get cameraPermissionInfo;
+
+  /// Label for a button to cancel an action.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Label for a button to close a screen or dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// Label for a confirmation button.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// Message displayed when the contact list is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No contacts yet.\nTap the \'+\' button to add your first one!'**
+  String get contactsListEmpty;
+
+  /// Label for a delete button.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// Label for a button to delete the user's account.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// A confirmation message shown to the user before deleting their account.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account? All your data will be permanently lost. This action is irreversible.'**
+  String get deleteAccountMessage;
+
+  /// The title for a dialog asking the user to confirm a delete action.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Deletion'**
+  String get deleteConfirmation;
+
+  /// A confirmation message for deleting a specific contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to permanently delete the contact for \'{taxCode}\'?'**
+  String deleteMessage(String taxCode);
+
+  /// Label for an edit button.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// A generic title for an error dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// Label for the first name input field.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get firstName;
+
+  /// Title for the page where user enters contact details.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Details'**
+  String get formPageTitle;
+
+  /// Label for the gender input field.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// A user-friendly message for a generic error, asking them to retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get genericError;
+
+  /// Title for the main home page.
+  ///
+  /// In en, this message translates to:
+  /// **'My Contacts'**
+  String get homePageTitle;
+
+  /// A generic title for an informational dialog or screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info;
+
   /// Label for the installer store field in an info screen.
   ///
   /// In en, this message translates to:
   /// **'Installer Store'**
   String get installerStore;
 
-  /// Title for the modal showing the birthplaces database download progress.
+  /// Error message shown when a form field contains disallowed characters (like numbers or symbols).
   ///
   /// In en, this message translates to:
-  /// **'Updating Birthplaces Database'**
-  String get birthplacesDownloadTitle;
+  /// **'The field contains invalid characters.'**
+  String get invalidCharacters;
+
+  /// Label for the last name input field.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get lastName;
+
+  /// Error message when there is no internet connectivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Please check your network and try again.'**
+  String get networkError;
+
+  /// Tooltip for the FloatingActionButton to create a new contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Contact'**
+  String get newItem;
+
+  /// Label for a button that navigates the user to the app's settings page.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get openSettings;
+
+  /// Label for the package name field in an info screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Package Name'**
+  String get packageName;
+
+  /// A welcome message on the login screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome, please sign in to continue.'**
+  String get pleaseSignIn;
+
+  /// A welcome message on the registration screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome, please create an account to continue.'**
+  String get pleaseSignUp;
+
+  /// Title for the user profile screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profilePageTitle;
+
+  /// Error message when the user has exceeded their daily limit of tax code calculations.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily limit reached. Please try again tomorrow.'**
+  String get rateLimitExceeded;
+
+  /// Label for a button in the profile screen that opens the Play Store for the user to leave a review.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate this App'**
+  String get rateThisApp;
+
+  /// A validation error message for a required form field.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get required;
+
+  /// Label for a button that initiates scanning a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan from Health Card'**
+  String get scanCard;
+
+  /// Error message shown when the scan fails to extract data from a document photo. It prompts the user to retry with a better picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not read data from the picture. Please try taking a new, more focused one.'**
+  String get scanFailedErrorMessage;
+
+  /// Placeholder text inside a search bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or tax code...'**
+  String get search;
+
+  /// Message displayed when a search yields no results.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found for \'{searchText}\''**
+  String searchNoResults(String searchText);
+
+  /// Error message when the backend service is down or returning an error.
+  ///
+  /// In en, this message translates to:
+  /// **'The service is temporarily unavailable. Please try again later.'**
+  String get serviceUnavailable;
+
+  /// Error message when the user's authentication token is invalid or expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please sign in again.'**
+  String get sessionExpired;
+
+  /// Label for a share button.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// Label for a button to display the terms and conditions.
+  ///
+  /// In en, this message translates to:
+  /// **'View Terms & Conditions'**
+  String get showTerms;
+
+  /// Label for a button to sign out of the application.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get signOut;
 
   /// Initial step indicating the service is checking whether birthplace data needs to be downloaded.
   ///
@@ -500,11 +416,65 @@ abstract class AppLocalizations {
   /// **'Reading database...'**
   String get stepBirthplacesParsing;
 
-  /// Label for a button in the profile screen that opens the Play Store for the user to leave a review.
+  /// Title for the camera screen.
   ///
   /// In en, this message translates to:
-  /// **'Rate this App'**
-  String get rateThisApp;
+  /// **'Scan Card'**
+  String get takePicture;
+
+  /// A notice about agreeing to terms and conditions.
+  ///
+  /// In en, this message translates to:
+  /// **'By proceeding, you agree to our Terms and Conditions.'**
+  String get termsAndCondition;
+
+  /// Tooltip for the button to confirm the captured picture and proceed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm picture'**
+  String get tooltipConfirmPicture;
+
+  /// Tooltip for the delete button on a contact card.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Contact'**
+  String get tooltipDelete;
+
+  /// Tooltip for the edit button on a contact card.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Contact'**
+  String get tooltipEdit;
+
+  /// Tooltip for the button to discard the current picture and take a new one.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake picture'**
+  String get tooltipRetakePicture;
+
+  /// Tooltip for the share button on a contact card.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Tax Code'**
+  String get tooltipShare;
+
+  /// Tooltip for the barcode button on a contact card.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Barcode'**
+  String get tooltipShowBarcode;
+
+  /// Tooltip for the button to capture a picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Take picture'**
+  String get tooltipTakePicture;
+
+  /// Tooltip for the button that toggles the camera flash on and off.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle flash'**
+  String get tooltipToggleFlash;
 }
 
 class _AppLocalizationsDelegate

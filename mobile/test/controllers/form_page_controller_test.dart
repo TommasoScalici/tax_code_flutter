@@ -5,12 +5,13 @@ import 'package:mocktail/mocktail.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
+import 'package:shared/models/scanned_data.dart';
 import 'package:shared/models/tax_code_response.dart';
 import 'package:shared/repositories/contact_repository.dart';
+import 'package:shared/services/birthplace_service.dart';
+import 'package:shared/services/tax_code_service.dart';
+
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
-import 'package:tax_code_flutter/models/scanned_data.dart';
-import 'package:tax_code_flutter/services/birthplace_service.dart';
-import 'package:tax_code_flutter/services/tax_code_service.dart';
 
 // Mocks for dependencies that have logic
 class MockTaxCodeService extends Mock implements TaxCodeServiceAbstract {}
@@ -64,7 +65,7 @@ void main() {
     late MockContactRepository mockContactRepository;
     late MockLogger mockLogger;
 
-    final sampleBirthplace = const Birthplace(name: 'Palermo', state: 'PA');
+    const sampleBirthplace = Birthplace(name: 'Palermo', state: 'PA');
     final sampleContact = Contact(
       id: 'test-id',
       firstName: 'Mario',
@@ -93,7 +94,7 @@ void main() {
       ).thenAnswer((_) async => [sampleBirthplace]);
       when(() => mockContactRepository.contacts).thenReturn([]);
       when(
-        () => mockLogger.e(any(), error: any(named: 'error')),
+        () => mockLogger.e(any<Object?>(), error: any<Object?>(named: 'error')),
       ).thenAnswer((_) {});
     });
 
@@ -107,7 +108,7 @@ void main() {
         initialContact: initialContact,
       );
       // Wait for async operations in the controller's `_initialize` to complete
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
     }
 
     test('initialization loads birthplaces and builds the form', () async {
@@ -115,9 +116,7 @@ void main() {
       await createController();
 
       // Assert
-      verify(
-        () => mockBirthplaceService.loadBirthplaces(),
-      ).called(1);
+      verify(() => mockBirthplaceService.loadBirthplaces()).called(1);
       expect(formPageController.birthplaces, isNotEmpty);
       expect(formPageController.form, isA<FormGroup>());
       expect(formPageController.isLoading, isFalse);
@@ -166,11 +165,11 @@ void main() {
 
     group('submitForm', () {
       // Use real model instances for the successful response
-      final successfulData = const Data(
+      const successfulData = Data(
         fiscalCode: 'NEWTAXCODE123',
         allFiscalCodes: [],
       );
-      final successfulResponse = TaxCodeResponse(
+      const successfulResponse = TaxCodeResponse(
         status: true,
         message: 'OK',
         data: successfulData,
@@ -236,37 +235,34 @@ void main() {
         expect(formPageController.isLoading, isFalse);
       });
 
-      test(
-        'sets network error key on TaxCodeApiNetworkException',
-        () async {
-          // Arrange
-          await createController();
-          formPageController.form.patchValue({
-            'firstName': 'Guido',
-            'lastName': 'Bianchi',
-            'gender': 'M',
-            'birthDate': DateTime(1975, 3, 10),
-            'birthPlace': sampleBirthplace,
-          });
-          when(
-            () => mockTaxCodeService.fetchTaxCode(
-              firstName: any(named: 'firstName'),
-              lastName: any(named: 'lastName'),
-              gender: any(named: 'gender'),
-              birthDate: any(named: 'birthDate'),
-              birthPlaceName: any(named: 'birthPlaceName'),
-              birthPlaceState: any(named: 'birthPlaceState'),
-            ),
-          ).thenThrow(TaxCodeApiNetworkException());
+      test('sets network error key on TaxCodeApiNetworkException', () async {
+        // Arrange
+        await createController();
+        formPageController.form.patchValue({
+          'firstName': 'Guido',
+          'lastName': 'Bianchi',
+          'gender': 'M',
+          'birthDate': DateTime(1975, 3, 10),
+          'birthPlace': sampleBirthplace,
+        });
+        when(
+          () => mockTaxCodeService.fetchTaxCode(
+            firstName: any(named: 'firstName'),
+            lastName: any(named: 'lastName'),
+            gender: any(named: 'gender'),
+            birthDate: any(named: 'birthDate'),
+            birthPlaceName: any(named: 'birthPlaceName'),
+            birthPlaceState: any(named: 'birthPlaceState'),
+          ),
+        ).thenThrow(TaxCodeApiNetworkException());
 
-          // Act
-          final result = await formPageController.submitForm();
+        // Act
+        final result = await formPageController.submitForm();
 
-          // Assert
-          expect(result, isNull);
-          expect(formPageController.errorKey, 'networkError');
-        },
-      );
+        // Assert
+        expect(result, isNull);
+        expect(formPageController.errorKey, 'networkError');
+      });
 
       test('sets rate limit error key on resource-exhausted error', () async {
         // Arrange

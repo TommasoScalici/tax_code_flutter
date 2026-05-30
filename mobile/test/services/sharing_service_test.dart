@@ -33,7 +33,7 @@ void main() {
       'should return ShareResult with success status when sharing is successful',
       () async {
         // Arrange
-        final successResult = const ShareResult(
+        const successResult = ShareResult(
           'com.example.app',
           ShareResultStatus.success,
         );
@@ -54,7 +54,7 @@ void main() {
       'should return ShareResult with dismissed status when sharing is dismissed',
       () async {
         // Arrange
-        final dismissedResult = const ShareResult(
+        const dismissedResult = ShareResult(
           'com.example.app',
           ShareResultStatus.dismissed,
         );
@@ -75,7 +75,7 @@ void main() {
       () async {
         // Arrange
         when(
-          () => mockShareAdapter.share(text: any(named: 'text')),
+          () => mockShareAdapter.share(text: any<String>(named: 'text')),
         ).thenThrow(Exception('Platform error'));
 
         // Act
@@ -85,9 +85,9 @@ void main() {
         expect(result, ShareResult.unavailable);
         verify(
           () => mockLogger.e(
-            any(),
-            error: any(named: 'error'),
-            stackTrace: any(named: 'stackTrace'),
+            any<Object?>(),
+            error: any<Object?>(named: 'error'),
+            stackTrace: any<StackTrace?>(named: 'stackTrace'),
           ),
         ).called(1);
       },

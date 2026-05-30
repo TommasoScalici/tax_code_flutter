@@ -23,7 +23,7 @@ final class ContactCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final valueTextStyle = const TextStyle(fontWeight: FontWeight.w600);
+    const valueTextStyle = TextStyle(fontWeight: FontWeight.w600);
     final taxCodeTextStyle = TextStyle(
       color: Theme.of(context).colorScheme.surface,
       fontSize: 22,

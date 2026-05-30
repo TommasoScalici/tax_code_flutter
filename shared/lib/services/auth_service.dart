@@ -18,7 +18,7 @@ class AuthService with ChangeNotifier {
   final Logger _logger;
 
   AuthStatus _status = AuthStatus.initializing;
-  StreamSubscription? _authSubscription;
+  StreamSubscription<User?>? _authSubscription;
   User? _currentUser;
   String? _errorMessage;
   bool _isLoading = false;

@@ -7,7 +7,7 @@ void main() {
   /// Tests for the Contact model
   group('Contact Model', () {
     final birthDate = DateTime(1990, 1, 15);
-    final birthplace = const Birthplace(name: 'Roma', state: 'RM');
+    const birthplace = Birthplace(name: 'Roma', state: 'RM');
     final contact = Contact(
       id: '12345',
       firstName: 'Mario',

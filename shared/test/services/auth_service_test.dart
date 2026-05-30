@@ -56,13 +56,13 @@ void main() {
     when(() => mockDbService.saveUserData(any())).thenAnswer((_) async {});
     when(
       () => mockLogger.e(
-        any(),
-        error: any(named: 'error'),
-        stackTrace: any(named: 'stackTrace'),
+        any<Object?>(),
+        error: any<Object?>(named: 'error'),
+        stackTrace: any<StackTrace?>(named: 'stackTrace'),
       ),
     ).thenAnswer((_) {});
-    when(() => mockLogger.w(any())).thenAnswer((_) {});
-    when(() => mockLogger.i(any())).thenAnswer((_) {});
+    when(() => mockLogger.w(any<Object?>())).thenAnswer((_) {});
+    when(() => mockLogger.i(any<Object?>())).thenAnswer((_) {});
 
     authService = AuthService(
       auth: mockAuth,
@@ -90,7 +90,7 @@ void main() {
         // Arrange
         final mockUser = MockUser();
 
-        when(() => mockUser.reload()).thenAnswer((_) async {});
+        when(mockUser.reload).thenAnswer((_) async {});
         when(() => mockAuth.currentUser).thenReturn(mockUser);
         when(
           () => mockDbService.saveUserData(mockUser),
@@ -105,7 +105,7 @@ void main() {
         expect(authService.isSignedIn, isTrue);
         expect(authService.currentUser, mockUser);
 
-        verify(() => mockUser.reload()).called(1);
+        verify(mockUser.reload).called(1);
         verify(() => mockDbService.saveUserData(mockUser)).called(1);
         verifyNever(() => mockAuth.signOut());
       },
@@ -123,7 +123,7 @@ void main() {
       final mockUser = MockUser();
       final exception = Exception('Firestore connection failed');
 
-      when(() => mockUser.reload()).thenAnswer((_) async {});
+      when(mockUser.reload).thenAnswer((_) async {});
       when(() => mockAuth.currentUser).thenReturn(mockUser);
       when(() => mockDbService.saveUserData(mockUser)).thenThrow(exception);
       when(() => mockAuth.signOut()).thenAnswer((_) async {});
@@ -137,7 +137,7 @@ void main() {
       expect(authService.isSignedIn, isFalse);
       expect(authService.currentUser, isNull);
 
-      verify(() => mockUser.reload()).called(1);
+      verify(mockUser.reload).called(1);
       verify(() => mockDbService.saveUserData(mockUser)).called(1);
 
       verify(() => mockAuth.signOut()).called(1);
@@ -240,7 +240,7 @@ void main() {
       when(
         () => mockDbService.deleteAllUserData(any()),
       ).thenAnswer((_) async {});
-      when(() => userToDelete.delete()).thenAnswer((_) async {});
+      when(userToDelete.delete).thenAnswer((_) async {});
     });
 
     test('should do nothing if user is not signed in', () async {
@@ -252,7 +252,7 @@ void main() {
 
       // Assert
       verifyNever(() => mockDbService.deleteAllUserData(any()));
-      verifyNever(() => userToDelete.delete());
+      verifyNever(userToDelete.delete);
     });
 
     test(
@@ -267,7 +267,7 @@ void main() {
         // Assert
         verifyInOrder([
           () => mockDbService.deleteAllUserData('test_uid'),
-          () => userToDelete.delete(),
+          userToDelete.delete,
         ]);
         verify(
           () => mockLogger.i(
@@ -295,14 +295,14 @@ void main() {
           stackTrace: any(named: 'stackTrace'),
         ),
       ).called(1);
-      verifyNever(() => userToDelete.delete());
+      verifyNever(userToDelete.delete);
     });
 
     test('should rethrow and log error if user.delete() fails', () async {
       // Arrange
       when(() => mockAuth.currentUser).thenReturn(userToDelete);
       final exception = FirebaseAuthException(code: 'requires-recent-login');
-      when(() => userToDelete.delete()).thenThrow(exception);
+      when(userToDelete.delete).thenThrow(exception);
 
       // Act
       final future = authService.deleteUserAccount();

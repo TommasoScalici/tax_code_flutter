@@ -11,9 +11,7 @@ import '../helpers/test_setup.dart';
 class FakeLocale extends Fake implements Locale {}
 
 void main() {
-  setUpAll(() {
-    setupTests();
-  });
+  setUpAll(setupTests);
 
   group('AuthGate Widget Tests', () {
     testWidgets('displays HomePage when user is signed in', (tester) async {

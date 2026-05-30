@@ -70,9 +70,9 @@ void main() {
           expect(result, isFalse);
           verify(
             () => mockLogger.e(
-              any(),
-              error: any(named: 'error'),
-              stackTrace: any(named: 'stackTrace'),
+              any<Object?>(),
+              error: any<Object?>(named: 'error'),
+              stackTrace: any<StackTrace?>(named: 'stackTrace'),
             ),
           ).called(1);
         },
@@ -124,9 +124,9 @@ void main() {
           expect(result, isFalse);
           verify(
             () => mockLogger.e(
-              any(),
-              error: any(named: 'error'),
-              stackTrace: any(named: 'stackTrace'),
+              any<Object?>(),
+              error: any<Object?>(named: 'error'),
+              stackTrace: any<StackTrace?>(named: 'stackTrace'),
             ),
           ).called(1);
         },

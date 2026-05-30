@@ -15,9 +15,7 @@ import '../helpers/test_setup.dart';
 class FakeLocale extends Fake implements Locale {}
 
 void main() {
-  setUpAll(() {
-    setupTests();
-  });
+  setUpAll(setupTests);
 
   late MockAuthService mockAuthService;
   late MockThemeService mockThemeService;

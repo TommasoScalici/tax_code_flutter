@@ -5,13 +5,14 @@ import 'package:logger/logger.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
+import 'package:shared/models/scanned_data.dart';
 import 'package:shared/repositories/contact_repository.dart';
-import 'package:tax_code_flutter/models/scanned_data.dart';
-import 'package:tax_code_flutter/services/birthplace_service.dart';
-import 'package:tax_code_flutter/services/tax_code_service.dart';
+import 'package:shared/services/birthplace_service.dart';
+import 'package:shared/services/tax_code_service.dart';
+import 'package:shared/utils/error_mapper.dart';
 import 'package:uuid/uuid.dart';
 
-/// Validator that checks if a control's value contains only letters,
+/// Validator that checks if a cont6arol's value contains only letters,
 /// spaces, and apostrophes.
 class OnlyLettersValidator extends Validator<String> {
   const OnlyLettersValidator();
@@ -36,7 +37,7 @@ class FormPageController with ChangeNotifier {
   final TaxCodeServiceAbstract _taxCodeService;
   final BirthplaceServiceAbstract _birthplaceService;
   final ContactRepository _contactRepository;
-  StreamSubscription? _formStatusSubscription;
+  StreamSubscription<ControlStatus>? _formStatusSubscription;
   final Logger _logger;
   final Contact? _initialContact;
   late final FormGroup form;
@@ -185,15 +186,15 @@ class FormPageController with ChangeNotifier {
       }
 
       final formData = form.value;
-      final firstName = (formData['firstName'] as String).trim();
-      final lastName = (formData['lastName'] as String).trim();
-      final birthPlace = formData['birthPlace'] as Birthplace;
+      final firstName = (formData['firstName']! as String).trim();
+      final lastName = (formData['lastName']! as String).trim();
+      final birthPlace = formData['birthPlace']! as Birthplace;
 
       final response = await _taxCodeService.fetchTaxCode(
         firstName: firstName,
         lastName: lastName,
-        gender: formData['gender'] as String,
-        birthDate: formData['birthDate'] as DateTime,
+        gender: formData['gender']! as String,
+        birthDate: formData['birthDate']! as DateTime,
         birthPlaceName: birthPlace.name,
         birthPlaceState: birthPlace.state,
       );
@@ -203,10 +204,10 @@ class FormPageController with ChangeNotifier {
           id: _initialContact?.id ?? const Uuid().v4(),
           firstName: firstName,
           lastName: lastName,
-          gender: formData['gender'] as String,
+          gender: formData['gender']! as String,
           taxCode: response.data.fiscalCode,
           birthPlace: birthPlace,
-          birthDate: formData['birthDate'] as DateTime,
+          birthDate: formData['birthDate']! as DateTime,
           listIndex:
               _initialContact?.listIndex ??
               _contactRepository.contacts.length + 1,
@@ -216,28 +217,9 @@ class FormPageController with ChangeNotifier {
       } else {
         throw Exception('API returned status false.');
       }
-    } on TaxCodeApiNetworkException {
-      _setErrorKey('networkError');
-      _setLoading(false);
-      return null;
-    } on TaxCodeApiServerException catch (e) {
-      _logger.e('Server error during form submission: ${e.code}');
-      if (e.code == 'resource-exhausted') {
-        _setErrorKey('rateLimitExceeded');
-      } else if (e.code == 'unauthenticated' || e.code == 'permission-denied') {
-        _setErrorKey('sessionExpired');
-      } else if (e.code == 'deadline-exceeded') {
-        _setErrorKey('deadlineExceeded');
-      } else if (e.code == 'unavailable' || e.code == 'failed-precondition') {
-        _setErrorKey('serviceUnavailable');
-      } else {
-        _setErrorKey('serviceUnavailable');
-      }
-      _setLoading(false);
-      return null;
     } catch (e) {
-      _logger.e('An error occurred during form submission', error: e);
-      _setErrorKey('genericError');
+      _logger.e('Error during form submission', error: e);
+      _setErrorKey(ErrorMapper.mapErrorToKey(e));
       _setLoading(false);
       return null;
     }

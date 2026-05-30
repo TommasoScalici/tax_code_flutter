@@ -98,11 +98,10 @@ function parseForeignCountriesCSV(content: string): Birthplace[] {
 
   const results: Birthplace[] = [];
   if (nameIdx !== -1) {
-    for (let i = 1; i < rows.length; i++) {
-      const row = rows[i];
+    for (const row of rows.slice(1)) {
       if (row.length <= nameIdx) continue;
 
-      const name = row[nameIdx]?.trim();
+      const name = row.at(nameIdx)?.trim();
       if (name) {
         results.push({ name, state: "EE" });
       }

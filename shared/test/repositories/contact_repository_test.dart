@@ -9,6 +9,7 @@ import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/database_service.dart';
+import 'package:shared/services/hive_local_cache_service.dart';
 
 import '../fakes/fake_auth_service.dart';
 import '../fakes/fake_user.dart';
@@ -82,15 +83,16 @@ void main() {
     ).thenAnswer((_) async {});
     when(
       () => mockLogger.e(
-        any(),
-        error: any(named: 'error'),
-        stackTrace: any(named: 'stackTrace'),
+        any<Object?>(),
+        error: any<Object?>(named: 'error'),
+        stackTrace: any<StackTrace?>(named: 'stackTrace'),
       ),
     ).thenAnswer((_) {});
 
     contactRepository = ContactRepository(
       authService: fakeAuthService,
       dbService: mockDbService,
+      cacheService: HiveLocalCacheService(),
       logger: mockLogger,
     );
   });
@@ -145,6 +147,7 @@ void main() {
         final repo = ContactRepository(
           authService: preAuthService,
           dbService: mockDbService,
+          cacheService: HiveLocalCacheService(),
           logger: mockLogger,
         );
         await pumpEventQueue();
@@ -235,9 +238,9 @@ void main() {
         expect(contactRepository.contacts.single, equals(contact1));
         verify(
           () => mockLogger.e(
-            any(that: contains('falling back to cache')),
+            any<Object?>(that: contains('falling back to cache')),
             error: exception,
-            stackTrace: any(named: 'stackTrace'),
+            stackTrace: any<StackTrace?>(named: 'stackTrace'),
           ),
         ).called(1);
 

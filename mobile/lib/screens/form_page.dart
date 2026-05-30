@@ -5,16 +5,19 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_date_time_picker/reactive_date_time_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
-import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
+import 'package:shared/models/scanned_data.dart';
 import 'package:shared/repositories/contact_repository.dart';
+import 'package:shared/services/birthplace_service.dart';
+import 'package:shared/services/tax_code_service.dart';
+
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
-import 'package:tax_code_flutter/models/scanned_data.dart';
 import 'package:tax_code_flutter/routes.dart';
-import 'package:tax_code_flutter/services/birthplace_service.dart';
-import 'package:tax_code_flutter/services/tax_code_service.dart';
+import 'package:tax_code_flutter/utils/error_dialog_helper.dart';
+import 'package:tax_code_flutter/widgets/form/birthplace_autocomplete.dart';
+import 'package:tax_code_flutter/widgets/form/custom_text_field.dart';
+import 'package:tax_code_flutter/widgets/form/gender_dropdown.dart';
 
 class FormPage extends StatelessWidget {
   final Contact? contact;
@@ -64,7 +67,7 @@ class _FormViewState extends State<_FormView> {
 
     controller.addListener(() {
       if (controller.errorKey != null && mounted) {
-        _showErrorKey(context, controller.errorKey!);
+        ErrorDialogHelper.showErrorDialog(context, controller.errorKey!);
         controller.clearError();
       }
     });
@@ -74,46 +77,6 @@ class _FormViewState extends State<_FormView> {
   void dispose() {
     _birthplaceFocusNode.dispose();
     super.dispose();
-  }
-
-  void _showErrorKey(BuildContext context, String errorKey) {
-    final l10n = AppLocalizations.of(context)!;
-    String message;
-
-    switch (errorKey) {
-      case 'rateLimitExceeded':
-        message = l10n.rateLimitExceeded;
-        break;
-      case 'serviceUnavailable':
-        message = l10n.serviceUnavailable;
-        break;
-      case 'networkError':
-        message = l10n.networkError;
-        break;
-      case 'sessionExpired':
-        message = l10n.sessionExpired;
-        break;
-      case 'genericError':
-      default:
-        message = l10n.genericError;
-        break;
-    }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(l10n.error),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(l10n.close),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Future<void> _openCameraPage(FormPageController controller) async {
@@ -188,14 +151,9 @@ class _FormViewState extends State<_FormView> {
                           horizontal: 32,
                           vertical: 16,
                         ),
-                        child: ReactiveTextField(
-                          decoration: InputDecoration(
-                            labelText: l10n.firstName,
-                          ),
+                        child: CustomTextField(
                           formControlName: 'firstName',
-                          onTapOutside: (event) =>
-                              FocusScope.of(context).unfocus(),
-                          textInputAction: TextInputAction.next,
+                          labelText: l10n.firstName,
                           validationMessages: {
                             ValidationMessage.required: (error) =>
                                 l10n.required,
@@ -209,12 +167,9 @@ class _FormViewState extends State<_FormView> {
                           horizontal: 32,
                           vertical: 16,
                         ),
-                        child: ReactiveTextField(
-                          decoration: InputDecoration(labelText: l10n.lastName),
+                        child: CustomTextField(
                           formControlName: 'lastName',
-                          onTapOutside: (event) =>
-                              FocusScope.of(context).unfocus(),
-                          textInputAction: TextInputAction.next,
+                          labelText: l10n.lastName,
                           validationMessages: {
                             ValidationMessage.required: (error) =>
                                 l10n.required,
@@ -233,21 +188,9 @@ class _FormViewState extends State<_FormView> {
                           children: <Widget>[
                             Expanded(
                               flex: 3,
-                              child: ReactiveDropdownField<String>(
+                              child: GenderDropdown(
                                 formControlName: 'gender',
-                                decoration: InputDecoration(
-                                  labelText: l10n.gender,
-                                ),
-                                items: const [
-                                  DropdownMenuItem(
-                                    value: 'M',
-                                    child: Text('M'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 'F',
-                                    child: Text('F'),
-                                  ),
-                                ],
+                                labelText: l10n.gender,
                                 validationMessages: {
                                   ValidationMessage.required: (error) =>
                                       l10n.required,
@@ -284,113 +227,12 @@ class _FormViewState extends State<_FormView> {
                           horizontal: 32,
                           vertical: 16,
                         ),
-                        child: ReactiveRawAutocomplete<Birthplace, Birthplace>(
+                        child: BirthplaceAutocomplete(
                           formControlName: 'birthPlace',
                           focusNode: _birthplaceFocusNode,
-                          validationMessages: {
-                            ValidationMessage.required: (error) =>
-                                l10n.required,
-                          },
-                          optionsBuilder: (value) {
-                            if (value.text.length < 2) {
-                              return const Iterable<Birthplace>.empty();
-                            }
-                            return controller.birthplaces
-                                .where(
-                                  (b) => b.name.toLowerCase().contains(
-                                    value.text.toLowerCase(),
-                                  ),
-                                )
-                                .take(20)
-                                .toList();
-                          },
-                          fieldViewBuilder:
-                              (
-                                BuildContext context,
-                                TextEditingController textEditingController,
-                                FocusNode focusNode,
-                                VoidCallback onFieldSubmitted,
-                              ) {
-                                final control =
-                                    context
-                                            .read<FormPageController>()
-                                            .form
-                                            .control('birthPlace')
-                                        as FormControl;
-
-                                return ReactiveValueListenableBuilder(
-                                  formControl: control,
-                                  builder: (context, control, child) {
-                                    final errorText =
-                                        control.invalid && control.touched
-                                        ? l10n.required
-                                        : null;
-
-                                    return TextField(
-                                      controller: textEditingController,
-                                      focusNode: focusNode,
-                                      decoration: InputDecoration(
-                                        labelText: l10n.birthPlace,
-                                        errorText: errorText,
-                                        suffixIcon: IconButton(
-                                          icon: const Icon(Icons.clear),
-                                          onPressed: () {
-                                            final control = context
-                                                .read<FormPageController>()
-                                                .form
-                                                .control('birthPlace');
-                                            textEditingController.clear();
-                                            control.value = null;
-                                            control.markAsTouched();
-                                            FocusScope.of(context).unfocus();
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                          optionsViewBuilder:
-                              (
-                                BuildContext context,
-                                void Function(Birthplace) onSelected,
-                                Iterable<Birthplace> options,
-                              ) {
-                                return Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Material(
-                                    elevation: 4.0,
-                                    child: ConstrainedBox(
-                                      constraints: const BoxConstraints(
-                                        maxHeight: 240,
-                                      ),
-                                      child: ListView.builder(
-                                        padding: EdgeInsets.zero,
-                                        shrinkWrap: true,
-                                        itemCount: options.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                              final birthplace = options
-                                                  .elementAt(index);
-                                              return InkWell(
-                                                onTap: () {
-                                                  onSelected(birthplace);
-                                                  FocusScope.of(
-                                                    context,
-                                                  ).unfocus();
-                                                },
-                                                child: ListTile(
-                                                  title: Text(
-                                                    '${birthplace.name} (${birthplace.state})',
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
+                          labelText: l10n.birthPlace,
+                          requiredMessage: l10n.required,
+                          birthplaces: controller.birthplaces,
                         ),
                       ),
                       Center(

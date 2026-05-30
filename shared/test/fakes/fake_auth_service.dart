@@ -98,7 +98,7 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
   Future<bool> reauthenticateWithGoogle() async {
     setLoading(true);
 
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
 
     if (_reauthShouldFail) {
       setError('Simulated re-auth failure');

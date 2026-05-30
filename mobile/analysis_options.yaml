@@ -1,23 +1,34 @@
-include: package:flutter_lints/flutter.yaml
-
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+include: package:very_good_analysis/analysis_options.yaml
 
 analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
   exclude:
     - "**/*.mocks.dart"
     - "**/*.g.dart"
 
 linter:
   rules:
-    avoid_print: true
-    avoid_web_libraries_in_flutter: true
-    depend_on_referenced_packages: false
-    directives_ordering: true
-    prefer_const_constructors: true
-    prefer_final_fields: true
-    prefer_final_locals: true
-    prefer_single_quotes: true
-    sized_box_for_whitespace: true
-    unawaited_futures: true
-    use_key_in_widget_constructors: true
+    depend_on_referenced_packages: true
+    public_member_api_docs: false
+    lines_longer_than_80_chars: false
+    sort_constructors_first: false
+    prefer_int_literals: false
+    omit_local_variable_types: false
+    always_put_required_named_parameters_first: false
+    avoid_redundant_argument_values: false
+    one_member_abstracts: false
+    unnecessary_breaks: false
+    cascade_invocations: false
+    eol_at_end_of_file: false
+    use_colored_box: false
+    always_use_package_imports: false
+    avoid_slow_async_io: false
+    use_if_null_to_convert_nulls_to_bools: false
+    prefer_final_in_for_each: false
+    avoid_positional_boolean_parameters: false
+    use_setters_to_change_properties: false
+    sort_pub_dependencies: false
+

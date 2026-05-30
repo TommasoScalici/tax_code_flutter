@@ -6,8 +6,9 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
+import 'package:shared/services/birthplace_service.dart';
+
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
-import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
 
 class MockContactRepository extends Mock implements ContactRepository {}

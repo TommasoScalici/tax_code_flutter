@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
-import 'package:tax_code_flutter/services/birthplace_service.dart';
+import 'package:shared/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
 
 /// Manages the state and business logic for the HomePage.

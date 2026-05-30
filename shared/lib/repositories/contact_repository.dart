@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:hive_ce/hive.dart';
 import 'package:logger/logger.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/database_service.dart';
+import 'package:shared/services/local_cache_service.dart';
 
 ///
 /// Manages loading, caching, and modifying user contacts.
@@ -13,10 +13,11 @@ import 'package:shared/services/database_service.dart';
 class ContactRepository with ChangeNotifier {
   final AuthService _authService;
   final DatabaseService _dbService;
+  final LocalCacheService _cacheService;
   final Logger _logger;
 
   String? _cachedUserId;
-  StreamSubscription? _contactsSubscription;
+  StreamSubscription<List<Contact>>? _contactsSubscription;
   List<Contact> _contacts = [];
   bool _isDisposed = false;
   bool _isLoading = true;
@@ -32,9 +33,11 @@ class ContactRepository with ChangeNotifier {
   ContactRepository({
     required AuthService authService,
     required DatabaseService dbService,
+    required LocalCacheService cacheService,
     required Logger logger,
   }) : _authService = authService,
        _dbService = dbService,
+       _cacheService = cacheService,
        _logger = logger {
     _authService.addListener(_onAuthChanged);
 
@@ -150,8 +153,7 @@ class ContactRepository with ChangeNotifier {
     final userIdToClear = _cachedUserId;
     if (userIdToClear != null) {
       try {
-        final box = await Hive.openBox<Contact>('contacts_$userIdToClear');
-        await box.clear();
+        await _cacheService.clearContacts(userIdToClear);
         _logger.i('Local cache for user $userIdToClear has been cleared.');
       } on Exception catch (e, s) {
         _logger.e(
@@ -238,7 +240,7 @@ class ContactRepository with ChangeNotifier {
           (remoteContacts) async {
             await _processContactsUpdate(remoteContacts);
           },
-          onError: (e, s) {
+          onError: (Object e, StackTrace s) {
             _logger.e(
               'Error on contacts stream after initial load.',
               error: e,
@@ -267,14 +269,11 @@ class ContactRepository with ChangeNotifier {
   }
 
   Future<void> _loadContactsFromLocalCache() async {
-    final box = await Hive.openBox<Contact>('contacts_$_cachedUserId');
-    _contacts = box.values.toList();
+    _contacts = await _cacheService.loadContacts(_cachedUserId!);
     _contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
   }
 
   Future<void> _saveContactsToLocalCache() async {
-    final box = await Hive.openBox<Contact>('contacts_$_cachedUserId');
-    await box.clear();
-    await box.putAll({for (var c in _contacts) c.id: c});
+    await _cacheService.saveContacts(_cachedUserId!, _contacts);
   }
 }

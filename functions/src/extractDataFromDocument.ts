@@ -42,7 +42,9 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
       vertexAI = new VertexAI({ project: PROJECT_ID, location: LOCATION });
 
       generativeModel = vertexAI.getGenerativeModel({
-        model: "gemini-flash-latest",
+        model: "gemini-3.5-flash",
+        systemInstruction:
+          "You are an expert document parser. Your task is to extract demographic data from Italian documents and format them strictly into JSON according to the prompt instructions.",
         safetySettings: [
           {
             category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,

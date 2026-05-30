@@ -7,7 +7,6 @@ import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -15,20 +14,21 @@ import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/database_service.dart';
+import 'package:shared/services/gemini_service.dart';
+import 'package:shared/services/tax_code_service.dart';
 import 'package:shared/services/theme_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/routes.dart';
-import 'package:tax_code_flutter/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
-import 'package:tax_code_flutter/services/gemini_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
-import 'package:tax_code_flutter/services/tax_code_service.dart';
 
 import 'mocks.dart';
 
@@ -57,7 +57,6 @@ Future<void> pumpApp(
   final birthplaceService = mockBirthplaceService ?? MockBirthplaceService();
   final taxCodeService = mockTaxCodeService ?? MockTaxCodeService();
   final infoService = mockInfoService ?? MockInfoService();
-  final httpClient = MockHttpClient();
   final googleSignIn = MockGoogleSignIn();
   final sharedPreferences = MockSharedPreferences();
   final firebaseAuth = MockFirebaseAuth();
@@ -75,34 +74,30 @@ Future<void> pumpApp(
     () => authService.isSignedIn,
   ).thenReturn(currentStatus == AuthStatus.authenticated);
 
-  when(() => birthplaceService.loadBirthplaces()).thenAnswer((_) async => []);
+  when(birthplaceService.loadBirthplaces).thenAnswer((_) async => []);
   when(() => contactRepository.isLoading).thenReturn(false);
   when(() => contactRepository.contacts).thenReturn(<Contact>[]);
 
   when(() => themeService.theme).thenReturn(ThemeMode.light);
-  when(() => remoteConfig.getString(any())).thenReturn('');
+  when(() => remoteConfig.getString(any<String>())).thenReturn('');
 
   when(
     () => logger.e(
-      any(),
-      error: any(named: 'error'),
-      stackTrace: any(named: 'stackTrace'),
+      any<Object?>(),
+      error: any<Object?>(named: 'error'),
+      stackTrace: any<StackTrace?>(named: 'stackTrace'),
     ),
   ).thenAnswer((_) {});
 
-  when(
-    () => permissionService.requestCameraPermission(),
-  ).thenAnswer((_) async => true);
-  when(
-    () => permissionService.openAppSettingsHandler(),
-  ).thenAnswer((_) async => true);
+  when(permissionService.requestCameraPermission).thenAnswer((_) async => true);
+  when(permissionService.openAppSettingsHandler).thenAnswer((_) async => true);
 
-  when(() => infoService.getLocalizedTerms(any())).thenAnswer(
+  when(() => infoService.getLocalizedTerms(any<Locale>())).thenAnswer(
     (_) async =>
         '<h1>Mocked Terms</h1><p>Author: <strong>Test User</strong></p>',
   );
 
-  when(() => infoService.getPackageInfo()).thenAnswer(
+  when(infoService.getPackageInfo).thenAnswer(
     (_) async => PackageInfo(
       appName: 'Test App',
       packageName: 'com.test.app',
@@ -115,7 +110,6 @@ Future<void> pumpApp(
     MultiProvider(
       providers: [
         // --- Level 1: Low-level and External Instances ---
-        Provider<http.Client>.value(value: httpClient),
         Provider<Logger>.value(value: logger),
         Provider<GoogleSignIn>.value(value: googleSignIn),
         Provider<SharedPreferencesAsync>.value(value: sharedPreferences),

@@ -1,7 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -9,31 +6,17 @@ import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_ce_flutter/adapters.dart';
-import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/hive_registrar.g.dart';
-import 'package:shared/repositories/contact_repository.dart';
-import 'package:shared/services/auth_service.dart';
-import 'package:shared/services/database_service.dart';
 import 'package:shared/services/review_service.dart';
 import 'package:shared/services/theme_service.dart';
 import 'package:shared/utils/app_bootstrap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tax_code_flutter/controllers/home_page_controller.dart';
+import 'package:tax_code_flutter/core/providers.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/routes.dart';
-import 'package:tax_code_flutter/services/birthplace_service.dart';
-import 'package:tax_code_flutter/services/brightness_service.dart';
-import 'package:tax_code_flutter/services/camera_service.dart';
-import 'package:tax_code_flutter/services/gemini_service.dart';
-import 'package:tax_code_flutter/services/in_app_review_service.dart';
-import 'package:tax_code_flutter/services/info_service.dart';
-import 'package:tax_code_flutter/services/permission_service.dart';
-import 'package:tax_code_flutter/services/sharing_service.dart';
-import 'package:tax_code_flutter/services/tax_code_service.dart';
 
 import 'firebase_options.dart';
 import 'settings.dart';
@@ -77,110 +60,11 @@ Future<void> main() async {
 
   runApp(
     MultiProvider(
-      providers: [
-        // --- Level 1: Low-level and External Instances ---
-        Provider<http.Client>(create: (_) => http.Client()),
-        Provider<Logger>.value(value: logger),
-        Provider<GoogleSignIn>.value(value: GoogleSignIn()),
-        Provider<SharedPreferencesAsync>.value(value: sharedPreferences),
-        Provider<FirebaseAuth>.value(value: FirebaseAuth.instance),
-        Provider<FirebaseCrashlytics>(
-          create: (_) => FirebaseCrashlytics.instance,
-        ),
-        Provider<FirebaseFirestore>.value(value: FirebaseFirestore.instance),
-        Provider<FirebaseFunctions>.value(
-          value: FirebaseFunctions.instanceFor(region: 'us-central1'),
-        ),
-        Provider<FirebaseRemoteConfig>.value(
-          value: FirebaseRemoteConfig.instance,
-        ),
-
-        // --- Level 2: Specialized, Self-Contained Services ---
-        Provider<PermissionServiceAbstract>(
-          create: (context) => PermissionService(
-            logger: context.read<Logger>(),
-            permissionHandler: AppPermissionHandlerAdapter(),
-          ),
-        ),
-        Provider<CameraServiceAbstract>(
-          create: (context) => CameraService(logger: context.read<Logger>()),
-        ),
-        Provider<DatabaseService>(
-          create: (context) =>
-              DatabaseService(firestore: context.read<FirebaseFirestore>()),
-        ),
-        Provider<BirthplaceServiceAbstract>(
-          create: (context) => BirthplaceService(
-            functions: context.read<FirebaseFunctions>(),
-            logger: context.read<Logger>(),
-          ),
-        ),
-        Provider<InfoServiceAbstract>(
-          create: (context) => InfoService(logger: context.read<Logger>()),
-        ),
-        Provider<BrightnessServiceAbstract>(
-          create: (context) =>
-              BrightnessService(logger: context.read<Logger>()),
-        ),
-        Provider<SharingServiceAbstract>(
-          create: (context) => SharingService(
-            logger: context.read<Logger>(),
-            shareAdapter: AppShareAdapter(),
-          ),
-        ),
-        Provider<GeminiServiceAbstract>(
-          create: (context) => GeminiService(
-            functions: context.read<FirebaseFunctions>(),
-            logger: context.read<Logger>(),
-          ),
-        ),
-        Provider<TaxCodeServiceAbstract>(
-          create: (context) => TaxCodeService(
-            functions: context.read<FirebaseFunctions>(),
-            logger: context.read<Logger>(),
-          ),
-        ),
-        Provider<ReviewService>.value(value: reviewService),
-        Provider<InAppReviewService>(
-          create: (context) => InAppReviewService(
-            reviewService: context.read<ReviewService>(),
-            logger: context.read<Logger>(),
-          ),
-        ),
-
-        // --- Level 3: State Services ---
-        ChangeNotifierProvider<ThemeService>(
-          create: (context) =>
-              ThemeService(prefs: context.read<SharedPreferencesAsync>())
-                ..init(),
-        ),
-        ChangeNotifierProvider<AuthService>(
-          create: (context) => AuthService(
-            auth: context.read<FirebaseAuth>(),
-            googleSignIn: context.read<GoogleSignIn>(),
-            dbService: context.read<DatabaseService>(),
-            logger: context.read<Logger>(),
-          ),
-        ),
-
-        // --- Level 4: Repositories ---
-        ChangeNotifierProvider<ContactRepository>(
-          create: (context) => ContactRepository(
-            authService: context.read<AuthService>(),
-            dbService: context.read<DatabaseService>(),
-            logger: context.read<Logger>(),
-          ),
-        ),
-
-        // --- Level 5: View Controllers ---
-        ChangeNotifierProvider<HomePageController>(
-          create: (context) => HomePageController(
-            contactRepository: context.read<ContactRepository>(),
-            sharingService: context.read<SharingServiceAbstract>(),
-            birthplaceService: context.read<BirthplaceServiceAbstract>(),
-          ),
-        ),
-      ],
+      providers: getAppProviders(
+        logger: logger,
+        sharedPreferences: sharedPreferences,
+        reviewService: reviewService,
+      ),
       child: const TaxCodeApp(),
     ),
   );
@@ -196,7 +80,7 @@ final class TaxCodeApp extends StatelessWidget {
 
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      localizationsDelegates: [
+      localizationsDelegates: const [
         ...AppLocalizations.localizationsDelegates,
         FirebaseUILocalizations.delegate,
       ],

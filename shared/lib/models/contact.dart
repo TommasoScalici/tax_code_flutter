@@ -94,7 +94,7 @@ class Contact extends Equatable {
   String toString() =>
       '$firstName $lastName ($gender)'
       ' - ${DateFormat.yMd().format(birthDate)}'
-      ' - ${birthPlace.toString()}';
+      ' - $birthPlace';
 
   /// Equality is based on [id] only. This is intentional — two contacts
   /// with the same ID are considered the same entity regardless of field

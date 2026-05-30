@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:logger/logger.dart';
-import 'package:tax_code_flutter/models/scanned_data.dart';
+import 'package:shared/models/scanned_data.dart';
 
 abstract class GeminiServiceAbstract {
   /// Calls the backend to extract data and returns it as form data.
@@ -21,7 +21,7 @@ class GeminiService implements GeminiServiceAbstract {
     _logger.i("Calling 'extractDataFromDocument' Firebase Function.");
     try {
       final callable = _functions.httpsCallable('extractDataFromDocument');
-      final result = await callable.call({
+      final result = await callable.call<dynamic>({
         'image': base64Image,
       });
 

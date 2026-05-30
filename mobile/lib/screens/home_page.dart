@@ -78,10 +78,10 @@ final class HomePage extends StatelessWidget {
             ),
             onPressed: themeService.toggleTheme,
           ),
-          PopupMenuButton(
+          PopupMenuButton<void>(
             icon: const Icon(Icons.more_vert),
             itemBuilder: (context) => [
-              PopupMenuItem(
+              PopupMenuItem<void>(
                 child: Row(
                   children: [
                     const Icon(Icons.info),
@@ -91,7 +91,7 @@ final class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                onTap: () => showDialog(
+                onTap: () => showDialog<void>(
                   context: context,
                   builder: (BuildContext context) => const InfoModal(),
                 ),

@@ -2,8 +2,8 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:tax_code_flutter/models/scanned_data.dart';
-import 'package:tax_code_flutter/services/gemini_service.dart';
+import 'package:shared/models/scanned_data.dart';
+import 'package:shared/services/gemini_service.dart';
 
 //--- Mocks ---//
 class MockLogger extends Mock implements Logger {}
@@ -27,7 +27,7 @@ void main() {
     mockCallable = MockHttpsCallable();
     geminiService = GeminiService(functions: mockFunctions, logger: mockLogger);
 
-    when(() => mockFunctions.httpsCallable(any())).thenReturn(mockCallable);
+    when(() => mockFunctions.httpsCallable(any<String>())).thenReturn(mockCallable);
   });
 
   group('GeminiService', () {
@@ -43,7 +43,7 @@ void main() {
         when(() => mockResult.data).thenReturn(fakeResponseData);
 
         when(
-          () => mockCallable.call(any()),
+          () => mockCallable.call<dynamic>(any<Object?>()),
         ).thenAnswer((_) async => mockResult);
 
         // Act
@@ -58,15 +58,16 @@ void main() {
 
         verify(() => mockFunctions.httpsCallable(functionName)).called(1);
         final captured = verify(
-          () => mockCallable.call(captureAny()),
+          () => mockCallable.call<dynamic>(captureAny<Object?>()),
         ).captured;
-        expect(captured.first['image'], testBase64Image);
+        final map = captured.first as Map<String, Object?>;
+        expect(map['image'], testBase64Image);
 
-        verify(() => mockLogger.i(any(that: contains('Calling')))).called(1);
+        verify(() => mockLogger.i(any<Object?>(that: contains('Calling')))).called(1);
         verify(
-            () => mockLogger.i(any(that: contains('Successfully received'))))
+            () => mockLogger.i(any<Object?>(that: contains('Successfully received'))))
             .called(1);
-        verifyNever(() => mockLogger.e(any()));
+        verifyNever(() => mockLogger.e(any<Object?>()));
       },
     );
 
@@ -80,7 +81,7 @@ void main() {
         );
 
         when(
-          () => mockCallable.call(any()),
+          () => mockCallable.call<dynamic>(any<Object?>()),
         ).thenThrow(exception);
 
         // Act
@@ -92,9 +93,9 @@ void main() {
         expect(result, isNull);
         verify(
           () => mockLogger.e(
-            any(that: contains('Firebase Function failed')),
+            any<Object?>(that: contains('Firebase Function failed')),
             error: exception,
-            stackTrace: any(named: 'stackTrace'),
+            stackTrace: any<StackTrace?>(named: 'stackTrace'),
           ),
         ).called(1);
       },
@@ -105,7 +106,7 @@ void main() {
       final exception = Exception('A generic error');
 
       when(
-        () => mockCallable.call(any()),
+        () => mockCallable.call<dynamic>(any<Object?>()),
       ).thenThrow(exception);
 
       // Act
@@ -119,8 +120,8 @@ void main() {
         () => mockLogger.e(
           'An unexpected error occurred while calling the Gemini service.',
           error: exception,
-          stackTrace: any(named: 'stackTrace'),
-          time: any(named: 'time'),
+          stackTrace: any<StackTrace?>(named: 'stackTrace'),
+          time: any<DateTime?>(named: 'time'),
         ),
       ).called(1);
     });

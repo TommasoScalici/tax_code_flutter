@@ -46,7 +46,7 @@ void main() {
 
         // Assert
         expect(result, equals(fakeCameras));
-        verifyNever(() => mockLogger.e(any()));
+        verifyNever(() => mockLogger.e(any<Object?>()));
       });
 
       test(
@@ -66,9 +66,9 @@ void main() {
           verify(
             () => mockLogger.e(
               'Failed to get available cameras',
-              error: any(named: 'error', that: isA<CameraException>()),
-              stackTrace: any(named: 'stackTrace'),
-              time: any(named: 'time'),
+              error: any<Object?>(named: 'error', that: isA<CameraException>()),
+              stackTrace: any<StackTrace?>(named: 'stackTrace'),
+              time: any<DateTime?>(named: 'time'),
             ),
           ).called(1);
         },

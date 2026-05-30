@@ -21,3 +21,4 @@ linter:
     sized_box_for_whitespace: true
     unawaited_futures: true
     use_key_in_widget_constructors: true
+    sort_pub_dependencies: false

@@ -18,9 +18,7 @@ class MockFirebaseAuthException extends Fake implements FirebaseAuthException {
 }
 
 void main() {
-  setUpAll(() {
-    setupTests();
-  });
+  setUpAll(setupTests);
 
   late MockAuthService mockAuthService;
   late MockUser mockUser;

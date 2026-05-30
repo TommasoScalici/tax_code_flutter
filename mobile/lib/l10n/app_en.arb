@@ -1,151 +1,21 @@
 {
   "@@author": "Tommaso Scalici",
   "@@locale": "en",
+  "appName": "App Name",
+  "@appName": {
+    "description": "Label for the app name field in an info screen."
+  },
   "appTitle": "Tax Code",
   "@appTitle": {
     "description": "The title of the application, often shown in the app bar."
   },
-  "ok": "OK",
-  "@ok": {
-    "description": "Label for a generic confirmation button, typically to close an informational dialog."
-  },
-  "confirm": "Confirm",
-  "@confirm": {
-    "description": "Label for a confirmation button."
-  },
-  "cancel": "Cancel",
-  "@cancel": {
-    "description": "Label for a button to cancel an action."
-  },
-  "close": "Close",
-  "@close": {
-    "description": "Label for a button to close a screen or dialog."
-  },
-  "delete": "Delete",
-  "@delete": {
-    "description": "Label for a delete button."
-  },
-  "edit": "Edit",
-  "@edit": {
-    "description": "Label for an edit button."
-  },
-  "share": "Share",
-  "@share": {
-    "description": "Label for a share button."
-  },
-  "info": "Info",
-  "@info": {
-    "description": "A generic title for an informational dialog or screen."
-  },
-  "actionRequired": "Action Required",
-  "@actionRequired": {
-    "description": "Title for a dialog that requires the user to take a specific action."
-  },
-  "requiresRecentLoginMessage": "For security reasons, this operation requires recent authentication. Please log in again and retry.",
-  "@requiresRecentLoginMessage": {
-    "description": "Message displayed when a sensitive operation (e.g., account deletion) fails because the user's login session is not recent enough."
-  },
-  "pleaseSignIn": "Welcome, please sign in to continue.",
-  "@pleaseSignIn": {
-    "description": "A welcome message on the login screen."
-  },
-  "pleaseSignUp": "Welcome, please create an account to continue.",
-  "@pleaseSignUp": {
-    "description": "A welcome message on the registration screen."
-  },
-  "signOut": "Sign Out",
-  "@signOut": {
-    "description": "Label for a button to sign out of the application."
-  },
-  "deleteAccount": "Delete Account",
-  "@deleteAccount": {
-    "description": "Label for a button to delete the user's account."
-  },
-  "deleteAccountMessage": "Are you sure you want to delete your account? All your data will be permanently lost. This action is irreversible.",
-  "@deleteAccountMessage": {
-    "description": "A confirmation message shown to the user before deleting their account."
-  },
-  "homePageTitle": "My Contacts",
-  "@homePageTitle": {
-    "description": "Title for the main home page."
-  },
-  "profilePageTitle": "Profile",
-  "@profilePageTitle": {
-    "description": "Title for the user profile screen."
-  },
-  "formPageTitle": "Contact Details",
-  "@formPageTitle": {
-    "description": "Title for the page where user enters contact details."
+  "appVersion": "Version",
+  "@appVersion": {
+    "description": "Label for the app version field in an info screen."
   },
   "barcodePageTitle": "Tax Code Barcode",
   "@barcodePageTitle": {
     "description": "Title for the page displaying the barcode."
-  },
-  "takePicture": "Scan Card",
-  "@takePicture": {
-    "description": "Title for the camera screen."
-  },
-  "scanFailedErrorMessage": "Could not read data from the picture. Please try taking a new, more focused one.",
-  "@scanFailedErrorMessage": {
-    "description": "Error message shown when the scan fails to extract data from a document photo. It prompts the user to retry with a better picture."
-  },
-  "newItem": "Add Contact",
-  "@newItem": {
-    "description": "Tooltip for the FloatingActionButton to create a new contact."
-  },
-  "invalidCharacters": "The field contains invalid characters.",
-  "@invalidCharacters": {
-    "description": "Error message shown when a form field contains disallowed characters (like numbers or symbols)."
-  },
-  "search": "Search by name or tax code...",
-  "@search": {
-    "description": "Placeholder text inside a search bar."
-  },
-  "contactsListEmpty": "No contacts yet.\nTap the '+' button to add your first one!",
-  "@contactsListEmpty": {
-    "description": "Message displayed when the contact list is empty."
-  },
-  "searchNoResults": "No results found for '{searchText}'",
-  "@searchNoResults": {
-    "description": "Message displayed when a search yields no results.",
-    "placeholders": {
-      "searchText": {
-        "type": "String",
-        "example": "Rossi"
-      }
-    }
-  },
-  "tooltipShare": "Share Tax Code",
-  "@tooltipShare": {
-    "description": "Tooltip for the share button on a contact card."
-  },
-  "tooltipShowBarcode": "Show Barcode",
-  "@tooltipShowBarcode": {
-    "description": "Tooltip for the barcode button on a contact card."
-  },
-  "tooltipEdit": "Edit Contact",
-  "@tooltipEdit": {
-    "description": "Tooltip for the edit button on a contact card."
-  },
-  "tooltipDelete": "Delete Contact",
-  "@tooltipDelete": {
-    "description": "Tooltip for the delete button on a contact card."
-  },
-  "scanCard": "Scan from Health Card",
-  "@scanCard": {
-    "description": "Label for a button that initiates scanning a card."
-  },
-  "firstName": "First Name",
-  "@firstName": {
-    "description": "Label for the first name input field."
-  },
-  "lastName": "Last Name",
-  "@lastName": {
-    "description": "Label for the last name input field."
-  },
-  "gender": "Gender",
-  "@gender": {
-    "description": "Label for the gender input field."
   },
   "birthDate": "Date of Birth",
   "@birthDate": {
@@ -155,9 +25,49 @@
   "@birthPlace": {
     "description": "Label for the birth place input field."
   },
-  "required": "This field is required",
-  "@required": {
-    "description": "A validation error message for a required form field."
+  "birthplacesDownloadTitle": "Updating Birthplaces Database",
+  "@birthplacesDownloadTitle": {
+    "description": "Title for the modal showing the birthplaces database download progress."
+  },
+  "buildNumber": "Build Number",
+  "@buildNumber": {
+    "description": "Label for the build number field in an info screen."
+  },
+  "buildSignature": "Build Signature",
+  "@buildSignature": {
+    "description": "Label for the build signature field in an info screen."
+  },
+  "cameraPermissionInfo": "To scan cards, this app needs access to your camera. Please go to your device settings and grant camera permission.",
+  "@cameraPermissionInfo": {
+    "description": "An informational message explaining how to grant camera permission."
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Label for a button to cancel an action."
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Label for a button to close a screen or dialog."
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Label for a confirmation button."
+  },
+  "contactsListEmpty": "No contacts yet.\nTap the '+' button to add your first one!",
+  "@contactsListEmpty": {
+    "description": "Message displayed when the contact list is empty."
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Label for a delete button."
+  },
+  "deleteAccount": "Delete Account",
+  "@deleteAccount": {
+    "description": "Label for a button to delete the user's account."
+  },
+  "deleteAccountMessage": "Are you sure you want to delete your account? All your data will be permanently lost. This action is irreversible.",
+  "@deleteAccountMessage": {
+    "description": "A confirmation message shown to the user before deleting their account."
   },
   "deleteConfirmation": "Confirm Deletion",
   "@deleteConfirmation": {
@@ -173,97 +83,131 @@
       }
     }
   },
-  "permissionRequired": "Permission Required",
-  "@permissionRequired": {
-    "description": "Title for a dialog informing the user that a permission is required."
-  },
-  "cameraPermissionInfo": "To scan cards, this app needs access to your camera. Please go to your device settings and grant camera permission.",
-  "@cameraPermissionInfo": {
-    "description": "An informational message explaining how to grant camera permission."
-  },
-  "openSettings": "Open Settings",
-  "@openSettings": {
-    "description": "Label for a button that navigates the user to the app's settings page."
+  "edit": "Edit",
+  "@edit": {
+    "description": "Label for an edit button."
   },
   "error": "Error",
   "@error": {
     "description": "A generic title for an error dialog."
   },
+  "firstName": "First Name",
+  "@firstName": {
+    "description": "Label for the first name input field."
+  },
+  "formPageTitle": "Contact Details",
+  "@formPageTitle": {
+    "description": "Title for the page where user enters contact details."
+  },
+  "gender": "Gender",
+  "@gender": {
+    "description": "Label for the gender input field."
+  },
   "genericError": "Something went wrong. Please try again.",
   "@genericError": {
     "description": "A user-friendly message for a generic error, asking them to retry."
   },
-  "rateLimitExceeded": "Daily limit reached. Please try again tomorrow.",
-  "@rateLimitExceeded": {
-    "description": "Error message when the user has exceeded their daily limit of tax code calculations."
+  "homePageTitle": "My Contacts",
+  "@homePageTitle": {
+    "description": "Title for the main home page."
   },
-  "serviceUnavailable": "The service is temporarily unavailable. Please try again later.",
-  "@serviceUnavailable": {
-    "description": "Error message when the backend service is down or returning an error."
-  },
-  "deadlineExceeded": "The request took too long. Please check your connection or try again later.",
-  "@deadlineExceeded": {
-    "description": "Error message when the request times out."
-  },
-  "networkError": "No internet connection. Please check your network and try again.",
-  "@networkError": {
-    "description": "Error message when there is no internet connectivity."
-  },
-  "sessionExpired": "Your session has expired. Please sign in again.",
-  "@sessionExpired": {
-    "description": "Error message when the user's authentication token is invalid or expired."
-  },
-  "tooltipToggleFlash": "Toggle flash",
-  "@tooltipToggleFlash": {
-    "description": "Tooltip for the button that toggles the camera flash on and off."
-  },
-  "tooltipTakePicture": "Take picture",
-  "@tooltipTakePicture": {
-    "description": "Tooltip for the button to capture a picture."
-  },
-  "tooltipConfirmPicture": "Confirm picture",
-  "@tooltipConfirmPicture": {
-    "description": "Tooltip for the button to confirm the captured picture and proceed."
-  },
-  "tooltipRetakePicture": "Retake picture",
-  "@tooltipRetakePicture": {
-    "description": "Tooltip for the button to discard the current picture and take a new one."
-  },
-  "termsAndCondition": "By proceeding, you agree to our Terms and Conditions.",
-  "@termsAndCondition": {
-    "description": "A notice about agreeing to terms and conditions."
-  },
-  "showTerms": "View Terms & Conditions",
-  "@showTerms": {
-    "description": "Label for a button to display the terms and conditions."
-  },
-  "appName": "App Name",
-  "@appName": {
-    "description": "Label for the app name field in an info screen."
-  },
-  "packageName": "Package Name",
-  "@packageName": {
-    "description": "Label for the package name field in an info screen."
-  },
-  "appVersion": "Version",
-  "@appVersion": {
-    "description": "Label for the app version field in an info screen."
-  },
-  "buildNumber": "Build Number",
-  "@buildNumber": {
-    "description": "Label for the build number field in an info screen."
-  },
-  "buildSignature": "Build Signature",
-  "@buildSignature": {
-    "description": "Label for the build signature field in an info screen."
+  "info": "Info",
+  "@info": {
+    "description": "A generic title for an informational dialog or screen."
   },
   "installerStore": "Installer Store",
   "@installerStore": {
     "description": "Label for the installer store field in an info screen."
   },
-  "birthplacesDownloadTitle": "Updating Birthplaces Database",
-  "@birthplacesDownloadTitle": {
-    "description": "Title for the modal showing the birthplaces database download progress."
+  "invalidCharacters": "The field contains invalid characters.",
+  "@invalidCharacters": {
+    "description": "Error message shown when a form field contains disallowed characters (like numbers or symbols)."
+  },
+  "lastName": "Last Name",
+  "@lastName": {
+    "description": "Label for the last name input field."
+  },
+  "networkError": "No internet connection. Please check your network and try again.",
+  "@networkError": {
+    "description": "Error message when there is no internet connectivity."
+  },
+  "newItem": "Add Contact",
+  "@newItem": {
+    "description": "Tooltip for the FloatingActionButton to create a new contact."
+  },
+  "openSettings": "Open Settings",
+  "@openSettings": {
+    "description": "Label for a button that navigates the user to the app's settings page."
+  },
+  "packageName": "Package Name",
+  "@packageName": {
+    "description": "Label for the package name field in an info screen."
+  },
+  "pleaseSignIn": "Welcome, please sign in to continue.",
+  "@pleaseSignIn": {
+    "description": "A welcome message on the login screen."
+  },
+  "pleaseSignUp": "Welcome, please create an account to continue.",
+  "@pleaseSignUp": {
+    "description": "A welcome message on the registration screen."
+  },
+  "profilePageTitle": "Profile",
+  "@profilePageTitle": {
+    "description": "Title for the user profile screen."
+  },
+  "rateLimitExceeded": "Daily limit reached. Please try again tomorrow.",
+  "@rateLimitExceeded": {
+    "description": "Error message when the user has exceeded their daily limit of tax code calculations."
+  },
+  "rateThisApp": "Rate this App",
+  "@rateThisApp": {
+    "description": "Label for a button in the profile screen that opens the Play Store for the user to leave a review."
+  },
+  "required": "This field is required",
+  "@required": {
+    "description": "A validation error message for a required form field."
+  },
+  "scanCard": "Scan from Health Card",
+  "@scanCard": {
+    "description": "Label for a button that initiates scanning a card."
+  },
+  "scanFailedErrorMessage": "Could not read data from the picture. Please try taking a new, more focused one.",
+  "@scanFailedErrorMessage": {
+    "description": "Error message shown when the scan fails to extract data from a document photo. It prompts the user to retry with a better picture."
+  },
+  "search": "Search by name or tax code...",
+  "@search": {
+    "description": "Placeholder text inside a search bar."
+  },
+  "searchNoResults": "No results found for '{searchText}'",
+  "@searchNoResults": {
+    "description": "Message displayed when a search yields no results.",
+    "placeholders": {
+      "searchText": {
+        "type": "String",
+        "example": "Rossi"
+      }
+    }
+  },
+  "serviceUnavailable": "The service is temporarily unavailable. Please try again later.",
+  "@serviceUnavailable": {
+    "description": "Error message when the backend service is down or returning an error."
+  },
+  "sessionExpired": "Your session has expired. Please sign in again.",
+  "@sessionExpired": {
+    "description": "Error message when the user's authentication token is invalid or expired."
+  },
+  "share": "Share",
+  "@share": {
+    "description": "Label for a share button."
+  },
+  "showTerms": "View Terms & Conditions",
+  "@showTerms": {
+    "description": "Label for a button to display the terms and conditions."
+  },
+  "signOut": "Sign Out",
+  "@signOut": {
+    "description": "Label for a button to sign out of the application."
   },
   "stepBirthplacesChecking": "Checking birthplaces database...",
   "@stepBirthplacesChecking": {
@@ -281,8 +225,44 @@
   "@stepBirthplacesParsing": {
     "description": "Progress step indicating birthplace data is being parsed from the local JSON file."
   },
-  "rateThisApp": "Rate this App",
-  "@rateThisApp": {
-    "description": "Label for a button in the profile screen that opens the Play Store for the user to leave a review."
+  "takePicture": "Scan Card",
+  "@takePicture": {
+    "description": "Title for the camera screen."
+  },
+  "termsAndCondition": "By proceeding, you agree to our Terms and Conditions.",
+  "@termsAndCondition": {
+    "description": "A notice about agreeing to terms and conditions."
+  },
+  "tooltipConfirmPicture": "Confirm picture",
+  "@tooltipConfirmPicture": {
+    "description": "Tooltip for the button to confirm the captured picture and proceed."
+  },
+  "tooltipDelete": "Delete Contact",
+  "@tooltipDelete": {
+    "description": "Tooltip for the delete button on a contact card."
+  },
+  "tooltipEdit": "Edit Contact",
+  "@tooltipEdit": {
+    "description": "Tooltip for the edit button on a contact card."
+  },
+  "tooltipRetakePicture": "Retake picture",
+  "@tooltipRetakePicture": {
+    "description": "Tooltip for the button to discard the current picture and take a new one."
+  },
+  "tooltipShare": "Share Tax Code",
+  "@tooltipShare": {
+    "description": "Tooltip for the share button on a contact card."
+  },
+  "tooltipShowBarcode": "Show Barcode",
+  "@tooltipShowBarcode": {
+    "description": "Tooltip for the barcode button on a contact card."
+  },
+  "tooltipTakePicture": "Take picture",
+  "@tooltipTakePicture": {
+    "description": "Tooltip for the button to capture a picture."
+  },
+  "tooltipToggleFlash": "Toggle flash",
+  "@tooltipToggleFlash": {
+    "description": "Tooltip for the button that toggles the camera flash on and off."
   }
 }

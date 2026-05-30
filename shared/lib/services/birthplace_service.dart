@@ -101,8 +101,9 @@ class BirthplaceService implements BirthplaceServiceAbstract {
             try {
               final result = await _functions
                   .httpsCallable('updateBirthplaces')
-                  .call();
-              if (result.data != null && result.data['success'] == true) {
+                  .call<dynamic>();
+              final data = result.data;
+              if (data is Map && data['success'] == true) {
                 // Now try nicely to download it again
                 _logger.i(
                   'Cloud function completed, downloading newly generated file...',
@@ -142,9 +143,11 @@ class BirthplaceService implements BirthplaceServiceAbstract {
       downloadStep.value = 'parsing';
       downloadProgress.value = null;
       final jsonString = await localFile.readAsString();
-      final List<dynamic> jsonList = jsonDecode(jsonString);
+      final jsonList = jsonDecode(jsonString) as List<dynamic>;
       _cachedBirthplaces = jsonList
-          .map<Birthplace>((json) => Birthplace.fromJson(json))
+          .map<Birthplace>(
+            (dynamic json) => Birthplace.fromJson(json as Map<String, dynamic>),
+          )
           .toList();
       
       downloadStep.value = null;

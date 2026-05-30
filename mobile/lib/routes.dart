@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared/models/contact.dart';
-import 'models/scanned_data.dart';
+import 'package:shared/models/scanned_data.dart';
 import 'screens/auth_gate.dart';
 import 'screens/barcode_page.dart';
 import 'screens/camera_page.dart';
@@ -39,7 +39,7 @@ final class Routes {
       case camera:
         return MaterialPageRoute<ScannedData?>(builder: (_) => const CameraPage());
       case barcode:
-        final taxCode = settings.arguments as String;
+        final taxCode = settings.arguments! as String;
         return MaterialPageRoute<void>(
           builder: (_) => BarcodePage(taxCode: taxCode),
         );

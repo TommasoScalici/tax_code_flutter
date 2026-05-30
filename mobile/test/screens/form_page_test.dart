@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -9,26 +10,25 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
+import 'package:shared/models/scanned_data.dart';
 import 'package:shared/models/tax_code_response.dart';
+import 'package:shared/services/tax_code_service.dart';
+
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
-import 'package:tax_code_flutter/models/scanned_data.dart';
 import 'package:tax_code_flutter/screens/form_page.dart';
-import 'package:tax_code_flutter/services/tax_code_service.dart';
 
 import '../helpers/mocks.dart';
 import '../helpers/pump_app.dart';
 import '../helpers/test_setup.dart';
 
 void main() {
-  setUpAll(() {
-    setupTests();
-  });
+  setUpAll(setupTests);
 
   late MockBirthplaceService mockBirthplaceService;
   late MockContactRepository mockContactRepository;
   late MockTaxCodeService mockTaxCodeService;
 
-  final mockBirthplace = const Birthplace(name: 'ROMA', state: 'RM');
+  const mockBirthplace = Birthplace(name: 'ROMA', state: 'RM');
 
   final mockContact = Contact(
     id: '1',
@@ -41,7 +41,7 @@ void main() {
     listIndex: 0,
   );
 
-  final mockResponse = const TaxCodeResponse(
+  const mockResponse = TaxCodeResponse(
     status: true,
     message: 'Success',
     data: Data(
@@ -78,7 +78,7 @@ void main() {
       );
 
       // Assert
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byType(LinearProgressIndicator), findsOneWidget);
       expect(find.text('First Name'), findsNothing);
 
       // Cleanup
@@ -212,12 +212,7 @@ void main() {
       );
 
       addTearDown(
-        () => tester.view.viewInsets = const FakeViewPadding(
-          bottom: 0,
-          top: 0,
-          left: 0,
-          right: 0,
-        ),
+        () => tester.view.viewInsets = FakeViewPadding.zero,
       );
     });
 
@@ -225,7 +220,7 @@ void main() {
       tester,
     ) async {
       // Arrange
-      final mockBirthplace = const Birthplace(name: 'ROMA', state: 'RM');
+      const mockBirthplace = Birthplace(name: 'ROMA', state: 'RM');
       final mockContact = Contact(
         id: '1',
         firstName: 'Mario',
@@ -293,7 +288,7 @@ void main() {
       birthPlace: const Birthplace(name: 'MILANO', state: 'MI'),
     );
 
-    final mockBirthplace = const Birthplace(name: 'MILANO', state: 'MI');
+    const mockBirthplace = Birthplace(name: 'MILANO', state: 'MI');
 
     testWidgets('populates form when CameraPage returns scanned data', (
       tester,
@@ -539,7 +534,9 @@ void main() {
       // Assert
       expect(find.byType(AlertDialog), findsOneWidget);
       expect(
-        find.text('No internet connection. Please check your network and try again.'),
+        find.text(
+          'No internet connection. Please check your network and try again.',
+        ),
         findsOneWidget,
       );
 
@@ -584,7 +581,10 @@ void main() {
 
         // Assert
         expect(find.byType(AlertDialog), findsOneWidget);
-        expect(find.text('Something went wrong. Please try again.'), findsOneWidget);
+        expect(
+          find.text('Something went wrong. Please try again.'),
+          findsOneWidget,
+        );
       },
     );
 
@@ -596,7 +596,7 @@ void main() {
         () => mockBirthplaceService.loadBirthplaces(),
       ).thenAnswer((_) async => [mockBirthplace]);
 
-      final mockFailedResponse = const TaxCodeResponse(
+      const mockFailedResponse = TaxCodeResponse(
         status: false,
         message: 'Invalid data provided',
         data: Data(fiscalCode: '', allFiscalCodes: []),
@@ -631,7 +631,10 @@ void main() {
 
       // Assert
       expect(find.byType(AlertDialog), findsOneWidget);
-      expect(find.text('Something went wrong. Please try again.'), findsOneWidget);
+      expect(
+        find.text('Something went wrong. Please try again.'),
+        findsOneWidget,
+      );
     });
   });
 }
