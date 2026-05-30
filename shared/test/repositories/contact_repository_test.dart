@@ -125,6 +125,20 @@ void main() {
 
     await completer.future;
     contactRepository.removeListener(listener);
+    await pumpEventQueue();
+  }
+
+  Future<void> waitForRepositoryUpdate(Future<void> Function() action) async {
+    final completer = Completer<void>();
+    void listener() {
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    }
+    contactRepository.addListener(listener);
+    await action();
+    await completer.future;
+    contactRepository.removeListener(listener);
   }
 
   group('Initialization and Authentication', () {
@@ -150,11 +164,19 @@ void main() {
           cacheService: HiveLocalCacheService(),
           logger: mockLogger,
         );
-        await pumpEventQueue();
+        expect(repo.isLoading, isTrue);
+
+        final completer = Completer<void>();
+        repo.addListener(() {
+          if (!repo.isLoading && !completer.isCompleted) {
+            completer.complete();
+          }
+        });
+        await completer.future;
 
         // Assert
         verify(() => mockDbService.getContactsStream(fakeUser.uid)).called(1);
-        expect(repo.isLoading, isTrue);
+        expect(repo.isLoading, isFalse);
       },
     );
 
@@ -167,6 +189,9 @@ void main() {
       await waitForLoading(() async {
         fakeAuthService.login(fakeUser);
         await pumpEventQueue();
+      });
+
+      await waitForRepositoryUpdate(() async {
         contactsStreamController.add(contactsList);
       });
 
@@ -182,6 +207,8 @@ void main() {
         await waitForLoading(() async {
           fakeAuthService.login(fakeUser);
           await pumpEventQueue();
+        });
+        await waitForRepositoryUpdate(() async {
           contactsStreamController.add(contactsList);
         });
         expect(contactRepository.contacts, isNotEmpty);
@@ -193,7 +220,7 @@ void main() {
         // Assert
         expect(contactRepository.isLoading, isFalse);
         expect(contactRepository.contacts, isEmpty);
-        verify(() => mockDbService.getContactsStream(fakeUser.uid)).called(2);
+        verify(() => mockDbService.getContactsStream(fakeUser.uid)).called(1);
       },
     );
   });
@@ -206,6 +233,9 @@ void main() {
         await waitForLoading(() async {
           fakeAuthService.login(fakeUser);
           await pumpEventQueue();
+        });
+
+        await waitForRepositoryUpdate(() async {
           contactsStreamController.add(contactsList);
         });
 
@@ -230,15 +260,17 @@ void main() {
         await waitForLoading(() async {
           fakeAuthService.login(fakeUser);
           await pumpEventQueue();
-          contactsStreamController.addError(exception);
         });
+
+        contactsStreamController.addError(exception);
+        await pumpEventQueue();
 
         // Assert: Loaded from cache
         expect(contactRepository.isLoading, isFalse);
         expect(contactRepository.contacts.single, equals(contact1));
         verify(
           () => mockLogger.e(
-            any<Object?>(that: contains('falling back to cache')),
+            'Error on contacts stream after initial load.',
             error: exception,
             stackTrace: any<StackTrace?>(named: 'stackTrace'),
           ),
@@ -246,8 +278,9 @@ void main() {
 
         // Assert: Still listening to the stream
         final updatedContacts = [contact1, contact2];
-        contactsStreamController.add(updatedContacts);
-        await pumpEventQueue();
+        await waitForRepositoryUpdate(() async {
+          contactsStreamController.add(updatedContacts);
+        });
 
         // Assert 2: Contacts updated
         expect(contactRepository.contacts, equals(updatedContacts));
@@ -259,6 +292,8 @@ void main() {
       await waitForLoading(() async {
         fakeAuthService.login(fakeUser);
         await pumpEventQueue();
+      });
+      await waitForRepositoryUpdate(() async {
         contactsStreamController.add([contact1]);
       });
       expect(contactRepository.contacts.length, 1);
@@ -288,6 +323,8 @@ void main() {
         await waitForLoading(() async {
           fakeAuthService.login(fakeUser);
           await pumpEventQueue();
+        });
+        await waitForRepositoryUpdate(() async {
           contactsStreamController.add([contact1]);
         });
 
@@ -313,6 +350,8 @@ void main() {
         await waitForLoading(() async {
           fakeAuthService.login(fakeUser);
           await pumpEventQueue();
+        });
+        await waitForRepositoryUpdate(() async {
           contactsStreamController.add([contact1]);
         });
         final contact1Updated = contact1.copyWith(firstName: 'Giovanni');
@@ -334,6 +373,8 @@ void main() {
       await waitForLoading(() async {
         fakeAuthService.login(fakeUser);
         await pumpEventQueue();
+      });
+      await waitForRepositoryUpdate(() async {
         contactsStreamController.add(contactsList);
       });
 
@@ -357,6 +398,8 @@ void main() {
         await waitForLoading(() async {
           fakeAuthService.login(fakeUser);
           await pumpEventQueue();
+        });
+        await waitForRepositoryUpdate(() async {
           contactsStreamController.add(contactsList);
         });
         final reorderedList = [contact2, contact1];
@@ -385,6 +428,8 @@ void main() {
       await waitForLoading(() async {
         fakeAuthService.login(fakeUser);
         await pumpEventQueue();
+      });
+      await waitForRepositoryUpdate(() async {
         contactsStreamController.add([contact1]);
       });
       final exception = Exception('Update failed');
@@ -411,6 +456,8 @@ void main() {
       await waitForLoading(() async {
         fakeAuthService.login(fakeUser);
         await pumpEventQueue();
+      });
+      await waitForRepositoryUpdate(() async {
         contactsStreamController.add([contact1]);
       });
       final exception = Exception('Remove failed');
@@ -437,6 +484,8 @@ void main() {
       await waitForLoading(() async {
         fakeAuthService.login(fakeUser);
         await pumpEventQueue();
+      });
+      await waitForRepositoryUpdate(() async {
         contactsStreamController.add(contactsList);
       });
       final exception = Exception('Firebase write failed');
@@ -466,10 +515,12 @@ void main() {
         await waitForLoading(() async {
           fakeAuthService.login(fakeUser);
           await pumpEventQueue();
+        });
+        await waitForRepositoryUpdate(() async {
           contactsStreamController.add([contact1]);
         });
 
-        verify(() => mockDbService.getContactsStream(fakeUser.uid)).called(2);
+        verify(() => mockDbService.getContactsStream(fakeUser.uid)).called(1);
 
         // Act
         contactRepository.dispose();

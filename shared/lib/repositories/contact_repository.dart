@@ -180,22 +180,18 @@ class ContactRepository with ChangeNotifier {
     notifyListeners();
 
     try {
-      final initialContacts = await _dbService
-          .getContactsStream(userId)
-          .first
-          .timeout(const Duration(seconds: 10));
-      // This method already sets isLoading = false and notifies listeners
-      await _processContactsUpdate(initialContacts);
+      await _loadContactsFromLocalCache();
     } catch (e, s) {
       _logger.e(
-        'Could not get initial contacts, falling back to cache.',
+        'Could not load contacts from local cache.',
         error: e,
         stackTrace: s,
       );
-      await _loadContactsFromLocalCache();
+    } finally {
       _isLoading = false;
-      if (_isDisposed) return;
-      notifyListeners();
+      if (!_isDisposed) {
+        notifyListeners();
+      }
     }
 
     _listenToRemoteContacts(userId);
