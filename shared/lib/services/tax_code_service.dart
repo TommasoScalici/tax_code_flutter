@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:logger/logger.dart';
 import 'package:shared/models/tax_code_response.dart';
+import 'package:shared/services/birthplace_service.dart';
+import 'package:shared/utils/tax_code_generator.dart';
 
 /// Exception for network errors during tax code fetching.
 class TaxCodeApiNetworkException implements Exception {}
@@ -26,14 +27,16 @@ abstract class TaxCodeServiceAbstract {
 }
 
 /// Implementation of the TaxCodeService.
-/// This class is responsible for fetching tax codes from the TaxCode API.
+/// This class is responsible for generating tax codes locally.
 class TaxCodeService implements TaxCodeServiceAbstract {
-  final FirebaseFunctions _functions;
+  final BirthplaceServiceAbstract _birthplaceService;
   final Logger _logger;
 
-  TaxCodeService({required FirebaseFunctions functions, required Logger logger})
-    : _functions = functions,
-      _logger = logger;
+  TaxCodeService({
+    required BirthplaceServiceAbstract birthplaceService,
+    required Logger logger,
+  })  : _birthplaceService = birthplaceService,
+        _logger = logger;
 
   @override
   Future<TaxCodeResponse> fetchTaxCode({
@@ -45,57 +48,39 @@ class TaxCodeService implements TaxCodeServiceAbstract {
     required DateTime birthDate,
   }) async {
     try {
-      final response = await _functions
-          .httpsCallable('calculateTaxCode')
-          .call<dynamic>({
-        'fname': firstName.trim(),
-        'lname': lastName.trim(),
-        'gender': gender,
-        'city': birthPlaceName,
-        'state': birthPlaceState,
-        'day': birthDate.day,
-        'month': birthDate.month,
-        'year': birthDate.year,
-      });
+      final birthplaces = await _birthplaceService.loadBirthplaces();
+      final birthplace = birthplaces.firstWhere(
+        (b) =>
+            b.name.toLowerCase() == birthPlaceName.toLowerCase() &&
+            b.state.toLowerCase() == birthPlaceState.toLowerCase(),
+        orElse: () => throw TaxCodeApiServerException('birthplace-not-found'),
+      );
 
-      final data = response.data;
-      if (data == null || data is! Map) {
-         throw TaxCodeApiServerException('invalid-response');
+      if (birthplace.code.isEmpty) {
+        throw TaxCodeApiServerException('missing-birthplace-code');
       }
 
-      final sanitizedData = _sanitizeMap(data);
-      return TaxCodeResponse.fromJson(sanitizedData);
-    } on FirebaseFunctionsException catch (e, s) {
-      _logger.w('TaxCode Cloud Function error: ${e.code}', error: e, stackTrace: s);
-      if (e.code == 'unavailable') {
-        throw TaxCodeApiNetworkException();
-      }
-      throw TaxCodeApiServerException(e.code);
+      final fiscalCode = TaxCodeGenerator.generate(
+        firstName: firstName,
+        lastName: lastName,
+        dateOfBirth: birthDate,
+        gender: gender,
+        birthplaceCode: birthplace.code,
+      );
+
+      return TaxCodeResponse(
+        status: true,
+        message: 'Calculated successfully',
+        data: Data(
+          fiscalCode: fiscalCode,
+          allFiscalCodes: [fiscalCode],
+        ),
+      );
+    } on TaxCodeApiServerException {
+      rethrow;
     } catch (e, s) {
       _logger.e('Unexpected error in TaxCodeService: $e', error: e, stackTrace: s);
-      throw TaxCodeApiNetworkException();
+      throw TaxCodeApiServerException('calculation-failed');
     }
-  }
-
-  Map<String, dynamic> _sanitizeMap(Map<dynamic, dynamic>? map) {
-    if (map == null) return <String, dynamic>{};
-
-    return Map<String, dynamic>.from(
-      map.map((key, value) {
-        final sanitizedKey = key.toString();
-        dynamic sanitizedValue = value;
-
-        if (value is Map) {
-          sanitizedValue = _sanitizeMap(value);
-        } else if (value is List) {
-          sanitizedValue = value.map((e) {
-            if (e is Map) return _sanitizeMap(e);
-            return e;
-          }).toList();
-        }
-
-        return MapEntry(sanitizedKey, sanitizedValue);
-      }),
-    );
   }
 }

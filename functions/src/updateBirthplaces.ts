@@ -1,10 +1,8 @@
-import { execSync } from "child_process";
 import { getStorage } from "firebase-admin/storage";
 import { logger } from "firebase-functions";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
-import { unlinkSync, writeFileSync } from "fs";
-import { join } from "path";
+import foreignCountriesData from "./foreign_countries.json";
 
 /**
  * Represents a birthplace (city or country).
@@ -12,6 +10,7 @@ import { join } from "path";
 export interface Birthplace {
   name: string;
   state: string;
+  code: string;
 }
 
 const LOCATION = "us-central1";
@@ -20,10 +19,6 @@ const STORAGE_PATH = "public/birthplaces.json";
 // ISTAT JSON API for Italian municipalities
 const ITALIAN_MUNICIPALITIES_API =
   "https://situas-servizi.istat.it/publish/reportspooljson";
-// ISTAT ZIP for foreign countries
-const FOREIGN_COUNTRIES_ZIP_URL =
-  "https://www.istat.it/wp-content/uploads/2024/03/Elenco-codici-e-denominazioni-unita-territoriali-estere.zip";
-const CSV_FILENAME_PATTERN = "denominazioni-al-31_12_2023.csv";
 
 /**
  * Returns the current date in DD/MM/YYYY format for the ISTAT API.
@@ -51,7 +46,11 @@ async function fetchItalianMunicipalities(): Promise<Birthplace[]> {
   }
 
   const data = (await response.json()) as {
-    resultset: Array<{ COMUNE: string; SIGLA_AUTOMOBILISTICA: string }>;
+    resultset: Array<{
+      COMUNE: string;
+      SIGLA_AUTOMOBILISTICA: string;
+      COD_CATASTO: string;
+    }>;
   };
   if (!data.resultset || !Array.isArray(data.resultset)) {
     throw new Error("Invalid response format from Italian municipalities API");
@@ -60,102 +59,25 @@ async function fetchItalianMunicipalities(): Promise<Birthplace[]> {
   return data.resultset.map((item) => ({
     name: item.COMUNE.trim(),
     state: item.SIGLA_AUTOMOBILISTICA.trim(),
+    code: item.COD_CATASTO.trim(),
   }));
 }
 
 /**
- * Simple CSV parser for semicolon-delimited files.
+ * Loads foreign countries from the local JSON dataset.
  */
-function parseCSV(content: string, delimiter: string = ";"): string[][] {
-  const lines = content.split(/\r?\n/);
-  return lines
-    .map((line) =>
-      line.split(delimiter).map((cell) => cell.replace(/^"|"$/g, "").trim()),
-    )
-    .filter((row) => row.length > 1 && row.some((cell) => cell !== ""));
-}
-
-/**
- * Parses the foreign countries CSV content.
- */
-function parseForeignCountriesCSV(content: string): Birthplace[] {
-  const rows = parseCSV(content);
-
-  if (rows.length < 2) {
-    throw new Error("Foreign countries CSV is empty or invalid");
-  }
-
-  const headers = rows[0];
-  const normalizedHeaders = headers.map((h) =>
-    h
-      .toLowerCase()
-      .trim()
-      .replace(/[\s()]+/g, "_")
-      .replace(/^_+|_+$/g, ""),
-  );
-
-  const nameIdx = normalizedHeaders.indexOf("denominazione_it");
-
-  const results: Birthplace[] = [];
-  if (nameIdx !== -1) {
-    for (const row of rows.slice(1)) {
-      if (row.length <= nameIdx) continue;
-
-      const name = row.at(nameIdx)?.trim();
-      if (name) {
-        results.push({ name, state: "EE" });
-      }
-    }
-  }
-
-  return results.filter((b) => b.name && b.name.toLowerCase() !== "italia"); // Exclude Italy as it is handled by the other API
-}
-
-/**
- * Fetches foreign countries from ISTAT ZIP.
- */
-async function fetchForeignCountries(): Promise<Birthplace[]> {
-  logger.info(`Fetching foreign countries from: ${FOREIGN_COUNTRIES_ZIP_URL}`);
-
-  const response = await fetch(FOREIGN_COUNTRIES_ZIP_URL);
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch foreign countries ZIP: ${response.statusText}`,
-    );
-  }
-
-  const arrayBuffer = await response.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  const zipPath = join("/tmp", "countries.zip");
-  writeFileSync(zipPath, buffer);
-
-  let content: string;
-  try {
-    // Extract the CSV content to stdout using unzip -p with wildcard.
-    // Using latin1 encoding for ISTAT CSV files to preserve special characters.
-    content = execSync(
-      `unzip -p ${zipPath} "*${CSV_FILENAME_PATTERN}"`,
-    ).toString("latin1");
-  } catch (error) {
-    // Fallback attempt: if zip folder structure is different, try listing files.
-    logger.warn("Primary zip extraction failed, trying fallback...", { error });
-    const listOutput = execSync(`unzip -l ${zipPath}`).toString();
-    const match = listOutput.match(/\s(\S+denominazioni-al-31_12_2023\.csv)/i);
-    if (!match) {
-      throw new Error(`Could not find CSV in ZIP: ${listOutput}`, {
-        cause: error,
-      });
-    }
-    content = execSync(`unzip -p ${zipPath} "${match[1]}"`).toString("latin1");
-  } finally {
-    try {
-      unlinkSync(zipPath);
-    } catch {
-      // Ignore cleanup errors
-    }
-  }
-
-  return parseForeignCountriesCSV(content);
+function getForeignCountries(): Birthplace[] {
+  const list = foreignCountriesData as Array<{
+    nome: string;
+    codiceCatastale: string;
+  }>;
+  return list
+    .filter((item) => item.codiceCatastale && item.codiceCatastale !== "n.d.")
+    .map((item) => ({
+      name: item.nome,
+      state: "EE",
+      code: item.codiceCatastale,
+    }));
 }
 
 /**
@@ -164,16 +86,8 @@ async function fetchForeignCountries(): Promise<Birthplace[]> {
 export async function downloadAndParseBirthplaceData(): Promise<number> {
   logger.info("Starting birthplace data update");
 
-  const [italian, foreign] = await Promise.all([
-    fetchItalianMunicipalities(),
-    fetchForeignCountries().catch((err) => {
-      logger.error(
-        "Foreign countries fetch failed, continuing with Italian data only",
-        { err },
-      );
-      return [] as Birthplace[];
-    }),
-  ]);
+  const italian = await fetchItalianMunicipalities();
+  const foreign = getForeignCountries();
 
   const combined = [...italian, ...foreign];
 

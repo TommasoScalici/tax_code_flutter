@@ -4,14 +4,15 @@ import 'package:shared/models/birthplace.dart';
 void main() {
   /// A group of tests for the [Birthplace] model.
   group('Birthplace', () {
-    const birthplace = Birthplace(name: 'Torino', state: 'TO');
-    final birthplaceMap = {'name': 'Torino', 'state': 'TO'};
+    const birthplace = Birthplace(name: 'Torino', state: 'TO', code: 'L219');
+    final birthplaceMap = {'name': 'Torino', 'state': 'TO', 'code': 'L219'};
 
     /// Tests if a [Birthplace] instance is correctly created from a JSON map.
     test('fromJson should return a valid model', () {
       final model = Birthplace.fromJson(birthplaceMap);
       expect(model.name, birthplace.name);
       expect(model.state, birthplace.state);
+      expect(model.code, birthplace.code);
     });
 
     /// Tests if a [Birthplace] instance is correctly converted to a JSON map.
@@ -27,8 +28,8 @@ void main() {
     });
 
     test('should be equal when properties are the same', () {
-      const birthplace1 = Birthplace(name: 'Torino', state: 'TO');
-      const birthplace2 = Birthplace(name: 'Torino', state: 'TO');
+      const birthplace1 = Birthplace(name: 'Torino', state: 'TO', code: 'L219');
+      const birthplace2 = Birthplace(name: 'Torino', state: 'TO', code: 'L219');
       expect(birthplace1, equals(birthplace2));
     });
 
@@ -36,9 +37,9 @@ void main() {
       'should be equal when properties are the same and not equal when they are different',
       () {
         // Arrange
-        const birthplace1 = Birthplace(name: 'Torino', state: 'TO');
-        const birthplace2 = Birthplace(name: 'Torino', state: 'TO');
-        const birthplace3 = Birthplace(name: 'Milano', state: 'MI');
+        const birthplace1 = Birthplace(name: 'Torino', state: 'TO', code: 'L219');
+        const birthplace2 = Birthplace(name: 'Torino', state: 'TO', code: 'L219');
+        const birthplace3 = Birthplace(name: 'Milano', state: 'MI', code: 'F205');
 
         // Assert
         expect(birthplace1, equals(birthplace2));

@@ -71,26 +71,16 @@ describe("updateBirthplaces", () => {
 
   describe("updateBirthplaces core logic", () => {
     it("should succeed and perform full ingestion if admin", async () => {
-      // 1. Mock Italian Municipalities JSON response
+      // 1. Mock Italian Municipalities JSON response with codes
       vi.mocked(global.fetch).mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           resultset: [
-            { COMUNE: "Roma", SIGLA_AUTOMOBILISTICA: "RM" },
-            { COMUNE: "Milano", SIGLA_AUTOMOBILISTICA: "MI" },
+            { COMUNE: "Roma", SIGLA_AUTOMOBILISTICA: "RM", COD_CATASTO: "H501" },
+            { COMUNE: "Milano", SIGLA_AUTOMOBILISTICA: "MI", COD_CATASTO: "F205" },
           ],
         }),
       } as Response);
-
-      // 2. Mock Foreign Countries ZIP response
-      vi.mocked(global.fetch).mockResolvedValueOnce({
-        ok: true,
-        arrayBuffer: async () => new ArrayBuffer(8),
-      } as Response);
-
-      // 3. Mock unzip -p output (robust method using wildcard)
-      const mockCsv = "Denominazione IT;Dummy\nFrancia;X\nGermania;Y\n";
-      vi.mocked(execSync).mockReturnValueOnce(Buffer.from(mockCsv));
 
       const wrapped = testEnv.wrap(updateBirthplaces);
       const result = await wrapped({
@@ -101,37 +91,22 @@ describe("updateBirthplaces", () => {
       } as unknown as CallableRequest<void>);
 
       expect(result.success).toBe(true);
-      expect(result.count).toBe(4); // 2 cities + 2 countries
+      // 2 Italian municipalities + 272 foreign countries = 274 total
+      expect(result.count).toBe(274);
 
-      expect(fs.writeFileSync).toHaveBeenCalled();
-      expect(fs.unlinkSync).toHaveBeenCalled();
       expect(mockSave).toHaveBeenCalled();
 
-      // Verify "EE" state for foreign countries
+      // Verify data and codes
       const savedData = JSON.parse(mockSave.mock.calls[0][0]);
       const francia = savedData.find(
         (b: { name: string }) => b.name === "Francia",
       );
       expect(francia.state).toBe("EE");
+      expect(francia.code).toBe("Z110");
+
       const roma = savedData.find((b: { name: string }) => b.name === "Roma");
       expect(roma.state).toBe("RM");
-    });
-
-    it("should handle foreign fetch failure gracefully", async () => {
-      vi.mocked(global.fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          resultset: [{ COMUNE: "Roma", SIGLA_AUTOMOBILISTICA: "RM" }],
-        }),
-      } as Response);
-
-      vi.mocked(global.fetch).mockResolvedValueOnce({
-        ok: false,
-        statusText: "Not Found",
-      } as Response);
-
-      const count = await downloadAndParseBirthplaceData();
-      expect(count).toBe(1); // Only Roma
+      expect(roma.code).toBe("H501");
     });
 
     it("should throw unauthenticated error if no auth context", async () => {

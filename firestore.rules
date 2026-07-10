@@ -11,7 +11,7 @@ service cloud.firestore {
       }
     }
 
-    // Rate limits are managed by Cloud Functions, but user can read their own
+    // Rate limits for document scanning (Gemini Vision API - limited to 15 calls/day)
     match /rateLimits/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
       allow write: if false; // Only Cloud Functions (Admin SDK) should write this

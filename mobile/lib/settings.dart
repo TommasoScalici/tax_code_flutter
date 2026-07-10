@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 final class Settings {
   Settings._();
 
-  static String get mioCodiceFiscaleApiKey => 'miocodicefiscale_access_token';
   static String get googleProviderClientId => 'google_provider_client_id';
 
   static final ThemeData _lightTheme = ThemeData(

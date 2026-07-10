@@ -8,7 +8,6 @@ void main() {
 
     test('API key getters return correct constant values', () {
       // Act & Assert
-      expect(Settings.mioCodiceFiscaleApiKey, 'miocodicefiscale_access_token');
       expect(Settings.googleProviderClientId, 'google_provider_client_id');
     });
 

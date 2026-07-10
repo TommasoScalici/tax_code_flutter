@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared/models/birthplace.dart';
@@ -16,9 +17,8 @@ abstract class BirthplaceServiceAbstract {
 }
 
 /// The concrete implementation of [BirthplaceService] that loads data
-/// from Firebase Storage and caches it locally.
+/// from Firebase Storage in the background and uses local fallback assets on first launch.
 class BirthplaceService implements BirthplaceServiceAbstract {
-  final FirebaseFunctions _functions;
   final Logger _logger;
   final String _storagePath;
 
@@ -31,11 +31,9 @@ class BirthplaceService implements BirthplaceServiceAbstract {
   Future<List<Birthplace>>? _initializationFuture;
 
   BirthplaceService({
-    required FirebaseFunctions functions,
     required Logger logger,
     String storagePath = 'public/birthplaces.json',
-  }) : _functions = functions,
-       _logger = logger,
+  }) : _logger = logger,
        _storagePath = storagePath;
 
   @override
@@ -51,108 +49,73 @@ class BirthplaceService implements BirthplaceServiceAbstract {
       final cacheDir = await getApplicationDocumentsDirectory();
       final localFile = File('${cacheDir.path}/birthplaces.json');
 
-      final ref = FirebaseStorage.instance.ref(_storagePath);
-      bool shouldDownload = true;
-
-      try {
-        if (await localFile.exists() && await localFile.length() > 0) {
-          // Check if server version is newer
-          final metadata = await ref.getMetadata();
-          final serverLastModified = metadata.updated;
-          final localLastModified = await localFile.lastModified();
-
-          if (serverLastModified != null &&
-              !serverLastModified.isAfter(localLastModified)) {
-            shouldDownload = false;
-          }
-        }
-      } catch (e) {
-        // If metadata check fails (e.g. offline), use cache if it exists
-        if (await localFile.exists() && await localFile.length() > 0) {
-          shouldDownload = false;
-          _logger.w('Could not check for updates, using cached file: $e');
-        }
-      }
-
-      if (shouldDownload) {
-        _logger.i('Downloading/Updating birthplaces.json from Firebase Storage...');
-
+      // Copy from asset fallback if cache is empty
+      if (!await localFile.exists() || await localFile.length() == 0) {
+        _logger.i('Cache empty. Loading fallback birthplaces from assets...');
         try {
-          downloadStep.value = 'downloading';
-          final downloadTask = ref.writeToFile(localFile);
-          downloadTask.snapshotEvents.listen((taskSnapshot) {
-            if (taskSnapshot.state == TaskState.running &&
-                taskSnapshot.totalBytes > 0) {
-              downloadProgress.value =
-                  taskSnapshot.bytesTransferred / taskSnapshot.totalBytes;
-            }
-          });
-          await downloadTask;
-          _logger.i('Downloaded and cached birthplaces.json successfully.');
-        } on FirebaseException catch (e) {
-          _logger.w(
-            'FirebaseStorage download failed: ${e.code}. Generating via Cloud Function...',
+          final assetContent = await rootBundle.loadString(
+            'assets/birthplaces.json',
           );
+          await localFile.writeAsString(assetContent);
+          _logger.i('Fallback birthplaces copied to cache.');
+        } catch (assetErr) {
+          _logger.e(
+            'Failed to load fallback birthplaces from assets: $assetErr',
+          );
+        }
+      }
 
-          if (e.code == 'object-not-found') {
-            downloadStep.value = 'generating';
-            downloadProgress.value = null;
-            // The JSON does not exist on storage yet, let's call the function
-            try {
-              final result = await _functions
-                  .httpsCallable('updateBirthplaces')
-                  .call<dynamic>();
-              final data = result.data;
-              if (data is Map && data['success'] == true) {
-                // Now try nicely to download it again
-                _logger.i(
-                  'Cloud function completed, downloading newly generated file...',
-                );
-                downloadStep.value = 'downloading';
-                final downloadTask = ref.writeToFile(localFile);
-                downloadTask.snapshotEvents.listen((taskSnapshot) {
-                  if (taskSnapshot.state == TaskState.running &&
-                      taskSnapshot.totalBytes > 0) {
-                    downloadProgress.value =
-                        taskSnapshot.bytesTransferred / taskSnapshot.totalBytes;
-                  }
-                });
-                await downloadTask;
-              }
-            } catch (fnErr) {
-              _logger.e(
-                'Failed to generate birthplaces.json via Cloud Function.',
-                error: fnErr,
-              );
-              throw Exception(
-                'Could not fetch or generate birthplaces.json from Firebase',
-              );
-            }
-          } else {
-            throw Exception('FirebaseStorage Error: ${e.message}');
+      // Read cache immediately for instant startup
+      if (await localFile.exists() && await localFile.length() > 0) {
+        downloadStep.value = 'parsing';
+        final jsonString = await localFile.readAsString();
+        final jsonList = jsonDecode(jsonString) as List<dynamic>;
+        var parsedList = jsonList
+            .map<Birthplace>(
+              (dynamic json) =>
+                  Birthplace.fromJson(json as Map<String, dynamic>),
+            )
+            .toList();
+
+        // Check if the cache contains Belfiore codes (at least check the first few elements)
+        final missingCodes = parsedList.isNotEmpty &&
+            parsedList.take(50).every((b) => b.code.isEmpty);
+
+        if (missingCodes) {
+          _logger.w(
+            'Outdated birthplace cache detected (no Belfiore codes). Overwriting with asset fallback...',
+          );
+          try {
+            final assetContent =
+                await rootBundle.loadString('assets/birthplaces.json');
+            await localFile.writeAsString(assetContent);
+
+            final newJsonString = await localFile.readAsString();
+            final newJsonList = jsonDecode(newJsonString) as List<dynamic>;
+            parsedList = newJsonList
+                .map<Birthplace>(
+                  (dynamic json) =>
+                      Birthplace.fromJson(json as Map<String, dynamic>),
+                )
+                .toList();
+            _logger.i('Fallback birthplaces copied to cache and re-loaded.');
+          } catch (assetErr) {
+            _logger.e('Failed to overwrite with asset fallback: $assetErr');
           }
         }
-      } else {
-        _logger.i('Using locally cached birthplaces.json.');
+
+        _cachedBirthplaces = parsedList;
+        _logger.i(
+          'Successfully loaded ${_cachedBirthplaces!.length} birthplaces from local cache.',
+        );
       }
 
-      if (!await localFile.exists()) {
-        throw Exception('birthplaces.json is not available locally.');
-      }
+      // Trigger background update from Firebase Storage without awaiting it
+      _triggerBackgroundUpdate(localFile);
 
-      downloadStep.value = 'parsing';
-      downloadProgress.value = null;
-      final jsonString = await localFile.readAsString();
-      final jsonList = jsonDecode(jsonString) as List<dynamic>;
-      _cachedBirthplaces = jsonList
-          .map<Birthplace>(
-            (dynamic json) => Birthplace.fromJson(json as Map<String, dynamic>),
-          )
-          .toList();
-      
       downloadStep.value = null;
       downloadProgress.value = null;
-      return _cachedBirthplaces!;
+      return _cachedBirthplaces ?? [];
     } catch (e, s) {
       _logger.e(
         'Failed to load or parse birthplaces.',
@@ -164,5 +127,59 @@ class BirthplaceService implements BirthplaceServiceAbstract {
       _initializationFuture = null; // Allow retry on failure
       return [];
     }
+  }
+
+  void _triggerBackgroundUpdate(File localFile) {
+    scheduleMicrotask(() async {
+      try {
+        final ref = FirebaseStorage.instance.ref(_storagePath);
+        bool shouldDownload = true;
+
+        try {
+          final metadata = await ref.getMetadata();
+          final serverLastModified = metadata.updated;
+          final localLastModified = await localFile.lastModified();
+
+          if (serverLastModified != null &&
+              !serverLastModified.isAfter(localLastModified)) {
+            shouldDownload = false;
+          }
+        } catch (e) {
+          // Offline or storage metadata read error, keep local cache
+          shouldDownload = false;
+        }
+
+        if (shouldDownload) {
+          _logger.i(
+            'Background: Downloading updated birthplaces.json from Firebase Storage...',
+          );
+          final tempFile = File('${localFile.path}.tmp');
+
+          try {
+            final downloadTask = ref.writeToFile(tempFile);
+            downloadTask.snapshotEvents.listen((taskSnapshot) {
+              if (taskSnapshot.state == TaskState.running &&
+                  taskSnapshot.totalBytes > 0) {
+                downloadProgress.value =
+                    taskSnapshot.bytesTransferred / taskSnapshot.totalBytes;
+              }
+            });
+            await downloadTask;
+            if (await tempFile.exists()) {
+              await tempFile.rename(localFile.path);
+              _logger.i(
+                'Background: Local birthplaces.json cache updated successfully.',
+              );
+            }
+          } finally {
+            if (await tempFile.exists()) {
+              await tempFile.delete();
+            }
+          }
+        }
+      } catch (e) {
+        _logger.w('Background update of birthplaces.json failed: $e');
+      }
+    });
   }
 }

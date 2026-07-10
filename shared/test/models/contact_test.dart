@@ -7,7 +7,7 @@ void main() {
   /// Tests for the Contact model
   group('Contact Model', () {
     final birthDate = DateTime(1990, 1, 15);
-    const birthplace = Birthplace(name: 'Roma', state: 'RM');
+    const birthplace = Birthplace(name: 'Roma', state: 'RM', code: 'H501');
     final contact = Contact(
       id: '12345',
       firstName: 'Mario',
@@ -27,7 +27,7 @@ void main() {
         'lastName': 'Rossi',
         'gender': 'M',
         'taxCode': 'RSSMRA90A15H501A',
-        'birthPlace': {'name': 'Roma', 'state': 'RM'},
+        'birthPlace': {'name': 'Roma', 'state': 'RM', 'code': 'H501'},
         'birthDate': Timestamp.fromDate(birthDate),
         'listIndex': 0,
       };

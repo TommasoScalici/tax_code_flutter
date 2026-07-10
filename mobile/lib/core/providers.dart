@@ -38,16 +38,12 @@ List<SingleChildWidget> getAppProviders({
     Provider<GoogleSignIn>.value(value: GoogleSignIn()),
     Provider<SharedPreferencesAsync>.value(value: sharedPreferences),
     Provider<FirebaseAuth>.value(value: FirebaseAuth.instance),
-    Provider<FirebaseCrashlytics>(
-      create: (_) => FirebaseCrashlytics.instance,
-    ),
+    Provider<FirebaseCrashlytics>(create: (_) => FirebaseCrashlytics.instance),
     Provider<FirebaseFirestore>.value(value: FirebaseFirestore.instance),
     Provider<FirebaseFunctions>.value(
       value: FirebaseFunctions.instanceFor(region: 'us-central1'),
     ),
-    Provider<FirebaseRemoteConfig>.value(
-      value: FirebaseRemoteConfig.instance,
-    ),
+    Provider<FirebaseRemoteConfig>.value(value: FirebaseRemoteConfig.instance),
 
     // --- Level 2: Specialized, Self-Contained Services ---
     Provider<PermissionServiceAbstract>(
@@ -65,7 +61,6 @@ List<SingleChildWidget> getAppProviders({
     ),
     Provider<BirthplaceServiceAbstract>(
       create: (context) => BirthplaceService(
-        functions: context.read<FirebaseFunctions>(),
         logger: context.read<Logger>(),
       ),
     ),
@@ -73,8 +68,7 @@ List<SingleChildWidget> getAppProviders({
       create: (context) => InfoService(logger: context.read<Logger>()),
     ),
     Provider<BrightnessServiceAbstract>(
-      create: (context) =>
-          BrightnessService(logger: context.read<Logger>()),
+      create: (context) => BrightnessService(logger: context.read<Logger>()),
     ),
     Provider<SharingServiceAbstract>(
       create: (context) => SharingService(
@@ -90,7 +84,7 @@ List<SingleChildWidget> getAppProviders({
     ),
     Provider<TaxCodeServiceAbstract>(
       create: (context) => TaxCodeService(
-        functions: context.read<FirebaseFunctions>(),
+        birthplaceService: context.read<BirthplaceServiceAbstract>(),
         logger: context.read<Logger>(),
       ),
     ),
@@ -103,13 +97,10 @@ List<SingleChildWidget> getAppProviders({
     ),
 
     // --- Level 3: State Services ---
-    Provider<LocalCacheService>(
-      create: (_) => HiveLocalCacheService(),
-    ),
+    Provider<LocalCacheService>(create: (_) => HiveLocalCacheService()),
     ChangeNotifierProvider<ThemeService>(
       create: (context) =>
-          ThemeService(prefs: context.read<SharedPreferencesAsync>())
-            ..init(),
+          ThemeService(prefs: context.read<SharedPreferencesAsync>())..init(),
     ),
     ChangeNotifierProvider<AuthService>(
       create: (context) => AuthService(

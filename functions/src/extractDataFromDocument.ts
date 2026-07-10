@@ -68,6 +68,8 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
 
     const uid = request.auth.uid;
     const db = getFirestore();
+    // Uses a distinct collection "rateLimits" (15 calls/day limit) to avoid counter namespace
+    // collision with the tax code calculation rate limits in "rateLimitsTaxCode" (50 calls/day limit).
     const rateLimitRef = db.collection("rateLimits").doc(uid);
     const MAX_CALLS_PER_DAY = 15; // Set quota rate limit
     const today = new Date().toISOString().split("T")[0];

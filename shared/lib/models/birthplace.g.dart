@@ -16,17 +16,23 @@ class BirthplaceAdapter extends TypeAdapter<Birthplace> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Birthplace(name: fields[0] as String, state: fields[1] as String);
+    return Birthplace(
+      name: fields[0] as String,
+      state: fields[1] as String,
+      code: fields[2] == null ? '' : fields[2] as String,
+    );
   }
 
   @override
   void write(BinaryWriter writer, Birthplace obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
-      ..write(obj.state);
+      ..write(obj.state)
+      ..writeByte(2)
+      ..write(obj.code);
   }
 
   @override
@@ -44,8 +50,15 @@ class BirthplaceAdapter extends TypeAdapter<Birthplace> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Birthplace _$BirthplaceFromJson(Map<String, dynamic> json) =>
-    Birthplace(name: json['name'] as String, state: json['state'] as String);
+Birthplace _$BirthplaceFromJson(Map<String, dynamic> json) => Birthplace(
+  name: json['name'] as String,
+  state: json['state'] as String,
+  code: json['code'] as String? ?? '',
+);
 
 Map<String, dynamic> _$BirthplaceToJson(Birthplace instance) =>
-    <String, dynamic>{'name': instance.name, 'state': instance.state};
+    <String, dynamic>{
+      'name': instance.name,
+      'state': instance.state,
+      'code': instance.code,
+    };

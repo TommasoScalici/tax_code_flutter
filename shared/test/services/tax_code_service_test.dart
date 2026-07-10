@@ -1,34 +1,27 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/tax_code_response.dart';
+import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 
 // --- Mocks ---
-class MockFirebaseFunctions extends Mock implements FirebaseFunctions {}
-
-class MockHttpsCallable extends Mock implements HttpsCallable {}
-
-class MockHttpsCallableResult extends Mock implements HttpsCallableResult<Object?> {}
+class MockBirthplaceService extends Mock implements BirthplaceServiceAbstract {}
 
 class MockLogger extends Mock implements Logger {}
 
 void main() {
   late TaxCodeService taxCodeService;
-  late MockFirebaseFunctions mockFunctions;
-  late MockHttpsCallable mockHttpsCallable;
-  late MockHttpsCallableResult mockResult;
+  late MockBirthplaceService mockBirthplaceService;
   late MockLogger mockLogger;
 
   setUp(() {
-    mockFunctions = MockFirebaseFunctions();
-    mockHttpsCallable = MockHttpsCallable();
-    mockResult = MockHttpsCallableResult();
+    mockBirthplaceService = MockBirthplaceService();
     mockLogger = MockLogger();
 
     taxCodeService = TaxCodeService(
-      functions: mockFunctions,
+      birthplaceService: mockBirthplaceService,
       logger: mockLogger,
     );
   });
@@ -39,7 +32,7 @@ void main() {
   const tGender = 'M';
   const tBirthPlaceName = 'Roma';
   const tBirthPlaceState = 'RM';
-  final tBirthDate = DateTime(1980, 1, 1);
+  final tBirthDate = DateTime(1980, 1, 5); // Jan 5, 1980
 
   Future<TaxCodeResponse> callFetchTaxCode() {
     return taxCodeService.fetchTaxCode(
@@ -52,62 +45,41 @@ void main() {
     );
   }
 
-  group('TaxCodeService', () {
-    final Map<String, dynamic> fakeResponseData = {
-      'status': true,
-      'message': 'OK',
-      'data': {
-        'cf': 'RSSMRA80A01H501U',
-        'all_cf': ['RSSMRA80A01H501U'],
-      },
-    };
-
+  group('TaxCodeService Local Calculation', () {
     test(
-      'should return TaxCodeResponse when the Cloud Function succeeds',
+      'should return TaxCodeResponse with correct locally generated code',
       () async {
         // Arrange
-        when(
-          () => mockFunctions.httpsCallable(any<String>()),
-        ).thenReturn(mockHttpsCallable);
-        when(
-          () => mockHttpsCallable.call<dynamic>(any<Object?>()),
-        ).thenAnswer((_) async => mockResult);
-        when(() => mockResult.data).thenReturn(fakeResponseData);
+        when(() => mockBirthplaceService.loadBirthplaces()).thenAnswer(
+          (_) async => [
+            const Birthplace(name: 'Roma', state: 'RM', code: 'H501'),
+            const Birthplace(name: 'Milano', state: 'MI', code: 'F205'),
+          ],
+        );
 
         // Act
         final result = await callFetchTaxCode();
 
         // Assert
-        expect(result.data.fiscalCode, 'RSSMRA80A01H501U');
-        verify(() => mockFunctions.httpsCallable('calculateTaxCode')).called(1);
+        expect(result.status, true);
+        expect(result.data.fiscalCode, 'RSSMRA80A05H501H');
+        expect(result.data.allFiscalCodes, contains('RSSMRA80A05H501H'));
+        verify(() => mockBirthplaceService.loadBirthplaces()).called(1);
       },
     );
 
     test(
-      'should throw a TaxCodeApiServerException when the Cloud Function throws',
+      'should throw a TaxCodeApiServerException when birthplace is not found',
       () async {
         // Arrange
-        when(
-          () => mockFunctions.httpsCallable(any<String>()),
-        ).thenReturn(mockHttpsCallable);
-        when(() => mockHttpsCallable.call<dynamic>(any<Object?>())).thenThrow(
-          FirebaseFunctionsException(message: 'Error', code: 'internal'),
+        when(() => mockBirthplaceService.loadBirthplaces()).thenAnswer(
+          (_) async => [
+            const Birthplace(name: 'Milano', state: 'MI', code: 'F205'),
+          ],
         );
 
         // Act & Assert
-        try {
-          await callFetchTaxCode();
-          fail('should have thrown a TaxCodeApiServerException');
-        } catch (e) {
-          expect(e, isA<TaxCodeApiServerException>());
-          verify(
-            () => mockLogger.w(
-              any<Object?>(),
-              error: any<Object?>(named: 'error'),
-              stackTrace: any<StackTrace?>(named: 'stackTrace'),
-            ),
-          ).called(1);
-        }
+        expect(callFetchTaxCode, throwsA(isA<TaxCodeApiServerException>()));
       },
     );
   });

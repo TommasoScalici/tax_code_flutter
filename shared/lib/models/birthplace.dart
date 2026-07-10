@@ -11,8 +11,14 @@ class Birthplace extends Equatable {
   final String name;
   @HiveField(1)
   final String state;
+  @HiveField(2)
+  final String code;
 
-  const Birthplace({required this.name, required this.state});
+  const Birthplace({
+    required this.name,
+    required this.state,
+    this.code = '',
+  });
 
   factory Birthplace.fromJson(Map<String, dynamic> json) =>
       _$BirthplaceFromJson(json);
@@ -22,5 +28,5 @@ class Birthplace extends Equatable {
   String toString() => '$name ($state)';
 
   @override
-  List<Object?> get props => [name, state];
+  List<Object?> get props => [name, state, code];
 }
