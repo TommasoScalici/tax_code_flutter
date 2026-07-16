@@ -57,6 +57,10 @@
   "@contactsListEmpty": {
     "description": "Message displayed when the contact list is empty."
   },
+  "deadlineExceeded": "Richiesta scaduta. Riprova.",
+  "@deadlineExceeded": {
+    "description": "Error message when a backend or API request times out."
+  },
   "delete": "Elimina",
   "@delete": {
     "description": "Label for a delete button."

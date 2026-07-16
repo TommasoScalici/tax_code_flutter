@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 
@@ -7,6 +8,9 @@ class ErrorDialogHelper {
     String message;
 
     switch (errorKey) {
+      case 'deadlineExceeded':
+        message = l10n.deadlineExceeded;
+        break;
       case 'rateLimitExceeded':
         message = l10n.rateLimitExceeded;
         break;
@@ -25,20 +29,22 @@ class ErrorDialogHelper {
         break;
     }
 
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(l10n.error),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(l10n.close),
-            ),
-          ],
-        );
-      },
+    unawaited(
+      showDialog<void>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(l10n.error),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(l10n.close),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

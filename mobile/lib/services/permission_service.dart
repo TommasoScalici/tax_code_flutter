@@ -34,7 +34,7 @@ class PermissionService implements PermissionServiceAbstract {
     try {
       final status = await _permissionHandler.requestCamera();
       return status.isGranted;
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Failed to request camera permission', error: e, stackTrace: s);
       return false;
     }
@@ -44,7 +44,7 @@ class PermissionService implements PermissionServiceAbstract {
   Future<bool> openAppSettingsHandler() async {
     try {
       return await _permissionHandler.openSettings();
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Failed to open app settings', error: e, stackTrace: s);
       return false;
     }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' hide ProfileScreen;
@@ -137,9 +138,11 @@ class _LoginFooter extends StatelessWidget {
           if (screenWidth >= 300)
             TextButton(
               onPressed: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (context) => const InfoModal(),
+                unawaited(
+                  showDialog<void>(
+                    context: context,
+                    builder: (context) => const InfoModal(),
+                  ),
                 );
               },
               child: Text(l10n.showTerms),

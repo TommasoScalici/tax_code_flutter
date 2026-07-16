@@ -55,7 +55,7 @@ class AuthService with ChangeNotifier {
 
   @override
   void dispose() {
-    _authSubscription?.cancel();
+    unawaited(_authSubscription?.cancel());
     super.dispose();
   }
 
@@ -156,13 +156,13 @@ class AuthService with ChangeNotifier {
   Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Error during Google sign out', error: e, stackTrace: s);
     }
 
     try {
       await _auth.signOut();
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Error during Firebase sign out', error: e, stackTrace: s);
     }
   }
@@ -178,46 +178,73 @@ class AuthService with ChangeNotifier {
       return;
     }
 
-    try {
-      _logger.i('User detected, validating with server...');
-      await user.reload();
-      final freshUser = _auth.currentUser;
-      if (freshUser == null) {
-        throw Exception('User disappeared immediately after reload.');
-      }
-
-      _currentUser = freshUser;
-
-      await _saveUserData(freshUser);
-
-      _logger.i('User validation successful.');
-      _status = AuthStatus.authenticated;
-    } catch (e, s) {
-      _logger.w(
-        'User validation failed (reload or save). Assuming deleted/disabled. Forcing sign out.',
-        error: e,
-        stackTrace: s,
-      );
-      _currentUser = null;
-      _status = AuthStatus.unauthenticated;
-
-      await _auth.signOut();
-    }
-
+    _currentUser = user;
+    _status = AuthStatus.authenticated;
     notifyListeners();
+
+    _validateAndSyncUserInBackground(user);
   }
 
-  ///
-  /// Saves user metadata to Firestore upon login or registration.
-  ///
-  Future<void> _saveUserData(User user) async {
-    try {
-      await _dbService.saveUserData(user);
-    } on Exception catch (e, s) {
-      _logger.e('Error while storing user data', error: e, stackTrace: s);
-      rethrow;
-    }
+  void _validateAndSyncUserInBackground(User user) {
+    scheduleMicrotask(() async {
+      try {
+        _logger.i('Background: validating user with server...');
+        await user.reload();
+
+        final freshUser = _auth.currentUser;
+        if (freshUser == null) {
+          throw FirebaseAuthException(
+            code: 'user-not-found',
+            message: 'User disappeared after reload.',
+          );
+        }
+
+        _currentUser = freshUser;
+
+        try {
+          await _dbService.saveUserData(freshUser);
+        } on Object catch (dbErr, dbStack) {
+          _logger.e(
+            'Background: failed to save user data to Firestore',
+            error: dbErr,
+            stackTrace: dbStack,
+          );
+        }
+
+        _logger.i('Background: User validation successful.');
+        notifyListeners();
+      } on FirebaseAuthException catch (e, s) {
+        final isAccountRemoved =
+            e.code == 'user-not-found' || e.code == 'user-disabled';
+        if (isAccountRemoved) {
+          _logger.w(
+            'Background: User account disabled or deleted. Forcing sign out.',
+            error: e,
+            stackTrace: s,
+          );
+          _currentUser = null;
+          _status = AuthStatus.unauthenticated;
+          try {
+            await _auth.signOut();
+          } on Object catch (_) {}
+          notifyListeners();
+        } else {
+          _logger.w(
+            'Background: Server validation failed with non-fatal code (${e.code}). Keeping session.',
+            error: e,
+            stackTrace: s,
+          );
+        }
+      } on Object catch (e, s) {
+        _logger.w(
+          'Background: Non-fatal error during user validation. Keeping session.',
+          error: e,
+          stackTrace: s,
+        );
+      }
+    });
   }
+
 
   ///
   /// Private helper to manage the loading state and notify listeners.

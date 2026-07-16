@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,7 +23,7 @@ class ThemeService with ChangeNotifier {
     _currentTheme = _currentTheme == ThemeMode.dark
         ? ThemeMode.light
         : ThemeMode.dark;
-    _saveTheme(_currentTheme);
+    unawaited(_saveTheme(_currentTheme));
     notifyListeners();
   }
 

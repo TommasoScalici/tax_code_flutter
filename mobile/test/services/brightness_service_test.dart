@@ -33,7 +33,7 @@ void main() {
         'should call platform channel to set brightness to 1.0 on success',
         () async {
           TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-              .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+              .setMockMethodCallHandler(channel, (methodCall) async {
                 expect(methodCall.method, 'setApplicationScreenBrightness');
                 return null;
               });
@@ -46,7 +46,7 @@ void main() {
         // Arrange
         final exception = PlatformException(code: 'ERROR');
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(channel, (MethodCall methodCall) {
+            .setMockMethodCallHandler(channel, (methodCall) {
               return Future.error(exception);
             });
 
@@ -70,7 +70,7 @@ void main() {
         'should call platform channel to reset brightness on success',
         () async {
           TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-              .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+              .setMockMethodCallHandler(channel, (methodCall) async {
                 expect(methodCall.method, 'resetApplicationScreenBrightness');
                 return null;
               });
@@ -83,7 +83,7 @@ void main() {
         // Arrange
         final exception = PlatformException(code: 'ERROR');
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(channel, (MethodCall methodCall) {
+            .setMockMethodCallHandler(channel, (methodCall) {
               return Future.error(exception);
             });
 

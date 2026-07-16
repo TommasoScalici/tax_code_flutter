@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,12 +21,12 @@ class _BarcodePageState extends State<BarcodePage> {
   void initState() {
     super.initState();
     _brightnessService = context.read<BrightnessServiceAbstract>();
-    _brightnessService.setMaxBrightness();
+    unawaited(_brightnessService.setMaxBrightness());
   }
 
   @override
   void dispose() {
-    _brightnessService.resetBrightness();
+    unawaited(_brightnessService.resetBrightness());
     super.dispose();
   }
 

@@ -182,6 +182,12 @@ abstract class AppLocalizations {
   /// **'No contacts yet.\nTap the \'+\' button to add your first one!'**
   String get contactsListEmpty;
 
+  /// Error message when a backend or API request times out.
+  ///
+  /// In en, this message translates to:
+  /// **'Request timed out. Please try again.'**
+  String get deadlineExceeded;
+
   /// Label for a delete button.
   ///
   /// In en, this message translates to:

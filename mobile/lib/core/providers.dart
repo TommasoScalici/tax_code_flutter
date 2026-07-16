@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -99,8 +100,13 @@ List<SingleChildWidget> getAppProviders({
     // --- Level 3: State Services ---
     Provider<LocalCacheService>(create: (_) => HiveLocalCacheService()),
     ChangeNotifierProvider<ThemeService>(
-      create: (context) =>
-          ThemeService(prefs: context.read<SharedPreferencesAsync>())..init(),
+      create: (context) {
+        final themeService = ThemeService(
+          prefs: context.read<SharedPreferencesAsync>(),
+        );
+        unawaited(themeService.init());
+        return themeService;
+      },
     ),
     ChangeNotifierProvider<AuthService>(
       create: (context) => AuthService(

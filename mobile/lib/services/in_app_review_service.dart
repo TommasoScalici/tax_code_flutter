@@ -40,7 +40,7 @@ class InAppReviewService {
       _logger.i('Requesting in-app review.');
       await _inAppReview.requestReview();
       await _reviewService.recordReviewPromptShown();
-    } catch (e, s) {
+    } on Object catch (e, s) {
       // Never let a review prompt failure crash the app.
       _logger.w('Failed to request in-app review', error: e, stackTrace: s);
     }
@@ -51,7 +51,7 @@ class InAppReviewService {
   Future<void> openStoreListing() async {
     try {
       await _inAppReview.openStoreListing();
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.w('Failed to open store listing', error: e, stackTrace: s);
     }
   }

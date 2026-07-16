@@ -17,7 +17,7 @@ class CameraService implements CameraServiceAbstract {
   Future<List<CameraDescription>> getAvailableCameras() async {
     try {
       return await availableCameras();
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Failed to get available cameras', error: e, stackTrace: s);
       return [];
     }

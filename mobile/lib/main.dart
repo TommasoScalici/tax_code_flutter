@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -34,7 +36,17 @@ Future<void> main() async {
   await configureApp(
     logger: logger,
     configure: () async {
-      await FirebaseRemoteConfig.instance.fetchAndActivate();
+      await FirebaseRemoteConfig.instance.activate();
+      unawaited(
+        FirebaseRemoteConfig.instance.fetchAndActivate().catchError((Object e, StackTrace s) {
+          logger.e(
+            'Failed to fetch/activate remote config',
+            error: e,
+            stackTrace: s,
+          );
+          return false;
+        }),
+      );
 
       await FirebaseAppCheck.instance.activate(
         providerAndroid: kDebugMode
@@ -46,15 +58,28 @@ Future<void> main() async {
           FirebaseCrashlytics.instance.recordFlutterFatalError;
 
       PlatformDispatcher.instance.onError = (error, stack) {
-        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true),
+        );
         return true;
       };
     },
   );
 
   final reviewService = ReviewService(prefs: sharedPreferences);
-  await reviewService.recordFirstLaunchIfNeeded();
-  await reviewService.incrementAppOpenCount();
+  unawaited(
+    Future.wait([
+      reviewService.recordFirstLaunchIfNeeded(),
+      reviewService.incrementAppOpenCount(),
+    ]).catchError((Object e, StackTrace s) {
+      logger.e(
+        'Failed to update review service metrics',
+        error: e,
+        stackTrace: s,
+      );
+      return const <void>[];
+    }),
+  );
 
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 

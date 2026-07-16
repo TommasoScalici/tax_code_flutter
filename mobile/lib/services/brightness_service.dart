@@ -15,7 +15,7 @@ class BrightnessService implements BrightnessServiceAbstract {
   Future<void> setMaxBrightness() async {
     try {
       await ScreenBrightness().setApplicationScreenBrightness(1.0);
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Failed to set max brightness', error: e, stackTrace: s);
     }
   }
@@ -24,7 +24,7 @@ class BrightnessService implements BrightnessServiceAbstract {
   Future<void> resetBrightness() async {
     try {
       await ScreenBrightness().resetApplicationScreenBrightness();
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Failed to reset brightness', error: e, stackTrace: s);
     }
   }

@@ -4,16 +4,16 @@ import 'package:json_annotation/json_annotation.dart';
 part 'tax_code_response.g.dart';
 
 @JsonSerializable()
-class Data extends Equatable {
+class TaxCodeData extends Equatable {
   @JsonKey(name: 'cf')
   final String fiscalCode;
   @JsonKey(name: 'all_cf')
   final List<String> allFiscalCodes;
 
-  const Data({required this.fiscalCode, required this.allFiscalCodes});
+  const TaxCodeData({required this.fiscalCode, required this.allFiscalCodes});
 
-  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
-  Map<String, dynamic> toJson() => _$DataToJson(this);
+  factory TaxCodeData.fromJson(Map<String, dynamic> json) => _$TaxCodeDataFromJson(json);
+  Map<String, dynamic> toJson() => _$TaxCodeDataToJson(this);
 
   @override
   List<Object> get props => [fiscalCode, allFiscalCodes];
@@ -23,7 +23,7 @@ class Data extends Equatable {
 final class TaxCodeResponse extends Equatable {
   final bool status;
   final String message;
-  final Data data;
+  final TaxCodeData data;
 
   const TaxCodeResponse({
     required this.status,

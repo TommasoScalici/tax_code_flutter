@@ -12,6 +12,7 @@ import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
+import 'package:tax_code_flutter/validators/only_letters_validator.dart';
 
 // Mocks for dependencies that have logic
 class MockTaxCodeService extends Mock implements TaxCodeServiceAbstract {}
@@ -165,7 +166,7 @@ void main() {
 
     group('submitForm', () {
       // Use real model instances for the successful response
-      const successfulData = Data(
+      const successfulData = TaxCodeData(
         fiscalCode: 'NEWTAXCODE123',
         allFiscalCodes: [],
       );

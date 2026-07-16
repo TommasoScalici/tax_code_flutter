@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -78,7 +79,7 @@ class CameraPageController with ChangeNotifier {
       await _cameraController!.initialize();
 
       _updateStatus(CameraStatus.readyToScan);
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Error initializing camera', error: e, stackTrace: s);
       _updateStatus(CameraStatus.error);
     }
@@ -100,7 +101,7 @@ class CameraPageController with ChangeNotifier {
       _updateStatus(CameraStatus.pictureTaken);
 
       return scannedData;
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Gemini processing failed', error: e, stackTrace: s);
       _updateStatus(CameraStatus.pictureTaken);
       return null;
@@ -134,7 +135,7 @@ class CameraPageController with ChangeNotifier {
       _pictureOrientation = _cameraController!.value.deviceOrientation;
       _imagePath = image.path;
       _updateStatus(CameraStatus.pictureTaken);
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Error taking picture', error: e, stackTrace: s);
       _updateStatus(CameraStatus.error);
     }
@@ -171,8 +172,11 @@ class CameraPageController with ChangeNotifier {
 
   @override
   void dispose() {
-    _cameraController?.setFlashMode(FlashMode.off);
-    _cameraController?.dispose();
+    final controller = _cameraController;
+    if (controller != null) {
+      unawaited(controller.setFlashMode(FlashMode.off));
+      unawaited(controller.dispose());
+    }
     super.dispose();
   }
 }

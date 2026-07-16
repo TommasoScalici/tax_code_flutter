@@ -42,14 +42,14 @@ Map<String, dynamic> sortArbMap(Map<String, dynamic> arbMap) {
 
   // 1. Handle special keys starting with @@ (e.g., @@locale)
   final List<String> specialKeys =
-      arbMap.keys.where((String k) => k.startsWith('@@')).toList()..sort();
+      arbMap.keys.where((k) => k.startsWith('@@')).toList()..sort();
   for (final String key in specialKeys) {
     result[key] = arbMap[key];
   }
 
   // 2. Handle base keys (not starting with @)
   final List<String> baseKeys =
-      arbMap.keys.where((String k) => !k.startsWith('@')).toList()..sort();
+      arbMap.keys.where((k) => !k.startsWith('@')).toList()..sort();
 
   // 3. Keep track of which metadata keys we've used
   final Set<String> usedMetadataKeys = <String>{};
@@ -68,7 +68,7 @@ Map<String, dynamic> sortArbMap(Map<String, dynamic> arbMap) {
   final List<String> remainingMetadataKeys =
       arbMap.keys
           .where(
-            (String k) =>
+            (k) =>
                 k.startsWith('@') &&
                 !k.startsWith('@@') &&
                 !usedMetadataKeys.contains(k),

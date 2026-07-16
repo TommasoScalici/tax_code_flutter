@@ -72,8 +72,8 @@ void main() {
     );
   });
 
-  tearDown(() {
-    authStreamController.close();
+  tearDown(() async {
+    await authStreamController.close();
     authService.dispose();
   });
 
@@ -118,7 +118,7 @@ void main() {
       expect(authService.currentUser, isNull);
     });
 
-    test('should force logout if saving user data fails after login', () async {
+    test('should keep user logged in if saving user data fails after login', () async {
       // Arrange
       final mockUser = MockUser();
       final exception = Exception('Firestore connection failed');
@@ -126,24 +126,22 @@ void main() {
       when(mockUser.reload).thenAnswer((_) async {});
       when(() => mockAuth.currentUser).thenReturn(mockUser);
       when(() => mockDbService.saveUserData(mockUser)).thenThrow(exception);
-      when(() => mockAuth.signOut()).thenAnswer((_) async {});
 
       // Act
       authStreamController.add(mockUser);
       await pumpEventQueue();
 
       // Assert
-      expect(authService.status, AuthStatus.unauthenticated);
-      expect(authService.isSignedIn, isFalse);
-      expect(authService.currentUser, isNull);
+      expect(authService.status, AuthStatus.authenticated);
+      expect(authService.isSignedIn, isTrue);
+      expect(authService.currentUser, mockUser);
 
       verify(mockUser.reload).called(1);
       verify(() => mockDbService.saveUserData(mockUser)).called(1);
-
-      verify(() => mockAuth.signOut()).called(1);
+      verifyNever(() => mockAuth.signOut());
       verify(
-        () => mockLogger.w(
-          'User validation failed (reload or save). Assuming deleted/disabled. Forcing sign out.',
+        () => mockLogger.e(
+          'Background: failed to save user data to Firestore',
           error: exception,
           stackTrace: any(named: 'stackTrace'),
         ),

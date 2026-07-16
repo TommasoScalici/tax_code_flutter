@@ -14,7 +14,7 @@ void main() {
       },
     };
 
-    const expectedData = Data(
+    const expectedData = TaxCodeData(
       fiscalCode: 'RSSMRA80A01H501A',
       allFiscalCodes: ['RSSMRA80A01H501A', 'RSSMRA80A01H501O'],
     );
@@ -26,9 +26,9 @@ void main() {
     );
 
     group('Equality', () {
-      test('Data instances with same values should be equal', () {
-        const data1 = Data(fiscalCode: 'ABC', allFiscalCodes: ['123']);
-        const data2 = Data(fiscalCode: 'ABC', allFiscalCodes: ['123']);
+      test('TaxCodeData instances with same values should be equal', () {
+        const data1 = TaxCodeData(fiscalCode: 'ABC', allFiscalCodes: ['123']);
+        const data2 = TaxCodeData(fiscalCode: 'ABC', allFiscalCodes: ['123']);
         expect(data1, equals(data2));
       });
 
@@ -36,22 +36,22 @@ void main() {
         const response1 = TaxCodeResponse(
           status: true,
           message: 'OK',
-          data: Data(fiscalCode: 'ABC', allFiscalCodes: ['123']),
+          data: TaxCodeData(fiscalCode: 'ABC', allFiscalCodes: ['123']),
         );
         const response2 = TaxCodeResponse(
           status: true,
           message: 'OK',
-          data: Data(fiscalCode: 'ABC', allFiscalCodes: ['123']),
+          data: TaxCodeData(fiscalCode: 'ABC', allFiscalCodes: ['123']),
         );
         expect(response1, equals(response2));
       });
     });
 
-    /// Tests for the Data model
-    group('Data Model', () {
+    /// Tests for the TaxCodeData model
+    group('TaxCodeData Model', () {
       test('fromJson should create a valid model from map', () {
         // Act
-        final result = Data.fromJson(fakeJson['data']! as Map<String, dynamic>);
+        final result = TaxCodeData.fromJson(fakeJson['data']! as Map<String, dynamic>);
         // Assert
         expect(result, equals(expectedData));
       });

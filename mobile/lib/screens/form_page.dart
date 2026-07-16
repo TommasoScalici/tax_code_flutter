@@ -63,7 +63,7 @@ class _FormViewState extends State<_FormView> {
       }
     });
 
-    _initFuture = controller.initialize();
+    _initFuture = controller.initializationFuture;
 
     controller.addListener(() {
       if (controller.errorKey != null && mounted) {

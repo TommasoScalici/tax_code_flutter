@@ -53,6 +53,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'No contacts yet.\nTap the \'+\' button to add your first one!';
 
   @override
+  String get deadlineExceeded => 'Request timed out. Please try again.';
+
+  @override
   String get delete => 'Delete';
 
   @override

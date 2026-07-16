@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:animated_reorderable_list/animated_reorderable_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -198,6 +199,8 @@ class _ContactsListState extends State<ContactsList> {
   }
 
   void _onShowBarcode(BuildContext context, Contact contact) {
-    Navigator.pushNamed(context, Routes.barcode, arguments: contact.taxCode);
+    unawaited(
+      Navigator.pushNamed(context, Routes.barcode, arguments: contact.taxCode),
+    );
   }
 }

@@ -71,14 +71,14 @@ class TaxCodeService implements TaxCodeServiceAbstract {
       return TaxCodeResponse(
         status: true,
         message: 'Calculated successfully',
-        data: Data(
+        data: TaxCodeData(
           fiscalCode: fiscalCode,
           allFiscalCodes: [fiscalCode],
         ),
       );
     } on TaxCodeApiServerException {
       rethrow;
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Unexpected error in TaxCodeService: $e', error: e, stackTrace: s);
       throw TaxCodeApiServerException('calculation-failed');
     }

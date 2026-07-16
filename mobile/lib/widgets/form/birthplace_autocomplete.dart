@@ -30,7 +30,7 @@ class BirthplaceAutocomplete extends StatelessWidget {
       validationMessages: {
         ValidationMessage.required: (error) => requiredMessage,
       },
-      optionsBuilder: (TextEditingValue value) {
+      optionsBuilder: (value) {
         if (value.text.length < 2) {
           return const Iterable<Birthplace>.empty();
         }
@@ -44,10 +44,10 @@ class BirthplaceAutocomplete extends StatelessWidget {
             .toList();
       },
       fieldViewBuilder: (
-        BuildContext context,
-        TextEditingController textEditingController,
-        FocusNode fieldFocusNode,
-        VoidCallback onFieldSubmitted,
+        context,
+        textEditingController,
+        fieldFocusNode,
+        onFieldSubmitted,
       ) {
         return ReactiveValueListenableBuilder<dynamic>(
           formControl: control,
@@ -78,9 +78,9 @@ class BirthplaceAutocomplete extends StatelessWidget {
         );
       },
       optionsViewBuilder: (
-        BuildContext context,
-        void Function(Birthplace) onSelected,
-        Iterable<Birthplace> options,
+        context,
+        onSelected,
+        options,
       ) {
         return Align(
           alignment: Alignment.topLeft,
@@ -94,7 +94,7 @@ class BirthplaceAutocomplete extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 itemCount: options.length,
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (context, index) {
                   final birthplace = options.elementAt(index);
                   return InkWell(
                     onTap: () {

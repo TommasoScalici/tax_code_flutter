@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
@@ -5,7 +6,7 @@ import 'package:shared/services/birthplace_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
 
 /// Manages the state and business logic for the HomePage.
-class HomePageController with ChangeNotifier {
+interface class HomePageController with ChangeNotifier {
   final ContactRepository _contactRepository;
   final SharingServiceAbstract _sharingService;
   final BirthplaceServiceAbstract _birthplaceService;
@@ -42,22 +43,22 @@ class HomePageController with ChangeNotifier {
     final reorderedContacts = List<Contact>.from(_allContacts);
     final contact = reorderedContacts.removeAt(oldIndex);
     reorderedContacts.insert(newIndex, contact);
-    _contactRepository.updateContacts(reorderedContacts);
+    unawaited(_contactRepository.updateContacts(reorderedContacts));
   }
 
   /// Saves a new or updated contact.
   void saveContact(Contact contact) {
-    _contactRepository.addOrUpdateContact(contact);
+    unawaited(_contactRepository.addOrUpdateContact(contact));
   }
 
   /// Deletes a contact.
   void deleteContact(Contact contact) {
-    _contactRepository.removeContact(contact);
+    unawaited(_contactRepository.removeContact(contact));
   }
 
   /// Shares the contact's tax code via the SharingService.
   void shareContact(Contact contact) {
-    _sharingService.share(text: contact.taxCode);
+    unawaited(_sharingService.share(text: contact.taxCode));
   }
 
   @override
@@ -85,7 +86,7 @@ class HomePageController with ChangeNotifier {
     _contactRepository.addListener(_onContactsChanged);
     _onContactsChanged();
     // Start birthplace sync in background as soon as app opens
-    _birthplaceService.loadBirthplaces();
+    unawaited(_birthplaceService.loadBirthplaces());
   }
 
   /// Called whenever the ContactRepository notifies of a change.

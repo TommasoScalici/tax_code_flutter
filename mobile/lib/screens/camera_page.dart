@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -18,12 +19,16 @@ class CameraPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (ctx) => CameraPageController(
-        cameraService: ctx.read<CameraServiceAbstract>(),
-        geminiService: ctx.read<GeminiServiceAbstract>(),
-        permissionService: ctx.read<PermissionServiceAbstract>(),
-        logger: ctx.read<Logger>(),
-      )..initialize(),
+      create: (ctx) {
+        final controller = CameraPageController(
+          cameraService: ctx.read<CameraServiceAbstract>(),
+          geminiService: ctx.read<GeminiServiceAbstract>(),
+          permissionService: ctx.read<PermissionServiceAbstract>(),
+          logger: ctx.read<Logger>(),
+        );
+        unawaited(controller.initialize());
+        return controller;
+      },
       child: const _CameraView(),
     );
   }

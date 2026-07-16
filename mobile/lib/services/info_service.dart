@@ -19,7 +19,7 @@ class InfoService implements InfoServiceAbstract {
   Future<PackageInfo> getPackageInfo() async {
     try {
       return await PackageInfo.fromPlatform();
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Failed to get package info.', error: e, stackTrace: s);
       // Return a default object on failure to prevent the UI from crashing.
       return PackageInfo(
@@ -36,7 +36,7 @@ class InfoService implements InfoServiceAbstract {
     final htmlPath = _getLocalizedHtmlTermsPath(locale);
     try {
       return await rootBundle.loadString(htmlPath);
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e(
         'Failed to load terms HTML from $htmlPath',
         error: e,

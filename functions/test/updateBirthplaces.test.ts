@@ -116,8 +116,7 @@ describe("updateBirthplaces", () => {
       ).rejects.toThrow("Authentication required");
     });
 
-    it("should throw permission denied error if not admin and file exists", async () => {
-      mockExists.mockResolvedValueOnce([true]);
+    it("should throw permission denied error if not admin", async () => {
       const wrapped = testEnv.wrap(updateBirthplaces);
       await expect(
         wrapped({
@@ -129,26 +128,16 @@ describe("updateBirthplaces", () => {
       ).rejects.toThrow("Admin privileges required");
     });
 
-    it("should allow authenticated non-admin to update if file is missing", async () => {
-      mockExists.mockResolvedValueOnce([false]);
-
-      // Mock successful fetch for this test
-      vi.mocked(global.fetch).mockResolvedValue({
-        ok: true,
-        json: async () => ({ resultset: [] }),
-        arrayBuffer: async () => new ArrayBuffer(0),
-      } as Response);
-
+    it("should throw permission denied error if not admin even if file is missing", async () => {
       const wrapped = testEnv.wrap(updateBirthplaces);
-      const result = await wrapped({
-        auth: {
-          uid: "test-user",
-          token: { admin: false } as unknown as DecodedIdToken,
-        },
-      } as unknown as CallableRequest<void>);
-
-      expect(result.success).toBe(true);
-      expect(mockSave).toHaveBeenCalled();
+      await expect(
+        wrapped({
+          auth: {
+            uid: "test-user",
+            token: { admin: false } as unknown as DecodedIdToken,
+          },
+        } as unknown as CallableRequest<void>),
+      ).rejects.toThrow("Admin privileges required");
     });
   });
 

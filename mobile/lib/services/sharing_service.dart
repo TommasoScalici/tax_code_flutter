@@ -30,7 +30,7 @@ class SharingService implements SharingServiceAbstract {
   Future<ShareResult> share({required String text}) async {
     try {
       return await _shareAdapter.share(text: text);
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Failed to share content', error: e, stackTrace: s);
       return ShareResult.unavailable;
     }

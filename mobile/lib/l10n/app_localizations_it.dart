@@ -54,6 +54,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Nessun contatto presente.\nTocca il pulsante \'+\' per aggiungere il primo!';
 
   @override
+  String get deadlineExceeded => 'Richiesta scaduta. Riprova.';
+
+  @override
   String get delete => 'Elimina';
 
   @override

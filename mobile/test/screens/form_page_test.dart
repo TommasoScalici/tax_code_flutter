@@ -44,7 +44,7 @@ void main() {
   const mockResponse = TaxCodeResponse(
     status: true,
     message: 'Success',
-    data: Data(
+    data: TaxCodeData(
       fiscalCode: 'RSSMRA90A01H501A',
       allFiscalCodes: ['RSSMRA90A01H501A'],
     ),
@@ -599,7 +599,7 @@ void main() {
       const mockFailedResponse = TaxCodeResponse(
         status: false,
         message: 'Invalid data provided',
-        data: Data(fiscalCode: '', allFiscalCodes: []),
+        data: TaxCodeData(fiscalCode: '', allFiscalCodes: []),
       );
       when(
         () => mockTaxCodeService.fetchTaxCode(

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +48,7 @@ final class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, Routes.profile);
+              unawaited(Navigator.pushNamed(context, Routes.profile));
             },
             icon: currentUser != null && currentUser.photoURL != null
                 ? ClipRRect(
@@ -91,9 +92,11 @@ final class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                onTap: () => showDialog<void>(
-                  context: context,
-                  builder: (BuildContext context) => const InfoModal(),
+                onTap: () => unawaited(
+                  showDialog<void>(
+                    context: context,
+                    builder: (context) => const InfoModal(),
+                  ),
                 ),
               ),
             ],

@@ -41,7 +41,7 @@ class GeminiService implements GeminiServiceAbstract {
         stackTrace: s,
       );
       return null;
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e(
         'An unexpected error occurred while calling the Gemini service.',
         error: e,

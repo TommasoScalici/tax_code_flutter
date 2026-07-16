@@ -6,23 +6,24 @@ part of 'tax_code_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Data _$DataFromJson(Map<String, dynamic> json) => Data(
+TaxCodeData _$TaxCodeDataFromJson(Map<String, dynamic> json) => TaxCodeData(
   fiscalCode: json['cf'] as String,
   allFiscalCodes: (json['all_cf'] as List<dynamic>)
       .map((e) => e as String)
       .toList(),
 );
 
-Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-  'cf': instance.fiscalCode,
-  'all_cf': instance.allFiscalCodes,
-};
+Map<String, dynamic> _$TaxCodeDataToJson(TaxCodeData instance) =>
+    <String, dynamic>{
+      'cf': instance.fiscalCode,
+      'all_cf': instance.allFiscalCodes,
+    };
 
 TaxCodeResponse _$TaxCodeResponseFromJson(Map<String, dynamic> json) =>
     TaxCodeResponse(
       status: json['status'] as bool,
       message: json['message'] as String,
-      data: Data.fromJson(json['data'] as Map<String, dynamic>),
+      data: TaxCodeData.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TaxCodeResponseToJson(TaxCodeResponse instance) =>

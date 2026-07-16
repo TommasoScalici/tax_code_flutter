@@ -58,7 +58,7 @@ class BirthplaceService implements BirthplaceServiceAbstract {
           );
           await localFile.writeAsString(assetContent);
           _logger.i('Fallback birthplaces copied to cache.');
-        } catch (assetErr) {
+        } on Object catch (assetErr) {
           _logger.e(
             'Failed to load fallback birthplaces from assets: $assetErr',
           );
@@ -99,7 +99,7 @@ class BirthplaceService implements BirthplaceServiceAbstract {
                 )
                 .toList();
             _logger.i('Fallback birthplaces copied to cache and re-loaded.');
-          } catch (assetErr) {
+          } on Object catch (assetErr) {
             _logger.e('Failed to overwrite with asset fallback: $assetErr');
           }
         }
@@ -116,7 +116,7 @@ class BirthplaceService implements BirthplaceServiceAbstract {
       downloadStep.value = null;
       downloadProgress.value = null;
       return _cachedBirthplaces ?? [];
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e(
         'Failed to load or parse birthplaces.',
         error: e,
@@ -144,7 +144,7 @@ class BirthplaceService implements BirthplaceServiceAbstract {
               !serverLastModified.isAfter(localLastModified)) {
             shouldDownload = false;
           }
-        } catch (e) {
+        } on Object {
           // Offline or storage metadata read error, keep local cache
           shouldDownload = false;
         }
@@ -177,7 +177,7 @@ class BirthplaceService implements BirthplaceServiceAbstract {
             }
           }
         }
-      } catch (e) {
+      } on Object catch (e) {
         _logger.w('Background update of birthplaces.json failed: $e');
       }
     });

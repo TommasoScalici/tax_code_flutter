@@ -1,6 +1,6 @@
 name: shared
 description: "Shared code for Tax Code app."
-version: 1.5.1
+version: 1.6.0
 publish_to: none
 
 environment:
@@ -26,7 +26,7 @@ dependencies:
   provider: ^6.1.0
 
   # Firebase & Backend
-  cloud_firestore: ^6.0.0
+  cloud_firestore: ">=6.0.0 <6.6.0"
   cloud_functions: ^6.0.1
   firebase_auth: ^6.0.1
   firebase_core: ^4.0.0
@@ -44,7 +44,7 @@ dev_dependencies:
   json_serializable: ^6.8.0
   mocktail: ^1.0.4
   remove_unused_localizations: ^1.1.2
-  very_good_analysis: ^6.0.0
+  very_good_analysis: ^10.3.0
 
 flutter:
   generate: true

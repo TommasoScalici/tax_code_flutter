@@ -10,30 +10,10 @@ import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 import 'package:shared/utils/error_mapper.dart';
+import 'package:tax_code_flutter/validators/only_letters_validator.dart';
 import 'package:uuid/uuid.dart';
 
-/// Validator that checks if a cont6arol's value contains only letters,
-/// spaces, and apostrophes.
-class OnlyLettersValidator extends Validator<String> {
-  const OnlyLettersValidator();
-
-  @override
-  Map<String, dynamic>? validate(AbstractControl<String> control) {
-    if (control.value == null || control.value!.isEmpty) {
-      return null;
-    }
-
-    final hasInvalidCharacters = RegExp(
-      r"[^a-zA-Z\s']",
-    ).hasMatch(control.value!);
-
-    return hasInvalidCharacters
-        ? <String, dynamic>{'invalidCharacters': true}
-        : null;
-  }
-}
-
-class FormPageController with ChangeNotifier {
+interface class FormPageController with ChangeNotifier {
   final TaxCodeServiceAbstract _taxCodeService;
   final BirthplaceServiceAbstract _birthplaceService;
   final ContactRepository _contactRepository;
@@ -41,6 +21,7 @@ class FormPageController with ChangeNotifier {
   final Logger _logger;
   final Contact? _initialContact;
   late final FormGroup form;
+  late final Future<void> initializationFuture;
 
   List<Birthplace> birthplaces = [];
   bool _isDisposed = false;
@@ -61,13 +42,14 @@ class FormPageController with ChangeNotifier {
        _contactRepository = contactRepository,
        _logger = logger,
        _initialContact = initialContact {
-    initialize();
+    _buildForm();
+    initializationFuture = initialize();
   }
 
   @override
   void dispose() {
     _isDisposed = true;
-    _formStatusSubscription?.cancel();
+    unawaited(_formStatusSubscription?.cancel());
     super.dispose();
   }
 
@@ -103,7 +85,6 @@ class FormPageController with ChangeNotifier {
 
   Future<void> initialize() async {
     _setLoading(true);
-    _buildForm();
     await _loadBirthplaces();
     _setLoading(false);
   }
@@ -217,7 +198,7 @@ class FormPageController with ChangeNotifier {
       } else {
         throw Exception('API returned status false.');
       }
-    } catch (e) {
+    } on Object catch (e) {
       _logger.e('Error during form submission', error: e);
       _setErrorKey(ErrorMapper.mapErrorToKey(e));
       _setLoading(false);

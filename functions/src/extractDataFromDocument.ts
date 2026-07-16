@@ -120,7 +120,7 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
         );
         throw new HttpsError(
           "permission-denied",
-          "Permesso negato durante il controllo dei limiti di scansione.",
+          "Permission denied while checking scan limits.",
         );
       }
 

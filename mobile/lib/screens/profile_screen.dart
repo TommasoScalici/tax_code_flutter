@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -131,7 +132,9 @@ class _ProfileView extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          context.read<InAppReviewService>().openStoreListing();
+                          unawaited(
+                            context.read<InAppReviewService>().openStoreListing(),
+                          );
                         },
                         icon: const Icon(Icons.star_rate_rounded),
                         label: Text(l10n.rateThisApp),

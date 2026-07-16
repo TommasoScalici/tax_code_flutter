@@ -182,7 +182,7 @@ describe("extractDataFromDocument", () => {
         },
       } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow(
-      "Permesso negato durante il controllo dei limiti di scansione.",
+      "Permission denied while checking scan limits.",
     );
   });
 

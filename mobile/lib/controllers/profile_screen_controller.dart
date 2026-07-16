@@ -36,7 +36,7 @@ class ProfileScreenController extends ChangeNotifier {
     try {
       await _authService.signOut();
       return true;
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Failed to sign out', error: e, stackTrace: s);
       _errorKey = 'genericError';
       return false;
@@ -65,7 +65,7 @@ class ProfileScreenController extends ChangeNotifier {
           try {
             await _authService.deleteUserAccount();
             return true;
-          } catch (e2, s2) {
+          } on Object catch (e2, s2) {
             _logger.e('Failed to delete account AFTER re-auth', error: e2, stackTrace: s2);
             _errorKey = 'genericError';
             return false;
@@ -84,7 +84,7 @@ class ProfileScreenController extends ChangeNotifier {
         _errorKey = 'genericError';
         return false;
       }
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Generic error deleting user account', error: e, stackTrace: s);
       _errorKey = 'genericError';
       return false;

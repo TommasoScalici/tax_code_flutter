@@ -149,14 +149,10 @@ export const updateBirthplaces = onCall<void>(
       throw new HttpsError("unauthenticated", "Authentication required");
     }
 
-    const bucket = getStorage().bucket();
-    const file = bucket.file(STORAGE_PATH);
-    const [exists] = await file.exists();
-
-    if (exists && !request.auth.token?.admin) {
+    if (!request.auth.token?.admin) {
       throw new HttpsError(
         "permission-denied",
-        "Admin privileges required to force update existing data",
+        "Admin privileges required to update birthplace data",
       );
     }
 

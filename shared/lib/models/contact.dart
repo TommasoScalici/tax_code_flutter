@@ -59,7 +59,7 @@ class Contact extends Equatable {
       gender: '',
       taxCode: '',
       birthPlace: const Birthplace(name: '', state: ''),
-      birthDate: DateTime.now(),
+      birthDate: DateTime(1970, 1, 1),
       listIndex: 0,
     );
   }

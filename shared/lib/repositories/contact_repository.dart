@@ -44,7 +44,7 @@ class ContactRepository with ChangeNotifier {
     final initialUser = _authService.currentUser;
     if (initialUser != null) {
       _cachedUserId = initialUser.uid;
-      _initializeUserData(initialUser.uid);
+      unawaited(_initializeUserData(initialUser.uid));
     } else {
       _isLoading = false;
     }
@@ -54,7 +54,10 @@ class ContactRepository with ChangeNotifier {
   void dispose() {
     _isDisposed = true;
     _authService.removeListener(_onAuthChanged);
-    _contactsSubscription?.cancel();
+    final subscription = _contactsSubscription;
+    if (subscription != null) {
+      unawaited(subscription.cancel());
+    }
     super.dispose();
   }
 
@@ -181,7 +184,7 @@ class ContactRepository with ChangeNotifier {
 
     try {
       await _loadContactsFromLocalCache();
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e(
         'Could not load contacts from local cache.',
         error: e,
@@ -201,13 +204,15 @@ class ContactRepository with ChangeNotifier {
   /// Listens to authentication changes and dispatches to the appropriate handler.
   ///
   void _onAuthChanged() {
-    _processAuthChange().catchError((Object error, StackTrace stackTrace) {
-      _logger.e(
-        'Unhandled error during auth change processing',
-        error: error,
-        stackTrace: stackTrace,
-      );
-    });
+    unawaited(
+      _processAuthChange().catchError((Object error, StackTrace stackTrace) {
+        _logger.e(
+          'Unhandled error during auth change processing',
+          error: error,
+          stackTrace: stackTrace,
+        );
+      }),
+    );
   }
 
   Future<void> _processAuthChange() async {
