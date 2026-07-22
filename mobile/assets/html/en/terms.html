@@ -9,10 +9,10 @@
     This application <strong>IS NOT REPRESENTATIVE OF, NOR AFFILIATED WITH, ANY ITALIAN GOVERNMENT ENTITY.</strong>
 </p>
 <p>
-    This app calculates the Italian tax code (Codice Fiscale) utilizing an algorithm provided by an external service;
-    therefore, an active internet connection is required. Please note that the algorithm cannot resolve cases of
-    "omocodia" (when two individuals share the same calculated code). In such instances, the calculated tax code may not
-    correspond to your official one.
+    This app calculates the Italian tax code (Codice Fiscale) locally on your device based on standard official algorithms;
+    therefore, an internet connection is not required for manual calculation. Please note that standard algorithms cannot
+    resolve cases of "omocodia" (when two individuals share the same calculated code). In such instances, the calculated
+    tax code may not correspond to your official one.
 </p>
 <p>
     Remember that the only officially valid and 100% reliable tax identification code is the one issued directly by the
@@ -21,19 +21,22 @@
 
 <h3>Data Handling & Privacy</h3>
 <p>
-    The data you enter and the tax codes calculated (the information visible on your cards) are stored securely on the
-    Google Cloud environment linked to your account. This cloud synchronization is used <strong>EXCLUSIVELY</strong> to
-    allow you to seamlessly access your saved data across multiple devices logged into the same account. Your stored
-    data will <strong>NEVER</strong> be shared with third parties.
+    The data you enter and the tax codes calculated (the information visible on your cards) are stored locally on your
+    device and synchronized securely with the Google Cloud environment linked to your account when signed in. This cloud
+    synchronization is used <strong>EXCLUSIVELY</strong> to allow you to seamlessly access your saved data across multiple
+    devices logged into the same account. Your stored data will <strong>NEVER</strong> be shared with third parties.
 </p>
 
 <h3>Document Scanning</h3>
 <p>
-    When acquiring a new tax code via an identity document or health insurance card, you must take a photo that frames
-    the entire front side of the document. This photo is <strong>never</strong> stored on your device or in the cloud.
-    It is processed securely and ephemerally by Vertex AI. AI extraction algorithms can occasionally be imprecise due to
-    factors like lighting, camera quality, or viewing angle. Always manually verify the extracted data before saving.
+    When acquiring a new tax code via an identity document or health insurance card (which requires an active internet
+    connection), you must take a photo that frames the entire front side of the document. This photo is <strong>never</strong>
+    stored on your device or in the cloud; it is processed securely and ephemerally by Vertex AI. AI extraction algorithms can
+    occasionally be imprecise due to factors like lighting, camera quality, or viewing angle. Always manually verify the
+    extracted data before saving.
 </p>
+
+<h3>Limitation of Liability</h3>
 <p>
     We decline any and all liability for improper, illicit, or fraudulent use of this application.
 </p>
