@@ -1,8 +1,7 @@
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
+import 'test_env.dart';
 
 /// Typography definitions for the "Emerald Ledger" design system.
 ///
@@ -10,8 +9,7 @@ import 'app_colors.dart';
 /// Fiscal codes (Codice Fiscale) and machine-readable data use [GoogleFonts.jetBrainsMono]
 /// to ensure unambiguous character differentiation (e.g., distinguishing '0' from 'O').
 abstract final class AppTypography {
-  static bool get _isTest =>
-      !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+  static bool get _isTest => isFlutterTestEnvironment;
 
   static TextStyle _fontInter({
     required double fontSize,

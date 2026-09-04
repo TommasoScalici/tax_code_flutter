@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_typography.dart';
 
+@Preview(name: 'Emerald Ledger (Dark OLED)', brightness: Brightness.dark)
+Widget buildThemeShowcaseDarkPreview() {
+  return const ThemeShowcasePreview(isDarkMode: true);
+}
+
+@Preview(name: 'Emerald Ledger (Light)', brightness: Brightness.light)
+Widget buildThemeShowcaseLightPreview() {
+  return const ThemeShowcasePreview(isDarkMode: false);
+}
+
 /// A preview showcase demonstrating the Emerald Ledger design system tokens,
 /// cards, buttons, inputs, and typography across both dark and light modes.
 class ThemeShowcasePreview extends StatelessWidget {
-  const ThemeShowcasePreview({super.key});
+  @Preview(name: 'Theme Showcase Widget')
+  const ThemeShowcasePreview({
+    super.key,
+    this.isDarkMode = true,
+  });
+
+  final bool isDarkMode;
 
   @override
   Widget build(BuildContext context) {
@@ -14,21 +31,23 @@ class ThemeShowcasePreview extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark,
-      home: const _ShowcaseScaffold(),
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: _ShowcaseScaffold(initialDarkMode: isDarkMode),
     );
   }
 }
 
 class _ShowcaseScaffold extends StatefulWidget {
-  const _ShowcaseScaffold();
+  const _ShowcaseScaffold({this.initialDarkMode = true});
+
+  final bool initialDarkMode;
 
   @override
   State<_ShowcaseScaffold> createState() => _ShowcaseScaffoldState();
 }
 
 class _ShowcaseScaffoldState extends State<_ShowcaseScaffold> {
-  bool _isDarkMode = true;
+  late bool _isDarkMode = widget.initialDarkMode;
   String _selectedGender = 'M';
 
   @override
