@@ -8,6 +8,8 @@ analyzer:
   exclude:
     - "**/*.mocks.dart"
     - "**/*.g.dart"
+    - build/**
+    - android/**
 
 linter:
   rules:

@@ -33,7 +33,9 @@ dependencies:
   # UI & Widgets (Mobile specific)
   animated_reorderable_list: ^1.1.1
   barcode_widget: ^2.0.4
+  flutter_svg: ^2.0.17
   flutter_widget_from_html: ^0.17.0
+  google_fonts: ^6.3.0
   material_symbols_icons: ^4.2788.0
   reactive_date_time_picker: ^5.0.1
   reactive_forms: ^18.1.1
@@ -79,5 +81,5 @@ flutter:
   assets:
     - assets/html/en/terms.html
     - assets/html/it/terms.html
-    - assets/images/app_icon_512x512.png
+    - assets/images/tax_code_icon.svg
     - assets/birthplaces.json
