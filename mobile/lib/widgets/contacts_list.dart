@@ -199,8 +199,6 @@ class _ContactsListState extends State<ContactsList> {
   }
 
   void _onShowBarcode(BuildContext context, Contact contact) {
-    unawaited(
-      Navigator.pushNamed(context, Routes.barcode, arguments: contact.taxCode),
-    );
+    Navigator.pushNamed(context, Routes.barcode, arguments: contact.taxCode);
   }
 }

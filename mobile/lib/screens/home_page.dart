@@ -48,7 +48,7 @@ final class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              unawaited(Navigator.pushNamed(context, Routes.profile));
+              Navigator.pushNamed(context, Routes.profile);
             },
             icon: currentUser != null && currentUser.photoURL != null
                 ? ClipRRect(

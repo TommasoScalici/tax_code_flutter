@@ -4,6 +4,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' hide ProfileScreen;
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
@@ -79,7 +80,7 @@ class _LoginHeader extends StatelessWidget {
               borderRadius: BorderRadius.circular(20.0),
               child: AspectRatio(
                 aspectRatio: 1,
-                child: Image.asset('assets/images/app_icon_512x512.png'),
+                child: SvgPicture.asset('assets/images/tax_code_icon.svg'),
               ),
             ),
           ),
@@ -162,9 +163,9 @@ class _LoginSideImage extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20.0),
-        child: const AspectRatio(
+        child: AspectRatio(
           aspectRatio: 1,
-          child: Image(image: AssetImage('assets/images/app_icon_512x512.png')),
+          child: SvgPicture.asset('assets/images/tax_code_icon.svg'),
         ),
       ),
     );
