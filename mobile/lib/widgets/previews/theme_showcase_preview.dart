@@ -10,7 +10,9 @@ final class EmeraldPreviewThemeData extends PreviewThemeData {
 
   @override
   Widget apply(BuildContext context, Widget child) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark =
+        MediaQuery.maybePlatformBrightnessOf(context) == Brightness.dark ||
+        Theme.of(context).brightness == Brightness.dark;
     return Theme(
       data: isDark ? AppTheme.darkTheme : AppTheme.lightTheme,
       child: child,
@@ -22,14 +24,7 @@ final class EmeraldPreviewThemeData extends PreviewThemeData {
 PreviewThemeData emeraldPreviewTheme() => const EmeraldPreviewThemeData();
 
 @Preview(
-  name: 'Emerald Ledger (Dark OLED)',
-  brightness: Brightness.dark,
-  size: Size(390, 844),
-  theme: emeraldPreviewTheme,
-)
-@Preview(
-  name: 'Emerald Ledger (Light)',
-  brightness: Brightness.light,
+  name: 'Emerald Ledger Showcase',
   size: Size(390, 844),
   theme: emeraldPreviewTheme,
 )
@@ -40,11 +35,6 @@ Widget buildThemeShowcasePreview() {
 /// A preview showcase demonstrating the Emerald Ledger design system tokens,
 /// cards, buttons, inputs, and typography across both dark and light modes.
 class ThemeShowcasePreview extends StatefulWidget {
-  @Preview(
-    name: 'Theme Showcase Widget',
-    size: Size(390, 844),
-    theme: emeraldPreviewTheme,
-  )
   const ThemeShowcasePreview({
     super.key,
     this.initialDarkMode,
@@ -65,8 +55,12 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
     // Check if ambient widget previewer provides Directionality/MaterialApp
     final hasDirectionality = Directionality.maybeOf(context) != null;
 
-    // Default to the ambient theme brightness (controlled by the Previewer toolbar)
-    final isAmbientDark = Theme.of(context).brightness == Brightness.dark;
+    // React both to simulated device platformBrightness and ambient Theme brightness
+    final platformBrightness = MediaQuery.maybePlatformBrightnessOf(context);
+    final themeBrightness = Theme.of(context).brightness;
+    final isAmbientDark = platformBrightness == Brightness.dark ||
+        themeBrightness == Brightness.dark;
+
     final isDark =
         _isDarkModeOverride ?? widget.initialDarkMode ?? isAmbientDark;
     final theme = isDark ? AppTheme.darkTheme : AppTheme.lightTheme;
