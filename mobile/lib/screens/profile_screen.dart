@@ -7,6 +7,7 @@ import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/controllers/profile_screen_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
+import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -104,7 +105,9 @@ class _ProfileView extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(l10n.profilePageTitle),
       ),
-      body: SafeArea(
+      body: ResponsiveLayout(
+        maxWidth: 480.0,
+        padding: EdgeInsets.zero,
         child: Stack(
           children: [
             Center(

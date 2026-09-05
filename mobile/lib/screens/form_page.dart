@@ -18,6 +18,7 @@ import 'package:tax_code_flutter/utils/error_dialog_helper.dart';
 import 'package:tax_code_flutter/widgets/form/birthplace_autocomplete.dart';
 import 'package:tax_code_flutter/widgets/form/custom_text_field.dart';
 import 'package:tax_code_flutter/widgets/form/gender_dropdown.dart';
+import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
 class FormPage extends StatelessWidget {
   final Contact? contact;
@@ -120,7 +121,9 @@ class _FormViewState extends State<_FormView> {
           ),
           body: Stack(
             children: [
-          SafeArea(
+          ResponsiveLayout(
+            maxWidth: 600.0,
+            padding: EdgeInsets.zero,
             child: Padding(
               padding: EdgeInsets.only(
                 bottom: _shouldPushForm

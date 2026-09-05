@@ -10,6 +10,7 @@ import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/settings.dart';
 import 'package:tax_code_flutter/widgets/info_modal.dart';
+import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
 import 'home_page.dart';
 
@@ -30,7 +31,9 @@ class AuthGate extends StatelessWidget {
         final remoteConfig = context.read<FirebaseRemoteConfig>();
         final screenWidth = MediaQuery.of(context).size.width;
 
-        return SafeArea(
+        return ResponsiveLayout(
+          maxWidth: 840.0,
+          padding: EdgeInsets.zero,
           child: SignInScreen(
             auth: auth,
             showAuthActionSwitch: false,

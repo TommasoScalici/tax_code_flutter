@@ -12,6 +12,7 @@ import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/widgets/contacts_list.dart';
 import 'package:tax_code_flutter/widgets/info_modal.dart';
+import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
 final class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -103,7 +104,11 @@ final class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: const SafeArea(child: ContactsList()),
+      body: const ResponsiveLayout(
+        maxWidth: 600.0,
+        padding: EdgeInsets.zero,
+        child: ContactsList(),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _onAddContact(context),
         tooltip: l10n.newItem,
