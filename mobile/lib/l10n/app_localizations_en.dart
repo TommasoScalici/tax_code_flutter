@@ -46,6 +46,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get close => 'Close';
 
   @override
+  String get cloudSyncActive => 'Cloud sync active';
+
+  @override
   String get confirm => 'Confirm';
 
   @override
@@ -57,6 +60,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get dashboardTitle => 'My Codes';
 
   @override
   String get deadlineExceeded => 'Request timed out. Please try again.';
@@ -194,6 +200,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stepBirthplacesParsing => 'Reading database...';
+
+  @override
+  String get switchTheme => 'Toggle theme';
 
   @override
   String get takePicture => 'Scan Card';

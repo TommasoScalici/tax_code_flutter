@@ -170,6 +170,12 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get close;
 
+  /// Tooltip indicating active cloud synchronization on the user avatar.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud sync active'**
+  String get cloudSyncActive;
+
   /// Label for a confirmation button.
   ///
   /// In en, this message translates to:
@@ -193,6 +199,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue with Google'**
   String get continueWithGoogle;
+
+  /// Title of the main dashboard screen listing saved tax codes.
+  ///
+  /// In en, this message translates to:
+  /// **'My Codes'**
+  String get dashboardTitle;
 
   /// Error message when a backend or API request times out.
   ///
@@ -445,6 +457,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reading database...'**
   String get stepBirthplacesParsing;
+
+  /// Tooltip for the theme mode toggle button.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle theme'**
+  String get switchTheme;
 
   /// Title for the camera screen.
   ///

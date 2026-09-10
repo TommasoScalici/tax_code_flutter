@@ -49,6 +49,10 @@
   "@close": {
     "description": "Label for a button to close a screen or dialog."
   },
+  "cloudSyncActive": "Sincronizzazione attiva",
+  "@cloudSyncActive": {
+    "description": "Tooltip indicating active cloud synchronization on the user avatar."
+  },
   "confirm": "Conferma",
   "@confirm": {
     "description": "Label for a confirmation button."
@@ -64,6 +68,10 @@
   "continueWithGoogle": "Continua con Google",
   "@continueWithGoogle": {
     "description": "Label for the primary Google single sign-on authentication button."
+  },
+  "dashboardTitle": "I Miei Codici",
+  "@dashboardTitle": {
+    "description": "Title of the main dashboard screen listing saved tax codes."
   },
   "deadlineExceeded": "Richiesta scaduta. Riprova.",
   "@deadlineExceeded": {
@@ -244,6 +252,10 @@
   "stepBirthplacesParsing": "Lettura del database in corso...",
   "@stepBirthplacesParsing": {
     "description": "Passaggio che indica che i dati dei luoghi di nascita sono in fase di lettura dal file JSON locale."
+  },
+  "switchTheme": "Cambia tema",
+  "@switchTheme": {
+    "description": "Tooltip for the theme mode toggle button."
   },
   "takePicture": "Scansiona Tessera",
   "@takePicture": {
