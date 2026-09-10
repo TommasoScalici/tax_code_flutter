@@ -22,10 +22,25 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
   bool get isSignedIn => _status == AuthStatus.authenticated;
 
   @override
+  bool get isGuest => _currentUser != null && _currentUser!.isAnonymous;
+
+  @override
   bool get isLoading => _isLoading;
 
   @override
   String? get errorMessage => _errorMessage;
+
+  @override
+  Future<bool> signInWithGoogle() async {
+    login(FakeUser(uid: 'fake-google-uid'));
+    return true;
+  }
+
+  @override
+  Future<bool> signInAnonymously() async {
+    login(FakeUser(uid: 'fake-guest-uid', isAnonymous: true));
+    return true;
+  }
 
   /// Simulates a user logging in.
   void login(FakeUser user) {

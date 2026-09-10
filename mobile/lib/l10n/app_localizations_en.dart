@@ -53,6 +53,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'No contacts yet.\nTap the \'+\' button to add your first one!';
 
   @override
+  String get continueAsGuest => 'Continue as guest';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
   String get deadlineExceeded => 'Request timed out. Please try again.';
 
   @override
@@ -90,6 +96,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get genericError => 'Something went wrong. Please try again.';
+
+  @override
+  String get guestMode => 'Guest';
 
   @override
   String get homePageTitle => 'My Contacts';
@@ -168,6 +177,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get showTerms => 'View Terms & Conditions';
 
   @override
+  String get signInFailed => 'Sign-in failed. Please try again.';
+
+  @override
   String get signOut => 'Sign Out';
 
   @override
@@ -213,4 +225,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tooltipToggleFlash => 'Toggle flash';
+
+  @override
+  String get welcomeSubtitle =>
+      'Save, access, and show your codes at pharmacies or offices in an instant.';
+
+  @override
+  String get welcomeTitle => 'Your Tax Codes, always with you';
 }

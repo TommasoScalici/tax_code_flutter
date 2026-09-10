@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +7,7 @@ import 'package:tax_code_flutter/controllers/profile_screen_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
+import 'package:tax_code_flutter/widgets/user_avatar.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -49,7 +49,7 @@ class _ProfileView extends StatelessWidget {
               onPressed: () => Navigator.of(dialogContext).pop(true),
               child: Text(
                 l10n.delete,
-                style: const TextStyle(color: Colors.red),
+                style: TextStyle(color: Theme.of(dialogContext).colorScheme.error),
               ),
             ),
           ],
@@ -98,11 +98,15 @@ class _ProfileView extends StatelessWidget {
     final authService = context.watch<AuthService>();
     final controller = context.watch<ProfileScreenController>();
     final l10n = AppLocalizations.of(context)!;
-    final displayName = authService.currentUser?.displayName ?? '';
+    final displayName = authService.isGuest
+        ? l10n.guestMode
+        : (authService.currentUser?.displayName ?? '');
+
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(l10n.profilePageTitle),
       ),
       body: ResponsiveLayout(
@@ -120,9 +124,37 @@ class _ProfileView extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Text(
                         displayName,
-                        style: const TextStyle(fontSize: 24),
+                        style: theme.textTheme.headlineSmall,
                       ),
                     ),
+                    if (authService.isGuest) ...[
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: controller.isLoading
+                              ? null
+                              : () async {
+                                  final success =
+                                      await authService.signInWithGoogle();
+                                  if (!context.mounted) return;
+                                  if (!success &&
+                                      authService.errorMessage != null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          authService.errorMessage ??
+                                              l10n.signInFailed,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                          icon: const Icon(Icons.login),
+                          label: Text(l10n.continueWithGoogle),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
@@ -151,11 +183,12 @@ class _ProfileView extends StatelessWidget {
                         icon: const Icon(Icons.delete),
                         label: Text(
                           l10n.deleteAccount,
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: colorScheme.onError),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          iconColor: Colors.white,
+                          backgroundColor: colorScheme.error,
+                          foregroundColor: colorScheme.onError,
+                          iconColor: colorScheme.onError,
                         ),
                       ),
                     ),
@@ -164,9 +197,9 @@ class _ProfileView extends StatelessWidget {
               ),
             ),
             if (controller.isLoading)
-              const ModalBarrier(
+              ModalBarrier(
                 dismissible: false,
-                color: Colors.black26,
+                color: colorScheme.scrim.withValues(alpha: 0.32),
               ),
             if (controller.isLoading)
               const Center(

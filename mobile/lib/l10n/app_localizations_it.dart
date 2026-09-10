@@ -54,6 +54,12 @@ class AppLocalizationsIt extends AppLocalizations {
       'Nessun contatto presente.\nTocca il pulsante \'+\' per aggiungere il primo!';
 
   @override
+  String get continueAsGuest => 'Continua come ospite';
+
+  @override
+  String get continueWithGoogle => 'Continua con Google';
+
+  @override
   String get deadlineExceeded => 'Richiesta scaduta. Riprova.';
 
   @override
@@ -91,6 +97,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get genericError => 'Qualcosa è andato storto. Riprova.';
+
+  @override
+  String get guestMode => 'Ospite';
 
   @override
   String get homePageTitle => 'I Miei Contatti';
@@ -169,6 +178,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get showTerms => 'Visualizza Termini e Condizioni';
 
   @override
+  String get signInFailed => 'Accesso non riuscito. Riprova.';
+
+  @override
   String get signOut => 'Esci';
 
   @override
@@ -216,4 +228,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get tooltipToggleFlash => 'Attiva/Disattiva flash';
+
+  @override
+  String get welcomeSubtitle =>
+      'Salva, consulta e mostra i tuoi codici in farmacia o negli uffici in un istante.';
+
+  @override
+  String get welcomeTitle => 'I tuoi Codici Fiscali, sempre con te';
 }

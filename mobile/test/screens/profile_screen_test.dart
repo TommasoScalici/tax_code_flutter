@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart' hide ProfileScreen;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/screens/profile_screen.dart';
+import 'package:tax_code_flutter/widgets/user_avatar.dart';
 
 import '../helpers/mocks.dart';
 import '../helpers/pump_app.dart';
@@ -28,6 +28,7 @@ void main() {
     mockUser = MockUser();
 
     when(() => mockAuthService.currentUser).thenReturn(mockUser);
+    when(() => mockAuthService.isGuest).thenReturn(false);
     when(() => mockUser.photoURL).thenReturn(null);
   });
 
@@ -67,6 +68,29 @@ void main() {
       // Assert
       expect(find.text('Tommaso Scalici'), findsOneWidget);
       expect(find.text('Test User'), findsNothing);
+    });
+
+    testWidgets('displays guest mode and tapping Continue with Google calls signInWithGoogle', (tester) async {
+      // Arrange
+      when(() => mockAuthService.isGuest).thenReturn(true);
+      when(() => mockAuthService.signInWithGoogle()).thenAnswer((_) async => true);
+
+      // Act
+      await pumpApp(
+        tester,
+        const ProfileScreen(),
+        authStatus: AuthStatus.authenticated,
+        mockAuthService: mockAuthService,
+      );
+
+      // Assert
+      expect(find.text('Guest'), findsOneWidget);
+      expect(find.text('Continue with Google'), findsOneWidget);
+
+      await tester.tap(find.text('Continue with Google'));
+      await tester.pump();
+
+      verify(() => mockAuthService.signInWithGoogle()).called(1);
     });
 
     testWidgets('tapping Sign Out button calls authService.signOut', (

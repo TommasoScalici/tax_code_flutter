@@ -57,6 +57,14 @@
   "@contactsListEmpty": {
     "description": "Message displayed when the contact list is empty."
   },
+  "continueAsGuest": "Continua come ospite",
+  "@continueAsGuest": {
+    "description": "Label for the secondary button to access and use the app in guest mode without signing in."
+  },
+  "continueWithGoogle": "Continua con Google",
+  "@continueWithGoogle": {
+    "description": "Label for the primary Google single sign-on authentication button."
+  },
   "deadlineExceeded": "Richiesta scaduta. Riprova.",
   "@deadlineExceeded": {
     "description": "Error message when a backend or API request times out."
@@ -110,6 +118,10 @@
   "genericError": "Qualcosa è andato storto. Riprova.",
   "@genericError": {
     "description": "A user-friendly message for a generic error, asking them to retry."
+  },
+  "guestMode": "Ospite",
+  "@guestMode": {
+    "description": "Badge or display name indicating that the user is currently using the app in guest mode."
   },
   "homePageTitle": "I Miei Contatti",
   "@homePageTitle": {
@@ -209,6 +221,10 @@
   "@showTerms": {
     "description": "Label for a button to display the terms and conditions."
   },
+  "signInFailed": "Accesso non riuscito. Riprova.",
+  "@signInFailed": {
+    "description": "Error message displayed when an authentication attempt encounters an error."
+  },
   "signOut": "Esci",
   "@signOut": {
     "description": "Label for a button to sign out of the application."
@@ -268,5 +284,13 @@
   "tooltipToggleFlash": "Attiva/Disattiva flash",
   "@tooltipToggleFlash": {
     "description": "Tooltip for the button that toggles the camera flash on and off."
+  },
+  "welcomeSubtitle": "Salva, consulta e mostra i tuoi codici in farmacia o negli uffici in un istante.",
+  "@welcomeSubtitle": {
+    "description": "Subtitle displayed on the welcome and authentication screen explaining core app utility."
+  },
+  "welcomeTitle": "I tuoi Codici Fiscali, sempre con te",
+  "@welcomeTitle": {
+    "description": "Main headline displayed on the welcome and authentication screen."
   }
 }

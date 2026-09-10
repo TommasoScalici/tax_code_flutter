@@ -182,6 +182,18 @@ abstract class AppLocalizations {
   /// **'No contacts yet.\nTap the \'+\' button to add your first one!'**
   String get contactsListEmpty;
 
+  /// Label for the secondary button to access and use the app in guest mode without signing in.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue as guest'**
+  String get continueAsGuest;
+
+  /// Label for the primary Google single sign-on authentication button.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
   /// Error message when a backend or API request times out.
   ///
   /// In en, this message translates to:
@@ -253,6 +265,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong. Please try again.'**
   String get genericError;
+
+  /// Badge or display name indicating that the user is currently using the app in guest mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get guestMode;
 
   /// Title for the main home page.
   ///
@@ -392,6 +410,12 @@ abstract class AppLocalizations {
   /// **'View Terms & Conditions'**
   String get showTerms;
 
+  /// Error message displayed when an authentication attempt encounters an error.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in failed. Please try again.'**
+  String get signInFailed;
+
   /// Label for a button to sign out of the application.
   ///
   /// In en, this message translates to:
@@ -481,6 +505,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Toggle flash'**
   String get tooltipToggleFlash;
+
+  /// Subtitle displayed on the welcome and authentication screen explaining core app utility.
+  ///
+  /// In en, this message translates to:
+  /// **'Save, access, and show your codes at pharmacies or offices in an instant.'**
+  String get welcomeSubtitle;
+
+  /// Main headline displayed on the welcome and authentication screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Tax Codes, always with you'**
+  String get welcomeTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -228,6 +228,62 @@ void main() {
       expect(loadingStates, [true, false]);
       expect(authService.errorMessage, isNotNull);
     });
+
+    test('signInWithGoogle links credential if currentUser is anonymous', () async {
+      // Arrange
+      final anonymousUser = MockUser();
+      when(() => anonymousUser.isAnonymous).thenReturn(true);
+      when(() => anonymousUser.linkWithCredential(any())).thenAnswer((_) async => MockUserCredential());
+      when(() => mockAuth.currentUser).thenReturn(anonymousUser);
+      when(() => mockGoogleSignIn.signIn()).thenAnswer((_) async => mockGoogleAccount);
+
+      // Act
+      final result = await authService.signInWithGoogle();
+
+      // Assert
+      expect(result, isTrue);
+      verify(() => anonymousUser.linkWithCredential(any())).called(1);
+    });
+  });
+
+  group('signInAnonymously & isGuest', () {
+    test('signInAnonymously succeeds and logs', () async {
+      when(() => mockAuth.signInAnonymously()).thenAnswer((_) async => MockUserCredential());
+
+      final result = await authService.signInAnonymously();
+
+      expect(result, isTrue);
+      verify(() => mockAuth.signInAnonymously()).called(1);
+    });
+
+    test('signInAnonymously handles errors gracefully', () async {
+      final exception = Exception('Anonymous auth disabled');
+      when(() => mockAuth.signInAnonymously()).thenThrow(exception);
+
+      final result = await authService.signInAnonymously();
+
+      expect(result, isFalse);
+      expect(authService.errorMessage, isNotNull);
+      verify(
+        () => mockLogger.e(
+          'Error during anonymous sign-in',
+          error: exception,
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(1);
+    });
+
+    test('isGuest returns true when currentUser is anonymous', () async {
+      final anonUser = MockUser();
+      when(() => anonUser.isAnonymous).thenReturn(true);
+      when(anonUser.reload).thenAnswer((_) async {});
+      when(() => mockAuth.currentUser).thenReturn(anonUser);
+
+      authStreamController.add(anonUser);
+      await pumpEventQueue();
+
+      expect(authService.isGuest, isTrue);
+    });
   });
 
   group('deleteUserAccount', () {

@@ -3,7 +3,6 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -150,10 +149,7 @@ Future<void> pumpApp(
       ],
       child: MaterialApp(
         onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-        localizationsDelegates: const [
-          ...AppLocalizations.localizationsDelegates,
-          FirebaseUILocalizations.delegate,
-        ],
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: widget,
         onGenerateRoute: Routes.generateRoute,

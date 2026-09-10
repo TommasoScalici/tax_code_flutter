@@ -57,6 +57,14 @@
   "@contactsListEmpty": {
     "description": "Message displayed when the contact list is empty."
   },
+  "continueAsGuest": "Continue as guest",
+  "@continueAsGuest": {
+    "description": "Label for the secondary button to access and use the app in guest mode without signing in."
+  },
+  "continueWithGoogle": "Continue with Google",
+  "@continueWithGoogle": {
+    "description": "Label for the primary Google single sign-on authentication button."
+  },
   "deadlineExceeded": "Request timed out. Please try again.",
   "@deadlineExceeded": {
     "description": "Error message when a backend or API request times out."
@@ -110,6 +118,10 @@
   "genericError": "Something went wrong. Please try again.",
   "@genericError": {
     "description": "A user-friendly message for a generic error, asking them to retry."
+  },
+  "guestMode": "Guest",
+  "@guestMode": {
+    "description": "Badge or display name indicating that the user is currently using the app in guest mode."
   },
   "homePageTitle": "My Contacts",
   "@homePageTitle": {
@@ -209,6 +221,10 @@
   "@showTerms": {
     "description": "Label for a button to display the terms and conditions."
   },
+  "signInFailed": "Sign-in failed. Please try again.",
+  "@signInFailed": {
+    "description": "Error message displayed when an authentication attempt encounters an error."
+  },
   "signOut": "Sign Out",
   "@signOut": {
     "description": "Label for a button to sign out of the application."
@@ -268,5 +284,13 @@
   "tooltipToggleFlash": "Toggle flash",
   "@tooltipToggleFlash": {
     "description": "Tooltip for the button that toggles the camera flash on and off."
+  },
+  "welcomeSubtitle": "Save, access, and show your codes at pharmacies or offices in an instant.",
+  "@welcomeSubtitle": {
+    "description": "Subtitle displayed on the welcome and authentication screen explaining core app utility."
+  },
+  "welcomeTitle": "Your Tax Codes, always with you",
+  "@welcomeTitle": {
+    "description": "Main headline displayed on the welcome and authentication screen."
   }
 }

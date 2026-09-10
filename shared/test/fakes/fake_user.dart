@@ -6,5 +6,8 @@ class FakeUser extends Fake implements User {
   @override
   final String uid;
 
-  FakeUser({this.uid = 'test_uid'});
+  @override
+  final bool isAnonymous;
+
+  FakeUser({this.uid = 'test_uid', this.isAnonymous = false});
 }

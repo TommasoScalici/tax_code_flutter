@@ -32,6 +32,9 @@ class AuthService with ChangeNotifier {
   /// Returns true if a user is currently signed in.
   bool get isSignedIn => _status == AuthStatus.authenticated;
 
+  /// Returns true if the currently authenticated user is in guest mode (anonymous).
+  bool get isGuest => _currentUser != null && _currentUser!.isAnonymous;
+
   /// Returns true if an authentication operation is in progress.
   bool get isLoading => _isLoading;
 
@@ -122,16 +125,17 @@ class AuthService with ChangeNotifier {
   }
 
   ///
-  /// Handles the entire Google Sign-In and Firebase authentication process
-  /// for the Wearable app.
+  /// Handles Google Sign-In and Firebase authentication.
+  /// If the current user is an anonymous guest, links their account with Google.
+  /// Returns true if sign-in succeeded, false if cancelled or failed.
   ///
-  Future<void> signInWithGoogleForWearable() async {
+  Future<bool> signInWithGoogle() async {
     _setLoading(true);
     try {
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         _logger.w('Google Sign-In was cancelled by the user.');
-        return;
+        return false;
       }
 
       final googleAuth = await googleUser.authentication;
@@ -140,13 +144,60 @@ class AuthService with ChangeNotifier {
         idToken: googleAuth.idToken,
       );
 
+      final user = _auth.currentUser;
+      if (user != null && user.isAnonymous) {
+        try {
+          await user.linkWithCredential(credential);
+          _logger.i('Anonymous account successfully linked with Google.');
+          return true;
+        } on FirebaseAuthException catch (linkErr) {
+          if (linkErr.code == 'credential-already-in-use') {
+            _logger.w(
+              'Credential already in use, signing into existing Google account.',
+            );
+            await _auth.signInWithCredential(credential);
+            return true;
+          }
+          rethrow;
+        }
+      }
+
       await _auth.signInWithCredential(credential);
+      return true;
     } on Exception catch (e, s) {
       _logger.e('Error during Google Sign-In', error: e, stackTrace: s);
       _errorMessage = 'An unexpected error occurred. Please try again.';
+      return false;
     } finally {
       _setLoading(false);
     }
+  }
+
+  ///
+  /// Signs in anonymously as a guest.
+  /// Returns true if sign-in succeeded, false otherwise.
+  ///
+  Future<bool> signInAnonymously() async {
+    _setLoading(true);
+    try {
+      await _auth.signInAnonymously();
+      _logger.i('User signed in anonymously as guest.');
+      return true;
+    } on Exception catch (e, s) {
+      _logger.e('Error during anonymous sign-in', error: e, stackTrace: s);
+      _errorMessage = 'An unexpected error occurred. Please try again.';
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  ///
+  /// Handles the entire Google Sign-In and Firebase authentication process
+  /// for the Wearable app. Kept for backward compatibility.
+  ///
+  Future<void> signInWithGoogleForWearable() async {
+    await signInWithGoogle();
   }
 
   ///

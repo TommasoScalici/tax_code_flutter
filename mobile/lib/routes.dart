@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/models/scanned_data.dart';
 import 'screens/auth_gate.dart';
-import 'screens/barcode_page.dart';
 import 'screens/camera_page.dart';
 import 'screens/form_page.dart';
 import 'screens/profile_screen.dart';
+import 'screens/welcome_screen.dart';
 
 final class Routes {
   Routes._();
 
   static const String home = '/';
-  static const String profile = '/profile';
-  static const String form = '/form';
-  static const String camera = '/camera';
   static const String barcode = '/barcode';
+  static const String camera = '/camera';
+  static const String form = '/form';
+  static const String profile = '/profile';
+  static const String welcome = '/welcome';
 
   static Route<Object?> generateRoute(RouteSettings settings) {
     var routeName = settings.name;
@@ -29,6 +30,8 @@ final class Routes {
     switch (routeName) {
       case home:
         return MaterialPageRoute<void>(builder: (_) => const AuthGate());
+      case welcome:
+        return MaterialPageRoute<void>(builder: (_) => const WelcomeScreen());
       case profile:
         return MaterialPageRoute<void>(builder: (_) => const ProfileScreen());
       case form:
@@ -37,11 +40,21 @@ final class Routes {
           builder: (_) => FormPage(contact: contact),
         );
       case camera:
-        return MaterialPageRoute<ScannedData?>(builder: (_) => const CameraPage());
+        return MaterialPageRoute<ScannedData?>(
+          builder: (_) => const CameraPage(),
+        );
       case barcode:
         final taxCode = settings.arguments! as String;
         return MaterialPageRoute<void>(
-          builder: (_) => BarcodePage(taxCode: taxCode),
+          builder: (_) => Scaffold(
+            appBar: AppBar(title: const Text('Barcode')),
+            body: Center(
+              child: Text(
+                taxCode,
+                style: const TextStyle(fontSize: 24, letterSpacing: 2),
+              ),
+            ),
+          ),
         );
       default:
         return MaterialPageRoute<void>(
