@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_header_preview.dart';
+import 'package:tax_code_flutter/widgets/previews/dashboard_search_bar_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/theme_showcase_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/welcome_screen_preview.dart';
 import '../helpers/test_setup.dart';
@@ -23,6 +24,12 @@ void main() {
     await tester.pumpWidget(const DashboardHeaderPreview());
     await tester.pumpAndSettle();
     expect(find.byType(DashboardHeaderPreview), findsOneWidget);
+  });
+
+  testWidgets('pumps DashboardSearchBarPreview without error', (tester) async {
+    await tester.pumpWidget(const DashboardSearchBarPreview());
+    await tester.pumpAndSettle();
+    expect(find.byType(DashboardSearchBarPreview), findsOneWidget);
   });
 }
 

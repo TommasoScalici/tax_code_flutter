@@ -45,6 +45,7 @@ Future<void> pumpApp(
   MockGeminiService? mockGeminiService,
   MockPermissionService? mockPermissionService,
   AuthStatus? authStatus,
+  Locale? locale,
 }) async {
   final authService = mockAuthService ?? MockAuthService();
   final themeService = mockThemeService ?? MockThemeService();
@@ -148,6 +149,7 @@ Future<void> pumpApp(
         ),
       ],
       child: MaterialApp(
+        locale: locale,
         onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,

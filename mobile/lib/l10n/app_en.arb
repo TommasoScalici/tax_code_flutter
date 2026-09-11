@@ -53,6 +53,18 @@
   "@cloudSyncActive": {
     "description": "Tooltip indicating active cloud synchronization on the user avatar."
   },
+  "cloudSyncGuestTooltip": "Sign in with Google to sync your tax codes across devices",
+  "@cloudSyncGuestTooltip": {
+    "description": "Tooltip and message explaining that Google sign-in is required for cloud synchronization."
+  },
+  "cloudSyncOff": "Cloud sync inactive",
+  "@cloudSyncOff": {
+    "description": "Tooltip and message when cloud synchronization is disabled."
+  },
+  "cloudSyncOn": "Cloud sync active",
+  "@cloudSyncOn": {
+    "description": "Tooltip and message when cloud synchronization is enabled."
+  },
   "confirm": "Confirm",
   "@confirm": {
     "description": "Label for a confirmation button."
@@ -191,6 +203,16 @@
   "@required": {
     "description": "A validation error message for a required form field."
   },
+  "savedCardsCount": "{count, plural, =0{No saved cards} =1{1 saved card} other{{count} saved cards}}",
+  "@savedCardsCount": {
+    "description": "Badge label showing the number of saved tax code cards.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
   "scanCard": "Scan from Health Card",
   "@scanCard": {
     "description": "Label for a button that initiates scanning a card."
@@ -202,6 +224,10 @@
   "search": "Search by name or tax code...",
   "@search": {
     "description": "Placeholder text inside a search bar."
+  },
+  "searchClearTooltip": "Clear search",
+  "@searchClearTooltip": {
+    "description": "Tooltip for the clear button inside the dashboard search bar."
   },
   "searchNoResults": "No results found for '{searchText}'",
   "@searchNoResults": {

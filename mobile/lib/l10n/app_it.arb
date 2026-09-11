@@ -53,6 +53,18 @@
   "@cloudSyncActive": {
     "description": "Tooltip indicating active cloud synchronization on the user avatar."
   },
+  "cloudSyncGuestTooltip": "Accedi con Google per sincronizzare i tuoi codici tra dispositivi",
+  "@cloudSyncGuestTooltip": {
+    "description": "Tooltip and message explaining that Google sign-in is required for cloud synchronization."
+  },
+  "cloudSyncOff": "Sincronizzazione cloud non attiva",
+  "@cloudSyncOff": {
+    "description": "Tooltip and message when cloud synchronization is disabled."
+  },
+  "cloudSyncOn": "Sincronizzazione cloud attiva",
+  "@cloudSyncOn": {
+    "description": "Tooltip and message when cloud synchronization is enabled."
+  },
   "confirm": "Conferma",
   "@confirm": {
     "description": "Label for a confirmation button."
@@ -191,6 +203,16 @@
   "@required": {
     "description": "A validation error message for a required form field."
   },
+  "savedCardsCount": "{count, plural, =0{Nessuna tessera salvata} =1{1 tessera salvata} other{{count} tessere salvate}}",
+  "@savedCardsCount": {
+    "description": "Badge label showing the number of saved tax code cards.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
   "scanCard": "Scansiona da CIE / TS",
   "@scanCard": {
     "description": "Label for a button that initiates scanning a card."
@@ -202,6 +224,10 @@
   "search": "Cerca per nome o codice fiscale...",
   "@search": {
     "description": "Placeholder text inside a search bar."
+  },
+  "searchClearTooltip": "Cancella ricerca",
+  "@searchClearTooltip": {
+    "description": "Tooltip for the clear button inside the dashboard search bar."
   },
   "searchNoResults": "Nessun risultato trovato per '{searchText}'",
   "@searchNoResults": {

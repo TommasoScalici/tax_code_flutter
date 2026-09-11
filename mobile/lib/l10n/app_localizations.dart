@@ -176,6 +176,24 @@ abstract class AppLocalizations {
   /// **'Cloud sync active'**
   String get cloudSyncActive;
 
+  /// Tooltip and message explaining that Google sign-in is required for cloud synchronization.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google to sync your tax codes across devices'**
+  String get cloudSyncGuestTooltip;
+
+  /// Tooltip and message when cloud synchronization is disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud sync inactive'**
+  String get cloudSyncOff;
+
+  /// Tooltip and message when cloud synchronization is enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud sync active'**
+  String get cloudSyncOn;
+
   /// Label for a confirmation button.
   ///
   /// In en, this message translates to:
@@ -374,6 +392,12 @@ abstract class AppLocalizations {
   /// **'This field is required'**
   String get required;
 
+  /// Badge label showing the number of saved tax code cards.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No saved cards} =1{1 saved card} other{{count} saved cards}}'**
+  String savedCardsCount(int count);
+
   /// Label for a button that initiates scanning a card.
   ///
   /// In en, this message translates to:
@@ -391,6 +415,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search by name or tax code...'**
   String get search;
+
+  /// Tooltip for the clear button inside the dashboard search bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get searchClearTooltip;
 
   /// Message displayed when a search yields no results.
   ///

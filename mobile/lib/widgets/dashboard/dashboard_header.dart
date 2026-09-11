@@ -23,22 +23,30 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
   /// Optional callback when tapping the user profile avatar.
   final VoidCallback? onProfileTap;
 
+  /// Optional callback when tapping the cloud sync action button.
+  final VoidCallback? onSyncToggle;
+
   /// Optional custom title. Defaults to localized [AppLocalizations.dashboardTitle].
   final String? title;
 
   /// Optional custom subtitle. Defaults to localized [AppLocalizations.appTitle].
   final String? subtitle;
 
-  /// Whether to force display of the cloud sync badge.
-  /// If null, automatically displays when the user is signed in and not in guest mode.
+  /// Whether cloud sync is active.
+  /// If null, automatically reflects whether the user is signed in and not in guest mode.
+  final bool? isSyncActive;
+
+  /// Backward-compatible alias for [isSyncActive].
   final bool? showSyncBadge;
 
   const DashboardHeader({
     super.key,
     this.onThemeToggle,
     this.onProfileTap,
+    this.onSyncToggle,
     this.title,
     this.subtitle,
+    this.isSyncActive,
     this.showSyncBadge,
   });
 
@@ -53,8 +61,12 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final authService = context.watch<AuthService?>();
-    final isSyncActive = showSyncBadge ??
-        (authService != null && authService.isSignedIn && !authService.isGuest);
+    final isGuest = authService?.isGuest ?? false;
+    final isSignedIn = authService?.isSignedIn ?? false;
+
+    // Determine whether sync is active (defaults to authenticated Google user)
+    final syncActive = isSyncActive ??
+        (showSyncBadge ?? (isSignedIn && !isGuest));
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -126,8 +138,18 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: [
+        // Cloud Sync Action Button
+        _buildSyncButton(
+          context: context,
+          isGuest: isGuest,
+          isSyncActive: syncActive,
+          colorScheme: colorScheme,
+          l10n: l10n,
+        ),
+
         // Theme Switch Action
         IconButton(
+          key: const Key('dashboard_header_theme_button'),
           tooltip: l10n.switchTheme,
           icon: Icon(
             isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
@@ -147,7 +169,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.only(right: 12.0, left: 4.0),
           child: Tooltip(
-            message: isSyncActive ? l10n.cloudSyncActive : l10n.profilePageTitle,
+            message: syncActive ? l10n.cloudSyncActive : l10n.profilePageTitle,
             child: InkWell(
               onTap: onProfileTap,
               borderRadius: BorderRadius.circular(20),
@@ -155,7 +177,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
                 clipBehavior: Clip.none,
                 children: [
                   const UserAvatar(size: 34),
-                  if (isSyncActive)
+                  if (syncActive)
                     Positioned(
                       top: 0,
                       right: 0,
@@ -186,6 +208,71 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildSyncButton({
+    required BuildContext context,
+    required bool isGuest,
+    required bool isSyncActive,
+    required ColorScheme colorScheme,
+    required AppLocalizations l10n,
+  }) {
+    if (isGuest) {
+      // Disabled state for guest users
+      return IconButton(
+        key: const Key('dashboard_header_sync_button'),
+        tooltip: l10n.cloudSyncGuestTooltip,
+        icon: Icon(
+          Icons.cloud_off_rounded,
+          color: colorScheme.onSurface.withValues(alpha: 0.38),
+          size: 22,
+        ),
+        onPressed: () {
+          // Provide clear feedback explaining why sync is disabled for guests
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.cloudSyncGuestTooltip),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+          onSyncToggle?.call();
+        },
+      );
+    }
+
+    // Authenticated user state
+    final syncIcon =
+        isSyncActive ? Icons.cloud_done_rounded : Icons.cloud_off_rounded;
+    final syncColor =
+        isSyncActive ? colorScheme.primary : colorScheme.onSurfaceVariant;
+    final tooltipMessage =
+        isSyncActive ? l10n.cloudSyncOn : l10n.cloudSyncOff;
+
+    return IconButton(
+      key: const Key('dashboard_header_sync_button'),
+      tooltip: tooltipMessage,
+      icon: Icon(
+        syncIcon,
+        color: syncColor,
+        size: 22,
+      ),
+      onPressed: () {
+        if (onSyncToggle != null) {
+          onSyncToggle!();
+        } else {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(tooltipMessage),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      },
     );
   }
 }

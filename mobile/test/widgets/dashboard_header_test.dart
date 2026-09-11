@@ -87,13 +87,63 @@ void main() {
         mockAuthService: mockAuthService,
       );
 
-      final themeButton = find.byType(IconButton);
+      final themeButton = find.byKey(const Key('dashboard_header_theme_button'));
       expect(themeButton, findsOneWidget);
 
       await tester.tap(themeButton);
       await tester.pump();
 
       expect(themeToggled, isTrue);
+    });
+
+    testWidgets('tapping cloud sync button triggers onSyncToggle callback when authenticated', (tester) async {
+      setMobileSize(tester);
+      var syncToggled = false;
+
+      await pumpApp(
+        tester,
+        Scaffold(
+          appBar: DashboardHeader(
+            onSyncToggle: () {
+              syncToggled = true;
+            },
+          ),
+        ),
+        mockAuthService: mockAuthService,
+      );
+
+      final syncButton = find.byKey(const Key('dashboard_header_sync_button'));
+      expect(syncButton, findsOneWidget);
+
+      await tester.tap(syncButton);
+      await tester.pump();
+
+      expect(syncToggled, isTrue);
+    });
+
+    testWidgets('tapping cloud sync button as guest displays informative snackbar', (tester) async {
+      setMobileSize(tester);
+      when(() => mockAuthService.isGuest).thenReturn(true);
+
+      await pumpApp(
+        tester,
+        const Scaffold(
+          appBar: DashboardHeader(),
+        ),
+        mockAuthService: mockAuthService,
+        locale: const Locale('it'),
+      );
+
+      final syncButton = find.byKey(const Key('dashboard_header_sync_button'));
+      expect(syncButton, findsOneWidget);
+
+      await tester.tap(syncButton);
+      await tester.pump();
+
+      expect(
+        find.text('Accedi con Google per sincronizzare i tuoi codici tra dispositivi'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('tapping profile avatar triggers onProfileTap callback', (tester) async {

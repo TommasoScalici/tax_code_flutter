@@ -50,6 +50,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get cloudSyncActive => 'Sincronizzazione attiva';
 
   @override
+  String get cloudSyncGuestTooltip =>
+      'Accedi con Google per sincronizzare i tuoi codici tra dispositivi';
+
+  @override
+  String get cloudSyncOff => 'Sincronizzazione cloud non attiva';
+
+  @override
+  String get cloudSyncOn => 'Sincronizzazione cloud attiva';
+
+  @override
   String get confirm => 'Conferma';
 
   @override
@@ -155,6 +165,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get required => 'Questo campo è obbligatorio';
 
   @override
+  String savedCardsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tessere salvate',
+      one: '1 tessera salvata',
+      zero: 'Nessuna tessera salvata',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get scanCard => 'Scansiona da CIE / TS';
 
   @override
@@ -163,6 +185,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get search => 'Cerca per nome o codice fiscale...';
+
+  @override
+  String get searchClearTooltip => 'Cancella ricerca';
 
   @override
   String searchNoResults(String searchText) {

@@ -49,6 +49,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cloudSyncActive => 'Cloud sync active';
 
   @override
+  String get cloudSyncGuestTooltip =>
+      'Sign in with Google to sync your tax codes across devices';
+
+  @override
+  String get cloudSyncOff => 'Cloud sync inactive';
+
+  @override
+  String get cloudSyncOn => 'Cloud sync active';
+
+  @override
   String get confirm => 'Confirm';
 
   @override
@@ -154,6 +164,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get required => 'This field is required';
 
   @override
+  String savedCardsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count saved cards',
+      one: '1 saved card',
+      zero: 'No saved cards',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get scanCard => 'Scan from Health Card';
 
   @override
@@ -162,6 +184,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get search => 'Search by name or tax code...';
+
+  @override
+  String get searchClearTooltip => 'Clear search';
 
   @override
   String searchNoResults(String searchText) {

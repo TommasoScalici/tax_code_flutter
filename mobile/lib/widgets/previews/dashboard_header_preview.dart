@@ -66,6 +66,7 @@ class DashboardHeaderPreview extends StatefulWidget {
 class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
   bool _isDarkMode = false;
   bool _isGuestMode = false;
+  bool _cloudSyncEnabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -91,35 +92,67 @@ class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
             backgroundColor: theme.scaffoldBackgroundColor,
             body: Center(
               child: Container(
-                constraints: const BoxConstraints(maxWidth: 412),
+                constraints: const BoxConstraints(maxWidth: 440),
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Mode description tag
+                    // Preview interactive toolbar
                     Padding(
                       padding: const EdgeInsets.only(bottom: 12.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          Flexible(
-                            child: Text(
-                              'Dashboard Header',
-                              overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          FilterChip(
-                            label: Text(_isGuestMode ? 'Ospite' : 'Google Sync'),
+                          // Account type selector
+                          ChoiceChip(
+                            label: const Text('Google Account'),
                             selected: !_isGuestMode,
                             onSelected: (val) {
-                              setState(() {
-                                _isGuestMode = !val;
-                              });
+                              if (val) {
+                                setState(() {
+                                  _isGuestMode = false;
+                                });
+                              }
                             },
+                          ),
+                          ChoiceChip(
+                            label: const Text('Ospite (Guest)'),
+                            selected: _isGuestMode,
+                            onSelected: (val) {
+                              if (val) {
+                                setState(() {
+                                  _isGuestMode = true;
+                                });
+                              }
+                            },
+                          ),
+                          // Cloud Sync state switch (disabled in guest mode)
+                          FilterChip(
+                            avatar: Icon(
+                              _isGuestMode
+                                  ? Icons.cloud_off_rounded
+                                  : (_cloudSyncEnabled
+                                      ? Icons.cloud_done_rounded
+                                      : Icons.cloud_off_rounded),
+                              size: 16,
+                            ),
+                            label: Text(
+                              _isGuestMode
+                                  ? 'Sync Disabilitata'
+                                  : (_cloudSyncEnabled
+                                      ? 'Cloud Sync: ON'
+                                      : 'Cloud Sync: OFF'),
+                            ),
+                            selected: !_isGuestMode && _cloudSyncEnabled,
+                            onSelected: _isGuestMode
+                                ? null
+                                : (val) {
+                                    setState(() {
+                                      _cloudSyncEnabled = val;
+                                    });
+                                  },
                           ),
                         ],
                       ),
@@ -145,6 +178,15 @@ class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
                       child: ChangeNotifierProvider<AuthService>.value(
                         value: fakeAuthService,
                         child: DashboardHeader(
+                          isSyncActive:
+                              !_isGuestMode && _cloudSyncEnabled,
+                          onSyncToggle: () {
+                            setState(() {
+                              if (!_isGuestMode) {
+                                _cloudSyncEnabled = !_cloudSyncEnabled;
+                              }
+                            });
+                          },
                           onThemeToggle: () {
                             setState(() {
                               _isDarkMode = !_isDarkMode;
