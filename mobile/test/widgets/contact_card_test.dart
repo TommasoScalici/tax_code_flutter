@@ -82,6 +82,7 @@ void main() {
       expect(find.text(tContact.gender), findsOneWidget);
       expect(find.text('1/15/1980'), findsOneWidget);
       expect(find.text(tBirthplace.toString()), findsOneWidget);
+      expect(find.byIcon(Icons.drag_indicator_rounded), findsOneWidget);
     });
 
     testWidgets('should call onShare when the share button is tapped', (
