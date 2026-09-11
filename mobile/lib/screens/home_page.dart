@@ -1,17 +1,13 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
-import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/review_service.dart';
-import 'package:shared/services/theme_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/widgets/contacts_list.dart';
-import 'package:tax_code_flutter/widgets/info_modal.dart';
+import 'package:tax_code_flutter/widgets/dashboard/dashboard_fab.dart';
+import 'package:tax_code_flutter/widgets/dashboard/dashboard_header.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
 final class HomePage extends StatelessWidget {
@@ -37,82 +33,19 @@ final class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final authService = context.watch<AuthService>();
-    final themeService = context.watch<ThemeService>();
-    final currentUser = authService.currentUser;
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(l10n.homePageTitle),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.profile);
-            },
-            icon: currentUser != null && currentUser.photoURL != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
-                    child: Image.network(
-                      currentUser.photoURL!,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Symbols.account_circle_filled),
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(
-                          child: SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                : const Icon(Symbols.account_circle_filled),
-          ),
-          IconButton(
-            icon: Icon(
-              themeService.theme == ThemeMode.dark
-                  ? Icons.light_mode_sharp
-                  : Icons.mode_night_sharp,
-            ),
-            onPressed: themeService.toggleTheme,
-          ),
-          PopupMenuButton<void>(
-            icon: const Icon(Icons.more_vert),
-            itemBuilder: (context) => [
-              PopupMenuItem<void>(
-                child: Row(
-                  children: [
-                    const Icon(Icons.info),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(l10n.info),
-                    ),
-                  ],
-                ),
-                onTap: () => unawaited(
-                  showDialog<void>(
-                    context: context,
-                    builder: (context) => const InfoModal(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+      appBar: DashboardHeader(
+        onProfileTap: () => Navigator.pushNamed(context, Routes.profile),
       ),
-      body: const ResponsiveLayout(
+      body: ResponsiveLayout(
         maxWidth: 600.0,
         padding: EdgeInsets.zero,
-        child: ContactsList(),
+        child: ContactsList(
+          onAddContact: () => _onAddContact(context),
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: DashboardFab(
         onPressed: () => _onAddContact(context),
-        tooltip: l10n.newItem,
-        child: const Icon(Icons.add),
       ),
     );
   }

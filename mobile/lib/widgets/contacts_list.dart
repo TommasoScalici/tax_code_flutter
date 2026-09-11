@@ -9,13 +9,20 @@ import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
+import 'package:tax_code_flutter/widgets/dashboard/dashboard_empty_state.dart';
+import 'package:tax_code_flutter/widgets/dashboard/dashboard_search_bar.dart';
 
 import 'contact_card.dart';
 
 final class ContactsList extends StatefulWidget {
   final double? cardHeight;
+  final VoidCallback? onAddContact;
 
-  const ContactsList({super.key, this.cardHeight});
+  const ContactsList({
+    super.key,
+    this.cardHeight,
+    this.onAddContact,
+  });
 
   @override
   State<ContactsList> createState() => _ContactsListState();
@@ -27,50 +34,44 @@ class _ContactsListState extends State<ContactsList> {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<HomePageController>();
-    final l10n = AppLocalizations.of(context)!;
 
     if (controller.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
+    if (_searchController.text != controller.searchText) {
+      _searchController.value = _searchController.value.copyWith(
+        text: controller.searchText,
+        selection: TextSelection.collapsed(
+          offset: controller.searchText.length,
+        ),
+      );
+    }
+
     return Column(
       children: [
-        SizedBox(
-          width: 400,
-          child: TextField(
-            controller: _searchController,
-            onChanged: controller.filterContacts,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.search),
-              hintText: l10n.search,
-              suffix: controller.searchText.isNotEmpty
-                  ? IconButton(
-                      onPressed: () {
-                        controller.filterContacts('');
-                        _searchController.clear();
-                        FocusScope.of(context).unfocus();
-                      },
-                      icon: const Icon(Icons.clear),
-                    )
-                  : null,
-            ),
-          ),
+        DashboardSearchBar(
+          controller: _searchController,
+          cardCount: controller.contactsToShow.length,
+          onChanged: controller.filterContacts,
+          onClear: () {
+            FocusScope.of(context).unfocus();
+          },
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(top: 20.0, bottom: 90.0),
+            padding: const EdgeInsets.only(top: 8.0, bottom: 90.0),
             child: controller.contactsToShow.isEmpty
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        controller.searchText.isEmpty
-                            ? l10n.contactsListEmpty
-                            : l10n.searchNoResults(controller.searchText),
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
+                ? DashboardEmptyState(
+                    searchQuery: controller.searchText.isNotEmpty
+                        ? controller.searchText
+                        : null,
+                    onClearSearch: () {
+                      controller.filterContacts('');
+                      _searchController.clear();
+                      FocusScope.of(context).unfocus();
+                    },
+                    onAddContact: widget.onAddContact,
                   )
                 : _buildContactsGrid(context, controller),
           ),

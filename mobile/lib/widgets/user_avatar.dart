@@ -13,8 +13,8 @@ class UserAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authService = context.watch<AuthService>();
-    final photoURL = authService.currentUser?.photoURL;
+    final authService = context.watch<AuthService?>();
+    final photoURL = authService?.currentUser?.photoURL;
     final theme = Theme.of(context);
 
     if (photoURL != null && photoURL.isNotEmpty) {

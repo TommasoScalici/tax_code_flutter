@@ -3,6 +3,7 @@ import 'package:tax_code_flutter/widgets/previews/contact_card_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_empty_state_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_fab_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_header_preview.dart';
+import 'package:tax_code_flutter/widgets/previews/dashboard_screen_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_search_bar_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/theme_showcase_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/welcome_screen_preview.dart';
@@ -51,6 +52,12 @@ void main() {
     await tester.pumpWidget(const DashboardFabPreview());
     await tester.pumpAndSettle();
     expect(find.byType(DashboardFabPreview), findsOneWidget);
+  });
+
+  testWidgets('pumps DashboardScreenPreview without error', (tester) async {
+    await tester.pumpWidget(const DashboardScreenPreview());
+    await tester.pumpAndSettle();
+    expect(find.byType(DashboardScreenPreview), findsOneWidget);
   });
 }
 

@@ -7,6 +7,7 @@ import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/screens/home_page.dart';
 import 'package:tax_code_flutter/widgets/contacts_list.dart';
 import 'package:tax_code_flutter/widgets/info_modal.dart';
+import 'package:tax_code_flutter/widgets/user_avatar.dart';
 
 import '../helpers/mocks.dart';
 import '../helpers/pump_app.dart';
@@ -40,7 +41,7 @@ void main() {
       expect(find.byType(AppBar), findsOneWidget);
       expect(find.byType(ContactsList), findsOneWidget);
       expect(find.byType(FloatingActionButton), findsOneWidget);
-      expect(find.text('My Contacts'), findsOneWidget);
+      expect(find.text('My Codes'), findsOneWidget);
     });
 
     testWidgets('displays user avatar when photoURL is available', (
@@ -62,7 +63,13 @@ void main() {
         );
 
         // Assert
-        expect(find.byType(ClipRRect), findsOneWidget);
+        expect(
+          find.descendant(
+            of: find.byType(UserAvatar),
+            matching: find.byType(ClipRRect),
+          ),
+          findsOneWidget,
+        );
         expect(find.byType(Image), findsOneWidget);
         expect(find.byIcon(Symbols.account_circle_filled), findsNothing);
       });
@@ -102,7 +109,9 @@ void main() {
         mockThemeService: mockThemeService,
       );
 
-      await tester.tap(find.byIcon(Icons.mode_night_sharp));
+      await tester.tap(
+        find.byKey(const Key('dashboard_header_theme_button')),
+      );
       await tester.pump();
 
       // Assert

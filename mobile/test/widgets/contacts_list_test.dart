@@ -8,6 +8,7 @@ import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/widgets/contact_card.dart';
 import 'package:tax_code_flutter/widgets/contacts_list.dart';
+import 'package:tax_code_flutter/widgets/dashboard/dashboard_empty_state.dart';
 
 // --- Mocks ---
 class MockHomePageController extends Mock implements HomePageController {}
@@ -77,12 +78,8 @@ void main() {
         await pumpWidget(tester);
 
         // Assert
-        expect(
-          find.text(
-            "No contacts yet.\nTap the '+' button to add your first one!",
-          ),
-          findsOneWidget,
-        );
+        expect(find.byType(DashboardEmptyState), findsOneWidget);
+        expect(find.text('No cards saved yet'), findsOneWidget);
       },
     );
 
@@ -98,7 +95,14 @@ void main() {
         await pumpWidget(tester);
 
         // Assert
-        expect(find.text("No results found for 'Luigi'"), findsOneWidget);
+        expect(find.byType(DashboardEmptyState), findsOneWidget);
+        expect(find.text('No codes found'), findsOneWidget);
+        expect(
+          find.text(
+            "No card matches 'Luigi'. Try searching with a different name or tax code.",
+          ),
+          findsOneWidget,
+        );
       },
     );
 

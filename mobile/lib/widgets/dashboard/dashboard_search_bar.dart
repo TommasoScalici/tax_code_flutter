@@ -217,7 +217,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                     iconSize: 18,
                     visualDensity: VisualDensity.compact,
                     icon: Icon(
-                      Icons.close_rounded,
+                      Icons.clear,
                       color: colorScheme.onSurfaceVariant,
                     ),
                     onPressed: _handleClear,

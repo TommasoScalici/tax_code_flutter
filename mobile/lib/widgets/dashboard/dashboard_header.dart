@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import 'package:shared/services/theme_service.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/l10n/app_localizations_it.dart';
+import 'package:tax_code_flutter/widgets/info_modal.dart';
 import 'package:tax_code_flutter/widgets/user_avatar.dart';
 
 /// The top app bar header for the Dashboard following the Emerald Ledger design system.
@@ -15,6 +17,7 @@ import 'package:tax_code_flutter/widgets/user_avatar.dart';
 ///   and headline ("I Miei Codici").
 /// - Round theme toggle button (light/dark mode).
 /// - User profile avatar with active cloud sync indicator badge.
+/// - Overflow more menu with link to [InfoModal].
 class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
   /// Optional callback when tapping the theme toggle button.
   /// If omitted, defaults to [ThemeService.toggleTheme].
@@ -25,6 +28,9 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
 
   /// Optional callback when tapping the cloud sync action button.
   final VoidCallback? onSyncToggle;
+
+  /// Optional callback when tapping the info menu item.
+  final VoidCallback? onInfoTap;
 
   /// Optional custom title. Defaults to localized [AppLocalizations.dashboardTitle].
   final String? title;
@@ -44,6 +50,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
     this.onThemeToggle,
     this.onProfileTap,
     this.onSyncToggle,
+    this.onInfoTap,
     this.title,
     this.subtitle,
     this.isSyncActive,
@@ -61,8 +68,12 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final authService = context.watch<AuthService?>();
-    final isGuest = authService?.isGuest ?? false;
-    final isSignedIn = authService?.isSignedIn ?? false;
+    var isGuest = false;
+    var isSignedIn = false;
+    try {
+      isGuest = authService?.isGuest ?? false;
+      isSignedIn = authService?.isSignedIn ?? false;
+    } on Object catch (_) {}
 
     // Determine whether sync is active (defaults to authenticated Google user)
     final syncActive = isSyncActive ??
@@ -167,7 +178,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
 
         // Profile Avatar Action with Cloud Sync Badge
         Padding(
-          padding: const EdgeInsets.only(right: 12.0, left: 4.0),
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: Tooltip(
             message: syncActive ? l10n.cloudSyncActive : l10n.profilePageTitle,
             child: InkWell(
@@ -205,6 +216,44 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
+          ),
+        ),
+
+        // More options / Info overflow menu
+        Padding(
+          padding: const EdgeInsets.only(right: 6.0),
+          child: PopupMenuButton<void>(
+            key: const Key('dashboard_header_more_menu'),
+            icon: Icon(
+              Icons.more_vert,
+              color: colorScheme.onSurfaceVariant,
+              size: 22,
+            ),
+            itemBuilder: (context) => [
+              PopupMenuItem<void>(
+                onTap: () {
+                  if (onInfoTap != null) {
+                    onInfoTap!();
+                  } else {
+                    unawaited(
+                      showDialog<void>(
+                        context: context,
+                        builder: (context) => const InfoModal(),
+                      ),
+                    );
+                  }
+                },
+                child: Row(
+                  children: [
+                    const Icon(Icons.info),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(l10n.info),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],

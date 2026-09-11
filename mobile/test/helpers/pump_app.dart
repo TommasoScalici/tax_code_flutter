@@ -69,10 +69,29 @@ Future<void> pumpApp(
   final sharingService = MockSharingService();
 
   final currentStatus = authStatus ?? AuthStatus.unauthenticated;
-  when(() => authService.status).thenReturn(currentStatus);
-  when(
-    () => authService.isSignedIn,
-  ).thenReturn(currentStatus == AuthStatus.authenticated);
+  if (mockAuthService == null) {
+    when(() => authService.status).thenReturn(currentStatus);
+    when(
+      () => authService.isSignedIn,
+    ).thenReturn(currentStatus == AuthStatus.authenticated);
+    when(() => authService.isGuest).thenReturn(false);
+  } else {
+    if (authStatus != null) {
+      when(() => authService.status).thenReturn(authStatus);
+    }
+    try {
+      authService.isGuest;
+    } on Object catch (_) {
+      when(() => authService.isGuest).thenReturn(false);
+    }
+    try {
+      authService.isSignedIn;
+    } on Object catch (_) {
+      when(
+        () => authService.isSignedIn,
+      ).thenReturn(currentStatus == AuthStatus.authenticated);
+    }
+  }
 
   when(birthplaceService.loadBirthplaces).thenAnswer((_) async => []);
   when(() => contactRepository.isLoading).thenReturn(false);
