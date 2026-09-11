@@ -1,13 +1,10 @@
-import { execSync } from "child_process";
 import { DecodedIdToken } from "firebase-admin/auth";
 import { CallableRequest } from "firebase-functions/v2/https";
 import { ScheduledEvent } from "firebase-functions/v2/scheduler";
 import fft from "firebase-functions-test";
-import * as fs from "fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
-  downloadAndParseBirthplaceData,
   updateBirthplaces,
   updateBirthplacesScheduled,
 } from "../src/updateBirthplaces";
@@ -76,8 +73,16 @@ describe("updateBirthplaces", () => {
         ok: true,
         json: async () => ({
           resultset: [
-            { COMUNE: "Roma", SIGLA_AUTOMOBILISTICA: "RM", COD_CATASTO: "H501" },
-            { COMUNE: "Milano", SIGLA_AUTOMOBILISTICA: "MI", COD_CATASTO: "F205" },
+            {
+              COMUNE: "Roma",
+              SIGLA_AUTOMOBILISTICA: "RM",
+              COD_CATASTO: "H501",
+            },
+            {
+              COMUNE: "Milano",
+              SIGLA_AUTOMOBILISTICA: "MI",
+              COD_CATASTO: "F205",
+            },
           ],
         }),
       } as Response);

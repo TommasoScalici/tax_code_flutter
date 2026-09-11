@@ -179,6 +179,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get newTaxCodeTooltip => 'Crea o scansiona un nuovo Codice Fiscale';
 
   @override
+  String get ocrHeroButton => 'Scansiona';
+
+  @override
+  String get ocrHeroSubtitle =>
+      'Inquadra Tessera Sanitaria o CIE per compilare tutti i campi in automatico tramite AI.';
+
+  @override
+  String get ocrHeroTitle => 'Scansione Smart con Fotocamera';
+
+  @override
   String get openSettings => 'Apri Impostazioni';
 
   @override

@@ -225,6 +225,18 @@
   "@newTaxCodeTooltip": {
     "description": "Tooltip for the dashboard floating action button."
   },
+  "ocrHeroButton": "Scansiona",
+  "@ocrHeroButton": {
+    "description": "Label del pulsante pill nella card hero per avviare la scansione della tessera con fotocamera."
+  },
+  "ocrHeroSubtitle": "Inquadra Tessera Sanitaria o CIE per compilare tutti i campi in automatico tramite AI.",
+  "@ocrHeroSubtitle": {
+    "description": "Descrizione della card hero che spiega la compilazione automatica tramite scansione AI."
+  },
+  "ocrHeroTitle": "Scansione Smart con Fotocamera",
+  "@ocrHeroTitle": {
+    "description": "Titolo della card hero nel form per la scansione smart con fotocamera."
+  },
   "openSettings": "Apri Impostazioni",
   "@openSettings": {
     "description": "Label for a button that navigates the user to the app's settings page."

@@ -178,6 +178,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newTaxCodeTooltip => 'Create or scan a new tax code';
 
   @override
+  String get ocrHeroButton => 'Scan';
+
+  @override
+  String get ocrHeroSubtitle =>
+      'Frame Health Card or ID card to automatically fill all fields via AI.';
+
+  @override
+  String get ocrHeroTitle => 'Smart Camera Scan';
+
+  @override
   String get openSettings => 'Open Settings';
 
   @override

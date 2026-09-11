@@ -5,6 +5,7 @@ import 'package:tax_code_flutter/widgets/previews/dashboard_fab_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_header_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_screen_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_search_bar_preview.dart';
+import 'package:tax_code_flutter/widgets/previews/ocr_ai_hero_banner_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/theme_showcase_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/welcome_screen_preview.dart';
 import '../helpers/test_setup.dart';
@@ -58,6 +59,12 @@ void main() {
     await tester.pumpWidget(const DashboardScreenPreview());
     await tester.pumpAndSettle();
     expect(find.byType(DashboardScreenPreview), findsOneWidget);
+  });
+
+  testWidgets('pumps OcrAiHeroBannerPreview without error', (tester) async {
+    await tester.pumpWidget(const OcrAiHeroBannerPreview());
+    await tester.pumpAndSettle();
+    expect(find.byType(OcrAiHeroBannerPreview), findsOneWidget);
   });
 }
 

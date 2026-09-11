@@ -416,6 +416,24 @@ abstract class AppLocalizations {
   /// **'Create or scan a new tax code'**
   String get newTaxCodeTooltip;
 
+  /// Label del pulsante pill nella card hero per avviare la scansione della tessera con fotocamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get ocrHeroButton;
+
+  /// Descrizione della card hero che spiega la compilazione automatica tramite scansione AI.
+  ///
+  /// In en, this message translates to:
+  /// **'Frame Health Card or ID card to automatically fill all fields via AI.'**
+  String get ocrHeroSubtitle;
+
+  /// Titolo della card hero nel form per la scansione smart con fotocamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Camera Scan'**
+  String get ocrHeroTitle;
+
   /// Label for a button that navigates the user to the app's settings page.
   ///
   /// In en, this message translates to:

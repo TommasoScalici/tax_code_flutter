@@ -37,6 +37,14 @@ vi.mock("@google-cloud/vertexai", () => {
       HARM_CATEGORY_DANGEROUS_CONTENT: "HARM_CATEGORY_DANGEROUS_CONTENT",
     },
     HarmBlockThreshold: { BLOCK_MEDIUM_AND_ABOVE: "BLOCK_MEDIUM_AND_ABOVE" },
+    SchemaType: {
+      STRING: "STRING",
+      NUMBER: "NUMBER",
+      INTEGER: "INTEGER",
+      BOOLEAN: "BOOLEAN",
+      ARRAY: "ARRAY",
+      OBJECT: "OBJECT",
+    },
   };
 });
 
@@ -181,9 +189,7 @@ describe("extractDataFromDocument", () => {
           token: {} as unknown as DecodedIdToken,
         },
       } as unknown as CallableRequest<unknown>),
-    ).rejects.toThrow(
-      "Permission denied while checking scan limits.",
-    );
+    ).rejects.toThrow("Permission denied while checking scan limits.");
   });
 
   it("should handle generic Firestore transaction failure", async () => {

@@ -2,15 +2,17 @@ import {
   GenerativeModel,
   HarmBlockThreshold,
   HarmCategory,
+  SchemaType,
   VertexAI,
 } from "@google-cloud/vertexai";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { logger } from "firebase-functions";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 
-const LOCATION = "us-central1";
+const LOCATION = process.env.VERTEX_LOCATION || "us-central1";
 const PROJECT_ID = process.env.GCLOUD_PROJECT || "tax-code-flutter";
 const SERVICE_ACCOUNT = `vertex-ai-invoker@${PROJECT_ID}.iam.gserviceaccount.com`;
+const MODEL_NAME = process.env.GEMINI_MODEL || "gemini-flash-latest";
 
 let vertexAI: VertexAI;
 let generativeModel: GenerativeModel;
@@ -38,11 +40,13 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
   },
   async (request) => {
     if (!vertexAI) {
-      logger.info("Initializing Vertex AI client for the first time.");
+      logger.info(
+        `Initializing Vertex AI client with model ${MODEL_NAME} in location ${LOCATION}.`,
+      );
       vertexAI = new VertexAI({ project: PROJECT_ID, location: LOCATION });
 
       generativeModel = vertexAI.getGenerativeModel({
-        model: "gemini-3.5-flash",
+        model: MODEL_NAME,
         systemInstruction:
           "You are an expert document parser. Your task is to extract demographic data from Italian documents and format them strictly into JSON according to the prompt instructions.",
         safetySettings: [
@@ -54,6 +58,54 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
         generationConfig: {
           maxOutputTokens: 2048,
           temperature: 0.1,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: SchemaType.OBJECT,
+            properties: {
+              firstName: {
+                type: SchemaType.STRING,
+                description:
+                  "First name extracted from the document, or null if absent",
+                nullable: true,
+              },
+              lastName: {
+                type: SchemaType.STRING,
+                description:
+                  "Last name extracted from the document, or null if absent",
+                nullable: true,
+              },
+              gender: {
+                type: SchemaType.STRING,
+                description: "Gender ('M' or 'F'), or null if absent",
+                nullable: true,
+              },
+              birthPlace: {
+                type: SchemaType.OBJECT,
+                description: "Place of birth details, or null if absent",
+                nullable: true,
+                properties: {
+                  name: {
+                    type: SchemaType.STRING,
+                    description:
+                      "Municipality name or foreign country, or null if absent",
+                    nullable: true,
+                  },
+                  state: {
+                    type: SchemaType.STRING,
+                    description:
+                      "2-letter province abbreviation, or 'EE' for foreign country, or null",
+                    nullable: true,
+                  },
+                },
+              },
+              birthDate: {
+                type: SchemaType.STRING,
+                description:
+                  "Birth date formatted strictly as 'YYYY-MM-DD', or null if absent",
+                nullable: true,
+              },
+            },
+          },
         },
       });
     }
