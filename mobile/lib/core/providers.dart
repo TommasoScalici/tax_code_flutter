@@ -16,6 +16,7 @@ import 'package:shared/services/gemini_service.dart';
 import 'package:shared/services/hive_local_cache_service.dart';
 import 'package:shared/services/local_cache_service.dart';
 import 'package:shared/services/review_service.dart';
+import 'package:shared/services/sync_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 import 'package:shared/services/theme_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -116,6 +117,16 @@ List<SingleChildWidget> getAppProviders({
         logger: context.read<Logger>(),
       ),
     ),
+    ChangeNotifierProvider<SyncService>(
+      create: (context) {
+        final syncService = SyncService(
+          prefs: context.read<SharedPreferencesAsync>(),
+          authService: context.read<AuthService>(),
+        );
+        unawaited(syncService.init());
+        return syncService;
+      },
+    ),
 
     // --- Level 4: Repositories ---
     ChangeNotifierProvider<ContactRepository>(
@@ -124,6 +135,7 @@ List<SingleChildWidget> getAppProviders({
         dbService: context.read<DatabaseService>(),
         cacheService: context.read<LocalCacheService>(),
         logger: context.read<Logger>(),
+        syncService: context.read<SyncService>(),
       ),
     ),
 

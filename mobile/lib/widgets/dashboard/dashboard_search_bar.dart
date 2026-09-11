@@ -193,6 +193,8 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                     fontWeight: FontWeight.w500,
                   ),
                   decoration: InputDecoration(
+                    filled: false,
+                    fillColor: Colors.transparent,
                     isDense: true,
                     contentPadding: const EdgeInsets.symmetric(vertical: 12),
                     border: InputBorder.none,

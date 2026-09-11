@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
+import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/review_service.dart';
+import 'package:shared/services/sync_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
+import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/widgets/contacts_list.dart';
@@ -33,13 +36,31 @@ final class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final syncService = context.watch<SyncService?>();
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: DashboardHeader(
+        isSyncActive: syncService?.isSyncEnabled,
         onProfileTap: () => Navigator.pushNamed(context, Routes.profile),
+        onSyncToggle: () async {
+          final authService = context.read<AuthService?>();
+          if (authService?.isGuest == true) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(l10n?.cloudSyncGuestTooltip ?? ''),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+            return;
+          }
+          await syncService?.toggleSync();
+        },
       ),
       body: ResponsiveLayout(
         maxWidth: 600.0,
-        padding: EdgeInsets.zero,
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: ContactsList(
           onAddContact: () => _onAddContact(context),
         ),

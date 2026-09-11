@@ -187,12 +187,19 @@ class ContactCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.drag_indicator_rounded,
+                    size: 18,
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
 
               // Hero Tax Code Display Box with Tap-to-Copy
               Tooltip(
+                triggerMode: TooltipTriggerMode.manual,
                 message: l10n.copyTaxCode,
                 child: Material(
                   color: taxCodeBoxBg,
@@ -394,6 +401,7 @@ class _CardActionButton extends StatelessWidget {
         : colorScheme.outlineVariant.withValues(alpha: 0.5);
 
     return Tooltip(
+      triggerMode: TooltipTriggerMode.manual,
       message: tooltip,
       child: Material(
         color: bgColor,

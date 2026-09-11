@@ -6,7 +6,6 @@ import 'package:network_image_mock/network_image_mock.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/screens/home_page.dart';
 import 'package:tax_code_flutter/widgets/contacts_list.dart';
-import 'package:tax_code_flutter/widgets/info_modal.dart';
 import 'package:tax_code_flutter/widgets/user_avatar.dart';
 
 import '../helpers/mocks.dart';
@@ -118,7 +117,7 @@ void main() {
       verify(() => mockThemeService.toggleTheme()).called(1);
     });
 
-    testWidgets('tapping info menu item shows InfoModal dialog', (
+    testWidgets('tapping profile avatar navigates to profile', (
       tester,
     ) async {
       // Act
@@ -128,13 +127,9 @@ void main() {
         authStatus: AuthStatus.authenticated,
       );
 
-      await tester.tap(find.byIcon(Icons.more_vert));
+      expect(find.byType(UserAvatar), findsOneWidget);
+      await tester.tap(find.byType(UserAvatar));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Info'));
-      await tester.pumpAndSettle();
-
-      // Assert
-      expect(find.byType(InfoModal), findsOneWidget);
     });
   });
 }

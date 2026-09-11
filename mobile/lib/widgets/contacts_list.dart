@@ -108,14 +108,16 @@ class _ContactsListState extends State<ContactsList> {
     HomePageController controller,
   ) {
     const fixedGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-      crossAxisSpacing: 50,
+      crossAxisSpacing: 16,
+      mainAxisSpacing: 12,
       mainAxisExtent: 280,
       maxCrossAxisExtent: 800,
     );
 
     final gridDelegate = widget.cardHeight != null
         ? SliverGridDelegateWithMaxCrossAxisExtent(
-            crossAxisSpacing: 50,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 12,
             mainAxisExtent: widget.cardHeight,
             maxCrossAxisExtent: 800,
           )

@@ -6,6 +6,7 @@ import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/database_service.dart';
 import 'package:shared/services/local_cache_service.dart';
+import 'package:shared/services/sync_service.dart';
 
 ///
 /// Manages loading, caching, and modifying user contacts.
@@ -15,6 +16,7 @@ class ContactRepository with ChangeNotifier {
   final DatabaseService _dbService;
   final LocalCacheService _cacheService;
   final Logger _logger;
+  final SyncService? _syncService;
 
   String? _cachedUserId;
   StreamSubscription<List<Contact>>? _contactsSubscription;
@@ -26,6 +28,11 @@ class ContactRepository with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get _userId => _authService.currentUser?.uid;
 
+  /// Whether cloud sync is currently active.
+  bool get isSyncActive =>
+      _syncService?.isSyncEnabled ??
+      (_authService.isSignedIn && !_authService.isGuest);
+
   ///
   /// The main constructor for the contact repository.
   /// It listens to authentication changes to load/clear data.
@@ -35,11 +42,14 @@ class ContactRepository with ChangeNotifier {
     required DatabaseService dbService,
     required LocalCacheService cacheService,
     required Logger logger,
+    SyncService? syncService,
   }) : _authService = authService,
        _dbService = dbService,
        _cacheService = cacheService,
-       _logger = logger {
+       _logger = logger,
+       _syncService = syncService {
     _authService.addListener(_onAuthChanged);
+    _syncService?.addListener(_onSyncStateChanged);
 
     final initialUser = _authService.currentUser;
     if (initialUser != null) {
@@ -54,11 +64,39 @@ class ContactRepository with ChangeNotifier {
   void dispose() {
     _isDisposed = true;
     _authService.removeListener(_onAuthChanged);
+    _syncService?.removeListener(_onSyncStateChanged);
     final subscription = _contactsSubscription;
     if (subscription != null) {
       unawaited(subscription.cancel());
     }
     super.dispose();
+  }
+
+  void _onSyncStateChanged() {
+    if (_isDisposed) return;
+    if (isSyncActive) {
+      if (_contactsSubscription == null && _userId != null) {
+        _listenToRemoteContacts(_userId!);
+        unawaited(
+          _dbService.saveAllContacts(_userId!, _contacts).catchError(
+            (Object e, StackTrace s) {
+              _logger.e(
+                'Error syncing contacts to Firebase on re-enable',
+                error: e,
+                stackTrace: s,
+              );
+            },
+          ),
+        );
+      }
+    } else {
+      final subscription = _contactsSubscription;
+      if (subscription != null) {
+        unawaited(subscription.cancel());
+        _contactsSubscription = null;
+      }
+    }
+    notifyListeners();
   }
 
   ///
@@ -79,14 +117,16 @@ class ContactRepository with ChangeNotifier {
     if (_isDisposed) return;
     notifyListeners();
 
-    try {
-      await _dbService.addOrUpdateContact(_userId!, contact);
-    } on Exception catch (e, s) {
-      _logger.e(
-        'Error adding/updating contact in Firebase',
-        error: e,
-        stackTrace: s,
-      );
+    if (isSyncActive) {
+      try {
+        await _dbService.addOrUpdateContact(_userId!, contact);
+      } on Exception catch (e, s) {
+        _logger.e(
+          'Error adding/updating contact in Firebase',
+          error: e,
+          stackTrace: s,
+        );
+      }
     }
     await _saveContactsToLocalCache();
   }
@@ -103,14 +143,16 @@ class ContactRepository with ChangeNotifier {
     if (_isDisposed) return;
     notifyListeners();
 
-    try {
-      await _dbService.removeContact(_userId!, contact.id);
-    } on Exception catch (e, s) {
-      _logger.e(
-        'Error removing contact from Firebase',
-        error: e,
-        stackTrace: s,
-      );
+    if (isSyncActive) {
+      try {
+        await _dbService.removeContact(_userId!, contact.id);
+      } on Exception catch (e, s) {
+        _logger.e(
+          'Error removing contact from Firebase',
+          error: e,
+          stackTrace: s,
+        );
+      }
     }
     await _saveContactsToLocalCache();
   }
@@ -137,14 +179,16 @@ class ContactRepository with ChangeNotifier {
   ///
   Future<void> saveContacts() async {
     if (_userId == null) return;
-    try {
-      await _dbService.saveAllContacts(_userId!, _contacts);
-    } on Exception catch (e, s) {
-      _logger.e(
-        'Error while saving contacts to Firebase',
-        error: e,
-        stackTrace: s,
-      );
+    if (isSyncActive) {
+      try {
+        await _dbService.saveAllContacts(_userId!, _contacts);
+      } on Exception catch (e, s) {
+        _logger.e(
+          'Error while saving contacts to Firebase',
+          error: e,
+          stackTrace: s,
+        );
+      }
     }
     await _saveContactsToLocalCache();
   }
@@ -197,7 +241,9 @@ class ContactRepository with ChangeNotifier {
       }
     }
 
-    _listenToRemoteContacts(userId);
+    if (isSyncActive) {
+      _listenToRemoteContacts(userId);
+    }
   }
 
   ///

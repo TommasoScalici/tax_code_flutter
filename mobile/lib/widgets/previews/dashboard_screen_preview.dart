@@ -161,12 +161,11 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
                   });
                 },
                 onProfileTap: () => _showFeedback(context, l10n.profilePageTitle),
-                onInfoTap: () => _showFeedback(context, l10n.info),
                 onSyncToggle: () => _showFeedback(context, 'Cloud Sync Toggle'),
               ),
               body: ResponsiveLayout(
               maxWidth: 600.0,
-              padding: EdgeInsets.zero,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: [
                   // Search Bar with real-time query filtering & card counter

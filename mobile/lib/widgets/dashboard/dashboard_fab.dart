@@ -39,11 +39,19 @@ class DashboardFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context) ?? AppLocalizationsIt();
+    final fgColor = theme.floatingActionButtonTheme.foregroundColor ??
+        colorScheme.onPrimary;
 
     final effectiveLabel = label ?? l10n.newTaxCode;
     final effectiveTooltip = tooltip ?? l10n.newTaxCodeTooltip;
-    final effectiveIcon = icon ?? const Icon(Icons.add_rounded, size: 24);
+    final effectiveIcon = icon ??
+        Icon(
+          Icons.add_rounded,
+          size: 24,
+          color: fgColor,
+        );
 
     return FloatingActionButton.extended(
       key: const Key('dashboard_fab'),
@@ -55,6 +63,7 @@ class DashboardFab extends StatelessWidget {
       label: Text(
         effectiveLabel,
         style: theme.textTheme.labelLarge?.copyWith(
+          color: fgColor,
           fontWeight: FontWeight.w700,
           letterSpacing: 0.2,
         ),
