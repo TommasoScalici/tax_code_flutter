@@ -43,6 +43,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
+  String get cardActionBarcode => 'Barcode';
+
+  @override
+  String get cardActionDelete => 'Delete';
+
+  @override
+  String get cardActionEdit => 'Edit';
+
+  @override
   String get close => 'Close';
 
   @override
@@ -70,6 +79,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get copyTaxCode => 'Copy tax code';
 
   @override
   String get dashboardTitle => 'My Codes';
@@ -231,6 +243,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get takePicture => 'Scan Card';
+
+  @override
+  String get taxCodeCopied => 'Tax code copied to clipboard';
 
   @override
   String get termsAndCondition =>

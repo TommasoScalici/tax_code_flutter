@@ -31,6 +31,7 @@ void main() {
     required VoidCallback onShowBarcode,
     required VoidCallback onEdit,
     required VoidCallback onDelete,
+    VoidCallback? onCopy,
   }) async {
     await tester.pumpWidget(
       MaterialApp(
@@ -44,6 +45,7 @@ void main() {
             onShowBarcode: onShowBarcode,
             onEdit: onEdit,
             onDelete: onDelete,
+            onCopy: onCopy,
           ),
         ),
       ),
@@ -136,6 +138,30 @@ void main() {
       );
       await tester.tap(find.byIcon(Icons.delete));
       verify(() => mockOnDelete()).called(1);
+    });
+
+    testWidgets('should call onCopy and show snackbar when tax code box is tapped', (
+      tester,
+    ) async {
+      var copyCalled = false;
+      await pumpWidget(
+        tester,
+        onShare: mockOnShare.call,
+        onShowBarcode: mockOnShowBarcode.call,
+        onEdit: mockOnEdit.call,
+        onDelete: mockOnDelete.call,
+        onCopy: () => copyCalled = true,
+      );
+
+      final taxCodeBox = find.byKey(const Key('contact_card_tax_code_box'));
+      expect(taxCodeBox, findsOneWidget);
+
+      await tester.tap(taxCodeBox);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+
+      expect(copyCalled, isTrue);
+      expect(find.text('Tax code copied to clipboard'), findsOneWidget);
     });
   });
 }

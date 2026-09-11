@@ -39,11 +39,23 @@
   },
   "cameraPermissionInfo": "Per scansionare le tessere, l'app necessita dell'accesso alla fotocamera. Vai alle impostazioni del dispositivo e concedi il permesso.",
   "@cameraPermissionInfo": {
-    "description": "An informational message explaining how to grant camera permission."
+    "description": "Information message prompting user to grant camera permission."
   },
   "cancel": "Annulla",
   "@cancel": {
     "description": "Label for a button to cancel an action."
+  },
+  "cardActionBarcode": "Barcode",
+  "@cardActionBarcode": {
+    "description": "Label for the button showing the optical barcode of the tax code."
+  },
+  "cardActionDelete": "Elimina",
+  "@cardActionDelete": {
+    "description": "Label for the button deleting the contact."
+  },
+  "cardActionEdit": "Modifica",
+  "@cardActionEdit": {
+    "description": "Label for the button editing the contact details."
   },
   "close": "Chiudi",
   "@close": {
@@ -80,6 +92,10 @@
   "continueWithGoogle": "Continua con Google",
   "@continueWithGoogle": {
     "description": "Label for the primary Google single sign-on authentication button."
+  },
+  "copyTaxCode": "Copia codice fiscale",
+  "@copyTaxCode": {
+    "description": "Tooltip for the button or box to copy the tax code to clipboard."
   },
   "dashboardTitle": "I Miei Codici",
   "@dashboardTitle": {
@@ -286,6 +302,10 @@
   "takePicture": "Scansiona Tessera",
   "@takePicture": {
     "description": "Title for the camera screen."
+  },
+  "taxCodeCopied": "Codice Fiscale copiato negli appunti",
+  "@taxCodeCopied": {
+    "description": "Snackbar confirmation shown when the tax code is copied to clipboard."
   },
   "termsAndCondition": "Procedendo, accetti i nostri Termini e Condizioni.",
   "@termsAndCondition": {

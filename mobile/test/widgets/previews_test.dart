@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tax_code_flutter/widgets/previews/contact_card_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_header_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_search_bar_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/theme_showcase_preview.dart';
@@ -30,6 +31,12 @@ void main() {
     await tester.pumpWidget(const DashboardSearchBarPreview());
     await tester.pumpAndSettle();
     expect(find.byType(DashboardSearchBarPreview), findsOneWidget);
+  });
+
+  testWidgets('pumps ContactCardPreview without error', (tester) async {
+    await tester.pumpWidget(const ContactCardPreview());
+    await tester.pumpAndSettle();
+    expect(find.byType(ContactCardPreview), findsOneWidget);
   });
 }
 

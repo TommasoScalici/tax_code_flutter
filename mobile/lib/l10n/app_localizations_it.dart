@@ -44,6 +44,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get cancel => 'Annulla';
 
   @override
+  String get cardActionBarcode => 'Barcode';
+
+  @override
+  String get cardActionDelete => 'Elimina';
+
+  @override
+  String get cardActionEdit => 'Modifica';
+
+  @override
   String get close => 'Chiudi';
 
   @override
@@ -71,6 +80,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get continueWithGoogle => 'Continua con Google';
+
+  @override
+  String get copyTaxCode => 'Copia codice fiscale';
 
   @override
   String get dashboardTitle => 'I Miei Codici';
@@ -234,6 +246,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get takePicture => 'Scansiona Tessera';
+
+  @override
+  String get taxCodeCopied => 'Codice Fiscale copiato negli appunti';
 
   @override
   String get termsAndCondition =>

@@ -164,6 +164,24 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancel;
 
+  /// Label for the button showing the optical barcode of the tax code.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode'**
+  String get cardActionBarcode;
+
+  /// Label for the button deleting the contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get cardActionDelete;
+
+  /// Label for the button editing the contact details.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get cardActionEdit;
+
   /// Label for a button to close a screen or dialog.
   ///
   /// In en, this message translates to:
@@ -217,6 +235,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue with Google'**
   String get continueWithGoogle;
+
+  /// Tooltip for the button or box to copy the tax code to clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy tax code'**
+  String get copyTaxCode;
 
   /// Title of the main dashboard screen listing saved tax codes.
   ///
@@ -499,6 +523,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan Card'**
   String get takePicture;
+
+  /// Snackbar confirmation shown when the tax code is copied to clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax code copied to clipboard'**
+  String get taxCodeCopied;
 
   /// A notice about agreeing to terms and conditions.
   ///

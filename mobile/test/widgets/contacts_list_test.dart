@@ -186,7 +186,7 @@ void main() {
       expect(find.text('Confirm Deletion'), findsOneWidget);
 
       // Tap the 'Delete' button in the dialog.
-      await tester.tap(find.text('Delete'));
+      await tester.tap(find.widgetWithText(TextButton, 'Delete'));
       await tester.pumpAndSettle();
 
       // Assert

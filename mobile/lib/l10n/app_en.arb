@@ -45,6 +45,18 @@
   "@cancel": {
     "description": "Label for a button to cancel an action."
   },
+  "cardActionBarcode": "Barcode",
+  "@cardActionBarcode": {
+    "description": "Label for the button showing the optical barcode of the tax code."
+  },
+  "cardActionDelete": "Delete",
+  "@cardActionDelete": {
+    "description": "Label for the button deleting the contact."
+  },
+  "cardActionEdit": "Edit",
+  "@cardActionEdit": {
+    "description": "Label for the button editing the contact details."
+  },
   "close": "Close",
   "@close": {
     "description": "Label for a button to close a screen or dialog."
@@ -80,6 +92,10 @@
   "continueWithGoogle": "Continue with Google",
   "@continueWithGoogle": {
     "description": "Label for the primary Google single sign-on authentication button."
+  },
+  "copyTaxCode": "Copy tax code",
+  "@copyTaxCode": {
+    "description": "Tooltip for the button or box to copy the tax code to clipboard."
   },
   "dashboardTitle": "My Codes",
   "@dashboardTitle": {
@@ -286,6 +302,10 @@
   "takePicture": "Scan Card",
   "@takePicture": {
     "description": "Title for the camera screen."
+  },
+  "taxCodeCopied": "Tax code copied to clipboard",
+  "@taxCodeCopied": {
+    "description": "Snackbar confirmation shown when the tax code is copied to clipboard."
   },
   "termsAndCondition": "By proceeding, you agree to our Terms and Conditions.",
   "@termsAndCondition": {
