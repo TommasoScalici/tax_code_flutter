@@ -135,6 +135,36 @@
   "@edit": {
     "description": "Label for an edit button."
   },
+  "emptyDashboardAction": "Add Code",
+  "@emptyDashboardAction": {
+    "description": "Action button label in the empty dashboard to add a new tax code."
+  },
+  "emptyDashboardDescription": "Add your first Italian Tax Code to keep it handy anytime, even offline.",
+  "@emptyDashboardDescription": {
+    "description": "Description shown in the empty dashboard when no cards are saved yet."
+  },
+  "emptyDashboardTitle": "No cards saved yet",
+  "@emptyDashboardTitle": {
+    "description": "Title shown in the empty dashboard when no cards are saved yet."
+  },
+  "emptySearchClearAction": "Reset search",
+  "@emptySearchClearAction": {
+    "description": "Action button label to reset the search filter in the empty search state."
+  },
+  "emptySearchDescription": "No card matches '{query}'. Try searching with a different name or tax code.",
+  "@emptySearchDescription": {
+    "description": "Explanation shown when a search filter yields no results.",
+    "placeholders": {
+      "query": {
+        "type": "String",
+        "example": "Rossi"
+      }
+    }
+  },
+  "emptySearchTitle": "No codes found",
+  "@emptySearchTitle": {
+    "description": "Title shown when a search filter yields no results."
+  },
   "error": "Error",
   "@error": {
     "description": "A generic title for an error dialog."
@@ -186,6 +216,14 @@
   "newItem": "Add Contact",
   "@newItem": {
     "description": "Tooltip for the FloatingActionButton to create a new contact."
+  },
+  "newTaxCode": "New Code",
+  "@newTaxCode": {
+    "description": "Label for the dashboard floating action button to create a new tax code."
+  },
+  "newTaxCodeTooltip": "Create or scan a new tax code",
+  "@newTaxCodeTooltip": {
+    "description": "Tooltip for the dashboard floating action button."
   },
   "openSettings": "Open Settings",
   "@openSettings": {

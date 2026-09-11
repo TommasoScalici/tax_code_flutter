@@ -135,6 +135,36 @@
   "@edit": {
     "description": "Label for an edit button."
   },
+  "emptyDashboardAction": "Aggiungi Codice",
+  "@emptyDashboardAction": {
+    "description": "Action button label in the empty dashboard to add a new tax code."
+  },
+  "emptyDashboardDescription": "Aggiungi il tuo primo Codice Fiscale per averlo sempre a portata di mano anche offline.",
+  "@emptyDashboardDescription": {
+    "description": "Description shown in the empty dashboard when no cards are saved yet."
+  },
+  "emptyDashboardTitle": "Nessuna tessera salvata",
+  "@emptyDashboardTitle": {
+    "description": "Title shown in the empty dashboard when no cards are saved yet."
+  },
+  "emptySearchClearAction": "Reimposta ricerca",
+  "@emptySearchClearAction": {
+    "description": "Action button label to reset the search filter in the empty search state."
+  },
+  "emptySearchDescription": "Nessuna tessera corrisponde a '{query}'. Prova a cercare con un altro nome o codice fiscale.",
+  "@emptySearchDescription": {
+    "description": "Explanation shown when a search filter yields no results.",
+    "placeholders": {
+      "query": {
+        "type": "String",
+        "example": "Rossi"
+      }
+    }
+  },
+  "emptySearchTitle": "Nessun codice trovato",
+  "@emptySearchTitle": {
+    "description": "Title shown when a search filter yields no results."
+  },
   "error": "Errore",
   "@error": {
     "description": "A generic title for an error dialog."
@@ -186,6 +216,14 @@
   "newItem": "Aggiungi Contatto",
   "@newItem": {
     "description": "Tooltip for the FloatingActionButton to create a new contact."
+  },
+  "newTaxCode": "Nuovo Codice",
+  "@newTaxCode": {
+    "description": "Label for the dashboard floating action button to create a new tax code."
+  },
+  "newTaxCodeTooltip": "Crea o scansiona un nuovo Codice Fiscale",
+  "@newTaxCodeTooltip": {
+    "description": "Tooltip for the dashboard floating action button."
   },
   "openSettings": "Apri Impostazioni",
   "@openSettings": {

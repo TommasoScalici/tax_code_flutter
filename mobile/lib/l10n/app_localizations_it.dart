@@ -112,6 +112,27 @@ class AppLocalizationsIt extends AppLocalizations {
   String get edit => 'Modifica';
 
   @override
+  String get emptyDashboardAction => 'Aggiungi Codice';
+
+  @override
+  String get emptyDashboardDescription =>
+      'Aggiungi il tuo primo Codice Fiscale per averlo sempre a portata di mano anche offline.';
+
+  @override
+  String get emptyDashboardTitle => 'Nessuna tessera salvata';
+
+  @override
+  String get emptySearchClearAction => 'Reimposta ricerca';
+
+  @override
+  String emptySearchDescription(String query) {
+    return 'Nessuna tessera corrisponde a \'$query\'. Prova a cercare con un altro nome o codice fiscale.';
+  }
+
+  @override
+  String get emptySearchTitle => 'Nessun codice trovato';
+
+  @override
   String get error => 'Errore';
 
   @override
@@ -150,6 +171,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get newItem => 'Aggiungi Contatto';
+
+  @override
+  String get newTaxCode => 'Nuovo Codice';
+
+  @override
+  String get newTaxCodeTooltip => 'Crea o scansiona un nuovo Codice Fiscale';
 
   @override
   String get openSettings => 'Apri Impostazioni';

@@ -290,6 +290,42 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get edit;
 
+  /// Action button label in the empty dashboard to add a new tax code.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Code'**
+  String get emptyDashboardAction;
+
+  /// Description shown in the empty dashboard when no cards are saved yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first Italian Tax Code to keep it handy anytime, even offline.'**
+  String get emptyDashboardDescription;
+
+  /// Title shown in the empty dashboard when no cards are saved yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No cards saved yet'**
+  String get emptyDashboardTitle;
+
+  /// Action button label to reset the search filter in the empty search state.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset search'**
+  String get emptySearchClearAction;
+
+  /// Explanation shown when a search filter yields no results.
+  ///
+  /// In en, this message translates to:
+  /// **'No card matches \'{query}\'. Try searching with a different name or tax code.'**
+  String emptySearchDescription(String query);
+
+  /// Title shown when a search filter yields no results.
+  ///
+  /// In en, this message translates to:
+  /// **'No codes found'**
+  String get emptySearchTitle;
+
   /// A generic title for an error dialog.
   ///
   /// In en, this message translates to:
@@ -367,6 +403,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add Contact'**
   String get newItem;
+
+  /// Label for the dashboard floating action button to create a new tax code.
+  ///
+  /// In en, this message translates to:
+  /// **'New Code'**
+  String get newTaxCode;
+
+  /// Tooltip for the dashboard floating action button.
+  ///
+  /// In en, this message translates to:
+  /// **'Create or scan a new tax code'**
+  String get newTaxCodeTooltip;
 
   /// Label for a button that navigates the user to the app's settings page.
   ///

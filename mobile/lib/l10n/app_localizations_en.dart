@@ -111,6 +111,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edit => 'Edit';
 
   @override
+  String get emptyDashboardAction => 'Add Code';
+
+  @override
+  String get emptyDashboardDescription =>
+      'Add your first Italian Tax Code to keep it handy anytime, even offline.';
+
+  @override
+  String get emptyDashboardTitle => 'No cards saved yet';
+
+  @override
+  String get emptySearchClearAction => 'Reset search';
+
+  @override
+  String emptySearchDescription(String query) {
+    return 'No card matches \'$query\'. Try searching with a different name or tax code.';
+  }
+
+  @override
+  String get emptySearchTitle => 'No codes found';
+
+  @override
   String get error => 'Error';
 
   @override
@@ -149,6 +170,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get newItem => 'Add Contact';
+
+  @override
+  String get newTaxCode => 'New Code';
+
+  @override
+  String get newTaxCodeTooltip => 'Create or scan a new tax code';
 
   @override
   String get openSettings => 'Open Settings';
