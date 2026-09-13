@@ -80,7 +80,7 @@ void main() {
     when(() => mockInfoService.getPackageInfo()).thenAnswer(
       (_) async => PackageInfo(
         appName: 'Codice Fiscale',
-        packageName: 'it.scalici.tax_code_flutter',
+        packageName: 'tommasoscalici.taxcode',
         version: '2.0.0',
         buildNumber: '1',
         installerStore: 'Google Play',
@@ -234,7 +234,7 @@ void main() {
       expect(find.text("Informazioni sull'app"), findsOneWidget);
       expect(find.text('Codice Fiscale'), findsOneWidget);
       expect(find.text('v2.0.0 (1)'), findsOneWidget);
-      expect(find.text('it.scalici.tax_code_flutter'), findsOneWidget);
+      expect(find.text('tommasoscalici.taxcode'), findsOneWidget);
       expect(find.text('Disclaimer Istituzionale'), findsOneWidget);
       expect(find.text('Privacy & Protezione Dati'), findsOneWidget);
       expect(find.byKey(const Key('profile_open_online_policy_button')), findsOneWidget);

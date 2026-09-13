@@ -8,4 +8,5 @@
     <color name="text_secondary">#333333</color>
     <color name="background">@android:color/black</color>
     <color name="background_card">#B8E5B4</color>
+    <color name="ic_launcher_background">#121212</color>
 </resources>

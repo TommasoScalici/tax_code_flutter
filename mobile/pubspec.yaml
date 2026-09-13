@@ -70,6 +70,7 @@ dev_dependencies:
   plugin_platform_interface: ^2.1.8
   remove_unused_localizations: ^1.1.2
   very_good_analysis: ^10.3.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   generate: true
@@ -78,3 +79,11 @@ flutter:
     - assets/birthplaces.json
     - assets/images/google_logo.svg
     - assets/images/tax_code_icon.svg
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/images/app_icon.png"
+  adaptive_icon_background: "#121212"
+  adaptive_icon_foreground: "assets/images/app_icon_foreground.png"
+  adaptive_icon_monochrome: "assets/images/app_icon_monochrome.png"

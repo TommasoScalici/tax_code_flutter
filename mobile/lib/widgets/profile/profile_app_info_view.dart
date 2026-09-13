@@ -27,24 +27,26 @@ class ProfileAppInfoView extends StatelessWidget {
     final locale = Localizations.localeOf(context);
     final infoService = context.watch<InfoServiceAbstract?>();
 
+    final defaultPackageInfo = PackageInfo(
+      appName: l10n?.appName ?? 'Codice Fiscale',
+      packageName: 'tommasoscalici.taxcode',
+      version: '2.0.0',
+      buildNumber: '1',
+    );
+
     return FutureBuilder<PackageInfo>(
-      future: infoService?.getPackageInfo() ??
-          Future.value(
-            PackageInfo(
-              appName: 'Codice Fiscale',
-              packageName: 'it.scalici.tax_code_flutter',
-              version: '2.0.0',
-              buildNumber: '1',
-            ),
-          ),
+      future: infoService?.getPackageInfo() ?? Future.value(defaultPackageInfo),
       builder: (context, snapshot) {
-        final packageInfo = snapshot.data ??
-            PackageInfo(
-              appName: 'Codice Fiscale',
-              packageName: 'it.scalici.tax_code_flutter',
-              version: '2.0.0',
-              buildNumber: '1',
-            );
+        final packageInfo = snapshot.data ?? defaultPackageInfo;
+        final rawAppName = packageInfo.appName;
+        final appDisplayName = (rawAppName.isEmpty || rawAppName == 'Error')
+            ? (l10n?.appName ?? 'Codice Fiscale')
+            : rawAppName;
+        final rawPackageName = packageInfo.packageName;
+        final appPackageId =
+            (rawPackageName.isEmpty || rawPackageName == 'Error')
+                ? 'tommasoscalici.taxcode'
+                : rawPackageName;
 
         final policyUrl = locale.languageCode == 'it'
             ? _privacyPolicyUrlIt
@@ -90,9 +92,7 @@ class ProfileAppInfoView extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      packageInfo.appName.isEmpty
-                          ? (l10n?.appTitle ?? 'Codice Fiscale')
-                          : packageInfo.appName,
+                      appDisplayName,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.onSurface,
@@ -120,7 +120,7 @@ class ProfileAppInfoView extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      packageInfo.packageName,
+                      appPackageId,
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontFamily: 'JetBrains Mono',
                         color: theme.colorScheme.onSurfaceVariant,

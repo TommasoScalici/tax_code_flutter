@@ -39,12 +39,12 @@ class ProfileLegalSection extends StatelessWidget {
           child: FutureBuilder<PackageInfo>(
             future: infoService?.getPackageInfo() ??
                 Future.value(
-                  PackageInfo(
-                    appName: 'Codice Fiscale',
-                    packageName: 'it.scalici.tax_code_flutter',
-                    version: '2.0.0',
-                    buildNumber: '1',
-                  ),
+                    PackageInfo(
+                      appName: l10n?.appName ?? 'Codice Fiscale',
+                      packageName: 'tommasoscalici.taxcode',
+                      version: '2.0.0',
+                      buildNumber: '1',
+                    ),
                 ),
             builder: (context, snapshot) {
               final version = snapshot.data?.version ?? '2.0.0';

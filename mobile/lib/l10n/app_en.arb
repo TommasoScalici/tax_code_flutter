@@ -19,9 +19,9 @@
   "@appInfoTitle": {
     "description": "Title for the app information item and sub-view."
   },
-  "appName": "App Name",
+  "appName": "Tax Code",
   "@appName": {
-    "description": "Label for the app name field in an info screen."
+    "description": "Application name shown in legal details and app info."
   },
   "appTitle": "Tax Code",
   "@appTitle": {

@@ -177,7 +177,7 @@ class _PreviewInfoService implements InfoServiceAbstract {
   Future<PackageInfo> getPackageInfo() async {
     return PackageInfo(
       appName: 'Codice Fiscale',
-      packageName: 'it.scalici.tax_code_flutter',
+      packageName: 'tommasoscalici.taxcode',
       version: '2.0.0',
       buildNumber: '1',
       installerStore: 'Google Play',

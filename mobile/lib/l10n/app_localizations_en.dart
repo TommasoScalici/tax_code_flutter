@@ -20,7 +20,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appInfoTitle => 'App Information';
 
   @override
-  String get appName => 'App Name';
+  String get appName => 'Tax Code';
 
   @override
   String get appTitle => 'Tax Code';

@@ -116,10 +116,10 @@ abstract class AppLocalizations {
   /// **'App Information'**
   String get appInfoTitle;
 
-  /// Label for the app name field in an info screen.
+  /// Application name shown in legal details and app info.
   ///
   /// In en, this message translates to:
-  /// **'App Name'**
+  /// **'Tax Code'**
   String get appName;
 
   /// The title of the application, often shown in the app bar.
