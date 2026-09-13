@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/l10n/app_localizations_it.dart';
-import 'package:tax_code_flutter/widgets/info_modal.dart';
+import 'package:tax_code_flutter/widgets/profile_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
 ///
@@ -297,9 +297,9 @@ class WelcomeScreen extends StatelessWidget {
                       TextButton(
                         onPressed: () {
                           unawaited(
-                            showDialog<void>(
-                              context: context,
-                              builder: (_) => const InfoModal(),
+                            ProfileBottomSheet.show<void>(
+                              context,
+                              startAtAppInfo: true,
                             ),
                           );
                         },

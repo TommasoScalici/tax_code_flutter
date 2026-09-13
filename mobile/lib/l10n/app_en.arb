@@ -201,6 +201,14 @@
   "@developedBy": {
     "description": "Developer attribution in app information."
   },
+  "disclaimerBody": "This app is not affiliated with, endorsed by, or representative of any government agency. It is an independent third-party tool to calculate and store the Italian Tax Code using the public algorithm.",
+  "@disclaimerBody": {
+    "description": "Body text explaining independent third-party status."
+  },
+  "disclaimerTitle": "Official Disclaimer",
+  "@disclaimerTitle": {
+    "description": "Title for official disclaimer card in legal information."
+  },
   "edit": "Edit",
   "@edit": {
     "description": "Label for an edit button."
@@ -371,6 +379,42 @@
   "@pleaseSignUp": {
     "description": "A welcome message on the registration screen."
   },
+  "privacyDataOwnership": "Data Ownership",
+  "@privacyDataOwnership": {
+    "description": "Title for data ownership highlight."
+  },
+  "privacyDataOwnershipDesc": "Your codes remain your exclusive property, stored on your device or in your private encrypted cloud.",
+  "@privacyDataOwnershipDesc": {
+    "description": "Description for data ownership highlight."
+  },
+  "privacyGdprRights": "Right to be Forgotten (GDPR)",
+  "@privacyGdprRights": {
+    "description": "Title for GDPR user rights highlight."
+  },
+  "privacyGdprRightsDesc": "You can export or permanently delete your account and all data at any time.",
+  "@privacyGdprRightsDesc": {
+    "description": "Description for GDPR user rights highlight."
+  },
+  "privacyHighlightsTitle": "Privacy & Data Protection",
+  "@privacyHighlightsTitle": {
+    "description": "Title for privacy highlights section."
+  },
+  "privacyNoTracking": "Zero Tracking",
+  "@privacyNoTracking": {
+    "description": "Title for zero tracking highlight."
+  },
+  "privacyNoTrackingDesc": "No personal data is sold or used for commercial profiling or advertising.",
+  "@privacyNoTrackingDesc": {
+    "description": "Description for zero tracking highlight."
+  },
+  "privacySmartOcr": "Document Scanning",
+  "@privacySmartOcr": {
+    "description": "Title for smart OCR document scanning highlight."
+  },
+  "privacySmartOcrDesc": "Document AI OCR operates with strict privacy standards and encryption.",
+  "@privacySmartOcrDesc": {
+    "description": "Description for smart OCR document scanning highlight."
+  },
   "profilePageTitle": "Profile",
   "@profilePageTitle": {
     "description": "Title for the user profile screen."
@@ -390,6 +434,10 @@
   "rateThisApp": "Rate this App",
   "@rateThisApp": {
     "description": "Label for a button in the profile screen that opens the Play Store for the user to leave a review."
+  },
+  "readFullPrivacyPolicy": "Read Full Privacy Policy Online",
+  "@readFullPrivacyPolicy": {
+    "description": "Label for button opening full online privacy policy on website."
   },
   "required": "This field is required",
   "@required": {

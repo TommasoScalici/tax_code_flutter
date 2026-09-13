@@ -86,9 +86,6 @@ void main() {
         installerStore: 'Google Play',
       ),
     );
-    when(() => mockInfoService.getLocalizedTerms(any())).thenAnswer(
-      (_) async => '<p>Termini di servizio e informativa sulla privacy</p>',
-    );
 
     when(() => mockInAppReviewService.openStoreListing())
         .thenAnswer((_) async {});
@@ -238,7 +235,9 @@ void main() {
       expect(find.text('Codice Fiscale'), findsOneWidget);
       expect(find.text('v2.0.0 (1)'), findsOneWidget);
       expect(find.text('it.scalici.tax_code_flutter'), findsOneWidget);
-      expect(find.text('Termini e Privacy'), findsOneWidget);
+      expect(find.text('Disclaimer Istituzionale'), findsOneWidget);
+      expect(find.text('Privacy & Protezione Dati'), findsOneWidget);
+      expect(find.byKey(const Key('profile_open_online_policy_button')), findsOneWidget);
       expect(find.text('Sviluppata da Tommaso Scalici'), findsOneWidget);
 
       // Back button in header is visible
@@ -370,6 +369,40 @@ void main() {
 
       // Close bottom sheet
       await tester.tap(find.byKey(const Key('profile_sheet_close_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ProfileBottomSheet), findsNothing);
+    });
+
+    testWidgets('modal bottom sheet with startAtAppInfo: true opens directly to App Info view',
+        (tester) async {
+      setLargeViewport(tester);
+
+      await tester.pumpWidget(
+        buildTestApp(
+          child: Builder(
+            builder: (ctx) => ElevatedButton(
+              onPressed: () => ProfileBottomSheet.show<void>(
+                ctx,
+                startAtAppInfo: true,
+              ),
+              child: const Text('Open Info'),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Open Info'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ProfileBottomSheet), findsOneWidget);
+      expect(find.text("Informazioni sull'app"), findsOneWidget);
+      expect(find.text('Disclaimer Istituzionale'), findsOneWidget);
+      expect(find.byKey(const Key('profile_open_online_policy_button')), findsOneWidget);
+
+      // Back button pops modal
+      await tester.tap(find.byKey(const Key('profile_sheet_back_button')));
       await tester.pumpAndSettle();
 
       expect(find.byType(ProfileBottomSheet), findsNothing);

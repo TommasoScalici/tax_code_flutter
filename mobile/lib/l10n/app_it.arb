@@ -201,6 +201,14 @@
   "@developedBy": {
     "description": "Attribuzione dello sviluppatore nelle informazioni sull'app."
   },
+  "disclaimerBody": "Questa applicazione non rappresenta né è affiliata ad alcuna agenzia governativa. È uno strumento di terze parti per calcolare e memorizzare il Codice Fiscale tramite l'algoritmo pubblico.",
+  "@disclaimerBody": {
+    "description": "Testo esplicativo che chiarisce la natura indipendente e non governativa dell'app."
+  },
+  "disclaimerTitle": "Disclaimer Istituzionale",
+  "@disclaimerTitle": {
+    "description": "Titolo della card di disclaimer istituzionale nelle informazioni legali."
+  },
   "edit": "Modifica",
   "@edit": {
     "description": "Label for an edit button."
@@ -371,6 +379,42 @@
   "@pleaseSignUp": {
     "description": "A welcome message on the registration screen."
   },
+  "privacyDataOwnership": "Dati e Proprietà",
+  "@privacyDataOwnership": {
+    "description": "Titolo del punto relativo alla proprietà e conservazione dei dati."
+  },
+  "privacyDataOwnershipDesc": "I tuoi codici rimangono di tua proprietà, salvati sul dispositivo o nel tuo cloud cifrato.",
+  "@privacyDataOwnershipDesc": {
+    "description": "Descrizione del punto relativo alla proprietà e conservazione dei dati."
+  },
+  "privacyGdprRights": "Diritto all'Oblio (GDPR)",
+  "@privacyGdprRights": {
+    "description": "Titolo del punto relativo ai diritti dell'interessato e GDPR."
+  },
+  "privacyGdprRightsDesc": "Puoi esportare o eliminare definitivamente il tuo account e i dati in qualsiasi momento.",
+  "@privacyGdprRightsDesc": {
+    "description": "Descrizione del punto relativo ai diritti dell'interessato e GDPR."
+  },
+  "privacyHighlightsTitle": "Privacy & Protezione Dati",
+  "@privacyHighlightsTitle": {
+    "description": "Titolo della sezione con i punti chiave sulla protezione della privacy."
+  },
+  "privacyNoTracking": "Zero Tracciamento",
+  "@privacyNoTracking": {
+    "description": "Titolo del punto relativo all'assenza di tracciamento commerciale."
+  },
+  "privacyNoTrackingDesc": "Nessun dato personale viene venduto o utilizzato per profilazione commerciale.",
+  "@privacyNoTrackingDesc": {
+    "description": "Descrizione del punto relativo all'assenza di tracciamento commerciale."
+  },
+  "privacySmartOcr": "Scansione Documenti",
+  "@privacySmartOcr": {
+    "description": "Titolo del punto relativo alla scansione OCR dei documenti."
+  },
+  "privacySmartOcrDesc": "L'OCR AI per la lettura delle tessere opera con standard elevati di sicurezza.",
+  "@privacySmartOcrDesc": {
+    "description": "Descrizione del punto relativo alla scansione OCR dei documenti."
+  },
   "profilePageTitle": "Profilo",
   "@profilePageTitle": {
     "description": "Title for the user profile screen."
@@ -390,6 +434,10 @@
   "rateThisApp": "Valuta l'App",
   "@rateThisApp": {
     "description": "Etichetta per un pulsante nella schermata del profilo che apre il Play Store per lasciare una recensione."
+  },
+  "readFullPrivacyPolicy": "Leggi l'Informativa Completa Online",
+  "@readFullPrivacyPolicy": {
+    "description": "Etichetta del pulsante per aprire la privacy policy completa sul sito web."
   },
   "required": "Questo campo è obbligatorio",
   "@required": {

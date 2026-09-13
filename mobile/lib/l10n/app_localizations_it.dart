@@ -163,6 +163,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get developedBy => 'Sviluppata da Tommaso Scalici';
 
   @override
+  String get disclaimerBody =>
+      'Questa applicazione non rappresenta né è affiliata ad alcuna agenzia governativa. È uno strumento di terze parti per calcolare e memorizzare il Codice Fiscale tramite l\'algoritmo pubblico.';
+
+  @override
+  String get disclaimerTitle => 'Disclaimer Istituzionale';
+
+  @override
   String get edit => 'Modifica';
 
   @override
@@ -291,6 +298,37 @@ class AppLocalizationsIt extends AppLocalizations {
   String get pleaseSignUp => 'Benvenuto, crea un account per continuare.';
 
   @override
+  String get privacyDataOwnership => 'Dati e Proprietà';
+
+  @override
+  String get privacyDataOwnershipDesc =>
+      'I tuoi codici rimangono di tua proprietà, salvati sul dispositivo o nel tuo cloud cifrato.';
+
+  @override
+  String get privacyGdprRights => 'Diritto all\'Oblio (GDPR)';
+
+  @override
+  String get privacyGdprRightsDesc =>
+      'Puoi esportare o eliminare definitivamente il tuo account e i dati in qualsiasi momento.';
+
+  @override
+  String get privacyHighlightsTitle => 'Privacy & Protezione Dati';
+
+  @override
+  String get privacyNoTracking => 'Zero Tracciamento';
+
+  @override
+  String get privacyNoTrackingDesc =>
+      'Nessun dato personale viene venduto o utilizzato per profilazione commerciale.';
+
+  @override
+  String get privacySmartOcr => 'Scansione Documenti';
+
+  @override
+  String get privacySmartOcrDesc =>
+      'L\'OCR AI per la lettura delle tessere opera con standard elevati di sicurezza.';
+
+  @override
   String get profilePageTitle => 'Profilo';
 
   @override
@@ -305,6 +343,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get rateThisApp => 'Valuta l\'App';
+
+  @override
+  String get readFullPrivacyPolicy => 'Leggi l\'Informativa Completa Online';
 
   @override
   String get required => 'Questo campo è obbligatorio';

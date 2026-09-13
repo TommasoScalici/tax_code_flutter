@@ -111,11 +111,6 @@ Future<void> pumpApp(
   when(permissionService.requestCameraPermission).thenAnswer((_) async => true);
   when(permissionService.openAppSettingsHandler).thenAnswer((_) async => true);
 
-  when(() => infoService.getLocalizedTerms(any<Locale>())).thenAnswer(
-    (_) async =>
-        '<h1>Mocked Terms</h1><p>Author: <strong>Test User</strong></p>',
-  );
-
   when(infoService.getPackageInfo).thenAnswer(
     (_) async => PackageInfo(
       appName: 'Test App',

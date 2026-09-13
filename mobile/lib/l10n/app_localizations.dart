@@ -380,6 +380,18 @@ abstract class AppLocalizations {
   /// **'Developed by Tommaso Scalici'**
   String get developedBy;
 
+  /// Body text explaining independent third-party status.
+  ///
+  /// In en, this message translates to:
+  /// **'This app is not affiliated with, endorsed by, or representative of any government agency. It is an independent third-party tool to calculate and store the Italian Tax Code using the public algorithm.'**
+  String get disclaimerBody;
+
+  /// Title for official disclaimer card in legal information.
+  ///
+  /// In en, this message translates to:
+  /// **'Official Disclaimer'**
+  String get disclaimerTitle;
+
   /// Label for an edit button.
   ///
   /// In en, this message translates to:
@@ -626,6 +638,60 @@ abstract class AppLocalizations {
   /// **'Welcome, please create an account to continue.'**
   String get pleaseSignUp;
 
+  /// Title for data ownership highlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Ownership'**
+  String get privacyDataOwnership;
+
+  /// Description for data ownership highlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Your codes remain your exclusive property, stored on your device or in your private encrypted cloud.'**
+  String get privacyDataOwnershipDesc;
+
+  /// Title for GDPR user rights highlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Right to be Forgotten (GDPR)'**
+  String get privacyGdprRights;
+
+  /// Description for GDPR user rights highlight.
+  ///
+  /// In en, this message translates to:
+  /// **'You can export or permanently delete your account and all data at any time.'**
+  String get privacyGdprRightsDesc;
+
+  /// Title for privacy highlights section.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Data Protection'**
+  String get privacyHighlightsTitle;
+
+  /// Title for zero tracking highlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Zero Tracking'**
+  String get privacyNoTracking;
+
+  /// Description for zero tracking highlight.
+  ///
+  /// In en, this message translates to:
+  /// **'No personal data is sold or used for commercial profiling or advertising.'**
+  String get privacyNoTrackingDesc;
+
+  /// Title for smart OCR document scanning highlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Scanning'**
+  String get privacySmartOcr;
+
+  /// Description for smart OCR document scanning highlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Document AI OCR operates with strict privacy standards and encryption.'**
+  String get privacySmartOcrDesc;
+
   /// Title for the user profile screen.
   ///
   /// In en, this message translates to:
@@ -655,6 +721,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rate this App'**
   String get rateThisApp;
+
+  /// Label for button opening full online privacy policy on website.
+  ///
+  /// In en, this message translates to:
+  /// **'Read Full Privacy Policy Online'**
+  String get readFullPrivacyPolicy;
 
   /// A validation error message for a required form field.
   ///

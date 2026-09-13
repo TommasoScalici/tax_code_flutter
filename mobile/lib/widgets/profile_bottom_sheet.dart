@@ -23,13 +23,20 @@ class ProfileBottomSheet extends StatefulWidget {
   /// When true, renders without modal decoration or drag handle for testing.
   final bool isEmbedded;
 
+  /// When true, opens directly to the App Info & Legal sub-view.
+  final bool startAtAppInfo;
+
   const ProfileBottomSheet({
     super.key,
     this.isEmbedded = false,
+    this.startAtAppInfo = false,
   });
 
   /// Displays the profile bottom sheet modally.
-  static Future<T?> show<T>(BuildContext context) {
+  static Future<T?> show<T>(
+    BuildContext context, {
+    bool startAtAppInfo = false,
+  }) {
     return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: true,
@@ -37,7 +44,9 @@ class ProfileBottomSheet extends StatefulWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       barrierColor: Colors.black54,
-      builder: (context) => const ProfileBottomSheet(),
+      builder: (context) => ProfileBottomSheet(
+        startAtAppInfo: startAtAppInfo,
+      ),
     );
   }
 
@@ -46,7 +55,15 @@ class ProfileBottomSheet extends StatefulWidget {
 }
 
 class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
-  _ProfileSheetView _currentView = _ProfileSheetView.main;
+  late _ProfileSheetView _currentView;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentView = widget.startAtAppInfo
+        ? _ProfileSheetView.appInfo
+        : _ProfileSheetView.main;
+  }
 
   void _navigateToAppInfo() {
     setState(() {
@@ -67,9 +84,11 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
     final l10n = AppLocalizations.of(context);
 
     return PopScope(
-      canPop: _currentView == _ProfileSheetView.main,
+      canPop: _currentView == _ProfileSheetView.main || widget.startAtAppInfo,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop && _currentView == _ProfileSheetView.appInfo) {
+        if (!didPop &&
+            _currentView == _ProfileSheetView.appInfo &&
+            !widget.startAtAppInfo) {
           _navigateBackToMain();
         }
       },
@@ -152,7 +171,9 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
             IconButton(
               key: const Key('profile_sheet_back_button'),
               icon: const Icon(Icons.arrow_back_rounded),
-              onPressed: _navigateBackToMain,
+              onPressed: widget.startAtAppInfo
+                  ? () => Navigator.of(context).pop()
+                  : _navigateBackToMain,
             )
           else if (widget.isEmbedded)
             IconButton(

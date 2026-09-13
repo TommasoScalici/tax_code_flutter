@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 /// Defines the contract for a service that provides app information.
 abstract class InfoServiceAbstract {
   Future<PackageInfo> getPackageInfo();
-  Future<String> getLocalizedTerms(Locale locale);
 }
 
 /// The concrete implementation of [InfoServiceAbstract].
@@ -28,31 +25,6 @@ class InfoService implements InfoServiceAbstract {
         version: 'Error',
         buildNumber: 'Error',
       );
-    }
-  }
-
-  @override
-  Future<String> getLocalizedTerms(Locale locale) async {
-    final htmlPath = _getLocalizedHtmlTermsPath(locale);
-    try {
-      return await rootBundle.loadString(htmlPath);
-    } on Object catch (e, s) {
-      _logger.e(
-        'Failed to load terms HTML from $htmlPath',
-        error: e,
-        stackTrace: s,
-      );
-      return '<h1>Error</h1><p>Could not load terms and conditions.</p>';
-    }
-  }
-
-  String _getLocalizedHtmlTermsPath(Locale locale) {
-    switch (locale.languageCode) {
-      case 'it':
-        return 'assets/html/it/terms.html';
-      case 'en':
-      default:
-        return 'assets/html/en/terms.html';
     }
   }
 }

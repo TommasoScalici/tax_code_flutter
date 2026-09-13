@@ -3,7 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/screens/welcome_screen.dart';
-import 'package:tax_code_flutter/widgets/info_modal.dart';
+import 'package:tax_code_flutter/widgets/profile/profile_app_info_view.dart';
+import 'package:tax_code_flutter/widgets/profile_bottom_sheet.dart';
 
 import '../helpers/mocks.dart';
 import '../helpers/pump_app.dart';
@@ -140,7 +141,7 @@ void main() {
       expect(find.text('Guest sign-in failed'), findsOneWidget);
     });
 
-    testWidgets('tapping terms link opens InfoModal dialog', (tester) async {
+    testWidgets('tapping terms link opens ProfileBottomSheet with legal info', (tester) async {
       setMobileSize(tester);
 
       await pumpApp(
@@ -152,7 +153,8 @@ void main() {
       await tester.tap(find.text('View Terms & Conditions'));
       await tester.pumpAndSettle();
 
-      expect(find.byType(InfoModal), findsOneWidget);
+      expect(find.byType(ProfileBottomSheet), findsOneWidget);
+      expect(find.byType(ProfileAppInfoView), findsOneWidget);
     });
   });
 }

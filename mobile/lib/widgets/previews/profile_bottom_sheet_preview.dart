@@ -183,13 +183,6 @@ class _PreviewInfoService implements InfoServiceAbstract {
       installerStore: 'Google Play',
     );
   }
-
-  @override
-  Future<String> getLocalizedTerms(Locale locale) async {
-    return '<h3>Termini di Servizio & Privacy Policy</h3> '
-        "<p>L'applicazione consente di calcolare, conservare e consultare i codici fiscali italiani in totale sicurezza. I dati salvati rimangono di esclusiva proprietà dell'utente e sono protetti da crittografia locale e cloud conforme al GDPR.</p> "
-        '<p>Per ulteriori informazioni o per richiedere la cancellazione totale dei dati, consulta le opzioni nella schermata di gestione account.</p>';
-  }
 }
 
 class _PreviewInAppReviewService implements InAppReviewService {

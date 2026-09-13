@@ -162,6 +162,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get developedBy => 'Developed by Tommaso Scalici';
 
   @override
+  String get disclaimerBody =>
+      'This app is not affiliated with, endorsed by, or representative of any government agency. It is an independent third-party tool to calculate and store the Italian Tax Code using the public algorithm.';
+
+  @override
+  String get disclaimerTitle => 'Official Disclaimer';
+
+  @override
   String get edit => 'Edit';
 
   @override
@@ -290,6 +297,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseSignUp => 'Welcome, please create an account to continue.';
 
   @override
+  String get privacyDataOwnership => 'Data Ownership';
+
+  @override
+  String get privacyDataOwnershipDesc =>
+      'Your codes remain your exclusive property, stored on your device or in your private encrypted cloud.';
+
+  @override
+  String get privacyGdprRights => 'Right to be Forgotten (GDPR)';
+
+  @override
+  String get privacyGdprRightsDesc =>
+      'You can export or permanently delete your account and all data at any time.';
+
+  @override
+  String get privacyHighlightsTitle => 'Privacy & Data Protection';
+
+  @override
+  String get privacyNoTracking => 'Zero Tracking';
+
+  @override
+  String get privacyNoTrackingDesc =>
+      'No personal data is sold or used for commercial profiling or advertising.';
+
+  @override
+  String get privacySmartOcr => 'Document Scanning';
+
+  @override
+  String get privacySmartOcrDesc =>
+      'Document AI OCR operates with strict privacy standards and encryption.';
+
+  @override
   String get profilePageTitle => 'Profile';
 
   @override
@@ -304,6 +342,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rateThisApp => 'Rate this App';
+
+  @override
+  String get readFullPrivacyPolicy => 'Read Full Privacy Policy Online';
 
   @override
   String get required => 'This field is required';
