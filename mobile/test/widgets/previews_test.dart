@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tax_code_flutter/widgets/previews/barcode_bottom_sheet_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/birthdate_picker_field_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/birthplace_autocomplete_field_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/contact_card_preview.dart';
@@ -124,6 +125,12 @@ void main() {
     await tester.pumpWidget(const FormScreenPreview());
     await tester.pumpAndSettle();
     expect(find.byType(FormScreenPreview), findsOneWidget);
+  });
+
+  testWidgets('pumps BarcodeBottomSheetPreview without error', (tester) async {
+    await tester.pumpWidget(const BarcodeBottomSheetPreview());
+    await tester.pumpAndSettle();
+    expect(find.byType(BarcodeBottomSheetPreview), findsOneWidget);
   });
 }
 

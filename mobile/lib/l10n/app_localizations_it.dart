@@ -18,7 +18,23 @@ class AppLocalizationsIt extends AppLocalizations {
   String get appVersion => 'Versione';
 
   @override
+  String get barcodeCode128 => 'Codice a Barre (Code 128)';
+
+  @override
+  String get barcodeMaxBrightnessActive =>
+      'Luminosità massima attiva per lettura ottica';
+
+  @override
+  String get barcodeNotice => 'Mostra allo sportello farmaceutico o sanitario';
+
+  @override
+  String get barcodeOrDivider => 'oppure';
+
+  @override
   String get barcodePageTitle => 'Codice a Barre';
+
+  @override
+  String get barcodeQrCode => 'QR Code Sanitario';
 
   @override
   String get birthDate => 'Data di Nascita';
@@ -90,6 +106,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get continueWithGoogle => 'Continua con Google';
+
+  @override
+  String get copyAction => 'Copia';
 
   @override
   String get copyTaxCode => 'Copia codice fiscale';

@@ -18,7 +18,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appVersion => 'Version';
 
   @override
+  String get barcodeCode128 => 'Barcode (Code 128)';
+
+  @override
+  String get barcodeMaxBrightnessActive =>
+      'Maximum brightness active for optical scanning';
+
+  @override
+  String get barcodeNotice => 'Show at pharmacy or healthcare desk';
+
+  @override
+  String get barcodeOrDivider => 'or';
+
+  @override
   String get barcodePageTitle => 'Tax Code Barcode';
+
+  @override
+  String get barcodeQrCode => 'Health QR Code';
 
   @override
   String get birthDate => 'Date of Birth';
@@ -89,6 +105,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get copyAction => 'Copy';
 
   @override
   String get copyTaxCode => 'Copy tax code';

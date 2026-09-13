@@ -13,9 +13,29 @@
   "@appVersion": {
     "description": "Label for the app version field in an info screen."
   },
+  "barcodeCode128": "Barcode (Code 128)",
+  "@barcodeCode128": {
+    "description": "Label for the 1D Code 128 barcode in the bottom sheet."
+  },
+  "barcodeMaxBrightnessActive": "Maximum brightness active for optical scanning",
+  "@barcodeMaxBrightnessActive": {
+    "description": "Notice indicating screen brightness is set to maximum for easy optical scanning."
+  },
+  "barcodeNotice": "Show at pharmacy or healthcare desk",
+  "@barcodeNotice": {
+    "description": "Informational hint displayed under the barcode and QR code for use at service desks."
+  },
+  "barcodeOrDivider": "or",
+  "@barcodeOrDivider": {
+    "description": "Text divider between the 1D barcode and the 2D QR code."
+  },
   "barcodePageTitle": "Tax Code Barcode",
   "@barcodePageTitle": {
     "description": "Title for the page displaying the barcode."
+  },
+  "barcodeQrCode": "Health QR Code",
+  "@barcodeQrCode": {
+    "description": "Label for the 2D health QR code in the bottom sheet."
   },
   "birthDate": "Date of Birth",
   "@birthDate": {
@@ -104,6 +124,10 @@
   "continueWithGoogle": "Continue with Google",
   "@continueWithGoogle": {
     "description": "Label for the primary Google single sign-on authentication button."
+  },
+  "copyAction": "Copy",
+  "@copyAction": {
+    "description": "Label for the quick copy to clipboard button."
   },
   "copyTaxCode": "Copy tax code",
   "@copyTaxCode": {

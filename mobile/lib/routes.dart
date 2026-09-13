@@ -11,7 +11,6 @@ final class Routes {
   Routes._();
 
   static const String home = '/';
-  static const String barcode = '/barcode';
   static const String camera = '/camera';
   static const String form = '/form';
   static const String profile = '/profile';
@@ -42,19 +41,6 @@ final class Routes {
       case camera:
         return MaterialPageRoute<ScannedData?>(
           builder: (_) => const CameraPage(),
-        );
-      case barcode:
-        final taxCode = settings.arguments! as String;
-        return MaterialPageRoute<void>(
-          builder: (_) => Scaffold(
-            appBar: AppBar(title: const Text('Barcode')),
-            body: Center(
-              child: Text(
-                taxCode,
-                style: const TextStyle(fontSize: 24, letterSpacing: 2),
-              ),
-            ),
-          ),
         );
       default:
         return MaterialPageRoute<void>(

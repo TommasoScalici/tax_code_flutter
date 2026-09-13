@@ -9,6 +9,7 @@ import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
+import 'package:tax_code_flutter/widgets/barcode_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_empty_state.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_search_bar.dart';
 
@@ -202,6 +203,6 @@ class _ContactsListState extends State<ContactsList> {
   }
 
   void _onShowBarcode(BuildContext context, Contact contact) {
-    Navigator.pushNamed(context, Routes.barcode, arguments: contact.taxCode);
+    unawaited(BarcodeBottomSheet.show(context, contact: contact));
   }
 }

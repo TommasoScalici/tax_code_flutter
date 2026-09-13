@@ -116,11 +116,41 @@ abstract class AppLocalizations {
   /// **'Version'**
   String get appVersion;
 
+  /// Label for the 1D Code 128 barcode in the bottom sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode (Code 128)'**
+  String get barcodeCode128;
+
+  /// Notice indicating screen brightness is set to maximum for easy optical scanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum brightness active for optical scanning'**
+  String get barcodeMaxBrightnessActive;
+
+  /// Informational hint displayed under the barcode and QR code for use at service desks.
+  ///
+  /// In en, this message translates to:
+  /// **'Show at pharmacy or healthcare desk'**
+  String get barcodeNotice;
+
+  /// Text divider between the 1D barcode and the 2D QR code.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get barcodeOrDivider;
+
   /// Title for the page displaying the barcode.
   ///
   /// In en, this message translates to:
   /// **'Tax Code Barcode'**
   String get barcodePageTitle;
+
+  /// Label for the 2D health QR code in the bottom sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Health QR Code'**
+  String get barcodeQrCode;
 
   /// Label for the birth date input field.
   ///
@@ -253,6 +283,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue with Google'**
   String get continueWithGoogle;
+
+  /// Label for the quick copy to clipboard button.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copyAction;
 
   /// Tooltip for the button or box to copy the tax code to clipboard.
   ///

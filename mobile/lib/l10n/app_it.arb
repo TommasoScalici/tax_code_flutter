@@ -13,9 +13,29 @@
   "@appVersion": {
     "description": "Label for the app version field in an info screen."
   },
+  "barcodeCode128": "Codice a Barre (Code 128)",
+  "@barcodeCode128": {
+    "description": "Etichetta per il codice a barre 1D Code 128 nel bottom sheet."
+  },
+  "barcodeMaxBrightnessActive": "Luminosità massima attiva per lettura ottica",
+  "@barcodeMaxBrightnessActive": {
+    "description": "Avviso indicante che la luminosità dello schermo è al massimo per facilitare la scansione ottica."
+  },
+  "barcodeNotice": "Mostra allo sportello farmaceutico o sanitario",
+  "@barcodeNotice": {
+    "description": "Suggerimento informativo visualizzato sotto il codice a barre e QR code per l'uso allo sportello."
+  },
+  "barcodeOrDivider": "oppure",
+  "@barcodeOrDivider": {
+    "description": "Divisore testuale tra il codice a barre 1D e il codice QR 2D."
+  },
   "barcodePageTitle": "Codice a Barre",
   "@barcodePageTitle": {
     "description": "Title for the page displaying the barcode."
+  },
+  "barcodeQrCode": "QR Code Sanitario",
+  "@barcodeQrCode": {
+    "description": "Etichetta per il codice bidimensionale QR sanitario nel bottom sheet."
   },
   "birthDate": "Data di Nascita",
   "@birthDate": {
@@ -104,6 +124,10 @@
   "continueWithGoogle": "Continua con Google",
   "@continueWithGoogle": {
     "description": "Label for the primary Google single sign-on authentication button."
+  },
+  "copyAction": "Copia",
+  "@copyAction": {
+    "description": "Etichetta per il pulsante rapido di copia negli appunti."
   },
   "copyTaxCode": "Copia codice fiscale",
   "@copyTaxCode": {
