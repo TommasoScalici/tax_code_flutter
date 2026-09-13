@@ -27,10 +27,6 @@
   "@appTitle": {
     "description": "The title of the application, often shown in the app bar."
   },
-  "appVersion": "Version",
-  "@appVersion": {
-    "description": "Label for the app version field in an info screen."
-  },
   "barcodeCode128": "Barcode (Code 128)",
   "@barcodeCode128": {
     "description": "Label for the 1D Code 128 barcode in the bottom sheet."
@@ -46,10 +42,6 @@
   "barcodeOrDivider": "or",
   "@barcodeOrDivider": {
     "description": "Text divider between the 1D barcode and the 2D QR code."
-  },
-  "barcodePageTitle": "Tax Code Barcode",
-  "@barcodePageTitle": {
-    "description": "Title for the page displaying the barcode."
   },
   "barcodeQrCode": "Health QR Code",
   "@barcodeQrCode": {
@@ -82,10 +74,6 @@
   "buildNumber": "Build Number",
   "@buildNumber": {
     "description": "Label for the build number field in an info screen."
-  },
-  "buildSignature": "Build Signature",
-  "@buildSignature": {
-    "description": "Label for the build signature field in an info screen."
   },
   "cameraPermissionInfo": "To scan cards, this app needs access to your camera. Please go to your device settings and grant camera permission.",
   "@cameraPermissionInfo": {
@@ -134,14 +122,6 @@
   "cloudSyncOn": "Cloud sync active",
   "@cloudSyncOn": {
     "description": "Tooltip and message when cloud synchronization is enabled."
-  },
-  "confirm": "Confirm",
-  "@confirm": {
-    "description": "Label for a confirmation button."
-  },
-  "contactsListEmpty": "No contacts yet.\nTap the '+' button to add your first one!",
-  "@contactsListEmpty": {
-    "description": "Message displayed when the contact list is empty."
   },
   "continueAsGuest": "Continue as guest",
   "@continueAsGuest": {
@@ -275,10 +255,6 @@
   "@formOrManualEntry": {
     "description": "Divider text separating smart OCR scan hero and manual form input fields."
   },
-  "formPageTitle": "Contact Details",
-  "@formPageTitle": {
-    "description": "Title for the page where user enters contact details."
-  },
   "gender": "Gender",
   "@gender": {
     "description": "Label for the gender input field."
@@ -303,21 +279,9 @@
   "@guestBadge": {
     "description": "Badge for user in guest mode."
   },
-  "guestMode": "Guest",
-  "@guestMode": {
-    "description": "Badge or display name indicating that the user is currently using the app in guest mode."
-  },
-  "homePageTitle": "My Contacts",
-  "@homePageTitle": {
-    "description": "Title for the main home page."
-  },
   "info": "Info",
   "@info": {
     "description": "A generic title for an informational dialog or screen."
-  },
-  "installerStore": "Installer Store",
-  "@installerStore": {
-    "description": "Label for the installer store field in an info screen."
   },
   "invalidCharacters": "The field contains invalid characters.",
   "@invalidCharacters": {
@@ -334,10 +298,6 @@
   "networkError": "No internet connection. Please check your network and try again.",
   "@networkError": {
     "description": "Error message when there is no internet connectivity."
-  },
-  "newItem": "Add Contact",
-  "@newItem": {
-    "description": "Tooltip for the FloatingActionButton to create a new contact."
   },
   "newTaxCode": "New Code",
   "@newTaxCode": {
@@ -370,14 +330,6 @@
   "packageName": "Package Name",
   "@packageName": {
     "description": "Label for the package name field in an info screen."
-  },
-  "pleaseSignIn": "Welcome, please sign in to continue.",
-  "@pleaseSignIn": {
-    "description": "A welcome message on the login screen."
-  },
-  "pleaseSignUp": "Welcome, please create an account to continue.",
-  "@pleaseSignUp": {
-    "description": "A welcome message on the registration screen."
   },
   "privacyDataOwnership": "Data Ownership",
   "@privacyDataOwnership": {
@@ -431,10 +383,6 @@
   "@rateLimitExceeded": {
     "description": "Error message when the user has exceeded their daily limit of tax code calculations."
   },
-  "rateThisApp": "Rate this App",
-  "@rateThisApp": {
-    "description": "Label for a button in the profile screen that opens the Play Store for the user to leave a review."
-  },
   "readFullPrivacyPolicy": "Read Full Privacy Policy Online",
   "@readFullPrivacyPolicy": {
     "description": "Label for button opening full online privacy policy on website."
@@ -456,10 +404,6 @@
         "example": "3"
       }
     }
-  },
-  "scanCard": "Scan from Health Card",
-  "@scanCard": {
-    "description": "Label for a button that initiates scanning a card."
   },
   "scanFailedErrorMessage": "Could not read data from the picture. Please try taking a new, more focused one.",
   "@scanFailedErrorMessage": {
@@ -572,10 +516,6 @@
   "termsAndCondition": "By proceeding, you agree to our Terms and Conditions.",
   "@termsAndCondition": {
     "description": "A notice about agreeing to terms and conditions."
-  },
-  "termsAndPrivacyTitle": "Terms and Privacy",
-  "@termsAndPrivacyTitle": {
-    "description": "Title for terms of service and privacy policy section."
   },
   "tooltipConfirmPicture": "Confirm picture",
   "@tooltipConfirmPicture": {

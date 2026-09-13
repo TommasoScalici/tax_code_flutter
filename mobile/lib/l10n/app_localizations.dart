@@ -128,12 +128,6 @@ abstract class AppLocalizations {
   /// **'Tax Code'**
   String get appTitle;
 
-  /// Label for the app version field in an info screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Version'**
-  String get appVersion;
-
   /// Label for the 1D Code 128 barcode in the bottom sheet.
   ///
   /// In en, this message translates to:
@@ -157,12 +151,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'or'**
   String get barcodeOrDivider;
-
-  /// Title for the page displaying the barcode.
-  ///
-  /// In en, this message translates to:
-  /// **'Tax Code Barcode'**
-  String get barcodePageTitle;
 
   /// Label for the 2D health QR code in the bottom sheet.
   ///
@@ -211,12 +199,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Build Number'**
   String get buildNumber;
-
-  /// Label for the build signature field in an info screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Build Signature'**
-  String get buildSignature;
 
   /// An informational message explaining how to grant camera permission.
   ///
@@ -289,18 +271,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cloud sync active'**
   String get cloudSyncOn;
-
-  /// Label for a confirmation button.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm'**
-  String get confirm;
-
-  /// Message displayed when the contact list is empty.
-  ///
-  /// In en, this message translates to:
-  /// **'No contacts yet.\nTap the \'+\' button to add your first one!'**
-  String get contactsListEmpty;
 
   /// Label for the secondary button to access and use the app in guest mode without signing in.
   ///
@@ -482,12 +452,6 @@ abstract class AppLocalizations {
   /// **'Or enter manually'**
   String get formOrManualEntry;
 
-  /// Title for the page where user enters contact details.
-  ///
-  /// In en, this message translates to:
-  /// **'Contact Details'**
-  String get formPageTitle;
-
   /// Label for the gender input field.
   ///
   /// In en, this message translates to:
@@ -524,29 +488,11 @@ abstract class AppLocalizations {
   /// **'Guest'**
   String get guestBadge;
 
-  /// Badge or display name indicating that the user is currently using the app in guest mode.
-  ///
-  /// In en, this message translates to:
-  /// **'Guest'**
-  String get guestMode;
-
-  /// Title for the main home page.
-  ///
-  /// In en, this message translates to:
-  /// **'My Contacts'**
-  String get homePageTitle;
-
   /// A generic title for an informational dialog or screen.
   ///
   /// In en, this message translates to:
   /// **'Info'**
   String get info;
-
-  /// Label for the installer store field in an info screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Installer Store'**
-  String get installerStore;
 
   /// Error message shown when a form field contains disallowed characters (like numbers or symbols).
   ///
@@ -571,12 +517,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No internet connection. Please check your network and try again.'**
   String get networkError;
-
-  /// Tooltip for the FloatingActionButton to create a new contact.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Contact'**
-  String get newItem;
 
   /// Label for the dashboard floating action button to create a new tax code.
   ///
@@ -625,18 +565,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Package Name'**
   String get packageName;
-
-  /// A welcome message on the login screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome, please sign in to continue.'**
-  String get pleaseSignIn;
-
-  /// A welcome message on the registration screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome, please create an account to continue.'**
-  String get pleaseSignUp;
 
   /// Title for data ownership highlight.
   ///
@@ -716,12 +644,6 @@ abstract class AppLocalizations {
   /// **'Daily limit reached. Please try again tomorrow.'**
   String get rateLimitExceeded;
 
-  /// Label for a button in the profile screen that opens the Play Store for the user to leave a review.
-  ///
-  /// In en, this message translates to:
-  /// **'Rate this App'**
-  String get rateThisApp;
-
   /// Label for button opening full online privacy policy on website.
   ///
   /// In en, this message translates to:
@@ -745,12 +667,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{No saved cards} =1{1 saved card} other{{count} saved cards}}'**
   String savedCardsCount(int count);
-
-  /// Label for a button that initiates scanning a card.
-  ///
-  /// In en, this message translates to:
-  /// **'Scan from Health Card'**
-  String get scanCard;
 
   /// Error message shown when the scan fails to extract data from a document photo. It prompts the user to retry with a better picture.
   ///
@@ -901,12 +817,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'By proceeding, you agree to our Terms and Conditions.'**
   String get termsAndCondition;
-
-  /// Title for terms of service and privacy policy section.
-  ///
-  /// In en, this message translates to:
-  /// **'Terms and Privacy'**
-  String get termsAndPrivacyTitle;
 
   /// Tooltip for the button to confirm the captured picture and proceed.
   ///

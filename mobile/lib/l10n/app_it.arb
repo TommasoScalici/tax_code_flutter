@@ -27,10 +27,6 @@
   "@appTitle": {
     "description": "The title of the application, often shown in the app bar."
   },
-  "appVersion": "Versione",
-  "@appVersion": {
-    "description": "Label for the app version field in an info screen."
-  },
   "barcodeCode128": "Codice a Barre (Code 128)",
   "@barcodeCode128": {
     "description": "Etichetta per il codice a barre 1D Code 128 nel bottom sheet."
@@ -46,10 +42,6 @@
   "barcodeOrDivider": "oppure",
   "@barcodeOrDivider": {
     "description": "Divisore testuale tra il codice a barre 1D e il codice QR 2D."
-  },
-  "barcodePageTitle": "Codice a Barre",
-  "@barcodePageTitle": {
-    "description": "Title for the page displaying the barcode."
   },
   "barcodeQrCode": "QR Code Sanitario",
   "@barcodeQrCode": {
@@ -82,10 +74,6 @@
   "buildNumber": "Numero Build",
   "@buildNumber": {
     "description": "Label for the build number field in an info screen."
-  },
-  "buildSignature": "Firma Build",
-  "@buildSignature": {
-    "description": "Label for the build signature field in an info screen."
   },
   "cameraPermissionInfo": "Per scansionare le tessere, l'app necessita dell'accesso alla fotocamera. Vai alle impostazioni del dispositivo e concedi il permesso.",
   "@cameraPermissionInfo": {
@@ -134,14 +122,6 @@
   "cloudSyncOn": "Sincronizzazione cloud attiva",
   "@cloudSyncOn": {
     "description": "Tooltip and message when cloud synchronization is enabled."
-  },
-  "confirm": "Conferma",
-  "@confirm": {
-    "description": "Label for a confirmation button."
-  },
-  "contactsListEmpty": "Nessun contatto presente.\nTocca il pulsante '+' per aggiungere il primo!",
-  "@contactsListEmpty": {
-    "description": "Message displayed when the contact list is empty."
   },
   "continueAsGuest": "Continua come ospite",
   "@continueAsGuest": {
@@ -275,10 +255,6 @@
   "@formOrManualEntry": {
     "description": "Testo separatore tra il banner di scansione smart OCR e i campi di inserimento manuale nel form."
   },
-  "formPageTitle": "Dettagli Contatto",
-  "@formPageTitle": {
-    "description": "Title for the page where user enters contact details."
-  },
   "gender": "Sesso",
   "@gender": {
     "description": "Label for the gender input field."
@@ -303,21 +279,9 @@
   "@guestBadge": {
     "description": "Badge per utente in modalità ospite."
   },
-  "guestMode": "Ospite",
-  "@guestMode": {
-    "description": "Badge or display name indicating that the user is currently using the app in guest mode."
-  },
-  "homePageTitle": "I Miei Contatti",
-  "@homePageTitle": {
-    "description": "Title for the main home page."
-  },
   "info": "Informazioni",
   "@info": {
     "description": "A generic title for an informational dialog or screen."
-  },
-  "installerStore": "Store di Installazione",
-  "@installerStore": {
-    "description": "Label for the installer store field in an info screen."
   },
   "invalidCharacters": "Il campo contiene caratteri non ammessi.",
   "@invalidCharacters": {
@@ -334,10 +298,6 @@
   "networkError": "Nessuna connessione internet. Controlla la tua rete e riprova.",
   "@networkError": {
     "description": "Error message when there is no internet connectivity."
-  },
-  "newItem": "Aggiungi Contatto",
-  "@newItem": {
-    "description": "Tooltip for the FloatingActionButton to create a new contact."
   },
   "newTaxCode": "Nuovo Codice",
   "@newTaxCode": {
@@ -370,14 +330,6 @@
   "packageName": "Nome Pacchetto",
   "@packageName": {
     "description": "Label for the package name field in an info screen."
-  },
-  "pleaseSignIn": "Benvenuto, accedi per continuare.",
-  "@pleaseSignIn": {
-    "description": "A welcome message on the login screen."
-  },
-  "pleaseSignUp": "Benvenuto, crea un account per continuare.",
-  "@pleaseSignUp": {
-    "description": "A welcome message on the registration screen."
   },
   "privacyDataOwnership": "Dati e Proprietà",
   "@privacyDataOwnership": {
@@ -431,10 +383,6 @@
   "@rateLimitExceeded": {
     "description": "Error message when the user has exceeded their daily limit of tax code calculations."
   },
-  "rateThisApp": "Valuta l'App",
-  "@rateThisApp": {
-    "description": "Etichetta per un pulsante nella schermata del profilo che apre il Play Store per lasciare una recensione."
-  },
   "readFullPrivacyPolicy": "Leggi l'Informativa Completa Online",
   "@readFullPrivacyPolicy": {
     "description": "Etichetta del pulsante per aprire la privacy policy completa sul sito web."
@@ -456,10 +404,6 @@
         "example": "3"
       }
     }
-  },
-  "scanCard": "Scansiona da CIE / TS",
-  "@scanCard": {
-    "description": "Label for a button that initiates scanning a card."
   },
   "scanFailedErrorMessage": "Impossibile leggere i dati dalla foto. Prova a scattarne una nuova più a fuoco.",
   "@scanFailedErrorMessage": {
@@ -572,10 +516,6 @@
   "termsAndCondition": "Procedendo, accetti i nostri Termini e Condizioni.",
   "@termsAndCondition": {
     "description": "A notice about agreeing to terms and conditions."
-  },
-  "termsAndPrivacyTitle": "Termini e Privacy",
-  "@termsAndPrivacyTitle": {
-    "description": "Titolo per la sezione dei termini di servizio e informativa privacy."
   },
   "tooltipConfirmPicture": "Conferma foto",
   "@tooltipConfirmPicture": {

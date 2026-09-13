@@ -26,9 +26,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Tax Code';
 
   @override
-  String get appVersion => 'Version';
-
-  @override
   String get barcodeCode128 => 'Barcode (Code 128)';
 
   @override
@@ -40,9 +37,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get barcodeOrDivider => 'or';
-
-  @override
-  String get barcodePageTitle => 'Tax Code Barcode';
 
   @override
   String get barcodeQrCode => 'Health QR Code';
@@ -68,9 +62,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get buildNumber => 'Build Number';
-
-  @override
-  String get buildSignature => 'Build Signature';
 
   @override
   String get cameraPermissionInfo =>
@@ -110,13 +101,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cloudSyncOn => 'Cloud sync active';
-
-  @override
-  String get confirm => 'Confirm';
-
-  @override
-  String get contactsListEmpty =>
-      'No contacts yet.\nTap the \'+\' button to add your first one!';
 
   @override
   String get continueAsGuest => 'Continue as guest';
@@ -217,9 +201,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get formOrManualEntry => 'Or enter manually';
 
   @override
-  String get formPageTitle => 'Contact Details';
-
-  @override
   String get gender => 'Gender';
 
   @override
@@ -238,16 +219,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get guestBadge => 'Guest';
 
   @override
-  String get guestMode => 'Guest';
-
-  @override
-  String get homePageTitle => 'My Contacts';
-
-  @override
   String get info => 'Info';
-
-  @override
-  String get installerStore => 'Installer Store';
 
   @override
   String get invalidCharacters => 'The field contains invalid characters.';
@@ -261,9 +233,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get networkError =>
       'No internet connection. Please check your network and try again.';
-
-  @override
-  String get newItem => 'Add Contact';
 
   @override
   String get newTaxCode => 'New Code';
@@ -289,12 +258,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get packageName => 'Package Name';
-
-  @override
-  String get pleaseSignIn => 'Welcome, please sign in to continue.';
-
-  @override
-  String get pleaseSignUp => 'Welcome, please create an account to continue.';
 
   @override
   String get privacyDataOwnership => 'Data Ownership';
@@ -341,9 +304,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Daily limit reached. Please try again tomorrow.';
 
   @override
-  String get rateThisApp => 'Rate this App';
-
-  @override
   String get readFullPrivacyPolicy => 'Read Full Privacy Policy Online';
 
   @override
@@ -363,9 +323,6 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get scanCard => 'Scan from Health Card';
 
   @override
   String get scanFailedErrorMessage =>
@@ -457,9 +414,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get termsAndCondition =>
       'By proceeding, you agree to our Terms and Conditions.';
-
-  @override
-  String get termsAndPrivacyTitle => 'Terms and Privacy';
 
   @override
   String get tooltipConfirmPicture => 'Confirm picture';

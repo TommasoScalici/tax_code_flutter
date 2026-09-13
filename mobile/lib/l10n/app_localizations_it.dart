@@ -26,9 +26,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get appTitle => 'Codice Fiscale';
 
   @override
-  String get appVersion => 'Versione';
-
-  @override
   String get barcodeCode128 => 'Codice a Barre (Code 128)';
 
   @override
@@ -40,9 +37,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get barcodeOrDivider => 'oppure';
-
-  @override
-  String get barcodePageTitle => 'Codice a Barre';
 
   @override
   String get barcodeQrCode => 'QR Code Sanitario';
@@ -69,9 +63,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get buildNumber => 'Numero Build';
-
-  @override
-  String get buildSignature => 'Firma Build';
 
   @override
   String get cameraPermissionInfo =>
@@ -111,13 +102,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get cloudSyncOn => 'Sincronizzazione cloud attiva';
-
-  @override
-  String get confirm => 'Conferma';
-
-  @override
-  String get contactsListEmpty =>
-      'Nessun contatto presente.\nTocca il pulsante \'+\' per aggiungere il primo!';
 
   @override
   String get continueAsGuest => 'Continua come ospite';
@@ -218,9 +202,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get formOrManualEntry => 'Oppure inserisci manualmente';
 
   @override
-  String get formPageTitle => 'Dettagli Contatto';
-
-  @override
   String get gender => 'Sesso';
 
   @override
@@ -239,16 +220,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get guestBadge => 'Ospite';
 
   @override
-  String get guestMode => 'Ospite';
-
-  @override
-  String get homePageTitle => 'I Miei Contatti';
-
-  @override
   String get info => 'Informazioni';
-
-  @override
-  String get installerStore => 'Store di Installazione';
 
   @override
   String get invalidCharacters => 'Il campo contiene caratteri non ammessi.';
@@ -262,9 +234,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get networkError =>
       'Nessuna connessione internet. Controlla la tua rete e riprova.';
-
-  @override
-  String get newItem => 'Aggiungi Contatto';
 
   @override
   String get newTaxCode => 'Nuovo Codice';
@@ -290,12 +259,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get packageName => 'Nome Pacchetto';
-
-  @override
-  String get pleaseSignIn => 'Benvenuto, accedi per continuare.';
-
-  @override
-  String get pleaseSignUp => 'Benvenuto, crea un account per continuare.';
 
   @override
   String get privacyDataOwnership => 'Dati e Proprietà';
@@ -342,9 +305,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Limite giornaliero raggiunto. Riprova domani.';
 
   @override
-  String get rateThisApp => 'Valuta l\'App';
-
-  @override
   String get readFullPrivacyPolicy => 'Leggi l\'Informativa Completa Online';
 
   @override
@@ -364,9 +324,6 @@ class AppLocalizationsIt extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get scanCard => 'Scansiona da CIE / TS';
 
   @override
   String get scanFailedErrorMessage =>
@@ -461,9 +418,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get termsAndCondition =>
       'Procedendo, accetti i nostri Termini e Condizioni.';
-
-  @override
-  String get termsAndPrivacyTitle => 'Termini e Privacy';
 
   @override
   String get tooltipConfirmPicture => 'Conferma foto';
