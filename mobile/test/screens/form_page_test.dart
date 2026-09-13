@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as legacy;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -322,8 +323,8 @@ void main() {
             widget is ReactiveTextField &&
             widget.formControlName == 'firstName',
       );
-      final firstNameTextField = tester.widget<TextField>(
-        find.descendant(of: firstNameFinder, matching: find.byType(TextField)),
+      final firstNameTextField = tester.widget<legacy.TextField>(
+        find.descendant(of: firstNameFinder, matching: find.byType(legacy.TextField)),
       );
       expect(firstNameTextField.controller!.text, 'Laura');
 
@@ -331,8 +332,8 @@ void main() {
         (widget) =>
             widget is ReactiveTextField && widget.formControlName == 'lastName',
       );
-      final lastNameTextField = tester.widget<TextField>(
-        find.descendant(of: lastNameFinder, matching: find.byType(TextField)),
+      final lastNameTextField = tester.widget<legacy.TextField>(
+        find.descendant(of: lastNameFinder, matching: find.byType(legacy.TextField)),
       );
       expect(lastNameTextField.controller!.text, 'Neri');
 
@@ -343,7 +344,6 @@ void main() {
         controller.form.control('birthDate').value,
         DateTime(1985, 10, 20),
       );
-
       expect(controller.form.control('birthPlace').value, mockBirthplace);
     });
   });
@@ -378,14 +378,14 @@ void main() {
       await tester.pump();
 
       // Assert
-      final inputDecorator = tester.widget<InputDecorator>(
+      final inputDecorator = tester.widget<legacy.InputDecorator>(
         find.descendant(
           of: find.byWidgetPredicate(
             (widget) =>
                 widget is ReactiveTextField &&
                 widget.formControlName == 'firstName',
           ),
-          matching: find.byType(InputDecorator),
+          matching: find.byType(legacy.InputDecorator),
         ),
       );
 
@@ -426,10 +426,10 @@ void main() {
       await tester.pump();
 
       // Assert
-      final inputDecorator = tester.widget<InputDecorator>(
+      final inputDecorator = tester.widget<legacy.InputDecorator>(
         find.descendant(
           of: firstNameField,
-          matching: find.byType(InputDecorator),
+          matching: find.byType(legacy.InputDecorator),
         ),
       );
 

@@ -1,5 +1,5 @@
 import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';

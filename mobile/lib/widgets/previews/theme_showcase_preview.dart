@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_typography.dart';
-import '../../l10n/app_localizations.dart';
+import '../../l10n/app_localizations_setup.dart';
 
 /// A preview showcase demonstrating the Emerald Ledger design system tokens,
 /// cards, buttons, inputs, and typography across both dark and light modes.
@@ -27,7 +28,7 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
       darkTheme: AppTheme.darkTheme,
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
       locale: const Locale('it'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
         builder: (context) {

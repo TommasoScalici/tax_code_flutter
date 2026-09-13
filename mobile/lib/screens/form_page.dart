@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shared/models/contact.dart';
@@ -7,7 +7,6 @@ import 'package:shared/models/scanned_data.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/tax_code_service.dart';
-
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/routes.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A responsive wrapper widget designed to adapt layout across mobile phones,
 /// foldable devices, and tablets.

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'profile/profile_account_section.dart';
 import 'profile/profile_app_info_view.dart';

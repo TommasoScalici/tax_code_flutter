@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/models/scanned_data.dart';
 import 'screens/auth_gate.dart';

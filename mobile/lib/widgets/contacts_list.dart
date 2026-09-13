@@ -1,7 +1,8 @@
 import 'dart:async';
+
 import 'package:animated_reorderable_list/animated_reorderable_list.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/services/review_service.dart';

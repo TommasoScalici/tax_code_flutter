@@ -89,60 +89,63 @@ class CustomTextField extends StatelessWidget {
         ),
 
         // Reactive text field
-        ReactiveTextField<String>(
-          formControlName: formControlName,
-          textCapitalization: textCapitalization,
-          textInputAction: textInputAction,
-          onTapOutside: (_) => FocusScope.of(context).unfocus(),
-          validationMessages: validationMessages,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            fontSize: 15,
-            color: colorScheme.onSurface,
-          ),
-          decoration: InputDecoration(
-            hintText: placeholder,
-            filled: true,
-            fillColor: bgColor,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 14.0,
+        Material(
+          type: MaterialType.transparency,
+          child: ReactiveTextField<String>(
+            formControlName: formControlName,
+            textCapitalization: textCapitalization,
+            textInputAction: textInputAction,
+            onTapOutside: (_) => FocusScope.of(context).unfocus(),
+            validationMessages: validationMessages,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+              color: colorScheme.onSurface,
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: borderColor, width: 1.0),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: borderColor, width: 1.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(
-                color: colorScheme.primary,
-                width: 1.6,
+            decoration: InputDecoration(
+              hintText: placeholder,
+              filled: true,
+              fillColor: bgColor,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 14.0,
               ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(
-                color: colorScheme.error,
-                width: 1.0,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(color: borderColor, width: 1.0),
               ),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(
-                color: colorScheme.error,
-                width: 1.6,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(color: borderColor, width: 1.0),
               ),
-            ),
-            suffixIcon: suffixIcon ??
-                Icon(
-                  Icons.person_outline_rounded,
-                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-                  size: 20,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(
+                  color: colorScheme.primary,
+                  width: 1.6,
                 ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(
+                  color: colorScheme.error,
+                  width: 1.0,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(
+                  color: colorScheme.error,
+                  width: 1.6,
+                ),
+              ),
+              suffixIcon: suffixIcon ??
+                  Icon(
+                    Icons.person_outline_rounded,
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                    size: 20,
+                  ),
+            ),
           ),
         ),
       ],

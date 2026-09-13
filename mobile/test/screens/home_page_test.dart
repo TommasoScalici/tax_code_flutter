@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:shared/services/theme_service.dart';
 import 'package:tax_code_flutter/screens/home_page.dart';
 import 'package:tax_code_flutter/widgets/contacts_list.dart';
 import 'package:tax_code_flutter/widgets/user_avatar.dart';
@@ -97,7 +98,7 @@ void main() {
       tester,
     ) async {
       // Arrange
-      when(() => mockThemeService.theme).thenReturn(ThemeMode.light);
+      when(() => mockThemeService.theme).thenReturn(AppThemeMode.light);
       when(() => mockThemeService.toggleTheme()).thenAnswer((_) async {});
 
       // Act

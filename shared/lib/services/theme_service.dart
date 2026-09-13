@@ -1,6 +1,9 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:shared/models/app_theme_mode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+export 'package:shared/models/app_theme_mode.dart';
 
 ///
 /// Manages the application's theme state.
@@ -8,8 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemeService with ChangeNotifier {
   final SharedPreferencesAsync _prefs;
 
-  ThemeMode _currentTheme = ThemeMode.light;
-  ThemeMode get theme => _currentTheme;
+  AppThemeMode _currentTheme = AppThemeMode.light;
+  AppThemeMode get theme => _currentTheme;
 
   ///
   /// The main constructor for the theme service.
@@ -20,9 +23,9 @@ class ThemeService with ChangeNotifier {
   /// Toggles the application theme between light and dark mode.
   ///
   void toggleTheme() {
-    _currentTheme = _currentTheme == ThemeMode.dark
-        ? ThemeMode.light
-        : ThemeMode.dark;
+    _currentTheme = _currentTheme == AppThemeMode.dark
+        ? AppThemeMode.light
+        : AppThemeMode.dark;
     unawaited(_saveTheme(_currentTheme));
     notifyListeners();
   }
@@ -33,12 +36,12 @@ class ThemeService with ChangeNotifier {
   Future<void> init() async {
     final themeName = await _prefs.getString('theme') ?? 'light';
     _currentTheme =
-        ThemeMode.values.where((m) => m.name == themeName).firstOrNull ??
-        ThemeMode.light;
+        AppThemeMode.values.where((m) => m.name == themeName).firstOrNull ??
+        AppThemeMode.light;
     notifyListeners();
   }
 
-  Future<void> _saveTheme(ThemeMode theme) async {
+  Future<void> _saveTheme(AppThemeMode theme) async {
     await _prefs.setString('theme', theme.name);
   }
 }

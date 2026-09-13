@@ -3,10 +3,11 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as legacy;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +20,8 @@ import 'package:shared/services/gemini_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 import 'package:shared/services/theme_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
@@ -97,7 +97,7 @@ Future<void> pumpApp(
   when(() => contactRepository.isLoading).thenReturn(false);
   when(() => contactRepository.contacts).thenReturn(<Contact>[]);
 
-  when(() => themeService.theme).thenReturn(ThemeMode.light);
+  when(() => themeService.theme).thenReturn(AppThemeMode.light);
   when(() => remoteConfig.getString(any<String>())).thenReturn('');
 
   when(
@@ -165,8 +165,16 @@ Future<void> pumpApp(
       child: MaterialApp(
         locale: locale,
         onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
+        // MaterialUiCompatibilityBridge is deprecated by Flutter to denote temporary migration utility.
+        // ignore: deprecated_member_use
+        builder: (context, child) => MaterialUiCompatibilityBridge(
+          child: legacy.Material(
+            type: legacy.MaterialType.transparency,
+            child: child,
+          ),
+        ),
         home: widget,
         onGenerateRoute: Routes.generateRoute,
       ),
