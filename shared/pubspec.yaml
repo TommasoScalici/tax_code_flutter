@@ -43,7 +43,6 @@ dev_dependencies:
   hive_ce_generator: ^1.9.0
   json_serializable: ^6.8.0
   mocktail: ^1.0.4
-  remove_unused_localizations: ^1.1.2
   very_good_analysis: ^10.3.0
 
 flutter:

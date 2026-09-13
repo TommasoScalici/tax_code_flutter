@@ -4,7 +4,6 @@ import 'package:shared/models/scanned_data.dart';
 import 'screens/auth_gate.dart';
 import 'screens/camera_page.dart';
 import 'screens/form_page.dart';
-import 'screens/profile_screen.dart';
 import 'screens/welcome_screen.dart';
 
 final class Routes {
@@ -13,7 +12,6 @@ final class Routes {
   static const String home = '/';
   static const String camera = '/camera';
   static const String form = '/form';
-  static const String profile = '/profile';
   static const String welcome = '/welcome';
 
   static Route<Object?> generateRoute(RouteSettings settings) {
@@ -31,8 +29,6 @@ final class Routes {
         return MaterialPageRoute<void>(builder: (_) => const AuthGate());
       case welcome:
         return MaterialPageRoute<void>(builder: (_) => const WelcomeScreen());
-      case profile:
-        return MaterialPageRoute<void>(builder: (_) => const ProfileScreen());
       case form:
         final contact = settings.arguments as Contact?;
         return MaterialPageRoute<Contact?>(
