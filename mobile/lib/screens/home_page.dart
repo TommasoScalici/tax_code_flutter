@@ -11,6 +11,7 @@ import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/widgets/contacts_list.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_fab.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_header.dart';
+import 'package:tax_code_flutter/widgets/profile_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
 final class HomePage extends StatelessWidget {
@@ -42,7 +43,7 @@ final class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: DashboardHeader(
         isSyncActive: syncService?.isSyncEnabled,
-        onProfileTap: () => Navigator.pushNamed(context, Routes.profile),
+        onProfileTap: () => ProfileBottomSheet.show<void>(context),
         onSyncToggle: () async {
           final authService = context.read<AuthService?>();
           if (authService?.isGuest == true) {

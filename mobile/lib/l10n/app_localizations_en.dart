@@ -9,6 +9,17 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get accountAndSettings => 'Account & Settings';
+
+  @override
+  String appInfoSubtitle(String version) {
+    return 'Version $version • Legal notes and Privacy Policy';
+  }
+
+  @override
+  String get appInfoTitle => 'App Information';
+
+  @override
   String get appName => 'App Name';
 
   @override
@@ -81,6 +92,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get close => 'Close';
 
   @override
+  String get cloudBackupBannerSubtitle =>
+      'Sign in with Google to sync and protect your tax codes.';
+
+  @override
+  String get cloudBackupBannerTitle => 'Enable Cloud Backup';
+
+  @override
   String get cloudSyncActive => 'Cloud sync active';
 
   @override
@@ -125,6 +143,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAccount => 'Delete Account';
 
   @override
+  String get deleteAccountGdprSubtitle =>
+      'Permanent deletion and right to be forgotten (GDPR)';
+
+  @override
   String get deleteAccountMessage =>
       'Are you sure you want to delete your account? All your data will be permanently lost. This action is irreversible.';
 
@@ -135,6 +157,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String deleteMessage(String taxCode) {
     return 'Are you sure you want to permanently delete the contact for \'$taxCode\'?';
   }
+
+  @override
+  String get developedBy => 'Developed by Tommaso Scalici';
 
   @override
   String get edit => 'Edit';
@@ -167,6 +192,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error => 'Error';
 
   @override
+  String get exportDataSubtitle => 'Offline backup in JSON or CSV format';
+
+  @override
+  String get exportDataTitle => 'Export codes';
+
+  @override
+  String get featureComingSoon => 'Feature coming soon';
+
+  @override
   String get firstName => 'First Name';
 
   @override
@@ -189,6 +223,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get genericError => 'Something went wrong. Please try again.';
+
+  @override
+  String get googleBadge => 'Google';
+
+  @override
+  String get guestBadge => 'Guest';
 
   @override
   String get guestMode => 'Guest';
@@ -253,6 +293,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profilePageTitle => 'Profile';
 
   @override
+  String get rateAppSubtitle => 'Support app development';
+
+  @override
+  String get rateAppTitle => 'Rate on the Play Store';
+
+  @override
   String get rateLimitExceeded =>
       'Daily limit reached. Please try again tomorrow.';
 
@@ -296,6 +342,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get sectionAccountManagement => 'Account Management';
+
+  @override
+  String get sectionDataAndUtilities => 'Data & Utilities';
+
+  @override
+  String get sectionLegalAndAppInfo => 'Legal Information';
+
+  @override
   String get serviceUnavailable =>
       'The service is temporarily unavailable. Please try again later.';
 
@@ -316,6 +371,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signOut => 'Sign Out';
 
   @override
+  String get signOutSubtitle => 'Disconnect Google profile from this device';
+
+  @override
   String get stepBirthplacesChecking => 'Checking birthplaces database...';
 
   @override
@@ -330,6 +388,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get switchTheme => 'Toggle theme';
+
+  @override
+  String syncSavedCodesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count saved codes',
+      one: '1 saved code',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get takePicture => 'Scan Card';
@@ -347,6 +416,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get termsAndCondition =>
       'By proceeding, you agree to our Terms and Conditions.';
+
+  @override
+  String get termsAndPrivacyTitle => 'Terms and Privacy';
 
   @override
   String get tooltipConfirmPicture => 'Confirm picture';

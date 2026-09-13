@@ -9,6 +9,17 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
+  String get accountAndSettings => 'Account & Impostazioni';
+
+  @override
+  String appInfoSubtitle(String version) {
+    return 'Versione $version • Note legali e Privacy Policy';
+  }
+
+  @override
+  String get appInfoTitle => 'Informazioni sull\'app';
+
+  @override
   String get appName => 'Nome App';
 
   @override
@@ -82,6 +93,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get close => 'Chiudi';
 
   @override
+  String get cloudBackupBannerSubtitle =>
+      'Accedi con Google per sincronizzare e proteggere i tuoi codici fiscali.';
+
+  @override
+  String get cloudBackupBannerTitle => 'Attiva il Backup Cloud';
+
+  @override
   String get cloudSyncActive => 'Sincronizzazione attiva';
 
   @override
@@ -126,6 +144,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get deleteAccount => 'Elimina Account';
 
   @override
+  String get deleteAccountGdprSubtitle =>
+      'Cancellazione definitiva e diritto all\'oblio (GDPR)';
+
+  @override
   String get deleteAccountMessage =>
       'Sei sicuro di voler eliminare il tuo account? Tutti i tuoi dati verranno persi permanentemente. Questa azione è irreversibile.';
 
@@ -136,6 +158,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String deleteMessage(String taxCode) {
     return 'Sei sicuro di voler eliminare permanentemente il contatto per \'$taxCode\'?';
   }
+
+  @override
+  String get developedBy => 'Sviluppata da Tommaso Scalici';
 
   @override
   String get edit => 'Modifica';
@@ -168,6 +193,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get error => 'Errore';
 
   @override
+  String get exportDataSubtitle => 'Backup offline in formato JSON o CSV';
+
+  @override
+  String get exportDataTitle => 'Esporta codici';
+
+  @override
+  String get featureComingSoon => 'Funzionalità in arrivo';
+
+  @override
   String get firstName => 'Nome';
 
   @override
@@ -190,6 +224,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get genericError => 'Qualcosa è andato storto. Riprova.';
+
+  @override
+  String get googleBadge => 'Google';
+
+  @override
+  String get guestBadge => 'Ospite';
 
   @override
   String get guestMode => 'Ospite';
@@ -254,6 +294,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get profilePageTitle => 'Profilo';
 
   @override
+  String get rateAppSubtitle => 'Supporta lo sviluppo dell\'app';
+
+  @override
+  String get rateAppTitle => 'Valuta sul Play Store';
+
+  @override
   String get rateLimitExceeded =>
       'Limite giornaliero raggiunto. Riprova domani.';
 
@@ -297,6 +343,15 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get sectionAccountManagement => 'Gestione Account';
+
+  @override
+  String get sectionDataAndUtilities => 'Dati e Funzioni';
+
+  @override
+  String get sectionLegalAndAppInfo => 'Informazioni Legali';
+
+  @override
   String get serviceUnavailable =>
       'Il servizio è temporaneamente non disponibile. Riprova più tardi.';
 
@@ -317,6 +372,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signOut => 'Esci';
 
   @override
+  String get signOutSubtitle =>
+      'Scollega il profilo Google da questo dispositivo';
+
+  @override
   String get stepBirthplacesChecking =>
       'Controllo del database dei luoghi di nascita...';
 
@@ -335,6 +394,17 @@ class AppLocalizationsIt extends AppLocalizations {
   String get switchTheme => 'Cambia tema';
 
   @override
+  String syncSavedCodesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count codici salvati',
+      one: '1 codice salvato',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get takePicture => 'Scansiona Tessera';
 
   @override
@@ -350,6 +420,9 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get termsAndCondition =>
       'Procedendo, accetti i nostri Termini e Condizioni.';
+
+  @override
+  String get termsAndPrivacyTitle => 'Termini e Privacy';
 
   @override
   String get tooltipConfirmPicture => 'Conferma foto';

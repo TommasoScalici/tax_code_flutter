@@ -1,6 +1,24 @@
 {
   "@@author": "Tommaso Scalici",
   "@@locale": "en",
+  "accountAndSettings": "Account & Settings",
+  "@accountAndSettings": {
+    "description": "Header title for profile and settings bottom sheet."
+  },
+  "appInfoSubtitle": "Version {version} • Legal notes and Privacy Policy",
+  "@appInfoSubtitle": {
+    "description": "Subtitle for app information item with dynamic version.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "2.0.0"
+      }
+    }
+  },
+  "appInfoTitle": "App Information",
+  "@appInfoTitle": {
+    "description": "Title for the app information item and sub-view."
+  },
   "appName": "App Name",
   "@appName": {
     "description": "Label for the app name field in an info screen."
@@ -93,6 +111,14 @@
   "@close": {
     "description": "Label for a button to close a screen or dialog."
   },
+  "cloudBackupBannerSubtitle": "Sign in with Google to sync and protect your tax codes.",
+  "@cloudBackupBannerSubtitle": {
+    "description": "Description of promotional banner for guest users to enable cloud backup."
+  },
+  "cloudBackupBannerTitle": "Enable Cloud Backup",
+  "@cloudBackupBannerTitle": {
+    "description": "Title of promotional banner for guest users to enable cloud backup."
+  },
   "cloudSyncActive": "Cloud sync active",
   "@cloudSyncActive": {
     "description": "Tooltip indicating active cloud synchronization on the user avatar."
@@ -149,6 +175,10 @@
   "@deleteAccount": {
     "description": "Label for a button to delete the user's account."
   },
+  "deleteAccountGdprSubtitle": "Permanent deletion and right to be forgotten (GDPR)",
+  "@deleteAccountGdprSubtitle": {
+    "description": "Subtitle for account deletion action according to GDPR compliance."
+  },
   "deleteAccountMessage": "Are you sure you want to delete your account? All your data will be permanently lost. This action is irreversible.",
   "@deleteAccountMessage": {
     "description": "A confirmation message shown to the user before deleting their account."
@@ -166,6 +196,10 @@
         "example": "RSSMRA80A01H501A"
       }
     }
+  },
+  "developedBy": "Developed by Tommaso Scalici",
+  "@developedBy": {
+    "description": "Developer attribution in app information."
   },
   "edit": "Edit",
   "@edit": {
@@ -209,6 +243,18 @@
   "@error": {
     "description": "A generic title for an error dialog."
   },
+  "exportDataSubtitle": "Offline backup in JSON or CSV format",
+  "@exportDataSubtitle": {
+    "description": "Subtitle for the export saved codes item."
+  },
+  "exportDataTitle": "Export codes",
+  "@exportDataTitle": {
+    "description": "Title for the export saved codes item."
+  },
+  "featureComingSoon": "Feature coming soon",
+  "@featureComingSoon": {
+    "description": "Informational message for upcoming features."
+  },
   "firstName": "First Name",
   "@firstName": {
     "description": "Label for the first name input field."
@@ -240,6 +286,14 @@
   "genericError": "Something went wrong. Please try again.",
   "@genericError": {
     "description": "A user-friendly message for a generic error, asking them to retry."
+  },
+  "googleBadge": "Google",
+  "@googleBadge": {
+    "description": "Badge for user authenticated with Google account."
+  },
+  "guestBadge": "Guest",
+  "@guestBadge": {
+    "description": "Badge for user in guest mode."
   },
   "guestMode": "Guest",
   "@guestMode": {
@@ -321,6 +375,14 @@
   "@profilePageTitle": {
     "description": "Title for the user profile screen."
   },
+  "rateAppSubtitle": "Support app development",
+  "@rateAppSubtitle": {
+    "description": "Subtitle for rating app in store item."
+  },
+  "rateAppTitle": "Rate on the Play Store",
+  "@rateAppTitle": {
+    "description": "Title for rating app in store item."
+  },
   "rateLimitExceeded": "Daily limit reached. Please try again tomorrow.",
   "@rateLimitExceeded": {
     "description": "Error message when the user has exceeded their daily limit of tax code calculations."
@@ -373,6 +435,18 @@
       }
     }
   },
+  "sectionAccountManagement": "Account Management",
+  "@sectionAccountManagement": {
+    "description": "Header for account management section in profile bottom sheet."
+  },
+  "sectionDataAndUtilities": "Data & Utilities",
+  "@sectionDataAndUtilities": {
+    "description": "Header for data and utilities section in profile bottom sheet."
+  },
+  "sectionLegalAndAppInfo": "Legal Information",
+  "@sectionLegalAndAppInfo": {
+    "description": "Header for legal information section in profile bottom sheet."
+  },
   "serviceUnavailable": "The service is temporarily unavailable. Please try again later.",
   "@serviceUnavailable": {
     "description": "Error message when the backend service is down or returning an error."
@@ -397,6 +471,10 @@
   "@signOut": {
     "description": "Label for a button to sign out of the application."
   },
+  "signOutSubtitle": "Disconnect Google profile from this device",
+  "@signOutSubtitle": {
+    "description": "Subtitle for sign out action."
+  },
   "stepBirthplacesChecking": "Checking birthplaces database...",
   "@stepBirthplacesChecking": {
     "description": "Initial step indicating the service is checking whether birthplace data needs to be downloaded."
@@ -417,6 +495,16 @@
   "@switchTheme": {
     "description": "Tooltip for the theme mode toggle button."
   },
+  "syncSavedCodesCount": "{count, plural, =1{1 saved code} other{{count} saved codes}}",
+  "@syncSavedCodesCount": {
+    "description": "Count of saved tax codes for sync status pill.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
   "takePicture": "Scan Card",
   "@takePicture": {
     "description": "Title for the camera screen."
@@ -436,6 +524,10 @@
   "termsAndCondition": "By proceeding, you agree to our Terms and Conditions.",
   "@termsAndCondition": {
     "description": "A notice about agreeing to terms and conditions."
+  },
+  "termsAndPrivacyTitle": "Terms and Privacy",
+  "@termsAndPrivacyTitle": {
+    "description": "Title for terms of service and privacy policy section."
   },
   "tooltipConfirmPicture": "Confirm picture",
   "@tooltipConfirmPicture": {

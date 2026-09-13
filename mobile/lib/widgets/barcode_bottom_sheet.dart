@@ -8,6 +8,8 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 
@@ -267,7 +269,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.opticalWhite,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
@@ -291,7 +293,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             const Icon(
                               Symbols.barcode,
                               size: 16,
-                              color: Color(0xFF2E2E2E),
+                              color: AppColors.opticalTextPrimary,
                             ),
                             const SizedBox(width: 6),
                             Text(
@@ -300,7 +302,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                                 fontSize: 10.5,
                                 fontWeight: FontWeight.w800,
                                 letterSpacing: 1.4,
-                                color: Color(0xFF4A4A4A),
+                                color: AppColors.opticalTextSecondary,
                               ),
                             ),
                           ],
@@ -313,18 +315,15 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             barcode: Barcode.code128(),
                             data: widget.contact.taxCode,
                             drawText: false,
-                            color: Colors.black,
-                            backgroundColor: Colors.white,
+                            color: AppColors.opticalBlack,
+                            backgroundColor: AppColors.opticalWhite,
                           ),
                         ),
                         const SizedBox(height: 6),
                         SelectableText(
                           widget.contact.taxCode,
-                          style: GoogleFonts.jetBrainsMono(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 2.8,
-                            color: Colors.black,
+                          style: AppTypography.barcodeReadableText(
+                            color: AppColors.opticalBlack,
                           ),
                         ),
                         const SizedBox(height: 14),
@@ -333,7 +332,10 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                         Row(
                           children: [
                             const Expanded(
-                              child: Divider(color: Color(0xFFE2E2E2), height: 1),
+                              child: Divider(
+                                color: AppColors.opticalDivider,
+                                height: 1,
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -343,12 +345,15 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                                   fontSize: 10,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 1.2,
-                                  color: Color(0xFF888888),
+                                  color: AppColors.opticalTextMuted,
                                 ),
                               ),
                             ),
                             const Expanded(
-                              child: Divider(color: Color(0xFFE2E2E2), height: 1),
+                              child: Divider(
+                                color: AppColors.opticalDivider,
+                                height: 1,
+                              ),
                             ),
                           ],
                         ),
@@ -358,17 +363,17 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.opticalWhite,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: const Color(0xFFEDEDED)),
+                            border: Border.all(color: AppColors.opticalBorder),
                           ),
                           child: BarcodeWidget(
                             barcode: Barcode.qrCode(),
                             data: widget.contact.taxCode,
                             width: 110,
                             height: 110,
-                            color: Colors.black,
-                            backgroundColor: Colors.white,
+                            color: AppColors.opticalBlack,
+                            backgroundColor: AppColors.opticalWhite,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -377,7 +382,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF424242),
+                            color: AppColors.opticalTextSecondary,
                             letterSpacing: 0.4,
                           ),
                         ),

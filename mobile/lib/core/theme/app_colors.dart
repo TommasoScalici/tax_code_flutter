@@ -129,11 +129,44 @@ abstract final class AppColors {
   /// Pure pitch-black strictly reserved for barcode stripes and QR modules.
   static const Color opticalBlack = Color(0xFF000000);
 
-  /// Rating star color.
+  /// Subtle border around the optical scanner container.
+  static const Color opticalBorder = Color(0xFFEDEDED);
+
+  /// Divider line within the optical scanner container.
+  static const Color opticalDivider = Color(0xFFE2E2E2);
+
+  /// Primary text color inside the optical scanner container.
+  static const Color opticalTextPrimary = Color(0xFF2E2E2E);
+
+  /// Secondary text color inside the optical scanner container.
+  static const Color opticalTextSecondary = Color(0xFF4A4A4A);
+
+  /// Muted label text color inside the optical scanner container.
+  static const Color opticalTextMuted = Color(0xFF888888);
+
+  /// Rating star and gold highlight color.
   static const Color starGold = Color(0xFFFFC107);
+
+  /// Warning / attention accent color (e.g. guest mode indicator).
+  static const Color warning = Color(0xFFFFB74D);
+
+  /// Translucent warning container tint for badges and chips.
+  static const Color warningContainer = Color(0x29FFB74D);
+
+  /// Informational accent color (e.g. app info tile, legal notices).
+  static const Color info = Color(0xFF42A5F5);
+
+  /// Translucent info container tint.
+  static const Color infoContainer = Color(0x2942A5F5);
 
   /// Pulse badge color indicating active cloud sync.
   static const Color syncPulse = Color(0xFF58C878);
+
+  /// Brand avatar fallback gradient start color.
+  static const Color brandGradientStart = Color(0xFF1B4332);
+
+  /// Brand avatar fallback gradient end color.
+  static const Color brandGradientEnd = Color(0xFF2D6A4F);
 
   // ---------------------------------------------------------------------------
   // Material 3 ColorScheme Builders

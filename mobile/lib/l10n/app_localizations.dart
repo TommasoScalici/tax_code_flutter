@@ -98,6 +98,24 @@ abstract class AppLocalizations {
     Locale('it'),
   ];
 
+  /// Header title for profile and settings bottom sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Account & Settings'**
+  String get accountAndSettings;
+
+  /// Subtitle for app information item with dynamic version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} • Legal notes and Privacy Policy'**
+  String appInfoSubtitle(String version);
+
+  /// Title for the app information item and sub-view.
+  ///
+  /// In en, this message translates to:
+  /// **'App Information'**
+  String get appInfoTitle;
+
   /// Label for the app name field in an info screen.
   ///
   /// In en, this message translates to:
@@ -236,6 +254,18 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get close;
 
+  /// Description of promotional banner for guest users to enable cloud backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google to sync and protect your tax codes.'**
+  String get cloudBackupBannerSubtitle;
+
+  /// Title of promotional banner for guest users to enable cloud backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Cloud Backup'**
+  String get cloudBackupBannerTitle;
+
   /// Tooltip indicating active cloud synchronization on the user avatar.
   ///
   /// In en, this message translates to:
@@ -320,6 +350,12 @@ abstract class AppLocalizations {
   /// **'Delete Account'**
   String get deleteAccount;
 
+  /// Subtitle for account deletion action according to GDPR compliance.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent deletion and right to be forgotten (GDPR)'**
+  String get deleteAccountGdprSubtitle;
+
   /// A confirmation message shown to the user before deleting their account.
   ///
   /// In en, this message translates to:
@@ -337,6 +373,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to permanently delete the contact for \'{taxCode}\'?'**
   String deleteMessage(String taxCode);
+
+  /// Developer attribution in app information.
+  ///
+  /// In en, this message translates to:
+  /// **'Developed by Tommaso Scalici'**
+  String get developedBy;
 
   /// Label for an edit button.
   ///
@@ -392,6 +434,24 @@ abstract class AppLocalizations {
   /// **'Error'**
   String get error;
 
+  /// Subtitle for the export saved codes item.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline backup in JSON or CSV format'**
+  String get exportDataSubtitle;
+
+  /// Title for the export saved codes item.
+  ///
+  /// In en, this message translates to:
+  /// **'Export codes'**
+  String get exportDataTitle;
+
+  /// Informational message for upcoming features.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature coming soon'**
+  String get featureComingSoon;
+
   /// Label for the first name input field.
   ///
   /// In en, this message translates to:
@@ -439,6 +499,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong. Please try again.'**
   String get genericError;
+
+  /// Badge for user authenticated with Google account.
+  ///
+  /// In en, this message translates to:
+  /// **'Google'**
+  String get googleBadge;
+
+  /// Badge for user in guest mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get guestBadge;
 
   /// Badge or display name indicating that the user is currently using the app in guest mode.
   ///
@@ -560,6 +632,18 @@ abstract class AppLocalizations {
   /// **'Profile'**
   String get profilePageTitle;
 
+  /// Subtitle for rating app in store item.
+  ///
+  /// In en, this message translates to:
+  /// **'Support app development'**
+  String get rateAppSubtitle;
+
+  /// Title for rating app in store item.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate on the Play Store'**
+  String get rateAppTitle;
+
   /// Error message when the user has exceeded their daily limit of tax code calculations.
   ///
   /// In en, this message translates to:
@@ -620,6 +704,24 @@ abstract class AppLocalizations {
   /// **'No results found for \'{searchText}\''**
   String searchNoResults(String searchText);
 
+  /// Header for account management section in profile bottom sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Management'**
+  String get sectionAccountManagement;
+
+  /// Header for data and utilities section in profile bottom sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Data & Utilities'**
+  String get sectionDataAndUtilities;
+
+  /// Header for legal information section in profile bottom sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal Information'**
+  String get sectionLegalAndAppInfo;
+
   /// Error message when the backend service is down or returning an error.
   ///
   /// In en, this message translates to:
@@ -656,6 +758,12 @@ abstract class AppLocalizations {
   /// **'Sign Out'**
   String get signOut;
 
+  /// Subtitle for sign out action.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect Google profile from this device'**
+  String get signOutSubtitle;
+
   /// Initial step indicating the service is checking whether birthplace data needs to be downloaded.
   ///
   /// In en, this message translates to:
@@ -686,6 +794,12 @@ abstract class AppLocalizations {
   /// **'Toggle theme'**
   String get switchTheme;
 
+  /// Count of saved tax codes for sync status pill.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 saved code} other{{count} saved codes}}'**
+  String syncSavedCodesCount(int count);
+
   /// Title for the camera screen.
   ///
   /// In en, this message translates to:
@@ -715,6 +829,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'By proceeding, you agree to our Terms and Conditions.'**
   String get termsAndCondition;
+
+  /// Title for terms of service and privacy policy section.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms and Privacy'**
+  String get termsAndPrivacyTitle;
 
   /// Tooltip for the button to confirm the captured picture and proceed.
   ///

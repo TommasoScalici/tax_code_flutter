@@ -1,6 +1,24 @@
 {
   "@@author": "Tommaso Scalici",
   "@@locale": "it",
+  "accountAndSettings": "Account & Impostazioni",
+  "@accountAndSettings": {
+    "description": "Titolo dell'header del bottom sheet profilo e impostazioni."
+  },
+  "appInfoSubtitle": "Versione {version} • Note legali e Privacy Policy",
+  "@appInfoSubtitle": {
+    "description": "Sottotitolo per la voce informazioni sull'app con versione dinamica.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "2.0.0"
+      }
+    }
+  },
+  "appInfoTitle": "Informazioni sull'app",
+  "@appInfoTitle": {
+    "description": "Titolo della voce e della sotto-schermata informazioni sull'app."
+  },
   "appName": "Nome App",
   "@appName": {
     "description": "Label for the app name field in an info screen."
@@ -93,6 +111,14 @@
   "@close": {
     "description": "Label for a button to close a screen or dialog."
   },
+  "cloudBackupBannerSubtitle": "Accedi con Google per sincronizzare e proteggere i tuoi codici fiscali.",
+  "@cloudBackupBannerSubtitle": {
+    "description": "Descrizione del banner promozionale per utenti ospiti per attivare il backup su cloud."
+  },
+  "cloudBackupBannerTitle": "Attiva il Backup Cloud",
+  "@cloudBackupBannerTitle": {
+    "description": "Titolo del banner promozionale per utenti ospiti per attivare il backup su cloud."
+  },
   "cloudSyncActive": "Sincronizzazione attiva",
   "@cloudSyncActive": {
     "description": "Tooltip indicating active cloud synchronization on the user avatar."
@@ -149,6 +175,10 @@
   "@deleteAccount": {
     "description": "Label for a button to delete the user's account."
   },
+  "deleteAccountGdprSubtitle": "Cancellazione definitiva e diritto all'oblio (GDPR)",
+  "@deleteAccountGdprSubtitle": {
+    "description": "Sottotitolo per l'azione di eliminazione dell'account in conformità al GDPR."
+  },
   "deleteAccountMessage": "Sei sicuro di voler eliminare il tuo account? Tutti i tuoi dati verranno persi permanentemente. Questa azione è irreversibile.",
   "@deleteAccountMessage": {
     "description": "A confirmation message shown to the user before deleting their account."
@@ -166,6 +196,10 @@
         "example": "RSSMRA80A01H501A"
       }
     }
+  },
+  "developedBy": "Sviluppata da Tommaso Scalici",
+  "@developedBy": {
+    "description": "Attribuzione dello sviluppatore nelle informazioni sull'app."
   },
   "edit": "Modifica",
   "@edit": {
@@ -209,6 +243,18 @@
   "@error": {
     "description": "A generic title for an error dialog."
   },
+  "exportDataSubtitle": "Backup offline in formato JSON o CSV",
+  "@exportDataSubtitle": {
+    "description": "Sottotitolo per la voce di esportazione dei codici salvati."
+  },
+  "exportDataTitle": "Esporta codici",
+  "@exportDataTitle": {
+    "description": "Titolo per la voce di esportazione dei codici salvati."
+  },
+  "featureComingSoon": "Funzionalità in arrivo",
+  "@featureComingSoon": {
+    "description": "Messaggio informativo per funzionalità non ancora disponibili."
+  },
   "firstName": "Nome",
   "@firstName": {
     "description": "Label for the first name input field."
@@ -240,6 +286,14 @@
   "genericError": "Qualcosa è andato storto. Riprova.",
   "@genericError": {
     "description": "A user-friendly message for a generic error, asking them to retry."
+  },
+  "googleBadge": "Google",
+  "@googleBadge": {
+    "description": "Badge per utente autenticato con account Google."
+  },
+  "guestBadge": "Ospite",
+  "@guestBadge": {
+    "description": "Badge per utente in modalità ospite."
   },
   "guestMode": "Ospite",
   "@guestMode": {
@@ -321,6 +375,14 @@
   "@profilePageTitle": {
     "description": "Title for the user profile screen."
   },
+  "rateAppSubtitle": "Supporta lo sviluppo dell'app",
+  "@rateAppSubtitle": {
+    "description": "Sottotitolo per la voce di valutazione dell'app nello store."
+  },
+  "rateAppTitle": "Valuta sul Play Store",
+  "@rateAppTitle": {
+    "description": "Titolo per la voce di valutazione dell'app nello store."
+  },
   "rateLimitExceeded": "Limite giornaliero raggiunto. Riprova domani.",
   "@rateLimitExceeded": {
     "description": "Error message when the user has exceeded their daily limit of tax code calculations."
@@ -373,6 +435,18 @@
       }
     }
   },
+  "sectionAccountManagement": "Gestione Account",
+  "@sectionAccountManagement": {
+    "description": "Intestazione della sezione di gestione account nel bottom sheet profilo."
+  },
+  "sectionDataAndUtilities": "Dati e Funzioni",
+  "@sectionDataAndUtilities": {
+    "description": "Intestazione della sezione dati e funzioni nel bottom sheet profilo."
+  },
+  "sectionLegalAndAppInfo": "Informazioni Legali",
+  "@sectionLegalAndAppInfo": {
+    "description": "Intestazione della sezione informazioni legali nel bottom sheet profilo."
+  },
   "serviceUnavailable": "Il servizio è temporaneamente non disponibile. Riprova più tardi.",
   "@serviceUnavailable": {
     "description": "Error message when the backend service is down or returning an error."
@@ -397,6 +471,10 @@
   "@signOut": {
     "description": "Label for a button to sign out of the application."
   },
+  "signOutSubtitle": "Scollega il profilo Google da questo dispositivo",
+  "@signOutSubtitle": {
+    "description": "Sottotitolo per la voce di disconnessione dall'account."
+  },
   "stepBirthplacesChecking": "Controllo del database dei luoghi di nascita...",
   "@stepBirthplacesChecking": {
     "description": "Passaggio iniziale che indica che il servizio sta verificando se i dati dei luoghi di nascita devono essere scaricati."
@@ -417,6 +495,16 @@
   "@switchTheme": {
     "description": "Tooltip for the theme mode toggle button."
   },
+  "syncSavedCodesCount": "{count, plural, =1{1 codice salvato} other{{count} codici salvati}}",
+  "@syncSavedCodesCount": {
+    "description": "Conteggio dei codici salvati per la pillola di stato sincronizzazione.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
   "takePicture": "Scansiona Tessera",
   "@takePicture": {
     "description": "Title for the camera screen."
@@ -436,6 +524,10 @@
   "termsAndCondition": "Procedendo, accetti i nostri Termini e Condizioni.",
   "@termsAndCondition": {
     "description": "A notice about agreeing to terms and conditions."
+  },
+  "termsAndPrivacyTitle": "Termini e Privacy",
+  "@termsAndPrivacyTitle": {
+    "description": "Titolo per la sezione dei termini di servizio e informativa privacy."
   },
   "tooltipConfirmPicture": "Conferma foto",
   "@tooltipConfirmPicture": {
