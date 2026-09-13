@@ -7,6 +7,9 @@ class FormStickyBottomBar extends StatelessWidget {
   /// Callback when the save button is tapped.
   final VoidCallback? onSavePressed;
 
+  /// Optional alias callback for [onSavePressed].
+  final VoidCallback? onPressed;
+
   /// Whether the save button is enabled.
   final bool isEnabled;
 
@@ -21,7 +24,8 @@ class FormStickyBottomBar extends StatelessWidget {
 
   const FormStickyBottomBar({
     super.key,
-    required this.onSavePressed,
+    this.onSavePressed,
+    this.onPressed,
     this.isEnabled = true,
     this.isLoading = false,
     this.labelText,
@@ -52,7 +56,9 @@ class FormStickyBottomBar extends StatelessWidget {
       ),
       child: SafeArea(
         top: false,
-        child: Center(
+        child: Align(
+          alignment: Alignment.topCenter,
+          heightFactor: 1.0,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 520),
             child: Padding(
@@ -62,7 +68,7 @@ class FormStickyBottomBar extends StatelessWidget {
                 height: 52,
                 child: FilledButton(
                   key: const Key('form_sticky_bottom_bar_button'),
-                  onPressed: isEnabled && !isLoading ? onSavePressed : null,
+                  onPressed: isEnabled && !isLoading ? (onSavePressed ?? onPressed) : null,
                   style: FilledButton.styleFrom(
                     backgroundColor: colorScheme.primary,
                     foregroundColor: colorScheme.onPrimary,

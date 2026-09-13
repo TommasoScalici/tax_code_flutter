@@ -10,6 +10,7 @@ import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 import 'package:shared/utils/error_mapper.dart';
+import 'package:shared/utils/tax_code_generator.dart';
 import 'package:tax_code_flutter/validators/only_letters_validator.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,6 +19,7 @@ interface class FormPageController with ChangeNotifier {
   final BirthplaceServiceAbstract _birthplaceService;
   final ContactRepository _contactRepository;
   StreamSubscription<ControlStatus>? _formStatusSubscription;
+  StreamSubscription<dynamic>? _formValueSubscription;
   final Logger _logger;
   final Contact? _initialContact;
   late final FormGroup form;
@@ -30,6 +32,46 @@ interface class FormPageController with ChangeNotifier {
   String? errorKey;
   double? downloadProgress;
   String? downloadStep;
+
+  /// Whether the form is in editing mode for an existing contact.
+  bool get isEditing => _initialContact != null;
+
+  /// The original contact if in editing mode.
+  Contact? get initialContact => _initialContact;
+
+  /// Dynamically calculated 16-character tax code based on current form field values.
+  /// Falls back to existing contact's tax code if form is partially completed.
+  String? get calculatedTaxCode {
+    try {
+      final firstName = form.control('firstName').value as String?;
+      final lastName = form.control('lastName').value as String?;
+      final gender = form.control('gender').value as String?;
+      final birthDate = form.control('birthDate').value as DateTime?;
+      final birthPlace = form.control('birthPlace').value as Birthplace?;
+
+      if (firstName == null ||
+          firstName.trim().isEmpty ||
+          lastName == null ||
+          lastName.trim().isEmpty ||
+          gender == null ||
+          (gender != 'M' && gender != 'F') ||
+          birthDate == null ||
+          birthPlace == null ||
+          birthPlace.code.isEmpty) {
+        return _initialContact?.taxCode;
+      }
+
+      return TaxCodeGenerator.generate(
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        dateOfBirth: birthDate,
+        gender: gender,
+        birthplaceCode: birthPlace.code,
+      );
+    } on Object {
+      return _initialContact?.taxCode;
+    }
+  }
 
   FormPageController({
     required TaxCodeServiceAbstract taxCodeService,
@@ -50,6 +92,7 @@ interface class FormPageController with ChangeNotifier {
   void dispose() {
     _isDisposed = true;
     unawaited(_formStatusSubscription?.cancel());
+    unawaited(_formValueSubscription?.cancel());
     super.dispose();
   }
 
@@ -91,6 +134,9 @@ interface class FormPageController with ChangeNotifier {
 
   void _listenToFormStatus() {
     _formStatusSubscription = form.statusChanged.listen((status) {
+      notifyListeners();
+    });
+    _formValueSubscription = form.valueChanges.listen((value) {
       notifyListeners();
     });
   }

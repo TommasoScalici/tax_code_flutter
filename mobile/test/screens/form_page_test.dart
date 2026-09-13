@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
-import 'package:reactive_date_time_picker/reactive_date_time_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
 import 'package:shared/models/birthplace.dart';
@@ -13,9 +11,11 @@ import 'package:shared/models/contact.dart';
 import 'package:shared/models/scanned_data.dart';
 import 'package:shared/models/tax_code_response.dart';
 import 'package:shared/services/tax_code_service.dart';
-
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
 import 'package:tax_code_flutter/screens/form_page.dart';
+import 'package:tax_code_flutter/widgets/form/birthdate_picker_field.dart';
+import 'package:tax_code_flutter/widgets/form/gender_segmented_button.dart';
+import 'package:tax_code_flutter/widgets/form/ocr_ai_hero_banner.dart';
 
 import '../helpers/mocks.dart';
 import '../helpers/pump_app.dart';
@@ -119,7 +119,7 @@ void main() {
       expect(
         find.byWidgetPredicate(
           (widget) =>
-              widget is ReactiveDropdownField &&
+              widget is GenderSegmentedButton &&
               widget.formControlName == 'gender',
         ),
         findsOneWidget,
@@ -128,16 +128,16 @@ void main() {
       expect(
         find.byWidgetPredicate(
           (widget) =>
-              widget is ReactiveDateTimePicker &&
+              widget is BirthdatePickerField &&
               widget.formControlName == 'birthDate',
         ),
         findsOneWidget,
       );
 
-      expect(find.text('Confirm'), findsOneWidget);
+      expect(find.text('Save Code'), findsOneWidget);
     });
 
-    testWidgets('Confirm button is disabled when form is loaded and empty', (
+    testWidgets('Save Code button is disabled when form is loaded and empty', (
       tester,
     ) async {
       // Arrange
@@ -151,7 +151,7 @@ void main() {
 
       // Act
       final buttonFinder = find.ancestor(
-        of: find.text('Confirm'), // Trova prima il testo "Confirm"
+        of: find.text('Save Code'),
         matching: find.byType(FilledButton),
       );
 
@@ -197,6 +197,7 @@ void main() {
             widget is ReactiveRawAutocomplete &&
             widget.formControlName == 'birthPlace',
       );
+      await tester.ensureVisible(birthplaceField);
       await tester.tap(birthplaceField);
       await tester.pump();
 
@@ -307,7 +308,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(Symbols.id_card));
+      await tester.tap(find.byType(OcrAiHeroBanner));
 
       await tester.binding.setSurfaceSize(const Size(800, 600));
       tester.binding.scheduleFrameCallback((_) {
@@ -435,7 +436,7 @@ void main() {
       expect(inputDecorator.decoration.errorText, isNotNull);
 
       final confirmButtonFinder = find.ancestor(
-        of: find.text('Confirm'),
+        of: find.text('Save Code'),
         matching: find.byType(FilledButton),
       );
       final confirmButton = tester.widget<FilledButton>(confirmButtonFinder);
@@ -472,7 +473,7 @@ void main() {
 
       // Assert
       final confirmButtonFinder = find.ancestor(
-        of: find.text('Confirm'),
+        of: find.text('Save Code'),
         matching: find.byType(FilledButton),
       );
       final confirmButton = tester.widget<FilledButton>(confirmButtonFinder);
@@ -524,7 +525,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final confirmButtonFinder = find.ancestor(
-        of: find.text('Confirm'),
+        of: find.text('Save Code'),
         matching: find.byType(FilledButton),
       );
       await tester.tap(confirmButtonFinder);
@@ -573,7 +574,7 @@ void main() {
         await tester.pumpAndSettle();
 
         final confirmButtonFinder = find.ancestor(
-          of: find.text('Confirm'),
+          of: find.text('Save Code'),
           matching: find.byType(FilledButton),
         );
         await tester.tap(confirmButtonFinder);
@@ -623,7 +624,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final confirmButtonFinder = find.ancestor(
-        of: find.text('Confirm'),
+        of: find.text('Save Code'),
         matching: find.byType(FilledButton),
       );
       await tester.tap(confirmButtonFinder);

@@ -187,7 +187,7 @@ class BirthplaceAutocompleteField extends StatelessWidget {
                         suffixIcon: textValue.text.isNotEmpty
                             ? IconButton(
                                 key: const Key('birthplace_clear_button'),
-                                icon: const Icon(Icons.close_rounded, size: 18),
+                                icon: const Icon(Icons.clear, size: 18),
                                 color: colorScheme.onSurfaceVariant,
                                 onPressed: () {
                                   textEditingController.clear();
@@ -406,7 +406,7 @@ class _StandaloneBirthplaceAutocompleteState
                     suffixIcon: textValue.text.isNotEmpty
                         ? IconButton(
                             key: const Key('birthplace_clear_button'),
-                            icon: const Icon(Icons.close_rounded, size: 18),
+                            icon: const Icon(Icons.clear, size: 18),
                             color: colorScheme.onSurfaceVariant,
                             onPressed: () {
                               textEditingController.clear();

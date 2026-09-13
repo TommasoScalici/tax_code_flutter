@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
-import 'package:reactive_date_time_picker/reactive_date_time_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/models/scanned_data.dart';
@@ -15,13 +12,25 @@ import 'package:tax_code_flutter/controllers/form_page_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/utils/error_dialog_helper.dart';
-import 'package:tax_code_flutter/widgets/form/birthplace_autocomplete.dart';
+import 'package:tax_code_flutter/widgets/form/birthdate_picker_field.dart';
+import 'package:tax_code_flutter/widgets/form/birthplace_autocomplete_field.dart';
 import 'package:tax_code_flutter/widgets/form/custom_text_field.dart';
-import 'package:tax_code_flutter/widgets/form/gender_dropdown.dart';
+import 'package:tax_code_flutter/widgets/form/form_section_divider.dart';
+import 'package:tax_code_flutter/widgets/form/form_sticky_bottom_bar.dart';
+import 'package:tax_code_flutter/widgets/form/gender_segmented_button.dart';
+import 'package:tax_code_flutter/widgets/form/ocr_ai_hero_banner.dart';
+import 'package:tax_code_flutter/widgets/form/tax_code_live_preview_card.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
+/// Screen for creating a new Italian Tax Code or editing an existing contact.
+///
+/// Fully modernized with OCR AI scanner hero banner, segmented gender selector,
+/// formatted date picker, reactive birthplace autocomplete, real-time live preview
+/// calculation card, and sticky bottom action bar.
 class FormPage extends StatelessWidget {
+  /// The contact to edit, or null when creating a new tax code.
   final Contact? contact;
+
   const FormPage({super.key, this.contact});
 
   @override
@@ -95,6 +104,11 @@ class _FormViewState extends State<_FormView> {
   Widget build(BuildContext context) {
     final controller = context.watch<FormPageController>();
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    final title = controller.isEditing
+        ? l10n.editTaxCodeTitle
+        : l10n.newTaxCodeTitle;
 
     return FutureBuilder<void>(
       future: _initFuture,
@@ -102,8 +116,14 @@ class _FormViewState extends State<_FormView> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-              title: Text(l10n.formPageTitle),
+              title: Text(
+                title,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              elevation: 0,
+              scrolledUnderElevation: 0,
             ),
             body: Center(
               child: _SyncProgressOverlay(
@@ -116,174 +136,154 @@ class _FormViewState extends State<_FormView> {
 
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: Text(l10n.formPageTitle),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+              onPressed: () => Navigator.maybePop(context),
+            ),
+            title: Text(
+              title,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            elevation: 0,
+            scrolledUnderElevation: 0,
+          ),
+          bottomNavigationBar: FormStickyBottomBar(
+            labelText: l10n.saveCode,
+            isEnabled: controller.form.valid && !controller.isLoading,
+            isLoading: controller.isLoading,
+            onPressed: (controller.form.valid && !controller.isLoading)
+                ? () async {
+                    final contact = await controller.submitForm();
+                    if (context.mounted && contact != null) {
+                      Navigator.pop<Contact>(context, contact);
+                    }
+                  }
+                : null,
           ),
           body: Stack(
             children: [
-          ResponsiveLayout(
-            maxWidth: 600.0,
-            padding: EdgeInsets.zero,
-            child: Padding(
-              padding: EdgeInsets.only(
-                bottom: _shouldPushForm
-                    ? MediaQuery.of(context).viewInsets.bottom * 0.5
-                    : 0,
-              ),
-              child: SingleChildScrollView(
-                child: ReactiveForm(
-                  formGroup: controller.form,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 16,
-                          ),
-                          child: FilledButton.tonalIcon(
-                            onPressed: () => _openCameraPage(controller),
-                            icon: const Icon(Symbols.id_card),
-                            label: Text(l10n.scanCard),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 32,
-                          vertical: 16,
-                        ),
-                        child: CustomTextField(
-                          formControlName: 'firstName',
-                          labelText: l10n.firstName,
-                          validationMessages: {
-                            ValidationMessage.required: (error) =>
-                                l10n.required,
-                            'invalidCharacters': (error) =>
-                                l10n.invalidCharacters,
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 32,
-                          vertical: 16,
-                        ),
-                        child: CustomTextField(
-                          formControlName: 'lastName',
-                          labelText: l10n.lastName,
-                          validationMessages: {
-                            ValidationMessage.required: (error) =>
-                                l10n.required,
-                            'invalidCharacters': (error) =>
-                                l10n.invalidCharacters,
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 32,
-                          vertical: 16,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                              flex: 3,
-                              child: GenderDropdown(
-                                formControlName: 'gender',
-                                labelText: l10n.gender,
-                                validationMessages: {
-                                  ValidationMessage.required: (error) =>
-                                      l10n.required,
-                                },
-                              ),
+              ResponsiveLayout(
+                maxWidth: 520.0,
+                padding: EdgeInsets.zero,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    bottom: _shouldPushForm
+                        ? MediaQuery.of(context).viewInsets.bottom * 0.5
+                        : 0,
+                  ),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                    child: ReactiveForm(
+                      formGroup: controller.form,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Smart OCR AI Scanner Hero Banner (only on creation)
+                          if (!controller.isEditing) ...[
+                            OcrAiHeroBanner(
+                              onScanPressed: () => _openCameraPage(controller),
                             ),
-                            const SizedBox(width: 20),
-                            Expanded(
-                              flex: 7,
-                              child: ReactiveDateTimePicker(
-                                formControlName: 'birthDate',
-                                dateFormat: DateFormat.yMMMMd(
-                                  Localizations.localeOf(context).toString(),
-                                ),
-                                locale: Localizations.localeOf(context),
-                                decoration: InputDecoration(
-                                  labelText: l10n.birthDate,
-                                ),
-                                showClearIcon: true,
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime.now(),
-                                type: ReactiveDatePickerFieldType.date,
-                                validationMessages: {
-                                  ValidationMessage.required: (error) =>
-                                      l10n.required,
-                                },
-                              ),
-                            ),
+                            const SizedBox(height: 18),
+                            const FormSectionDivider(),
+                            const SizedBox(height: 18),
                           ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 32,
-                          vertical: 16,
-                        ),
-                        child: BirthplaceAutocomplete(
-                          formControlName: 'birthPlace',
-                          focusNode: _birthplaceFocusNode,
-                          labelText: l10n.birthPlace,
-                          requiredMessage: l10n.required,
-                          birthplaces: controller.birthplaces,
-                        ),
-                      ),
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 16,
+
+                          // First Name field
+                          CustomTextField(
+                            formControlName: 'firstName',
+                            labelText: l10n.firstName,
+                            placeholder: l10n.firstNamePlaceholder,
+                            validationMessages: {
+                              ValidationMessage.required: (_) => l10n.required,
+                              'invalidCharacters': (_) =>
+                                  l10n.invalidCharacters,
+                            },
                           ),
-                          child: FilledButton(
-                            onPressed:
-                                (controller.form.valid && !controller.isLoading)
-                                ? () async {
-                                    final contact = await controller
-                                        .submitForm();
-                                    if (context.mounted && contact != null) {
-                                      Navigator.pop<Contact>(context, contact);
-                                    }
-                                  }
-                                : null,
-                            child: Text(l10n.confirm),
+                          const SizedBox(height: 16),
+
+                          // Last Name field
+                          CustomTextField(
+                            formControlName: 'lastName',
+                            labelText: l10n.lastName,
+                            placeholder: l10n.lastNamePlaceholder,
+                            validationMessages: {
+                              ValidationMessage.required: (_) => l10n.required,
+                              'invalidCharacters': (_) =>
+                                  l10n.invalidCharacters,
+                            },
                           ),
-                        ),
+                          const SizedBox(height: 16),
+
+                          // Gender selector
+                          GenderSegmentedButton(
+                            formControlName: 'gender',
+                            labelText: l10n.gender,
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Birth Date field
+                          BirthdatePickerField(
+                            formControlName: 'birthDate',
+                            labelText: l10n.birthDate,
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now(),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Birth Place field
+                          BirthplaceAutocompleteField(
+                            formControlName: 'birthPlace',
+                            focusNode: _birthplaceFocusNode,
+                            labelText: l10n.birthPlace,
+                            birthplaces: controller.birthplaces,
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Real-time calculated Tax Code preview card
+                          TaxCodeLivePreviewCard(
+                            taxCode: controller.calculatedTaxCode,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-          if (controller.isLoading ||
-              (controller.downloadStep != null &&
-                  _birthplaceFocusNode.hasFocus))
-            Container(
-              color: Colors.black54,
-              child: Center(
-                child: _SyncProgressOverlay(
-                  controller: controller,
-                  l10n: l10n,
+
+              // Fullscreen loading overlay when submitting form
+              if (controller.isLoading)
+                const ModalBarrier(
+                  dismissible: false,
+                  color: Colors.black26,
                 ),
-              ),
-            ),
-        ],
+              if (controller.isLoading)
+                const Center(
+                  child: CircularProgressIndicator(),
+                ),
+
+              // Database sync progress overlay
+              if (controller.downloadStep != null &&
+                  _birthplaceFocusNode.hasFocus)
+                Container(
+                  color: Colors.black54,
+                  child: Center(
+                    child: _SyncProgressOverlay(
+                      controller: controller,
+                      l10n: l10n,
+                    ),
+                  ),
+                ),
+            ],
           ),
         );
       },
     );
   }
 }
+
 class _SyncProgressOverlay extends StatelessWidget {
   final FormPageController controller;
   final AppLocalizations l10n;

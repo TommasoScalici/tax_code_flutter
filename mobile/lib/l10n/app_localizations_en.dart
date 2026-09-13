@@ -121,6 +121,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edit => 'Edit';
 
   @override
+  String get editTaxCodeTitle => 'Edit Tax Code';
+
+  @override
   String get emptyDashboardAction => 'Add Code';
 
   @override
@@ -146,6 +149,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get firstName => 'First Name';
+
+  @override
+  String get firstNamePlaceholder => 'e.g. Mario';
 
   @override
   String get formOrManualEntry => 'Or enter manually';
@@ -184,6 +190,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastName => 'Last Name';
 
   @override
+  String get lastNamePlaceholder => 'e.g. Smith';
+
+  @override
   String get networkError =>
       'No internet connection. Please check your network and try again.';
 
@@ -192,6 +201,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get newTaxCode => 'New Code';
+
+  @override
+  String get newTaxCodeTitle => 'New Tax Code';
 
   @override
   String get newTaxCodeTooltip => 'Create or scan a new tax code';

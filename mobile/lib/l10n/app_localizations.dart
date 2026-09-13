@@ -308,6 +308,12 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get edit;
 
+  /// App bar title in the edit tax code screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Tax Code'**
+  String get editTaxCodeTitle;
+
   /// Action button label in the empty dashboard to add a new tax code.
   ///
   /// In en, this message translates to:
@@ -355,6 +361,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'First Name'**
   String get firstName;
+
+  /// Example placeholder text for the First Name input field.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Mario'**
+  String get firstNamePlaceholder;
 
   /// Divider text separating smart OCR scan hero and manual form input fields.
   ///
@@ -428,6 +440,12 @@ abstract class AppLocalizations {
   /// **'Last Name'**
   String get lastName;
 
+  /// Example placeholder text for the Last Name input field.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Smith'**
+  String get lastNamePlaceholder;
+
   /// Error message when there is no internet connectivity.
   ///
   /// In en, this message translates to:
@@ -445,6 +463,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New Code'**
   String get newTaxCode;
+
+  /// App bar title in the new tax code creation screen.
+  ///
+  /// In en, this message translates to:
+  /// **'New Tax Code'**
+  String get newTaxCodeTitle;
 
   /// Tooltip for the dashboard floating action button.
   ///

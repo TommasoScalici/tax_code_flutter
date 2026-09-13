@@ -147,6 +147,10 @@
   "@edit": {
     "description": "Label for an edit button."
   },
+  "editTaxCodeTitle": "Modifica Codice Fiscale",
+  "@editTaxCodeTitle": {
+    "description": "Titolo dell'app bar nella schermata di modifica del codice fiscale."
+  },
   "emptyDashboardAction": "Aggiungi Codice",
   "@emptyDashboardAction": {
     "description": "Action button label in the empty dashboard to add a new tax code."
@@ -184,6 +188,10 @@
   "firstName": "Nome",
   "@firstName": {
     "description": "Label for the first name input field."
+  },
+  "firstNamePlaceholder": "es. Mario",
+  "@firstNamePlaceholder": {
+    "description": "Testo segnaposto di esempio per il campo Nome."
   },
   "formOrManualEntry": "Oppure inserisci manualmente",
   "@formOrManualEntry": {
@@ -233,6 +241,10 @@
   "@lastName": {
     "description": "Label for the last name input field."
   },
+  "lastNamePlaceholder": "es. Rossi",
+  "@lastNamePlaceholder": {
+    "description": "Testo segnaposto di esempio per il campo Cognome."
+  },
   "networkError": "Nessuna connessione internet. Controlla la tua rete e riprova.",
   "@networkError": {
     "description": "Error message when there is no internet connectivity."
@@ -244,6 +256,10 @@
   "newTaxCode": "Nuovo Codice",
   "@newTaxCode": {
     "description": "Label for the dashboard floating action button to create a new tax code."
+  },
+  "newTaxCodeTitle": "Nuovo Codice Fiscale",
+  "@newTaxCodeTitle": {
+    "description": "Titolo dell'app bar nella schermata di creazione nuovo codice fiscale."
   },
   "newTaxCodeTooltip": "Crea o scansiona un nuovo Codice Fiscale",
   "@newTaxCodeTooltip": {

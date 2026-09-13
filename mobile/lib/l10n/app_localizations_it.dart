@@ -122,6 +122,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get edit => 'Modifica';
 
   @override
+  String get editTaxCodeTitle => 'Modifica Codice Fiscale';
+
+  @override
   String get emptyDashboardAction => 'Aggiungi Codice';
 
   @override
@@ -147,6 +150,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get firstName => 'Nome';
+
+  @override
+  String get firstNamePlaceholder => 'es. Mario';
 
   @override
   String get formOrManualEntry => 'Oppure inserisci manualmente';
@@ -185,6 +191,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get lastName => 'Cognome';
 
   @override
+  String get lastNamePlaceholder => 'es. Rossi';
+
+  @override
   String get networkError =>
       'Nessuna connessione internet. Controlla la tua rete e riprova.';
 
@@ -193,6 +202,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get newTaxCode => 'Nuovo Codice';
+
+  @override
+  String get newTaxCodeTitle => 'Nuovo Codice Fiscale';
 
   @override
   String get newTaxCodeTooltip => 'Crea o scansiona un nuovo Codice Fiscale';

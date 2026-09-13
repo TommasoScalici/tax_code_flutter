@@ -7,6 +7,7 @@ import 'package:tax_code_flutter/widgets/previews/dashboard_fab_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_header_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_screen_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_search_bar_preview.dart';
+import 'package:tax_code_flutter/widgets/previews/form_screen_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/form_section_divider_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/form_sticky_bottom_bar_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/gender_segmented_button_preview.dart';
@@ -117,6 +118,12 @@ void main() {
     await tester.pumpWidget(const FormStickyBottomBarPreview());
     await tester.pumpAndSettle();
     expect(find.byType(FormStickyBottomBarPreview), findsOneWidget);
+  });
+
+  testWidgets('pumps FormScreenPreview without error', (tester) async {
+    await tester.pumpWidget(const FormScreenPreview());
+    await tester.pumpAndSettle();
+    expect(find.byType(FormScreenPreview), findsOneWidget);
   });
 }
 
