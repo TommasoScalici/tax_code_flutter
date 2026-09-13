@@ -134,6 +134,24 @@ abstract class AppLocalizations {
   /// **'Place of Birth'**
   String get birthPlace;
 
+  /// Placeholder format for the birth date input field.
+  ///
+  /// In en, this message translates to:
+  /// **'DD/MM/YYYY'**
+  String get birthdateHint;
+
+  /// Helper text below the birthplace input field.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the municipality name for quick cadastral code lookup (e.g. H501).'**
+  String get birthplaceHelperText;
+
+  /// Placeholder for the place or foreign country of birth field.
+  ///
+  /// In en, this message translates to:
+  /// **'Municipality or foreign country'**
+  String get birthplacePlaceholder;
+
   /// Title for the modal showing the birthplaces database download progress.
   ///
   /// In en, this message translates to:
@@ -338,6 +356,12 @@ abstract class AppLocalizations {
   /// **'First Name'**
   String get firstName;
 
+  /// Divider text separating smart OCR scan hero and manual form input fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Or enter manually'**
+  String get formOrManualEntry;
+
   /// Title for the page where user enters contact details.
   ///
   /// In en, this message translates to:
@@ -349,6 +373,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Gender'**
   String get gender;
+
+  /// Gender selection option for female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female (F)'**
+  String get genderFemale;
+
+  /// Gender selection option for male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male (M)'**
+  String get genderMale;
 
   /// A user-friendly message for a generic error, asking them to retry.
   ///
@@ -482,6 +518,12 @@ abstract class AppLocalizations {
   /// **'This field is required'**
   String get required;
 
+  /// Primary button to save the calculated tax code in the form.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Code'**
+  String get saveCode;
+
   /// Badge label showing the number of saved tax code cards.
   ///
   /// In en, this message translates to:
@@ -595,6 +637,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tax code copied to clipboard'**
   String get taxCodeCopied;
+
+  /// Hint shown when the preview tax code is not yet complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in all fields for automatic calculation'**
+  String get taxCodeLivePreviewHint;
+
+  /// Title of the live tax code preview card in the form.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Calculated Tax Code'**
+  String get taxCodeLivePreviewTitle;
 
   /// A notice about agreeing to terms and conditions.
   ///

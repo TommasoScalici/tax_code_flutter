@@ -25,6 +25,18 @@
   "@birthPlace": {
     "description": "Label for the birth place input field."
   },
+  "birthdateHint": "GG/MM/AAAA",
+  "@birthdateHint": {
+    "description": "Formato segnaposto per il campo data di nascita."
+  },
+  "birthplaceHelperText": "Digita il nome del comune per la ricerca rapida del codice catastale (es. H501).",
+  "@birthplaceHelperText": {
+    "description": "Testo di supporto sotto il campo luogo di nascita."
+  },
+  "birthplacePlaceholder": "Comune o Stato estero",
+  "@birthplacePlaceholder": {
+    "description": "Segnaposto del campo luogo o stato estero di nascita."
+  },
   "birthplacesDownloadTitle": "Aggiornamento Database Luoghi di Nascita",
   "@birthplacesDownloadTitle": {
     "description": "Titolo per il modal che mostra il progresso del download del database dei luoghi di nascita."
@@ -173,6 +185,10 @@
   "@firstName": {
     "description": "Label for the first name input field."
   },
+  "formOrManualEntry": "Oppure inserisci manualmente",
+  "@formOrManualEntry": {
+    "description": "Testo separatore tra il banner di scansione smart OCR e i campi di inserimento manuale nel form."
+  },
   "formPageTitle": "Dettagli Contatto",
   "@formPageTitle": {
     "description": "Title for the page where user enters contact details."
@@ -180,6 +196,14 @@
   "gender": "Sesso",
   "@gender": {
     "description": "Label for the gender input field."
+  },
+  "genderFemale": "Femminile (F)",
+  "@genderFemale": {
+    "description": "Opzione del selettore sesso per il genere femminile."
+  },
+  "genderMale": "Maschile (M)",
+  "@genderMale": {
+    "description": "Opzione del selettore sesso per il genere maschile."
   },
   "genericError": "Qualcosa è andato storto. Riprova.",
   "@genericError": {
@@ -269,6 +293,10 @@
   "@required": {
     "description": "A validation error message for a required form field."
   },
+  "saveCode": "Salva Codice",
+  "@saveCode": {
+    "description": "Pulsante principale per salvare il codice fiscale calcolato nel form."
+  },
   "savedCardsCount": "{count, plural, =0{Nessuna tessera salvata} =1{1 tessera salvata} other{{count} tessere salvate}}",
   "@savedCardsCount": {
     "description": "Badge label showing the number of saved tax code cards.",
@@ -356,6 +384,14 @@
   "taxCodeCopied": "Codice Fiscale copiato negli appunti",
   "@taxCodeCopied": {
     "description": "Snackbar confirmation shown when the tax code is copied to clipboard."
+  },
+  "taxCodeLivePreviewHint": "Compila tutti i campi per il calcolo automatico",
+  "@taxCodeLivePreviewHint": {
+    "description": "Suggerimento mostrato quando il codice fiscale in anteprima non è ancora completo."
+  },
+  "taxCodeLivePreviewTitle": "Codice Calcolato in Anteprima",
+  "@taxCodeLivePreviewTitle": {
+    "description": "Titolo della card di anteprima live del codice fiscale nel form."
   },
   "termsAndCondition": "Procedendo, accetti i nostri Termini e Condizioni.",
   "@termsAndCondition": {

@@ -27,6 +27,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get birthPlace => 'Luogo di Nascita';
 
   @override
+  String get birthdateHint => 'GG/MM/AAAA';
+
+  @override
+  String get birthplaceHelperText =>
+      'Digita il nome del comune per la ricerca rapida del codice catastale (es. H501).';
+
+  @override
+  String get birthplacePlaceholder => 'Comune o Stato estero';
+
+  @override
   String get birthplacesDownloadTitle =>
       'Aggiornamento Database Luoghi di Nascita';
 
@@ -139,10 +149,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get firstName => 'Nome';
 
   @override
+  String get formOrManualEntry => 'Oppure inserisci manualmente';
+
+  @override
   String get formPageTitle => 'Dettagli Contatto';
 
   @override
   String get gender => 'Sesso';
+
+  @override
+  String get genderFemale => 'Femminile (F)';
+
+  @override
+  String get genderMale => 'Maschile (M)';
 
   @override
   String get genericError => 'Qualcosa è andato storto. Riprova.';
@@ -212,6 +231,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get required => 'Questo campo è obbligatorio';
+
+  @override
+  String get saveCode => 'Salva Codice';
 
   @override
   String savedCardsCount(int count) {
@@ -286,6 +308,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get taxCodeCopied => 'Codice Fiscale copiato negli appunti';
+
+  @override
+  String get taxCodeLivePreviewHint =>
+      'Compila tutti i campi per il calcolo automatico';
+
+  @override
+  String get taxCodeLivePreviewTitle => 'Codice Calcolato in Anteprima';
 
   @override
   String get termsAndCondition =>

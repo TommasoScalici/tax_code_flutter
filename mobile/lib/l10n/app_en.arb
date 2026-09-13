@@ -25,6 +25,18 @@
   "@birthPlace": {
     "description": "Label for the birth place input field."
   },
+  "birthdateHint": "DD/MM/YYYY",
+  "@birthdateHint": {
+    "description": "Placeholder format for the birth date input field."
+  },
+  "birthplaceHelperText": "Type the municipality name for quick cadastral code lookup (e.g. H501).",
+  "@birthplaceHelperText": {
+    "description": "Helper text below the birthplace input field."
+  },
+  "birthplacePlaceholder": "Municipality or foreign country",
+  "@birthplacePlaceholder": {
+    "description": "Placeholder for the place or foreign country of birth field."
+  },
   "birthplacesDownloadTitle": "Updating Birthplaces Database",
   "@birthplacesDownloadTitle": {
     "description": "Title for the modal showing the birthplaces database download progress."
@@ -173,6 +185,10 @@
   "@firstName": {
     "description": "Label for the first name input field."
   },
+  "formOrManualEntry": "Or enter manually",
+  "@formOrManualEntry": {
+    "description": "Divider text separating smart OCR scan hero and manual form input fields."
+  },
   "formPageTitle": "Contact Details",
   "@formPageTitle": {
     "description": "Title for the page where user enters contact details."
@@ -180,6 +196,14 @@
   "gender": "Gender",
   "@gender": {
     "description": "Label for the gender input field."
+  },
+  "genderFemale": "Female (F)",
+  "@genderFemale": {
+    "description": "Gender selection option for female."
+  },
+  "genderMale": "Male (M)",
+  "@genderMale": {
+    "description": "Gender selection option for male."
   },
   "genericError": "Something went wrong. Please try again.",
   "@genericError": {
@@ -269,6 +293,10 @@
   "@required": {
     "description": "A validation error message for a required form field."
   },
+  "saveCode": "Save Code",
+  "@saveCode": {
+    "description": "Primary button to save the calculated tax code in the form."
+  },
   "savedCardsCount": "{count, plural, =0{No saved cards} =1{1 saved card} other{{count} saved cards}}",
   "@savedCardsCount": {
     "description": "Badge label showing the number of saved tax code cards.",
@@ -356,6 +384,14 @@
   "taxCodeCopied": "Tax code copied to clipboard",
   "@taxCodeCopied": {
     "description": "Snackbar confirmation shown when the tax code is copied to clipboard."
+  },
+  "taxCodeLivePreviewHint": "Fill in all fields for automatic calculation",
+  "@taxCodeLivePreviewHint": {
+    "description": "Hint shown when the preview tax code is not yet complete."
+  },
+  "taxCodeLivePreviewTitle": "Live Calculated Tax Code",
+  "@taxCodeLivePreviewTitle": {
+    "description": "Title of the live tax code preview card in the form."
   },
   "termsAndCondition": "By proceeding, you agree to our Terms and Conditions.",
   "@termsAndCondition": {

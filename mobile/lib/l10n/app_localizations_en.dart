@@ -27,6 +27,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get birthPlace => 'Place of Birth';
 
   @override
+  String get birthdateHint => 'DD/MM/YYYY';
+
+  @override
+  String get birthplaceHelperText =>
+      'Type the municipality name for quick cadastral code lookup (e.g. H501).';
+
+  @override
+  String get birthplacePlaceholder => 'Municipality or foreign country';
+
+  @override
   String get birthplacesDownloadTitle => 'Updating Birthplaces Database';
 
   @override
@@ -138,10 +148,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get firstName => 'First Name';
 
   @override
+  String get formOrManualEntry => 'Or enter manually';
+
+  @override
   String get formPageTitle => 'Contact Details';
 
   @override
   String get gender => 'Gender';
+
+  @override
+  String get genderFemale => 'Female (F)';
+
+  @override
+  String get genderMale => 'Male (M)';
 
   @override
   String get genericError => 'Something went wrong. Please try again.';
@@ -211,6 +230,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get required => 'This field is required';
+
+  @override
+  String get saveCode => 'Save Code';
 
   @override
   String savedCardsCount(int count) {
@@ -283,6 +305,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get taxCodeCopied => 'Tax code copied to clipboard';
+
+  @override
+  String get taxCodeLivePreviewHint =>
+      'Fill in all fields for automatic calculation';
+
+  @override
+  String get taxCodeLivePreviewTitle => 'Live Calculated Tax Code';
 
   @override
   String get termsAndCondition =>
