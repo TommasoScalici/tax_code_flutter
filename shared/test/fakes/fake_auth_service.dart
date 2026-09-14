@@ -31,6 +31,9 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
   String? get errorMessage => _errorMessage;
 
   @override
+  String? get errorKey => _errorMessage;
+
+  @override
   Future<bool> signInWithGoogle() async {
     login(FakeUser(uid: 'fake-google-uid'));
     return true;

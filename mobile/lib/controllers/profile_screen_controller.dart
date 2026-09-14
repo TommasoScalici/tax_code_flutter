@@ -13,9 +13,6 @@ class ProfileScreenController extends ChangeNotifier {
   String? _errorKey;
   String? get errorKey => _errorKey;
 
-  String? _customErrorMessage;
-  String? get customErrorMessage => _customErrorMessage;
-
   ProfileScreenController({
     required AuthService authService,
     required Logger logger,
@@ -24,7 +21,6 @@ class ProfileScreenController extends ChangeNotifier {
 
   void clearError() {
     _errorKey = null;
-    _customErrorMessage = null;
     notifyListeners();
   }
 
@@ -51,7 +47,6 @@ class ProfileScreenController extends ChangeNotifier {
   }) async {
     _isLoading = true;
     _errorKey = null;
-    _customErrorMessage = null;
     notifyListeners();
 
     try {
@@ -72,11 +67,7 @@ class ProfileScreenController extends ChangeNotifier {
           }
         } else {
           _logger.w('Re-authentication cancelled or failed.');
-          if (_authService.errorMessage != null) {
-            _customErrorMessage = _authService.errorMessage;
-          } else {
-            _errorKey = 'genericError';
-          }
+          _errorKey = _authService.errorKey ?? 'reauthFailed';
           return false;
         }
       } else {

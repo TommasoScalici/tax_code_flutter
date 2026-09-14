@@ -1,100 +1,133 @@
 # 🇮🇹 Tax Code App
 
-A powerful and user-friendly application to calculate and manage Italian Tax Codes (Codici Fiscali) with advanced features and cross-device synchronization.
+A modern, fast, and user-friendly cross-platform application to calculate and manage Italian Tax Codes (*Codici Fiscali*) with offline calculation, cloud synchronization, AI-powered document scanning, and Wear OS companion support.
 
-![Version](https://img.shields.io/badge/version-1.7.1-blue)
+![Version](https://img.shields.io/badge/version-1.7.2-blue)
 ![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Wear%20OS-brightgreen)
+![Flutter](https://img.shields.io/badge/flutter-3.22%2B-02569B?logo=flutter)
 ![License](https://img.shields.io/badge/license-MIT-green)
+
+---
 
 ## ✨ Features
 
-- 🧮 **Italian Tax Code Calculator**
+- 🧮 **In-House Italian Tax Code Calculator**
+  - Instant and 100% offline calculation using official ministerial algorithms.
+  - Comprehensive database of Italian municipalities and foreign countries with Belfiore codes.
+  - Barcode generation (Code39 format) for quick optical scanning at pharmacies and administrative desks.
 
-  - Instant calculation through miocodicefiscale.com API
-  - Accurate results based on personal data input
-  - Barcode generation (Code39 format)
+- 📸 **Smart Document Scanning (Gemini AI)**
+  - State-of-the-art multimodal document scanning (ID card / *Carta d'Identità* and Health Card / *Tessera Sanitaria*).
+  - Powered by Google Vertex AI Gemini Flash models via Firebase Cloud Functions.
+  - Real-time card overlay guide and automatic form autofill.
 
-- 📸 **Smart Document Scanning**
+- 💾 **Data Management & Cloud Sync**
+  - Offline-first local storage using Hive CE.
+  - Full CRUD operations, search, and custom card ordering.
+  - Real-time cross-device data synchronization via Cloud Firestore.
+  - Safe guest mode with seamless migration upon Google Sign-In.
 
-  - ID card and health card recognition
-  - Powered by Google Vision API
-  - Automatic form filling from scanned data
-
-- 💾 **Data Management**
-
-  - Create, Read, Update, Delete operations
-  - Custom card sorting and organization
-  - Cross-device data synchronization
+- ⌚ **Wear OS Companion App**
+  - Dedicated Wear OS app written in Flutter.
+  - Quick glance at saved tax codes and high-brightness barcode presentation on your smartwatch.
 
 - 🔐 **Security & Authentication**
+  - Secure Google Sign-In integration and anonymous guest access.
+  - Account deletion and GDPR-compliant data wipeout with re-authentication safeguards.
 
-  - Google SSO integration
-  - Secure data storage
-  - Cloud backup with Firestore
+- 🎨 **Modern Design & User Experience**
+  - Material 3 theme ("Emerald Ledger" palette) with dynamic Dark and Light mode support.
+  - Full English and Italian localization (`.arb`).
+  - Haptic feedback and subtle animations.
 
-- 🎨 **User Experience**
-  - Intuitive user interface
-  - Light/Dark theme support
-  - Responsive design
+---
 
-## ⚡ Technical Stack
+## ⚡ Architecture & Tech Stack
 
-### Core Technologies
+### Monorepo Structure
 
-- **Frontend:** Flutter
-- **Backend:** Firebase
-- **Primary Language:** Dart
-- **Wearable Support:** Kotlin
+```
+tax_code_flutter/
+├── shared/         # Core models, services, tax code logic, database & sync repositories
+├── mobile/         # Main Flutter Android app with Material 3 UI & OCR camera scanner
+├── wearable/       # Flutter Wear OS companion application
+└── functions/      # Firebase Cloud Functions (TypeScript, Node.js, Vertex AI Gemini Flash)
+```
 
-### Key Components
+### Technologies
 
-- 🔥 **Firebase Services**
+- **Frontend & Companion:** Flutter & Dart (Strict Typing, `very_good_analysis`)
+- **Backend & Cloud:** Firebase Cloud Functions (Node.js 24, ESM, Vitest 5.x)
+- **AI & Multimodal OCR:** Google Vertex AI Gemini Flash (`gemini-3.8-flash` / `gemini-3.7-flash` with zero-redeploy dynamic config)
+- **Database & Sync:** Cloud Firestore & Hive CE
+- **Storage:** Firebase Cloud Storage (dynamic birthplace dataset updates)
+- **Authentication:** Firebase Authentication & Google Sign-In
 
-  - Firestore (data storage)
-  - Authentication
-  - Remote Config
-  - Analytics and Crashlytics
-
-- 🔌 **APIs Integration**
-  - Google Vertex API
-  - miocodicefiscale.com API
-
-## 📱 Supported Platforms
-
-### Mobile
-
-- Android devices running Android 5.0 (Lollipop) and above
-- Full feature set including document scanning and barcode generation
-
-### Wear OS
-
-- Optimized companion app for Wear OS devices
-- Core features:
-  - Tax code viewing
-  - Barcode display
-- Native wearable integration using Kotlin
+---
 
 ## 🚀 Getting Started
 
-1. Clone the repository
-2. Configure Firebase project
-3. Set up Google SSO / provider client and Remote Config settings
-4. Run `dart pub global activate flutterfire_cli` and `flutterfire configure`
-5. Run `flutter pub get` to install dependencies
-6. Launch the app using `flutter run`
+### Prerequisites
+
+- Flutter SDK `3.22.0` or higher
+- Dart SDK `3.8.0` or higher
+- Node.js `24.x` (for Cloud Functions development)
+
+### Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/TommasoScalici/tax_code_flutter.git
+   cd tax_code_flutter
+   ```
+
+2. **Configure Firebase:**
+   Ensure you have configured your Firebase project with Firestore, Authentication (Google & Anonymous), Cloud Functions, and Cloud Storage.
+   ```bash
+   dart pub global activate flutterfire_cli
+   flutterfire configure
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   # In shared
+   cd shared && flutter pub get
+
+   # In mobile
+   cd ../mobile && flutter pub get
+
+   # In wearable
+   cd ../wearable && flutter pub get
+
+   # In functions
+   cd ../functions && npm install
+   ```
+
+4. **Run tests:**
+   ```bash
+   # Flutter suites
+   cd shared && flutter test
+   cd ../mobile && flutter test
+   cd ../wearable && flutter test
+
+   # Cloud functions suite
+   cd ../functions && npm test
+   ```
+
+5. **Launch the application:**
+   ```bash
+   cd mobile
+   flutter run
+   ```
+
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/TommasoScalici/tax_code_flutter/issues).
+
+---
 
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Contact
-
-For support or queries, please open an issue in the repository.
-
----
-
-Made with ❤️ using Dart, Flutter and Firebase

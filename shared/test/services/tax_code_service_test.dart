@@ -63,7 +63,6 @@ void main() {
         // Assert
         expect(result.status, true);
         expect(result.data.fiscalCode, 'RSSMRA80A05H501H');
-        expect(result.data.allFiscalCodes, contains('RSSMRA80A05H501H'));
         verify(() => mockBirthplaceService.loadBirthplaces()).called(1);
       },
     );

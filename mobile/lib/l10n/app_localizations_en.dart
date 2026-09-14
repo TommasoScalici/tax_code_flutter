@@ -367,6 +367,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signInFailed => 'Sign-in failed. Please try again.';
 
   @override
+  String get reauthFailed => 'Re-authentication failed. Please try again.';
+
+  @override
   String get signOut => 'Sign Out';
 
   @override

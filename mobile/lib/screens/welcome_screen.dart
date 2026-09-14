@@ -36,11 +36,16 @@ class WelcomeScreen extends StatelessWidget {
     final success = await authService.signInWithGoogle();
     if (!context.mounted) return;
 
-    if (!success && authService.errorMessage != null) {
+    if (!success && authService.errorKey != null) {
       final l10n = AppLocalizations.of(context) ?? AppLocalizationsIt();
+      final message = switch (authService.errorKey) {
+        'networkError' => l10n.networkError,
+        'reauthFailed' => l10n.reauthFailed,
+        _ => l10n.signInFailed,
+      };
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(authService.errorMessage ?? l10n.signInFailed),
+          content: Text(message),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -59,11 +64,15 @@ class WelcomeScreen extends StatelessWidget {
     final success = await authService.signInAnonymously();
     if (!context.mounted) return;
 
-    if (!success && authService.errorMessage != null) {
+    if (!success && authService.errorKey != null) {
       final l10n = AppLocalizations.of(context) ?? AppLocalizationsIt();
+      final message = switch (authService.errorKey) {
+        'networkError' => l10n.networkError,
+        _ => l10n.signInFailed,
+      };
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(authService.errorMessage ?? l10n.signInFailed),
+          content: Text(message),
           behavior: SnackBarBehavior.floating,
         ),
       );

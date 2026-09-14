@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -16,10 +17,27 @@ abstract class BirthplaceServiceAbstract {
   Future<List<Birthplace>> loadBirthplaces();
 }
 
+/// Parses raw JSON string into a list of [Birthplace] objects.
+List<Birthplace> _parseBirthplacesJson(String jsonString) {
+  final jsonList = jsonDecode(jsonString) as List<dynamic>;
+  return jsonList
+      .map<Birthplace>(
+        (dynamic json) =>
+            Birthplace.fromJson(json as Map<String, dynamic>),
+      )
+      .toList();
+}
+
+/// Helper to execute JSON parsing in a separate isolate without capturing class instance.
+Future<List<Birthplace>> _parseBirthplacesInIsolate(String jsonString) {
+  return Isolate.run(() => _parseBirthplacesJson(jsonString));
+}
+
 /// The concrete implementation of [BirthplaceService] that loads data
 /// from Firebase Storage in the background and uses local fallback assets on first launch.
 class BirthplaceService implements BirthplaceServiceAbstract {
   final Logger _logger;
+  final FirebaseStorage _storage;
   final String _storagePath;
 
   @override
@@ -32,9 +50,11 @@ class BirthplaceService implements BirthplaceServiceAbstract {
 
   BirthplaceService({
     required Logger logger,
+    FirebaseStorage? storage,
     String storagePath = 'public/birthplaces.json',
-  }) : _logger = logger,
-       _storagePath = storagePath;
+  })  : _logger = logger,
+        _storage = storage ?? FirebaseStorage.instance,
+        _storagePath = storagePath;
 
   @override
   Future<List<Birthplace>> loadBirthplaces() async {
@@ -69,13 +89,7 @@ class BirthplaceService implements BirthplaceServiceAbstract {
       if (await localFile.exists() && await localFile.length() > 0) {
         downloadStep.value = 'parsing';
         final jsonString = await localFile.readAsString();
-        final jsonList = jsonDecode(jsonString) as List<dynamic>;
-        var parsedList = jsonList
-            .map<Birthplace>(
-              (dynamic json) =>
-                  Birthplace.fromJson(json as Map<String, dynamic>),
-            )
-            .toList();
+        var parsedList = await _parseBirthplacesInIsolate(jsonString);
 
         // Check if the cache contains Belfiore codes (at least check the first few elements)
         final missingCodes = parsedList.isNotEmpty &&
@@ -91,13 +105,7 @@ class BirthplaceService implements BirthplaceServiceAbstract {
             await localFile.writeAsString(assetContent);
 
             final newJsonString = await localFile.readAsString();
-            final newJsonList = jsonDecode(newJsonString) as List<dynamic>;
-            parsedList = newJsonList
-                .map<Birthplace>(
-                  (dynamic json) =>
-                      Birthplace.fromJson(json as Map<String, dynamic>),
-                )
-                .toList();
+            parsedList = await _parseBirthplacesInIsolate(newJsonString);
             _logger.i('Fallback birthplaces copied to cache and re-loaded.');
           } on Object catch (assetErr) {
             _logger.e('Failed to overwrite with asset fallback: $assetErr');
@@ -132,8 +140,8 @@ class BirthplaceService implements BirthplaceServiceAbstract {
   void _triggerBackgroundUpdate(File localFile) {
     scheduleMicrotask(() async {
       try {
-        final ref = FirebaseStorage.instance.ref(_storagePath);
-        bool shouldDownload = true;
+        final ref = _storage.ref(_storagePath);
+        var shouldDownload = true;
 
         try {
           final metadata = await ref.getMetadata();
@@ -166,10 +174,28 @@ class BirthplaceService implements BirthplaceServiceAbstract {
             });
             await downloadTask;
             if (await tempFile.exists()) {
-              await tempFile.rename(localFile.path);
+              // Safe cross-platform copy & delete to prevent Windows OS Error 183
+              await tempFile.copy(localFile.path);
+              await tempFile.delete();
               _logger.i(
                 'Background: Local birthplaces.json cache updated successfully.',
               );
+
+              // Keep in-memory cache synchronized with background update
+              try {
+                final updatedJson = await localFile.readAsString();
+                final updatedList = await _parseBirthplacesInIsolate(
+                  updatedJson,
+                );
+                _cachedBirthplaces = updatedList;
+                _logger.i(
+                  'Background: Refreshed ${_cachedBirthplaces!.length} birthplaces in memory cache.',
+                );
+              } on Object catch (cacheErr) {
+                _logger.w(
+                  'Background: Failed to refresh in-memory cache: $cacheErr',
+                );
+              }
             }
           } finally {
             if (await tempFile.exists()) {

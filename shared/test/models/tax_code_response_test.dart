@@ -10,13 +10,11 @@ void main() {
       'message': 'Codice Fiscale Calcolato',
       'data': {
         'cf': 'RSSMRA80A01H501A',
-        'all_cf': ['RSSMRA80A01H501A', 'RSSMRA80A01H501O'],
       },
     };
 
     const expectedData = TaxCodeData(
       fiscalCode: 'RSSMRA80A01H501A',
-      allFiscalCodes: ['RSSMRA80A01H501A', 'RSSMRA80A01H501O'],
     );
 
     const expectedResponse = TaxCodeResponse(
@@ -27,8 +25,8 @@ void main() {
 
     group('Equality', () {
       test('TaxCodeData instances with same values should be equal', () {
-        const data1 = TaxCodeData(fiscalCode: 'ABC', allFiscalCodes: ['123']);
-        const data2 = TaxCodeData(fiscalCode: 'ABC', allFiscalCodes: ['123']);
+        const data1 = TaxCodeData(fiscalCode: 'ABC');
+        const data2 = TaxCodeData(fiscalCode: 'ABC');
         expect(data1, equals(data2));
       });
 
@@ -36,12 +34,12 @@ void main() {
         const response1 = TaxCodeResponse(
           status: true,
           message: 'OK',
-          data: TaxCodeData(fiscalCode: 'ABC', allFiscalCodes: ['123']),
+          data: TaxCodeData(fiscalCode: 'ABC'),
         );
         const response2 = TaxCodeResponse(
           status: true,
           message: 'OK',
-          data: TaxCodeData(fiscalCode: 'ABC', allFiscalCodes: ['123']),
+          data: TaxCodeData(fiscalCode: 'ABC'),
         );
         expect(response1, equals(response2));
       });

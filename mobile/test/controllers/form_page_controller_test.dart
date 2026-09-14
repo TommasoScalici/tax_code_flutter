@@ -168,7 +168,6 @@ void main() {
       // Use real model instances for the successful response
       const successfulData = TaxCodeData(
         fiscalCode: 'NEWTAXCODE123',
-        allFiscalCodes: [],
       );
       const successfulResponse = TaxCodeResponse(
         status: true,

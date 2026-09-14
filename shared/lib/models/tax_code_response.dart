@@ -7,16 +7,14 @@ part 'tax_code_response.g.dart';
 class TaxCodeData extends Equatable {
   @JsonKey(name: 'cf')
   final String fiscalCode;
-  @JsonKey(name: 'all_cf')
-  final List<String> allFiscalCodes;
 
-  const TaxCodeData({required this.fiscalCode, required this.allFiscalCodes});
+  const TaxCodeData({required this.fiscalCode});
 
   factory TaxCodeData.fromJson(Map<String, dynamic> json) => _$TaxCodeDataFromJson(json);
   Map<String, dynamic> toJson() => _$TaxCodeDataToJson(this);
 
   @override
-  List<Object> get props => [fiscalCode, allFiscalCodes];
+  List<Object> get props => [fiscalCode];
 }
 
 @JsonSerializable(explicitToJson: true)

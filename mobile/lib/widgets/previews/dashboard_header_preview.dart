@@ -36,6 +36,9 @@ class _HeaderPreviewAuthService extends ChangeNotifier implements AuthService {
   String? get errorMessage => null;
 
   @override
+  String? get errorKey => null;
+
+  @override
   Future<void> deleteUserAccount() async {}
 
   @override

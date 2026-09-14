@@ -30,6 +30,7 @@ void main() {
     when(() => mockAuthService.isLoading).thenReturn(false);
     when(() => mockAuthService.isGuest).thenReturn(false);
     when(() => mockAuthService.errorMessage).thenReturn(null);
+    when(() => mockAuthService.errorKey).thenReturn(null);
     when(() => mockAuthService.currentUser).thenReturn(null);
     when(() => mockAuthService.addListener(any())).thenAnswer((_) {});
     when(() => mockAuthService.removeListener(any())).thenAnswer((_) {});
@@ -108,7 +109,8 @@ void main() {
     testWidgets('shows snackbar when signInWithGoogle fails with error message', (tester) async {
       setMobileSize(tester);
       when(() => mockAuthService.signInWithGoogle()).thenAnswer((_) async => false);
-      when(() => mockAuthService.errorMessage).thenReturn('Network error occurred');
+      when(() => mockAuthService.errorKey).thenReturn('networkError');
+      when(() => mockAuthService.errorMessage).thenReturn('networkError');
 
       await pumpApp(
         tester,
@@ -120,13 +122,19 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('Network error occurred'), findsOneWidget);
+      expect(
+        find.text(
+          'No internet connection. Please check your network and try again.',
+        ),
+        findsOneWidget,
+      );
     });
 
     testWidgets('shows snackbar when signInAnonymously fails with error message', (tester) async {
       setMobileSize(tester);
       when(() => mockAuthService.signInAnonymously()).thenAnswer((_) async => false);
-      when(() => mockAuthService.errorMessage).thenReturn('Guest sign-in failed');
+      when(() => mockAuthService.errorKey).thenReturn('signInFailed');
+      when(() => mockAuthService.errorMessage).thenReturn('signInFailed');
 
       await pumpApp(
         tester,
@@ -138,7 +146,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('Guest sign-in failed'), findsOneWidget);
+      expect(find.text('Sign-in failed. Please try again.'), findsOneWidget);
     });
 
     testWidgets('tapping terms link opens ProfileBottomSheet with legal info', (tester) async {

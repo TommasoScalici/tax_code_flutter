@@ -459,6 +459,10 @@
   "@signInFailed": {
     "description": "Error message displayed when an authentication attempt encounters an error."
   },
+  "reauthFailed": "Riautenticazione non riuscita. Riprova.",
+  "@reauthFailed": {
+    "description": "Messaggio di errore mostrato quando la riautenticazione Google fallisce o viene annullata durante operazioni critiche come l'eliminazione dell'account."
+  },
   "signOut": "Esci",
   "@signOut": {
     "description": "Label for a button to sign out of the application."

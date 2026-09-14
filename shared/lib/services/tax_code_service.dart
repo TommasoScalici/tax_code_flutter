@@ -73,7 +73,6 @@ class TaxCodeService implements TaxCodeServiceAbstract {
         message: 'Calculated successfully',
         data: TaxCodeData(
           fiscalCode: fiscalCode,
-          allFiscalCodes: [fiscalCode],
         ),
       );
     } on TaxCodeApiServerException {

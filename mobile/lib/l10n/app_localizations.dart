@@ -740,6 +740,12 @@ abstract class AppLocalizations {
   /// **'Sign-in failed. Please try again.'**
   String get signInFailed;
 
+  /// Error message displayed when Google re-authentication fails or is cancelled during sensitive operations like account deletion.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-authentication failed. Please try again.'**
+  String get reauthFailed;
+
   /// Label for a button to sign out of the application.
   ///
   /// In en, this message translates to:

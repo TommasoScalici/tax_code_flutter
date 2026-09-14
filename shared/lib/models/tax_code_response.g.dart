@@ -6,18 +6,11 @@ part of 'tax_code_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TaxCodeData _$TaxCodeDataFromJson(Map<String, dynamic> json) => TaxCodeData(
-  fiscalCode: json['cf'] as String,
-  allFiscalCodes: (json['all_cf'] as List<dynamic>)
-      .map((e) => e as String)
-      .toList(),
-);
+TaxCodeData _$TaxCodeDataFromJson(Map<String, dynamic> json) =>
+    TaxCodeData(fiscalCode: json['cf'] as String);
 
 Map<String, dynamic> _$TaxCodeDataToJson(TaxCodeData instance) =>
-    <String, dynamic>{
-      'cf': instance.fiscalCode,
-      'all_cf': instance.allFiscalCodes,
-    };
+    <String, dynamic>{'cf': instance.fiscalCode};
 
 TaxCodeResponse _$TaxCodeResponseFromJson(Map<String, dynamic> json) =>
     TaxCodeResponse(

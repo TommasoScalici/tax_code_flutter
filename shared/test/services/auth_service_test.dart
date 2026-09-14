@@ -227,6 +227,18 @@ void main() {
       ).called(1);
       expect(loadingStates, [true, false]);
       expect(authService.errorMessage, isNotNull);
+      expect(authService.errorKey, 'signInFailed');
+    });
+
+    test('signInWithGoogle maps network-request-failed to networkError', () async {
+      final exception = FirebaseAuthException(code: 'network-request-failed');
+      when(() => mockAuth.signInWithCredential(any())).thenThrow(exception);
+      when(() => mockGoogleSignIn.signIn()).thenAnswer((_) async => mockGoogleAccount);
+
+      final result = await authService.signInWithGoogle();
+
+      expect(result, isFalse);
+      expect(authService.errorKey, 'networkError');
     });
 
     test('signInWithGoogle links credential if currentUser is anonymous', () async {
@@ -264,6 +276,7 @@ void main() {
 
       expect(result, isFalse);
       expect(authService.errorMessage, isNotNull);
+      expect(authService.errorKey, 'signInFailed');
       verify(
         () => mockLogger.e(
           'Error during anonymous sign-in',

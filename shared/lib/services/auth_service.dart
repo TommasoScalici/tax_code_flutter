@@ -20,7 +20,7 @@ class AuthService with ChangeNotifier {
   AuthStatus _status = AuthStatus.initializing;
   StreamSubscription<User?>? _authSubscription;
   User? _currentUser;
-  String? _errorMessage;
+  String? _errorKey;
   bool _isLoading = false;
 
   /// The current authentication status.
@@ -38,8 +38,12 @@ class AuthService with ChangeNotifier {
   /// Returns true if an authentication operation is in progress.
   bool get isLoading => _isLoading;
 
+  /// Semantic error key for localized UI presentation (e.g. 'networkError', 'signInFailed', 'reauthFailed').
+  String? get errorKey => _errorKey;
+
   /// An error message resulting from a failed authentication attempt, or null.
-  String? get errorMessage => _errorMessage;
+  /// Maintained for backwards compatibility.
+  String? get errorMessage => _errorKey;
 
   ///
   /// The main constructor for the authentication service.
@@ -87,7 +91,6 @@ class AuthService with ChangeNotifier {
   ///
   Future<bool> reauthenticateWithGoogle() async {
     _setLoading(true);
-    _errorMessage = null;
 
     try {
       final googleUser = await _googleSignIn.signIn();
@@ -111,13 +114,21 @@ class AuthService with ChangeNotifier {
       await user.reauthenticateWithCredential(credential);
       _logger.i('User re-authenticated successfully.');
       return true;
+    } on FirebaseAuthException catch (e, s) {
+      _logger.e(
+        'Error during Google Re-authentication: ${e.code}',
+        error: e,
+        stackTrace: s,
+      );
+      _errorKey = e.code == 'network-request-failed' ? 'networkError' : 'reauthFailed';
+      return false;
     } on Exception catch (e, s) {
       _logger.e(
         'Error during Google Re-authentication',
         error: e,
         stackTrace: s,
       );
-      _errorMessage = 'An unexpected error occurred. Please try again.';
+      _errorKey = 'reauthFailed';
       return false;
     } finally {
       _setLoading(false);
@@ -164,9 +175,13 @@ class AuthService with ChangeNotifier {
 
       await _auth.signInWithCredential(credential);
       return true;
+    } on FirebaseAuthException catch (e, s) {
+      _logger.e('Error during Google Sign-In: ${e.code}', error: e, stackTrace: s);
+      _errorKey = e.code == 'network-request-failed' ? 'networkError' : 'signInFailed';
+      return false;
     } on Exception catch (e, s) {
       _logger.e('Error during Google Sign-In', error: e, stackTrace: s);
-      _errorMessage = 'An unexpected error occurred. Please try again.';
+      _errorKey = 'signInFailed';
       return false;
     } finally {
       _setLoading(false);
@@ -183,9 +198,13 @@ class AuthService with ChangeNotifier {
       await _auth.signInAnonymously();
       _logger.i('User signed in anonymously as guest.');
       return true;
+    } on FirebaseAuthException catch (e, s) {
+      _logger.e('Error during anonymous sign-in: ${e.code}', error: e, stackTrace: s);
+      _errorKey = e.code == 'network-request-failed' ? 'networkError' : 'signInFailed';
+      return false;
     } on Exception catch (e, s) {
       _logger.e('Error during anonymous sign-in', error: e, stackTrace: s);
-      _errorMessage = 'An unexpected error occurred. Please try again.';
+      _errorKey = 'signInFailed';
       return false;
     } finally {
       _setLoading(false);
@@ -305,7 +324,7 @@ class AuthService with ChangeNotifier {
 
     _isLoading = loading;
     if (loading) {
-      _errorMessage = null;
+      _errorKey = null;
     }
 
     notifyListeners();
