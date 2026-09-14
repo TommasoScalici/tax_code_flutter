@@ -16,7 +16,14 @@ import 'package:tax_code_flutter/widgets/barcode_bottom_sheet.dart';
 /// brightness service integration, copy functionality, and theme adaptability.
 class BarcodeBottomSheetPreview extends StatefulWidget {
   @Preview(name: 'Barcode & QR Bottom Sheet')
-  const BarcodeBottomSheetPreview({super.key});
+  const BarcodeBottomSheetPreview({
+    super.key,
+    this.locale = const Locale('it'),
+    this.isDarkMode = false,
+  });
+
+  final Locale locale;
+  final bool isDarkMode;
 
   @override
   State<BarcodeBottomSheetPreview> createState() =>
@@ -38,9 +45,15 @@ class _MockBrightnessService implements BrightnessServiceAbstract {
 }
 
 class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
-  bool _isDarkMode = true;
+  late bool _isDarkMode;
   int _selectedContactIndex = 0;
   final _mockBrightnessService = _MockBrightnessService();
+
+  @override
+  void initState() {
+    super.initState();
+    _isDarkMode = widget.isDarkMode;
+  }
 
   static final List<Contact> _sampleContacts = [
     Contact(
@@ -74,6 +87,7 @@ class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      locale: widget.locale,
       localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Provider<BrightnessServiceAbstract>.value(

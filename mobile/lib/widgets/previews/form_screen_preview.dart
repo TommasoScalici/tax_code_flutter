@@ -29,15 +29,24 @@ import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 /// - Interactive AI scan simulation to auto-populate form
 class FormScreenPreview extends StatefulWidget {
   @Preview(name: 'Form Screen')
-  const FormScreenPreview({super.key});
+  const FormScreenPreview({
+    super.key,
+    this.locale = const Locale('it'),
+    this.initialContact,
+    this.isDarkMode = true,
+  });
+
+  final Locale locale;
+  final Contact? initialContact;
+  final bool isDarkMode;
 
   @override
   State<FormScreenPreview> createState() => _FormScreenPreviewState();
 }
 
 class _FormScreenPreviewState extends State<FormScreenPreview> {
-  bool _isDarkMode = true;
-  bool _isEditing = false;
+  late bool _isDarkMode;
+  late bool _isEditing;
   bool _isSubmitting = false;
 
   final List<Birthplace> _birthplaces = const [
@@ -55,7 +64,9 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
   @override
   void initState() {
     super.initState();
-    _initForm();
+    _isDarkMode = widget.isDarkMode;
+    _isEditing = widget.initialContact != null;
+    _initForm(contact: widget.initialContact);
   }
 
   void _initForm({Contact? contact}) {
@@ -187,7 +198,7 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      locale: const Locale('it'),
+      locale: widget.locale,
       localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(

@@ -7,14 +7,27 @@ import 'package:tax_code_flutter/widgets/form/ocr_ai_hero_banner.dart';
 /// Standalone preview for [OcrAiHeroBanner] within a centered mobile viewport.
 class OcrAiHeroBannerPreview extends StatefulWidget {
   @Preview(name: 'OCR AI Hero Banner')
-  const OcrAiHeroBannerPreview({super.key});
+  const OcrAiHeroBannerPreview({
+    super.key,
+    this.locale = const Locale('it'),
+    this.isDarkMode = true,
+  });
+
+  final Locale locale;
+  final bool isDarkMode;
 
   @override
   State<OcrAiHeroBannerPreview> createState() => _OcrAiHeroBannerPreviewState();
 }
 
 class _OcrAiHeroBannerPreviewState extends State<OcrAiHeroBannerPreview> {
-  bool _isDarkMode = true;
+  late bool _isDarkMode;
+
+  @override
+  void initState() {
+    super.initState();
+    _isDarkMode = widget.isDarkMode;
+  }
 
   void _showFeedback(BuildContext context, String message) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -34,7 +47,7 @@ class _OcrAiHeroBannerPreviewState extends State<OcrAiHeroBannerPreview> {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      locale: const Locale('it'),
+      locale: widget.locale,
       localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
@@ -194,10 +193,9 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                                   ),
                                   child: Text(
                                     widget.contact.taxCode,
-                                    style: GoogleFonts.jetBrainsMono(
+                                    style: AppTypography.codeDisplay(
                                       color: colorScheme.primary,
                                       fontSize: 13,
-                                      fontWeight: FontWeight.w700,
                                       letterSpacing: 1.1,
                                     ),
                                   ),

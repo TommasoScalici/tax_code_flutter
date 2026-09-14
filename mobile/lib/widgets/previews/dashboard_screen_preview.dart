@@ -60,14 +60,23 @@ class _ScreenPreviewAuthService extends ChangeNotifier implements AuthService {
 /// [DashboardEmptyState], and [DashboardFab] in action.
 class DashboardScreenPreview extends StatefulWidget {
   @Preview(name: 'Dashboard Screen')
-  const DashboardScreenPreview({super.key});
+  const DashboardScreenPreview({
+    super.key,
+    this.locale = const Locale('it'),
+    this.initialContacts,
+    this.isDarkMode = false,
+  });
+
+  final Locale locale;
+  final List<Contact>? initialContacts;
+  final bool isDarkMode;
 
   @override
   State<DashboardScreenPreview> createState() => _DashboardScreenPreviewState();
 }
 
 class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
-  bool _isDarkMode = false;
+  late bool _isDarkMode;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
@@ -109,7 +118,10 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
   @override
   void initState() {
     super.initState();
-    _contacts = List.from(_allContacts);
+    _isDarkMode = widget.isDarkMode;
+    _contacts = widget.initialContacts != null
+        ? List.from(widget.initialContacts!)
+        : List.from(_allContacts);
   }
 
   @override
@@ -146,7 +158,7 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      locale: const Locale('it'),
+      locale: widget.locale,
       localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
