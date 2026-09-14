@@ -141,6 +141,7 @@ class _PreviewHomePageController extends ChangeNotifier
   @override
   List<Contact> get contactsToShow => contacts;
 
+  @override
   bool get hasContacts => true;
 
   @override

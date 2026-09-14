@@ -95,7 +95,7 @@ class _DashboardFabPreviewState extends State<DashboardFabPreview> {
                         child: DashboardFab(
                           isExtended: _isExtended,
                           onPressed: () {
-                            _showFeedback(context, l10n.newTaxCode);
+                            _showFeedback(context, l10n.addCode);
                           },
                         ),
                       ),

@@ -179,7 +179,7 @@ abstract class AppLocalizations {
   /// Helper text below the birthplace input field.
   ///
   /// In en, this message translates to:
-  /// **'Type the municipality name for quick cadastral code lookup (e.g. H501).'**
+  /// **'Start typing the municipality or country of birth and select it from the menu.'**
   String get birthplaceHelperText;
 
   /// Placeholder for the place or foreign country of birth field.
@@ -374,11 +374,11 @@ abstract class AppLocalizations {
   /// **'Edit Tax Code'**
   String get editTaxCodeTitle;
 
-  /// Action button label in the empty dashboard to add a new tax code.
+  /// Button label to add or create a new tax code.
   ///
   /// In en, this message translates to:
   /// **'Add Code'**
-  String get emptyDashboardAction;
+  String get addCode;
 
   /// Description shown in the empty dashboard when no cards are saved yet.
   ///
@@ -517,12 +517,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No internet connection. Please check your network and try again.'**
   String get networkError;
-
-  /// Label for the dashboard floating action button to create a new tax code.
-  ///
-  /// In en, this message translates to:
-  /// **'New Code'**
-  String get newTaxCode;
 
   /// App bar title in the new tax code creation screen.
   ///

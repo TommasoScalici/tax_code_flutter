@@ -3,6 +3,8 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:network_image_mock/network_image_mock.dart';
+import 'package:shared/models/birthplace.dart';
+import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/theme_service.dart';
 import 'package:tax_code_flutter/screens/home_page.dart';
@@ -29,7 +31,9 @@ void main() {
   });
 
   group('HomePage Widget Tests', () {
-    testWidgets('renders correctly with default state', (tester) async {
+    testWidgets('renders correctly with default state without contacts (hides FAB)', (
+      tester,
+    ) async {
       // Arrange & Act
       await pumpApp(
         tester,
@@ -40,8 +44,38 @@ void main() {
       expect(find.byType(Scaffold), findsOneWidget);
       expect(find.byType(AppBar), findsOneWidget);
       expect(find.byType(ContactsList), findsOneWidget);
-      expect(find.byType(FloatingActionButton), findsOneWidget);
+      // FloatingActionButton must be hidden when there are no contacts to avoid clutter
+      expect(find.byType(FloatingActionButton), findsNothing);
       expect(find.text('My Codes'), findsOneWidget);
+    });
+
+    testWidgets('displays FloatingActionButton when at least one contact exists', (
+      tester,
+    ) async {
+      final mockContactRepository = MockContactRepository();
+      when(() => mockContactRepository.isLoading).thenReturn(false);
+      when(() => mockContactRepository.contacts).thenReturn([
+        Contact(
+          id: '1',
+          firstName: 'Mario',
+          lastName: 'Rossi',
+          gender: 'M',
+          birthDate: DateTime(1985, 4, 15),
+          birthPlace: const Birthplace(name: 'Roma', state: 'RM', code: 'H501'),
+          taxCode: 'RSSMRA85D15H501Z',
+          listIndex: 0,
+        ),
+      ]);
+
+      await pumpApp(
+        tester,
+        const HomePage(),
+        authStatus: AuthStatus.authenticated,
+        mockContactRepository: mockContactRepository,
+      );
+      await tester.pump(const Duration(milliseconds: 500));
+
+      expect(find.byType(FloatingActionButton), findsOneWidget);
     });
 
     testWidgets('displays user avatar when photoURL is available', (

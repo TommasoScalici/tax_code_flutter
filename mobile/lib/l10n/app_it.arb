@@ -59,7 +59,7 @@
   "@birthdateHint": {
     "description": "Formato segnaposto per il campo data di nascita."
   },
-  "birthplaceHelperText": "Digita il nome del comune per la ricerca rapida del codice catastale (es. H501).",
+  "birthplaceHelperText": "Inizia a digitare il nome del comune o stato di nascita e selezionalo dal menu.",
   "@birthplaceHelperText": {
     "description": "Testo di supporto sotto il campo luogo di nascita."
   },
@@ -197,9 +197,9 @@
   "@editTaxCodeTitle": {
     "description": "Titolo dell'app bar nella schermata di modifica del codice fiscale."
   },
-  "emptyDashboardAction": "Aggiungi Codice",
-  "@emptyDashboardAction": {
-    "description": "Action button label in the empty dashboard to add a new tax code."
+  "addCode": "Aggiungi Codice",
+  "@addCode": {
+    "description": "Label del pulsante per aggiungere o creare un nuovo codice fiscale."
   },
   "emptyDashboardDescription": "Aggiungi il tuo primo Codice Fiscale per averlo sempre a portata di mano anche offline.",
   "@emptyDashboardDescription": {
@@ -298,10 +298,6 @@
   "networkError": "Nessuna connessione internet. Controlla la tua rete e riprova.",
   "@networkError": {
     "description": "Error message when there is no internet connectivity."
-  },
-  "newTaxCode": "Nuovo Codice",
-  "@newTaxCode": {
-    "description": "Label for the dashboard floating action button to create a new tax code."
   },
   "newTaxCodeTitle": "Nuovo Codice Fiscale",
   "@newTaxCodeTitle": {

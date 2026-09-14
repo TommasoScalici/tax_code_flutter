@@ -254,12 +254,6 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                           ],
                         ),
                       ),
-                      IconButton(
-                        key: const Key('barcode_bottom_sheet_header_close_button'),
-                        icon: const Icon(Icons.close_rounded),
-                        tooltip: l10n.close,
-                        onPressed: () => Navigator.pop(context),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 16),

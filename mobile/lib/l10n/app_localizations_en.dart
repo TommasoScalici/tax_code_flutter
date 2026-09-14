@@ -52,7 +52,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get birthplaceHelperText =>
-      'Type the municipality name for quick cadastral code lookup (e.g. H501).';
+      'Start typing the municipality or country of birth and select it from the menu.';
 
   @override
   String get birthplacePlaceholder => 'Municipality or foreign country';
@@ -159,7 +159,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editTaxCodeTitle => 'Edit Tax Code';
 
   @override
-  String get emptyDashboardAction => 'Add Code';
+  String get addCode => 'Add Code';
 
   @override
   String get emptyDashboardDescription =>
@@ -233,9 +233,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get networkError =>
       'No internet connection. Please check your network and try again.';
-
-  @override
-  String get newTaxCode => 'New Code';
 
   @override
   String get newTaxCodeTitle => 'New Tax Code';

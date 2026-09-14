@@ -20,6 +20,7 @@ interface class HomePageController with ChangeNotifier {
   bool get isLoading => _isLoading;
   String get searchText => _searchText;
   bool get isReorderable => _searchText.isEmpty;
+  bool get hasContacts => _allContacts.isNotEmpty;
 
   HomePageController({
     required ContactRepository contactRepository,

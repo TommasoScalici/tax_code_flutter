@@ -73,30 +73,51 @@ class ContactRepository with ChangeNotifier {
   }
 
   void _onSyncStateChanged() {
+    unawaited(_handleSyncStateChanged());
+  }
+
+  Future<void> _handleSyncStateChanged() async {
     if (_isDisposed) return;
     if (isSyncActive) {
       if (_contactsSubscription == null && _userId != null) {
-        _listenToRemoteContacts(_userId!);
-        unawaited(
-          _dbService.saveAllContacts(_userId!, _contacts).catchError(
-            (Object e, StackTrace s) {
-              _logger.e(
-                'Error syncing contacts to Firebase on re-enable',
-                error: e,
-                stackTrace: s,
-              );
-            },
-          ),
-        );
+        final userId = _userId!;
+        final localContacts = List<Contact>.from(_contacts);
+        if (localContacts.isNotEmpty) {
+          try {
+            await _dbService.saveAllContacts(userId, localContacts);
+          } on Object catch (e, s) {
+            _logger.e(
+              'Error syncing contacts to Firebase on re-enable',
+              error: e,
+              stackTrace: s,
+            );
+          }
+        }
+        if (_isDisposed || !isSyncActive) return;
+        _listenToRemoteContacts(userId);
       }
     } else {
       final subscription = _contactsSubscription;
       if (subscription != null) {
-        unawaited(subscription.cancel());
+        await subscription.cancel();
         _contactsSubscription = null;
       }
+      final userId = _userId;
+      if (userId != null) {
+        try {
+          await _dbService.saveAllContacts(userId, <Contact>[]);
+        } on Object catch (e, s) {
+          _logger.e(
+            'Error clearing cloud contacts on sync disable',
+            error: e,
+            stackTrace: s,
+          );
+        }
+      }
     }
-    notifyListeners();
+    if (!_isDisposed) {
+      notifyListeners();
+    }
   }
 
   ///
@@ -266,17 +287,107 @@ class ContactRepository with ChangeNotifier {
 
     // Act only if the user state has actually changed
     if (user?.uid != _cachedUserId) {
+      final previousUserId = _cachedUserId;
+      // If we previously had contacts in a non-syncing (guest/offline) session and are now signing into an account
+      final hadLocalOnlyContacts =
+          _contactsSubscription == null && _contacts.isNotEmpty;
+      final guestContactsToMigrate =
+          hadLocalOnlyContacts ? List<Contact>.from(_contacts) : <Contact>[];
+
       await _contactsSubscription?.cancel();
       _contactsSubscription = null;
 
       if (user != null) {
         // A user has logged in or switched
         _cachedUserId = user.uid;
-        await _initializeUserData(user.uid);
+
+        if (guestContactsToMigrate.isNotEmpty && isSyncActive) {
+          await _migrateGuestContactsToAccount(
+            user.uid,
+            guestContactsToMigrate,
+            previousUserId,
+          );
+        } else {
+          await _initializeUserData(user.uid);
+        }
       } else {
         // The user has logged out
         await _clearUserData();
       }
+    }
+  }
+
+  Future<void> _migrateGuestContactsToAccount(
+    String targetUserId,
+    List<Contact> guestContacts,
+    String? previousUserId,
+  ) async {
+    _isLoading = true;
+    if (_isDisposed) return;
+    notifyListeners();
+
+    try {
+      // 1. Fetch remote contacts for the target user (if any exist on the cloud)
+      final remoteContacts = await _dbService.getContacts(targetUserId);
+
+      // 2. Perform intelligent merge: preserve remote contacts, add guest contacts if not already present
+      final mergedContacts = List<Contact>.from(remoteContacts);
+      final existingTaxCodes =
+          mergedContacts.map((c) => c.taxCode.toUpperCase()).toSet();
+      final existingIds = mergedContacts.map((c) => c.id).toSet();
+
+      for (final guestContact in guestContacts) {
+        final taxCodeUpper = guestContact.taxCode.toUpperCase();
+        if (!existingTaxCodes.contains(taxCodeUpper) &&
+            !existingIds.contains(guestContact.id)) {
+          mergedContacts.add(guestContact);
+          existingTaxCodes.add(taxCodeUpper);
+          existingIds.add(guestContact.id);
+        }
+      }
+
+      // 3. Re-index merged contacts
+      for (var i = 0; i < mergedContacts.length; i++) {
+        mergedContacts[i] = mergedContacts[i].copyWith(listIndex: i);
+      }
+
+      _contacts = mergedContacts;
+
+      // 4. Save merged contacts to Firestore so cloud has the complete unified list
+      await _dbService.saveAllContacts(targetUserId, _contacts);
+
+      // 5. Save to local cache for the target user
+      await _saveContactsToLocalCache();
+
+      // 6. Clean up the old guest local cache
+      if (previousUserId != null) {
+        try {
+          await _cacheService.clearContacts(previousUserId);
+        } on Object catch (e, s) {
+          _logger.e(
+            'Failed to clear migrated guest cache',
+            error: e,
+            stackTrace: s,
+          );
+        }
+      }
+    } on Object catch (e, s) {
+      _logger.e(
+        'Error during guest contact migration to user $targetUserId',
+        error: e,
+        stackTrace: s,
+      );
+      await _initializeUserData(targetUserId);
+    } finally {
+      _isLoading = false;
+      if (!_isDisposed) {
+        notifyListeners();
+      }
+    }
+
+    // 7. Attach the remote stream listener to keep synced with cloud
+    if (isSyncActive) {
+      _listenToRemoteContacts(targetUserId);
     }
   }
 
@@ -298,6 +409,25 @@ class ContactRepository with ChangeNotifier {
   }
 
   Future<void> _processContactsUpdate(List<Contact> remoteContacts) async {
+    if (remoteContacts.isEmpty && _contacts.isNotEmpty) {
+      _logger.w(
+        'Received empty remote contacts while local contacts exist. Re-uploading local contacts.',
+      );
+      final userId = _userId;
+      if (userId != null) {
+        try {
+          await _dbService.saveAllContacts(userId, _contacts);
+        } on Object catch (e, s) {
+          _logger.e(
+            'Error re-uploading local contacts to Firebase',
+            error: e,
+            stackTrace: s,
+          );
+        }
+      }
+      return;
+    }
+
     _contacts = List.from(remoteContacts)
       ..sort((a, b) => a.listIndex.compareTo(b.listIndex));
 

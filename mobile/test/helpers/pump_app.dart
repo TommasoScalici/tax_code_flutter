@@ -94,8 +94,12 @@ Future<void> pumpApp(
   }
 
   when(birthplaceService.loadBirthplaces).thenAnswer((_) async => []);
-  when(() => contactRepository.isLoading).thenReturn(false);
-  when(() => contactRepository.contacts).thenReturn(<Contact>[]);
+  when(() => contactRepository.addListener(any())).thenReturn(null);
+  when(() => contactRepository.removeListener(any())).thenReturn(null);
+  if (mockContactRepository == null) {
+    when(() => contactRepository.isLoading).thenReturn(false);
+    when(() => contactRepository.contacts).thenReturn(<Contact>[]);
+  }
 
   when(() => themeService.theme).thenReturn(AppThemeMode.light);
   when(() => remoteConfig.getString(any<String>())).thenReturn('');

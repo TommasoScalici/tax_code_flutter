@@ -134,7 +134,7 @@ class DashboardEmptyState extends StatelessWidget {
                 FilledButton.icon(
                   onPressed: onAddContact,
                   icon: const Icon(Icons.add_rounded, size: 20),
-                  label: Text(l10n.emptyDashboardAction),
+                  label: Text(l10n.addCode),
                 ),
             ],
           ),

@@ -52,7 +52,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get birthplaceHelperText =>
-      'Digita il nome del comune per la ricerca rapida del codice catastale (es. H501).';
+      'Inizia a digitare il nome del comune o stato di nascita e selezionalo dal menu.';
 
   @override
   String get birthplacePlaceholder => 'Comune o Stato estero';
@@ -160,7 +160,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editTaxCodeTitle => 'Modifica Codice Fiscale';
 
   @override
-  String get emptyDashboardAction => 'Aggiungi Codice';
+  String get addCode => 'Aggiungi Codice';
 
   @override
   String get emptyDashboardDescription =>
@@ -234,9 +234,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get networkError =>
       'Nessuna connessione internet. Controlla la tua rete e riprova.';
-
-  @override
-  String get newTaxCode => 'Nuovo Codice';
 
   @override
   String get newTaxCodeTitle => 'Nuovo Codice Fiscale';

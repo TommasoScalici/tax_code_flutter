@@ -249,7 +249,7 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
             ),
             floatingActionButton: DashboardFab(
               onPressed: () {
-                _showFeedback(context, l10n.newTaxCode);
+                _showFeedback(context, l10n.addCode);
               },
             ),
           ),

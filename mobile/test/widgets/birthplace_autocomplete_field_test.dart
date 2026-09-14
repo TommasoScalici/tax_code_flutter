@@ -54,7 +54,7 @@ void main() {
       expect(find.text('Comune o Stato estero'), findsOneWidget);
       expect(
         find.text(
-          'Digita il nome del comune per la ricerca rapida del codice catastale (es. H501).',
+          'Inizia a digitare il nome del comune o stato di nascita e selezionalo dal menu.',
         ),
         findsOneWidget,
       );
@@ -71,7 +71,7 @@ void main() {
       expect(find.text('Municipality or foreign country'), findsOneWidget);
       expect(
         find.text(
-          'Type the municipality name for quick cadastral code lookup (e.g. H501).',
+          'Start typing the municipality or country of birth and select it from the menu.',
         ),
         findsOneWidget,
       );

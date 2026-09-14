@@ -230,42 +230,25 @@ void main() {
       expect(find.byType(BarcodeBottomSheet), findsNothing);
     });
 
-    testWidgets('closes modal sheet when header close icon is tapped', (
-      tester,
-    ) async {
+    testWidgets('does not render redundant header close icon', (tester) async {
       await tester.pumpWidget(
         buildTestApp(
-          child: Builder(
-            builder: (context) {
-              return ElevatedButton(
-                onPressed: () {
-                  unawaited(
-                    BarcodeBottomSheet.show(
-                      context,
-                      contact: testContact,
-                      brightnessService: mockBrightnessService,
-                    ),
-                  );
-                },
-                child: const Text('Open Sheet'),
-              );
-            },
+          child: BarcodeBottomSheet(
+            contact: testContact,
+            brightnessService: mockBrightnessService,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Open Sheet'));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(BarcodeBottomSheet), findsOneWidget);
-
-      await tester.tap(
+      expect(
         find.byKey(const Key('barcode_bottom_sheet_header_close_button')),
+        findsNothing,
       );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(BarcodeBottomSheet), findsNothing);
+      expect(
+        find.byKey(const Key('barcode_bottom_sheet_close_button')),
+        findsOneWidget,
+      );
     });
   });
 }

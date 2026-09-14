@@ -66,9 +66,12 @@ final class HomePage extends StatelessWidget {
           onAddContact: () => _onAddContact(context),
         ),
       ),
-      floatingActionButton: DashboardFab(
-        onPressed: () => _onAddContact(context),
-      ),
+      floatingActionButton:
+          context.watch<HomePageController?>()?.hasContacts == true
+              ? DashboardFab(
+                  onPressed: () => _onAddContact(context),
+                )
+              : null,
     );
   }
 }

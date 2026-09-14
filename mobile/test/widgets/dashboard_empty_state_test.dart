@@ -104,5 +104,22 @@ void main() {
         findsOneWidget,
       );
     });
+
+    testWidgets('renders empty dashboard state in English locale with Add Code button', (tester) async {
+      setMobileSize(tester);
+
+      await pumpApp(
+        tester,
+        Scaffold(
+          body: DashboardEmptyState(
+            onAddContact: () {},
+          ),
+        ),
+        locale: const Locale('en'),
+      );
+
+      expect(find.text('No cards saved yet'), findsOneWidget);
+      expect(find.text('Add Code'), findsOneWidget);
+    });
   });
 }

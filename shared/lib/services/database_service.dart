@@ -24,6 +24,16 @@ class DatabaseService {
     });
   }
 
+  /// Fetches the current list of contacts for a given user from Firestore once.
+  Future<List<Contact>> getContacts(String userId) async {
+    final collection = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('contacts');
+    final snapshot = await collection.get();
+    return snapshot.docs.map((doc) => Contact.fromJson(doc.data())).toList();
+  }
+
   /// Saves or updates a single contact in Firestore for a given user.
   Future<void> addOrUpdateContact(String userId, Contact contact) {
     final docRef = _firestore

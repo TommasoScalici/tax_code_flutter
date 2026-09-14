@@ -125,7 +125,7 @@ class _DashboardEmptyStatePreviewState
                             });
                           },
                           onAddContact: () {
-                            _showFeedback(context, l10n.emptyDashboardAction);
+                            _showFeedback(context, l10n.addCode);
                           },
                         ),
                       ),

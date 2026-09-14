@@ -14,7 +14,7 @@ class DashboardFab extends StatelessWidget {
   /// Whether the FAB displays both icon and label, or only the icon.
   final bool isExtended;
 
-  /// Custom label override. Defaults to [AppLocalizations.newTaxCode].
+  /// Custom label override. Defaults to [AppLocalizations.addCode].
   final String? label;
 
   /// Custom icon override. Defaults to [Icons.add_rounded].
@@ -44,7 +44,7 @@ class DashboardFab extends StatelessWidget {
     final fgColor = theme.floatingActionButtonTheme.foregroundColor ??
         colorScheme.onPrimary;
 
-    final effectiveLabel = label ?? l10n.newTaxCode;
+    final effectiveLabel = label ?? l10n.addCode;
     final effectiveTooltip = tooltip ?? l10n.newTaxCodeTooltip;
     final effectiveIcon = icon ??
         Icon(

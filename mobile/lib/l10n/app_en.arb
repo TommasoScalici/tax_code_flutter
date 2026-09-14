@@ -59,7 +59,7 @@
   "@birthdateHint": {
     "description": "Placeholder format for the birth date input field."
   },
-  "birthplaceHelperText": "Type the municipality name for quick cadastral code lookup (e.g. H501).",
+  "birthplaceHelperText": "Start typing the municipality or country of birth and select it from the menu.",
   "@birthplaceHelperText": {
     "description": "Helper text below the birthplace input field."
   },
@@ -197,9 +197,9 @@
   "@editTaxCodeTitle": {
     "description": "App bar title in the edit tax code screen."
   },
-  "emptyDashboardAction": "Add Code",
-  "@emptyDashboardAction": {
-    "description": "Action button label in the empty dashboard to add a new tax code."
+  "addCode": "Add Code",
+  "@addCode": {
+    "description": "Button label to add or create a new tax code."
   },
   "emptyDashboardDescription": "Add your first Italian Tax Code to keep it handy anytime, even offline.",
   "@emptyDashboardDescription": {
@@ -298,10 +298,6 @@
   "networkError": "No internet connection. Please check your network and try again.",
   "@networkError": {
     "description": "Error message when there is no internet connectivity."
-  },
-  "newTaxCode": "New Code",
-  "@newTaxCode": {
-    "description": "Label for the dashboard floating action button to create a new tax code."
   },
   "newTaxCodeTitle": "New Tax Code",
   "@newTaxCodeTitle": {

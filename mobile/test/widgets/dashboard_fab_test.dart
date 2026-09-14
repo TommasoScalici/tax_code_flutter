@@ -35,7 +35,7 @@ void main() {
       );
 
       expect(find.byType(DashboardFab), findsOneWidget);
-      expect(find.text('Nuovo Codice'), findsOneWidget);
+      expect(find.text('Aggiungi Codice'), findsOneWidget);
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
 
       await tester.tap(find.byType(DashboardFab));
@@ -61,7 +61,7 @@ void main() {
       expect(find.byType(DashboardFab), findsOneWidget);
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
       // In collapsed mode, the label is omitted
-      expect(find.text('Nuovo Codice'), findsNothing);
+      expect(find.text('Aggiungi Codice'), findsNothing);
     });
 
     testWidgets('allows custom label and icon override', (tester) async {
@@ -96,7 +96,7 @@ void main() {
         locale: const Locale('en'),
       );
 
-      expect(find.text('New Code'), findsOneWidget);
+      expect(find.text('Add Code'), findsOneWidget);
     });
   });
 }

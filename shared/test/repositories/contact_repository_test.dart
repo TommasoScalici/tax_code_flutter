@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:logger/logger.dart';
@@ -10,6 +11,7 @@ import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/database_service.dart';
 import 'package:shared/services/hive_local_cache_service.dart';
+import 'package:shared/services/sync_service.dart';
 
 import '../fakes/fake_auth_service.dart';
 import '../fakes/fake_user.dart';
@@ -18,6 +20,8 @@ import '../fakes/fake_user.dart';
 class MockDatabaseService extends Mock implements DatabaseService {}
 
 class MockLogger extends Mock implements Logger {}
+
+class MockSyncService extends Mock implements SyncService {}
 
 void main() {
   final fakeUser = FakeUser();
@@ -563,6 +567,132 @@ void main() {
       verifyNever(() => mockDbService.addOrUpdateContact(any(), any()));
       verifyNever(() => mockDbService.removeContact(any(), any()));
       verifyNever(() => mockDbService.saveAllContacts(any(), any()));
+    });
+  });
+
+  group('Sync Safeguards & Cloud Sync Management', () {
+    late MockSyncService mockSyncService;
+    late ContactRepository syncRepo;
+
+    setUp(() async {
+      mockSyncService = MockSyncService();
+      when(() => mockSyncService.isSyncEnabled).thenReturn(true);
+      when(() => mockSyncService.addListener(any())).thenReturn(null);
+      when(() => mockSyncService.removeListener(any())).thenReturn(null);
+
+      fakeAuthService.login(fakeUser);
+
+      syncRepo = ContactRepository(
+        authService: fakeAuthService,
+        dbService: mockDbService,
+        cacheService: HiveLocalCacheService(),
+        logger: mockLogger,
+        syncService: mockSyncService,
+      );
+
+      while (syncRepo.isLoading) {
+        await pumpEventQueue();
+      }
+    });
+
+    tearDown(() {
+      syncRepo.dispose();
+    });
+
+    test('disabling sync clears cloud contacts and cancels subscription', () async {
+      await pumpEventQueue();
+      clearInteractions(mockDbService);
+
+      when(() => mockSyncService.isSyncEnabled).thenReturn(false);
+      final listener = verify(() => mockSyncService.addListener(captureAny())).captured.first as VoidCallback;
+      listener();
+      await pumpEventQueue();
+
+      verify(() => mockDbService.saveAllContacts(fakeUser.uid, <Contact>[])).called(1);
+    });
+
+    test('enabling sync uploads local contacts first before listening to stream', () async {
+      await pumpEventQueue();
+
+      // Disable first
+      when(() => mockSyncService.isSyncEnabled).thenReturn(false);
+      final listener = verify(() => mockSyncService.addListener(captureAny())).captured.first as VoidCallback;
+      listener();
+      await pumpEventQueue();
+
+      // Add contact locally while sync is disabled
+      await syncRepo.addOrUpdateContact(contact1);
+      clearInteractions(mockDbService);
+
+      // Re-enable sync
+      when(() => mockSyncService.isSyncEnabled).thenReturn(true);
+      listener();
+      await pumpEventQueue();
+
+      verifyInOrder([
+        () => mockDbService.saveAllContacts(fakeUser.uid, [contact1]),
+        () => mockDbService.getContactsStream(fakeUser.uid),
+      ]);
+    });
+
+    test('remote empty contacts do not wipe existing local contacts', () async {
+      while (syncRepo.isLoading) {
+        await pumpEventQueue();
+      }
+      await syncRepo.addOrUpdateContact(contact1);
+      clearInteractions(mockDbService);
+
+      // Remote stream unexpectedly emits empty list
+      contactsStreamController.add([]);
+      await pumpEventQueue();
+
+      // Contacts in repo must still contain contact1!
+      expect(syncRepo.contacts, contains(contact1));
+      verify(() => mockDbService.saveAllContacts(fakeUser.uid, [contact1])).called(1);
+    });
+
+    test('migrates guest contacts to Google account on sign-in without losing cloud contacts', () async {
+      final guestContact = contact1.copyWith(id: 'guest_1', taxCode: 'RSSMRA90A01H501Z');
+      final cloudContact = contact2.copyWith(id: 'cloud_1', taxCode: 'VRDLGU92B02F205Y');
+
+      // 1. Arrange: User is guest with non-syncing session
+      fakeAuthService.login(FakeUser(uid: 'guest_123', isAnonymous: true));
+      when(() => mockSyncService.isSyncEnabled).thenReturn(false);
+      when(() => mockDbService.getContacts('google_456')).thenAnswer((_) async => [cloudContact]);
+
+      final repo = ContactRepository(
+        authService: fakeAuthService,
+        dbService: mockDbService,
+        cacheService: HiveLocalCacheService(),
+        logger: mockLogger,
+        syncService: mockSyncService,
+      );
+
+      while (repo.isLoading) {
+        await pumpEventQueue();
+      }
+
+      // Guest adds contact
+      await repo.addOrUpdateContact(guestContact);
+      expect(repo.contacts, [guestContact]);
+      clearInteractions(mockDbService);
+
+      // 2. Act: User signs in with Google
+      when(() => mockSyncService.isSyncEnabled).thenReturn(true);
+      fakeAuthService.login(FakeUser(uid: 'google_456', isAnonymous: false));
+      // Allow auth change event loop cycle to start
+      await pumpEventQueue();
+      while (repo.isLoading) {
+        await pumpEventQueue();
+      }
+
+      // 3. Assert: contacts should be merged ([cloudContact, guestContact])
+      expect(repo.contacts.length, 2);
+      expect(repo.contacts.map((c) => c.id), containsAll(['guest_1', 'cloud_1']));
+      verify(() => mockDbService.getContacts('google_456')).called(1);
+      verify(() => mockDbService.saveAllContacts('google_456', any(that: hasLength(2)))).called(1);
+
+      repo.dispose();
     });
   });
 }
