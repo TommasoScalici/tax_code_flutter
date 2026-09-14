@@ -47,9 +47,36 @@ void main() {
       },
     );
 
-    test('should return error map for invalid input (numbers)', () {
-      final control = FormControl<String>(value: 'Mario123');
-      expect(validator.validate(control), {'invalidCharacters': true});
+    test('should return null for accented and hyphenated names', () {
+      final accentedNames = [
+        'Nicolò',
+        'Però',
+        "D'Amato",
+        'Àlex',
+        'José',
+        'Jean-Luc',
+        'Marie-Claire',
+      ];
+      for (final name in accentedNames) {
+        final control = FormControl<String>(value: name);
+        expect(
+          validator.validate(control),
+          isNull,
+          reason: 'Expected $name to be valid',
+        );
+      }
+    });
+
+    test('should return error map for invalid input (numbers and symbols)', () {
+      final invalidInputs = ['Mario123', 'Mario@', 'Test#1', 'John_Doe'];
+      for (final input in invalidInputs) {
+        final control = FormControl<String>(value: input);
+        expect(
+          validator.validate(control),
+          {'invalidCharacters': true},
+          reason: 'Expected $input to be invalid',
+        );
+      }
     });
 
     test('should return null for empty or null value', () {
@@ -66,7 +93,11 @@ void main() {
     late MockContactRepository mockContactRepository;
     late MockLogger mockLogger;
 
-    const sampleBirthplace = Birthplace(name: 'Palermo', state: 'PA');
+    const sampleBirthplace = Birthplace(
+      name: 'Palermo',
+      state: 'PA',
+      code: 'G273',
+    );
     final sampleContact = Contact(
       id: 'test-id',
       firstName: 'Mario',
@@ -163,6 +194,36 @@ void main() {
       expect(formPageController.form.control('firstName').value, 'Luigi');
       expect(formPageController.form.control('lastName').value, 'Verdi');
     });
+
+    test(
+      'populateFormFromScannedData resolves Belfiore code and updates calculatedTaxCode immediately',
+      () async {
+        // Arrange
+        await createController();
+        // Gemini OCR returns scanned data with empty Belfiore code
+        const scannedBirthplaceWithoutCode = Birthplace(
+          name: 'Palermo',
+          state: 'PA',
+        );
+        final scannedData = ScannedData(
+          firstName: 'Luigi',
+          lastName: 'Verdi',
+          gender: 'M',
+          birthDate: DateTime(1990, 5, 5),
+          birthPlace: scannedBirthplaceWithoutCode,
+        );
+
+        // Act
+        formPageController.populateFormFromScannedData(scannedData);
+
+        // Assert
+        final formBirthplace =
+            formPageController.form.control('birthPlace').value as Birthplace?;
+        expect(formBirthplace?.code, 'G273');
+        expect(formPageController.calculatedTaxCode, isNotNull);
+        expect(formPageController.calculatedTaxCode!.length, 16);
+      },
+    );
 
     group('submitForm', () {
       // Use real model instances for the successful response

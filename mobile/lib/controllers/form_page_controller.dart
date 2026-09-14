@@ -187,15 +187,59 @@ interface class FormPageController with ChangeNotifier {
     }
   }
 
+  Birthplace? _resolveBirthplace(Birthplace? scanned) {
+    if (scanned == null) return null;
+    if (scanned.code.isNotEmpty) return scanned;
+
+    final scannedName = scanned.name.trim().toLowerCase();
+    final scannedState = scanned.state.trim().toLowerCase();
+
+    // 1. Try matching by name and state
+    for (final b in birthplaces) {
+      if (b.name.trim().toLowerCase() == scannedName &&
+          (scannedState.isEmpty ||
+              b.state.trim().toLowerCase() == scannedState)) {
+        return b;
+      }
+    }
+
+    // 2. Fallback to matching by name only
+    for (final b in birthplaces) {
+      if (b.name.trim().toLowerCase() == scannedName) {
+        return b;
+      }
+    }
+
+    return scanned;
+  }
+
   void populateFormFromScannedData(ScannedData data) {
+    final resolvedBirthPlace = _resolveBirthplace(data.birthPlace);
+
     final Map<String, dynamic> patch = {
       if (data.firstName != null) 'firstName': data.firstName,
       if (data.lastName != null) 'lastName': data.lastName,
       if (data.gender != null) 'gender': data.gender,
       if (data.birthDate != null) 'birthDate': data.birthDate,
-      if (data.birthPlace != null) 'birthPlace': data.birthPlace,
+      'birthPlace': ?resolvedBirthPlace,
     };
     form.patchValue(patch);
+
+    // If birthplaces was empty during scan, resolve once initial loading completes
+    if (resolvedBirthPlace != null &&
+        resolvedBirthPlace.code.isEmpty &&
+        birthplaces.isEmpty) {
+      unawaited(
+        initializationFuture.then((_) {
+          if (!_isDisposed) {
+            final postResolved = _resolveBirthplace(resolvedBirthPlace);
+            if (postResolved != null && postResolved.code.isNotEmpty) {
+              form.control('birthPlace').value = postResolved;
+            }
+          }
+        }),
+      );
+    }
   }
 
   Future<Contact?> submitForm() async {

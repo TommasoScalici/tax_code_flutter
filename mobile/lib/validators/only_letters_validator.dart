@@ -12,7 +12,8 @@ class OnlyLettersValidator extends Validator<String> {
     }
 
     final hasInvalidCharacters = RegExp(
-      r"[^a-zA-Z\s']",
+      r"[^\p{L}\s'-]",
+      unicode: true,
     ).hasMatch(control.value!);
 
     return hasInvalidCharacters
