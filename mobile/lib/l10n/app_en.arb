@@ -75,6 +75,10 @@
   "@buildNumber": {
     "description": "Label for the build number field in an info screen."
   },
+  "cameraCardGuideHint": "Align your health card or tax code within the frame",
+  "@cameraCardGuideHint": {
+    "description": "Instructional text displayed above the camera card framing guide."
+  },
   "cameraPermissionInfo": "To scan cards, this app needs access to your camera. Please go to your device settings and grant camera permission.",
   "@cameraPermissionInfo": {
     "description": "An informational message explaining how to grant camera permission."

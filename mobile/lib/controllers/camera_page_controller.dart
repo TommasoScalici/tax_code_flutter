@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
+import 'package:image/image.dart' as img;
 import 'package:logger/logger.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared/models/scanned_data.dart';
@@ -27,11 +29,46 @@ typedef CameraControllerFactory =
       bool enableAudio,
     });
 
-class CameraPageController with ChangeNotifier {
+typedef ImageProcessor = Future<String> Function(String filePath);
+
+/// Resizes the image so neither dimension exceeds [maxDimension],
+/// compresses it as JPEG with [quality], and encodes it to Base64 in a background isolate.
+Future<String> defaultImageProcessor(
+  String filePath, {
+  int maxDimension = 1280,
+  int quality = 80,
+}) async {
+  return Isolate.run(() {
+    final rawBytes = File(filePath).readAsBytesSync();
+    try {
+      final decoded = img.decodeImage(rawBytes);
+      if (decoded == null) {
+        return base64Encode(rawBytes);
+      }
+
+      img.Image processed = decoded;
+      if (decoded.width > maxDimension || decoded.height > maxDimension) {
+        if (decoded.width >= decoded.height) {
+          processed = img.copyResize(decoded, width: maxDimension);
+        } else {
+          processed = img.copyResize(decoded, height: maxDimension);
+        }
+      }
+
+      final compressedBytes = img.encodeJpg(processed, quality: quality);
+      return base64Encode(compressedBytes);
+    } on Object {
+      return base64Encode(rawBytes);
+    }
+  });
+}
+
+class CameraPageController with ChangeNotifier, WidgetsBindingObserver {
   final CameraControllerFactory _cameraControllerFactory;
   final CameraServiceAbstract _cameraService;
   final GeminiServiceAbstract _geminiService;
   final PermissionServiceAbstract _permissionService;
+  final ImageProcessor _imageProcessor;
   final Logger _logger;
 
   CameraController? _cameraController;
@@ -39,6 +76,9 @@ class CameraPageController with ChangeNotifier {
   FlashMode _flashMode = FlashMode.off;
   DeviceOrientation? _pictureOrientation;
   CameraStatus _status = CameraStatus.initializing;
+  WidgetsBinding? _widgetsBinding;
+  bool _isDisposed = false;
+  bool _isObserverRegistered = false;
 
   CameraStatus get status => _status;
   CameraController? get cameraController => _cameraController;
@@ -51,15 +91,21 @@ class CameraPageController with ChangeNotifier {
     required PermissionServiceAbstract permissionService,
     required Logger logger,
     CameraControllerFactory? cameraControllerFactory,
+    ImageProcessor? imageProcessor,
+    WidgetsBinding? widgetsBinding,
   }) : _cameraService = cameraService,
        _geminiService = geminiService,
        _permissionService = permissionService,
        _logger = logger,
        _cameraControllerFactory =
-           cameraControllerFactory ?? CameraController.new;
+           cameraControllerFactory ?? CameraController.new,
+       _imageProcessor = imageProcessor ?? defaultImageProcessor,
+       _widgetsBinding = widgetsBinding;
 
   /// Initializes the camera and checks for permission.
   Future<void> initialize() async {
+    _ensureLifecycleObserver();
+
     final isGranted = await _permissionService.requestCameraPermission();
     if (!isGranted) {
       _updateStatus(CameraStatus.permissionDenied);
@@ -92,8 +138,7 @@ class CameraPageController with ChangeNotifier {
     _updateStatus(CameraStatus.processing);
 
     try {
-      final imageBytes = await File(imagePath!).readAsBytes();
-      final String base64Image = base64Encode(imageBytes);
+      final base64Image = await _imageProcessor(imagePath!);
       final scannedData = await _geminiService.extractDataFromDocument(
         base64Image,
       );
@@ -118,7 +163,7 @@ class CameraPageController with ChangeNotifier {
   Future<void> resetPicture() async {
     if (_cameraController == null) return;
 
-    _imagePath = null;
+    await _deleteTempImage();
     await _cameraController!.resumePreview();
     _updateStatus(CameraStatus.readyToScan);
   }
@@ -130,6 +175,10 @@ class CameraPageController with ChangeNotifier {
     }
 
     try {
+      if (_imagePath != null) {
+        await _deleteTempImage();
+      }
+
       final image = await _cameraController!.takePicture();
       await _cameraController!.pausePreview();
       _pictureOrientation = _cameraController!.value.deviceOrientation;
@@ -164,6 +213,73 @@ class CameraPageController with ChangeNotifier {
     }
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_isDisposed) return;
+
+    switch (state) {
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.hidden:
+        unawaited(_onAppPaused());
+      case AppLifecycleState.resumed:
+        unawaited(_onAppResumed());
+      case AppLifecycleState.detached:
+        break;
+    }
+  }
+
+  Future<void> _onAppPaused() async {
+    final controller = _cameraController;
+    if (controller != null && controller.value.isInitialized) {
+      _cameraController = null;
+      try {
+        await controller.dispose();
+      } on Object catch (e, s) {
+        _logger.w('Error disposing camera on pause', error: e, stackTrace: s);
+      }
+      notifyListeners();
+    }
+  }
+
+  Future<void> _onAppResumed() async {
+    if (_isDisposed) return;
+    if (_cameraController == null && _status != CameraStatus.permissionDenied) {
+      await initialize();
+    }
+  }
+
+  Future<void> _deleteTempImage() async {
+    final path = _imagePath;
+    _imagePath = null;
+    if (path == null) return;
+
+    try {
+      final file = File(path);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } on Object catch (e, s) {
+      _logger.w(
+        'Could not delete temporary camera file at $path',
+        error: e,
+        stackTrace: s,
+      );
+    }
+  }
+
+  void _ensureLifecycleObserver() {
+    if (!_isObserverRegistered) {
+      try {
+        _widgetsBinding ??= WidgetsBinding.instance;
+        _widgetsBinding?.addObserver(this);
+        _isObserverRegistered = true;
+      } on Object {
+        // WidgetsBinding not initialized (e.g. running in unit test without binding)
+      }
+    }
+  }
+
   void _updateStatus(CameraStatus newStatus) {
     if (_status == newStatus) return;
     _status = newStatus;
@@ -172,11 +288,18 @@ class CameraPageController with ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
+    if (_isObserverRegistered && _widgetsBinding != null) {
+      _widgetsBinding!.removeObserver(this);
+      _isObserverRegistered = false;
+    }
     final controller = _cameraController;
     if (controller != null) {
       unawaited(controller.setFlashMode(FlashMode.off));
       unawaited(controller.dispose());
+      _cameraController = null;
     }
+    unawaited(_deleteTempImage());
     super.dispose();
   }
 }

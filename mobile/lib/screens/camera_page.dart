@@ -42,9 +42,19 @@ class _CameraView extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.watch<CameraPageController>();
     final l10n = AppLocalizations.of(context)!;
+    final isScanning =
+        controller.status == CameraStatus.readyToScan ||
+        controller.status == CameraStatus.pictureTaken ||
+        controller.status == CameraStatus.processing;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.takePicture)),
+      appBar: isScanning
+          ? null
+          : AppBar(
+              title: Text(l10n.takePicture),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
       backgroundColor: Colors.black,
       body: _buildBody(context, controller, l10n),
     );
@@ -66,13 +76,17 @@ class _CameraView extends StatelessWidget {
       if (scannedData != null) {
         Navigator.pop(context, scannedData);
       } else {
+        final colorScheme = Theme.of(context).colorScheme;
         ScaffoldMessenger.of(context)
           ..clearSnackBars()
           ..showSnackBar(
             SnackBar(
-              content: Text(l10n.scanFailedErrorMessage),
+              content: Text(
+                l10n.scanFailedErrorMessage,
+                style: TextStyle(color: colorScheme.onError),
+              ),
               behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.redAccent,
+              backgroundColor: colorScheme.error,
             ),
           );
       }
@@ -143,7 +157,11 @@ class _CameraView extends StatelessWidget {
       children: [
         const CameraPreviewOverlay(),
         CameraControlsWidget(
-          onMainButtonPressed: () => _onMainButtonPressed(context, controller, l10n),
+          onMainButtonPressed: () => _onMainButtonPressed(
+            context,
+            controller,
+            l10n,
+          ),
         ),
       ],
     );

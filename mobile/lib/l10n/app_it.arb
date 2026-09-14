@@ -75,6 +75,10 @@
   "@buildNumber": {
     "description": "Label for the build number field in an info screen."
   },
+  "cameraCardGuideHint": "Inquadra la tessera sanitaria all'interno della cornice",
+  "@cameraCardGuideHint": {
+    "description": "Instructional text displayed above the camera card framing guide."
+  },
   "cameraPermissionInfo": "Per scansionare le tessere, l'app necessita dell'accesso alla fotocamera. Vai alle impostazioni del dispositivo e concedi il permesso.",
   "@cameraPermissionInfo": {
     "description": "Information message prompting user to grant camera permission."

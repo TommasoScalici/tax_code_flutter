@@ -200,6 +200,12 @@ abstract class AppLocalizations {
   /// **'Build Number'**
   String get buildNumber;
 
+  /// Instructional text displayed above the camera card framing guide.
+  ///
+  /// In en, this message translates to:
+  /// **'Align your health card or tax code within the frame'**
+  String get cameraCardGuideHint;
+
   /// An informational message explaining how to grant camera permission.
   ///
   /// In en, this message translates to:

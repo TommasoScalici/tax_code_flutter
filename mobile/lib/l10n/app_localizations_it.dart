@@ -65,6 +65,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get buildNumber => 'Numero Build';
 
   @override
+  String get cameraCardGuideHint =>
+      'Inquadra la tessera sanitaria all\'interno della cornice';
+
+  @override
   String get cameraPermissionInfo =>
       'Per scansionare le tessere, l\'app necessita dell\'accesso alla fotocamera. Vai alle impostazioni del dispositivo e concedi il permesso.';
 

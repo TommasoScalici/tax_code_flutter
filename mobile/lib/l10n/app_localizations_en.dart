@@ -64,6 +64,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get buildNumber => 'Build Number';
 
   @override
+  String get cameraCardGuideHint =>
+      'Align your health card or tax code within the frame';
+
+  @override
   String get cameraPermissionInfo =>
       'To scan cards, this app needs access to your camera. Please go to your device settings and grant camera permission.';
 
