@@ -12,10 +12,144 @@ import { HttpsError, onCall } from "firebase-functions/v2/https";
 const LOCATION = process.env.VERTEX_LOCATION || "us-central1";
 const PROJECT_ID = process.env.GCLOUD_PROJECT || "tax-code-flutter";
 const SERVICE_ACCOUNT = `vertex-ai-invoker@${PROJECT_ID}.iam.gserviceaccount.com`;
-const MODEL_NAME = process.env.GEMINI_MODEL || "gemini-flash-latest";
 
+const DEFAULT_MODEL = "gemini-3.8-flash";
+const DEFAULT_FALLBACK_MODEL = "gemini-3.7-flash";
+const CONFIG_TTL_MS = 10 * 60 * 1000; // 10 minutes cache
+
+export interface AiConfig {
+  model: string;
+  fallbackModel: string;
+  temperature: number;
+  maxOutputTokens: number;
+}
+
+let cachedConfig: AiConfig | null = null;
+let lastConfigFetchTime = 0;
 let vertexAI: VertexAI;
-let generativeModel: GenerativeModel;
+
+export function resetCachedAiConfig(): void {
+  cachedConfig = null;
+  lastConfigFetchTime = 0;
+}
+
+export async function getAiConfig(): Promise<AiConfig> {
+  const now = Date.now();
+  if (cachedConfig && now - lastConfigFetchTime < CONFIG_TTL_MS) {
+    return cachedConfig;
+  }
+
+  try {
+    const db = getFirestore();
+    const doc = await db.collection("systemConfig").doc("ai").get();
+    if (doc.exists) {
+      const data = doc.data();
+      cachedConfig = {
+        model:
+          (data?.model as string) || process.env.GEMINI_MODEL || DEFAULT_MODEL,
+        fallbackModel:
+          (data?.fallbackModel as string) ||
+          process.env.GEMINI_FALLBACK_MODEL ||
+          DEFAULT_FALLBACK_MODEL,
+        temperature:
+          typeof data?.temperature === "number" ? data.temperature : 0.1,
+        maxOutputTokens:
+          typeof data?.maxOutputTokens === "number"
+            ? data.maxOutputTokens
+            : 2048,
+      };
+      lastConfigFetchTime = now;
+      return cachedConfig;
+    }
+  } catch (error) {
+    logger.warn(
+      "Unable to fetch AI configuration from Firestore, using defaults.",
+      { error },
+    );
+  }
+
+  cachedConfig = {
+    model: process.env.GEMINI_MODEL || DEFAULT_MODEL,
+    fallbackModel: process.env.GEMINI_FALLBACK_MODEL || DEFAULT_FALLBACK_MODEL,
+    temperature: 0.1,
+    maxOutputTokens: 2048,
+  };
+  lastConfigFetchTime = now;
+  return cachedConfig;
+}
+
+const DOCUMENT_SCHEMA = {
+  type: SchemaType.OBJECT,
+  properties: {
+    firstName: {
+      type: SchemaType.STRING,
+      description: "First name extracted from the document, or null if absent",
+      nullable: true,
+    },
+    lastName: {
+      type: SchemaType.STRING,
+      description: "Last name extracted from the document, or null if absent",
+      nullable: true,
+    },
+    gender: {
+      type: SchemaType.STRING,
+      description: "Gender ('M' or 'F'), or null if absent",
+      nullable: true,
+    },
+    birthPlace: {
+      type: SchemaType.OBJECT,
+      description: "Place of birth details, or null if absent",
+      nullable: true,
+      properties: {
+        name: {
+          type: SchemaType.STRING,
+          description:
+            "Municipality name or foreign country, or null if absent",
+          nullable: true,
+        },
+        state: {
+          type: SchemaType.STRING,
+          description:
+            "2-letter province abbreviation, or 'EE' for foreign country, or null",
+          nullable: true,
+        },
+      },
+    },
+    birthDate: {
+      type: SchemaType.STRING,
+      description:
+        "Birth date formatted strictly as 'YYYY-MM-DD', or null if absent",
+      nullable: true,
+    },
+  },
+};
+
+function getGenerativeModel(
+  modelName: string,
+  config: AiConfig,
+): GenerativeModel {
+  if (!vertexAI) {
+    vertexAI = new VertexAI({ project: PROJECT_ID, location: LOCATION });
+  }
+
+  return vertexAI.getGenerativeModel({
+    model: modelName,
+    systemInstruction:
+      "You are an expert document parser. Your task is to extract demographic data from Italian documents and format them strictly into JSON according to the prompt instructions.",
+    safetySettings: [
+      {
+        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+      },
+    ],
+    generationConfig: {
+      maxOutputTokens: config.maxOutputTokens,
+      temperature: config.temperature,
+      responseMimeType: "application/json",
+      responseSchema: DOCUMENT_SCHEMA,
+    },
+  });
+}
 
 interface ExtractDataRequest {
   image: string;
@@ -39,77 +173,6 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
     maxInstances: 10,
   },
   async (request) => {
-    if (!vertexAI) {
-      logger.info(
-        `Initializing Vertex AI client with model ${MODEL_NAME} in location ${LOCATION}.`,
-      );
-      vertexAI = new VertexAI({ project: PROJECT_ID, location: LOCATION });
-
-      generativeModel = vertexAI.getGenerativeModel({
-        model: MODEL_NAME,
-        systemInstruction:
-          "You are an expert document parser. Your task is to extract demographic data from Italian documents and format them strictly into JSON according to the prompt instructions.",
-        safetySettings: [
-          {
-            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-          },
-        ],
-        generationConfig: {
-          maxOutputTokens: 2048,
-          temperature: 0.1,
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: SchemaType.OBJECT,
-            properties: {
-              firstName: {
-                type: SchemaType.STRING,
-                description:
-                  "First name extracted from the document, or null if absent",
-                nullable: true,
-              },
-              lastName: {
-                type: SchemaType.STRING,
-                description:
-                  "Last name extracted from the document, or null if absent",
-                nullable: true,
-              },
-              gender: {
-                type: SchemaType.STRING,
-                description: "Gender ('M' or 'F'), or null if absent",
-                nullable: true,
-              },
-              birthPlace: {
-                type: SchemaType.OBJECT,
-                description: "Place of birth details, or null if absent",
-                nullable: true,
-                properties: {
-                  name: {
-                    type: SchemaType.STRING,
-                    description:
-                      "Municipality name or foreign country, or null if absent",
-                    nullable: true,
-                  },
-                  state: {
-                    type: SchemaType.STRING,
-                    description:
-                      "2-letter province abbreviation, or 'EE' for foreign country, or null",
-                    nullable: true,
-                  },
-                },
-              },
-              birthDate: {
-                type: SchemaType.STRING,
-                description:
-                  "Birth date formatted strictly as 'YYYY-MM-DD', or null if absent",
-                nullable: true,
-              },
-            },
-          },
-        },
-      });
-    }
-
     if (!request.auth) {
       logger.error("Authentication failed. User is not authenticated.");
       throw new HttpsError(
@@ -120,42 +183,25 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
 
     const uid = request.auth.uid;
     const db = getFirestore();
-    // Uses a distinct collection "rateLimits" (15 calls/day limit) to avoid counter namespace
-    // collision with the tax code calculation rate limits in "rateLimitsTaxCode" (50 calls/day limit).
     const rateLimitRef = db.collection("rateLimits").doc(uid);
-    const MAX_CALLS_PER_DAY = 15; // Set quota rate limit
+    const MAX_CALLS_PER_DAY = 15;
     const today = new Date().toISOString().split("T")[0];
 
+    // Pre-check: read current rate limit without consuming it
     try {
-      await db.runTransaction(async (t) => {
-        const doc = await t.get(rateLimitRef);
-        const data = doc.data() || {};
-        let callsToday = 0;
+      const doc = await rateLimitRef.get();
+      const data = doc.data() || {};
+      const callsToday = data.date === today ? data.count || 0 : 0;
 
-        if (data.date === today) {
-          callsToday = data.count || 0;
-        }
-
-        if (callsToday >= MAX_CALLS_PER_DAY) {
-          logger.warn(
-            `User ${uid} exceeded daily limit of ${MAX_CALLS_PER_DAY} for the Gemini API.`,
-          );
-          throw new HttpsError(
-            "resource-exhausted",
-            "You have exceeded your daily limit for document processing.",
-          );
-        }
-
-        t.set(
-          rateLimitRef,
-          {
-            date: today,
-            count: callsToday + 1,
-            lastUpdated: FieldValue.serverTimestamp(),
-          },
-          { merge: true },
+      if (callsToday >= MAX_CALLS_PER_DAY) {
+        logger.warn(
+          `User ${uid} exceeded daily limit of ${MAX_CALLS_PER_DAY} for document processing.`,
         );
-      });
+        throw new HttpsError(
+          "resource-exhausted",
+          "You have exceeded your daily limit for document processing.",
+        );
+      }
     } catch (error: unknown) {
       if (error instanceof HttpsError) throw error;
 
@@ -176,22 +222,35 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
         );
       }
 
-      logger.error("Error executing rate limit transaction", { error, uid });
+      logger.error("Error checking rate limit", { error, uid });
       throw new HttpsError("internal", "Error enforcing rate limit.");
     }
 
-    if (!request.data.image) {
-      logger.error("Image data is missing from the request.");
+    const rawImage = request.data.image;
+    if (typeof rawImage !== "string" || !rawImage.trim()) {
+      logger.error("Image data is missing or invalid from the request.");
       throw new HttpsError(
         "invalid-argument",
         "The function must be called with an 'image' argument.",
       );
     }
 
-    const base64Image = request.data.image;
+    const cleanBase64 = rawImage.replace(/^data:image\/\w+;base64,/, "").trim();
+    const MAX_BASE64_BYTES = 10 * 1024 * 1024; // 10MB limit
+
+    if (cleanBase64.length > MAX_BASE64_BYTES) {
+      logger.error("Image payload exceeds maximum allowed size.", {
+        size: cleanBase64.length,
+      });
+      throw new HttpsError(
+        "invalid-argument",
+        "The image payload exceeds the maximum allowed size limit (10MB).",
+      );
+    }
+
     const imagePart = {
       inlineData: {
-        data: base64Image,
+        data: cleanBase64,
         mimeType: "image/jpeg",
       },
     };
@@ -218,57 +277,115 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
     Do not include any other text, explanation, or markdown formatting in your response.
   `;
 
+    const config = await getAiConfig();
+    const geminiRequest = {
+      contents: [{ role: "user", parts: [imagePart, { text: prompt }] }],
+    };
+
+    let content;
     try {
-      logger.info("Sending request to Gemini Vision API.", { uid });
+      logger.info(
+        `Sending request to Gemini Vision API using model ${config.model}.`,
+        { uid },
+      );
+      const primaryModel = getGenerativeModel(config.model, config);
+      const response = await primaryModel.generateContent(geminiRequest);
+      content = response.response.candidates?.[0]?.content;
+    } catch (primaryError: unknown) {
+      logger.warn(
+        `Primary model ${config.model} failed. Attempting fallback model ${config.fallbackModel}.`,
+        { error: primaryError, uid },
+      );
 
-      const geminiRequest = {
-        contents: [{ role: "user", parts: [imagePart, { text: prompt }] }],
-      };
+      try {
+        const fallbackModel = getGenerativeModel(config.fallbackModel, config);
+        const fallbackResponse =
+          await fallbackModel.generateContent(geminiRequest);
+        content = fallbackResponse.response.candidates?.[0]?.content;
+      } catch (fallbackError: unknown) {
+        if (
+          typeof fallbackError === "object" &&
+          fallbackError !== null &&
+          "status" in fallbackError
+        ) {
+          const status = (fallbackError as { status: number }).status;
+          if (status === 429) {
+            throw new HttpsError(
+              "unavailable",
+              "The service is currently overloaded. Please try again later.",
+            );
+          }
+        }
 
-      const response = await generativeModel.generateContent(geminiRequest);
-      const content = response.response.candidates?.[0]?.content;
-
-      if (!content || !content.parts[0]?.text) {
-        logger.error("Gemini API returned an empty or invalid response.", {
+        logger.error("Both primary and fallback Gemini models failed.", {
+          primaryError,
+          fallbackError,
           uid,
         });
         throw new HttpsError(
           "internal",
-          "Failed to extract data from the document.",
+          "The function encountered an error during processing.",
         );
       }
+    }
 
-      const jsonResponseText = content.parts[0].text
-        .replace(/```json|```/g, "")
-        .trim();
-      logger.info("Successfully received and parsed response from Gemini.", {
+    if (!content || !content.parts[0]?.text) {
+      logger.error("Gemini API returned an empty or invalid response.", {
         uid,
       });
-
-      return JSON.parse(jsonResponseText) as ExtractDataResponse;
-    } catch (error: unknown) {
-      if (error instanceof HttpsError) throw error;
-
-      logger.error("An error occurred while calling the Gemini API.", {
-        error,
-        uid: request.auth.uid,
-      });
-
-      // Handle common Vertex AI / Gemini API errors
-      if (typeof error === "object" && error !== null && "status" in error) {
-        const status = (error as { status: number }).status;
-        if (status === 429) {
-          throw new HttpsError(
-            "unavailable",
-            "The service is currently overloaded. Please try again later.",
-          );
-        }
-      }
-
       throw new HttpsError(
         "internal",
-        "The function encountered an error during processing.",
+        "Failed to extract data from the document.",
       );
     }
+
+    const jsonResponseText = content.parts[0].text
+      .replace(/```json|```/g, "")
+      .trim();
+
+    let parsedData: ExtractDataResponse;
+    try {
+      parsedData = JSON.parse(jsonResponseText) as ExtractDataResponse;
+    } catch (jsonErr) {
+      logger.error("Failed to parse Gemini JSON output.", {
+        jsonErr,
+        jsonResponseText,
+        uid,
+      });
+      throw new HttpsError(
+        "internal",
+        "Failed to parse document extraction data.",
+      );
+    }
+
+    // Only increment rate limit consumption AFTER successful extraction
+    try {
+      await db.runTransaction(async (t) => {
+        const freshDoc = await t.get(rateLimitRef);
+        const freshData = freshDoc.data() || {};
+        const freshCalls = freshData.date === today ? freshData.count || 0 : 0;
+
+        t.set(
+          rateLimitRef,
+          {
+            date: today,
+            count: freshCalls + 1,
+            lastUpdated: FieldValue.serverTimestamp(),
+          },
+          { merge: true },
+        );
+      });
+      logger.info(
+        "Successfully updated rate limit counter after document scan.",
+        { uid },
+      );
+    } catch (rateLimitErr) {
+      logger.warn(
+        "Failed to update rate limit counter after successful document scan.",
+        { rateLimitErr, uid },
+      );
+    }
+
+    return parsedData;
   },
 );

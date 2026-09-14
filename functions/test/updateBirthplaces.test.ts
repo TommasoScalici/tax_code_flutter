@@ -14,16 +14,6 @@ const testEnv = fft();
 // Mock fetch
 global.fetch = vi.fn();
 
-// Mock child_process and fs
-vi.mock("child_process", () => ({
-  execSync: vi.fn(),
-}));
-
-vi.mock("fs", () => ({
-  writeFileSync: vi.fn(),
-  unlinkSync: vi.fn(),
-}));
-
 // Mock firebase-admin
 const mockSave = vi.fn().mockResolvedValue(true);
 const mockMakePublic = vi.fn().mockResolvedValue(true);

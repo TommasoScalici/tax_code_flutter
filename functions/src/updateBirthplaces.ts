@@ -3,7 +3,7 @@ import { logger } from "firebase-functions";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 
-import foreignCountriesData from "./foreign_countries.json";
+import foreignCountriesData from "./foreign_countries.json" with { type: "json" };
 
 /**
  * Represents a birthplace (city or country).
@@ -39,7 +39,9 @@ async function fetchItalianMunicipalities(): Promise<Birthplace[]> {
   const url = `${ITALIAN_MUNICIPALITIES_API}?pfun=61&pdata=${getFormattedDate()}`;
   logger.info(`Fetching Italian municipalities from: ${url}`);
 
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(30_000),
+  });
   if (!response.ok) {
     throw new Error(
       `Failed to fetch Italian municipalities: ${response.statusText}`,
@@ -111,7 +113,14 @@ export async function downloadAndParseBirthplaceData(): Promise<number> {
     },
   });
 
-  await file.makePublic();
+  try {
+    await file.makePublic();
+  } catch (aclError) {
+    logger.info(
+      "file.makePublic() skipped or failed (likely Uniform Bucket-Level Access is enabled).",
+      { aclError },
+    );
+  }
 
   logger.info(
     `Successfully saved ${unique.length} birthplaces to ${STORAGE_PATH}`,
