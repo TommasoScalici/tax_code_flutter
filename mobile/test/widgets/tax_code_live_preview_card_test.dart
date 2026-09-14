@@ -44,7 +44,7 @@ void main() {
     testWidgets('renders Italian title and hint when tax code is empty', (
       tester,
     ) async {
-      await tester.pumpWidget(createTestWidget(locale: const Locale('it')));
+      await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
 
       expect(find.text('CODICE CALCOLATO IN ANTEPRIMA'), findsOneWidget);

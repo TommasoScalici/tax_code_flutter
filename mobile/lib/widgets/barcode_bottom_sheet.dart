@@ -110,7 +110,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
           decoration: BoxDecoration(
             color: sheetBgColor,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-            border: Border(top: BorderSide(color: topBorderColor, width: 1.0)),
+            border: Border(top: BorderSide(color: topBorderColor)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.40),
@@ -308,7 +308,6 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             barcode: Barcode.code128(),
                             data: widget.contact.taxCode,
                             drawText: false,
-                            color: AppColors.opticalBlack,
                             backgroundColor: AppColors.opticalWhite,
                           ),
                         ),
@@ -316,7 +315,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                         SelectableText(
                           widget.contact.taxCode,
                           style: AppTypography.barcodeReadableText(
-                            color: AppColors.opticalBlack,
+                            
                           ),
                         ),
                         const SizedBox(height: 14),
@@ -365,7 +364,6 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             data: widget.contact.taxCode,
                             width: 110,
                             height: 110,
-                            color: AppColors.opticalBlack,
                             backgroundColor: AppColors.opticalWhite,
                           ),
                         ),

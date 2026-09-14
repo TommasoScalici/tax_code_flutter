@@ -90,7 +90,7 @@ class ContactCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: cardBorderColor, width: 1.0),
+        border: Border.all(color: cardBorderColor),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.30 : 0.05),
@@ -124,7 +124,6 @@ class ContactCard extends StatelessWidget {
                         color: colorScheme.primary.withValues(
                           alpha: isDark ? 0.30 : 0.20,
                         ),
-                        width: 1,
                       ),
                     ),
                     child: Icon(
@@ -176,7 +175,6 @@ class ContactCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-                        width: 1,
                       ),
                     ),
                     child: Text(
@@ -406,7 +404,7 @@ class _CardActionButton extends StatelessWidget {
       child: Material(
         color: bgColor,
         shape: StadiumBorder(
-          side: BorderSide(color: borderColor, width: 1),
+          side: BorderSide(color: borderColor),
         ),
         child: InkWell(
           onTap: onPressed,

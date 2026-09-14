@@ -171,11 +171,11 @@ class BirthplaceAutocompleteField extends StatelessWidget {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
-                          borderSide: BorderSide(color: borderColor, width: 1.0),
+                          borderSide: BorderSide(color: borderColor),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
-                          borderSide: BorderSide(color: borderColor, width: 1.0),
+                          borderSide: BorderSide(color: borderColor),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
@@ -390,11 +390,11 @@ class _StandaloneBirthplaceAutocompleteState
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: BorderSide(color: borderColor, width: 1.0),
+                      borderSide: BorderSide(color: borderColor),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: BorderSide(color: borderColor, width: 1.0),
+                      borderSide: BorderSide(color: borderColor),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -481,7 +481,6 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
               color: colorScheme.outlineVariant.withValues(
                 alpha: isDark ? 0.6 : 0.8,
               ),
-              width: 1.0,
             ),
           ),
           child: ListView.separated(

@@ -74,7 +74,7 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor, width: 1.0),
+        border: Border.all(color: borderColor),
         boxShadow: _isComplete
             ? [
                 BoxShadow(

@@ -679,7 +679,7 @@ void main() {
 
       // 2. Act: User signs in with Google
       when(() => mockSyncService.isSyncEnabled).thenReturn(true);
-      fakeAuthService.login(FakeUser(uid: 'google_456', isAnonymous: false));
+      fakeAuthService.login(FakeUser(uid: 'google_456'));
       // Allow auth change event loop cycle to start
       await pumpEventQueue();
       while (repo.isLoading) {

@@ -42,7 +42,7 @@ void main() {
         verify(
           () => mockMethodChannel.invokeMethod<bool>('launchPhoneApp'),
         ).called(1);
-        verifyNever(() => mockLogger.e(any()));
+        verifyNever(() => mockLogger.e(any<Object?>()));
       });
 
       test('should log error and throw message on PlatformException', () async {
@@ -59,12 +59,12 @@ void main() {
         final call = nativeViewService.launchPhoneApp;
 
         // Assert
-        expect(call, throwsA(equals(exception.message)));
+        expect(call, throwsA(isA<PlatformException>()));
         verify(
           () => mockLogger.e(
-            any(that: contains('Failed to invoke native launchPhoneApp')),
+            any<Object?>(that: contains('Failed to invoke native launchPhoneApp')),
             error: exception,
-            stackTrace: any(named: 'stackTrace'),
+            stackTrace: any<StackTrace?>(named: 'stackTrace'),
           ),
         ).called(1);
       });
@@ -78,7 +78,7 @@ void main() {
         gender: 'M',
         taxCode: 'RSSMRA80A01H501U',
         birthPlace: const Birthplace(name: 'Roma', state: 'RM'),
-        birthDate: DateTime(1980, 1, 1),
+        birthDate: DateTime(1980),
         listIndex: 0,
       );
       final contacts = [contact];
@@ -89,15 +89,15 @@ void main() {
       test('should invoke method with correct arguments', () async {
         // Arrange
         when(
-          () => mockMethodChannel.invokeMethod('openNativeContactList', any()),
-        ).thenAnswer((_) async {});
+          () => mockMethodChannel.invokeMethod<dynamic>('openNativeContactList', any<dynamic>()),
+        ).thenAnswer((_) async => null);
 
         // Act
         await nativeViewService.showContactList(contacts);
 
         // Assert
         verify(
-          () => mockMethodChannel.invokeMethod(
+          () => mockMethodChannel.invokeMethod<dynamic>(
             'openNativeContactList',
             expectedArgs,
           ),
@@ -108,7 +108,7 @@ void main() {
         // Arrange
         final exception = PlatformException(code: 'ERROR');
         when(
-          () => mockMethodChannel.invokeMethod('openNativeContactList', any()),
+          () => mockMethodChannel.invokeMethod<dynamic>('openNativeContactList', any<dynamic>()),
         ).thenThrow(exception);
 
         // Act & Assert
@@ -118,9 +118,9 @@ void main() {
         );
         verify(
           () => mockLogger.e(
-            any(that: contains('Failed to invoke native method')),
+            any<Object?>(that: contains('Failed to invoke native method')),
             error: exception,
-            stackTrace: any(named: 'stackTrace'),
+            stackTrace: any<StackTrace?>(named: 'stackTrace'),
           ),
         ).called(1);
       });

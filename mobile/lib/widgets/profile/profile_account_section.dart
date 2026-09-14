@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/controllers/profile_screen_controller.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
-import 'profile_action_tile.dart';
+import 'package:tax_code_flutter/widgets/profile/profile_action_tile.dart';
 
 /// The account management and GDPR account deletion section.
 class ProfileAccountSection extends StatelessWidget {

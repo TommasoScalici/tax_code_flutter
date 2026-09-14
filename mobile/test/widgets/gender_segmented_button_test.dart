@@ -36,7 +36,7 @@ void main() {
     testWidgets('renders Italian labels and asterisk by default', (
       tester,
     ) async {
-      await tester.pumpWidget(createStandaloneWidget(locale: const Locale('it')));
+      await tester.pumpWidget(createStandaloneWidget());
       await tester.pumpAndSettle();
 
       expect(find.text('Sesso'), findsOneWidget);
@@ -68,7 +68,6 @@ void main() {
       String? updatedValue;
       await tester.pumpWidget(
         createStandaloneWidget(
-          value: null,
           onChanged: (val) => updatedValue = val,
         ),
       );

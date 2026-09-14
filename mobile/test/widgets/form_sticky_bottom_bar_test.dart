@@ -45,7 +45,7 @@ void main() {
     testWidgets('renders default Italian label and calculate icon', (
       tester,
     ) async {
-      await tester.pumpWidget(createTestWidget(locale: const Locale('it')));
+      await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
 
       expect(find.text('Salva Codice'), findsOneWidget);

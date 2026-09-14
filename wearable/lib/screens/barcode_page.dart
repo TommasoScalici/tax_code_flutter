@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,18 +21,18 @@ class _BarcodePageState extends State<BarcodePage> {
   void initState() {
     super.initState();
     _nativeViewService = context.read<NativeViewServiceAbstract>();
-    _enableBrightness();
+    unawaited(_enableBrightness());
   }
 
   @override
   void dispose() {
-    _disableBrightness();
+    unawaited(_disableBrightness());
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return ColoredBox(
       color: Colors.white,
       child: Center(
         child: Padding(

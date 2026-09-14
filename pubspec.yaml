@@ -1,0 +1,9 @@
+name: tax_code_flutter_root
+description: "Root workspace configuration for tax_code_flutter monorepo."
+publish_to: "none"
+
+environment:
+  sdk: ">=3.8.0 <4.0.0"
+
+dev_dependencies:
+  very_good_analysis: ^10.3.0

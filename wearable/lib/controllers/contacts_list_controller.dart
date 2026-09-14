@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:shared/repositories/contact_repository.dart';
@@ -43,7 +45,7 @@ class ContactsListController with ChangeNotifier {
 
     try {
       await _nativeViewService.launchPhoneApp();
-    } catch (e, s) {
+    } on Object catch (e, s) {
       _logger.e('Error launching phone app', error: e, stackTrace: s);
     } finally {
       _isLaunchingPhoneApp = false;
@@ -55,12 +57,12 @@ class ContactsListController with ChangeNotifier {
     final contacts = _contactRepository.contacts;
     if (contacts.isNotEmpty && !_nativeViewIsActive) {
       _nativeViewIsActive = true;
-      _nativeViewService.showContactList(contacts);
+      unawaited(_nativeViewService.showContactList(contacts));
     } else if (contacts.isNotEmpty && _nativeViewIsActive) {
-      _nativeViewService.updateContactList(contacts);
+      unawaited(_nativeViewService.updateContactList(contacts));
     } else if (contacts.isEmpty && _nativeViewIsActive) {
       _nativeViewIsActive = false;
-      _nativeViewService.closeContactList();
+      unawaited(_nativeViewService.closeContactList());
     }
     notifyListeners();
   }

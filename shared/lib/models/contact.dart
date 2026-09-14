@@ -3,10 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:shared/models/birthplace.dart';
 import 'package:shared/utils/timestamp_converter.dart';
 import 'package:uuid/uuid.dart';
-
-import 'birthplace.dart';
 
 part 'contact.g.dart';
 
@@ -59,7 +58,7 @@ class Contact extends Equatable {
       gender: '',
       taxCode: '',
       birthPlace: const Birthplace(name: '', state: ''),
-      birthDate: DateTime(1970, 1, 1),
+      birthDate: DateTime(1970),
       listIndex: 0,
     );
   }

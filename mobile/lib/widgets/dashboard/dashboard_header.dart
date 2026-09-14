@@ -99,7 +99,6 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
               borderRadius: BorderRadius.circular(8.0),
               child: SvgPicture.asset(
                 'assets/images/tax_code_icon.svg',
-                fit: BoxFit.contain,
               ),
             ),
           ),

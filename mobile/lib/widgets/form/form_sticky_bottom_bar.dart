@@ -52,7 +52,7 @@ class FormStickyBottomBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: bgColor,
-        border: Border(top: BorderSide(color: topBorderColor, width: 1.0)),
+        border: Border(top: BorderSide(color: topBorderColor)),
       ),
       child: SafeArea(
         top: false,

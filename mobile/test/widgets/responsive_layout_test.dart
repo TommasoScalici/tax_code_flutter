@@ -133,7 +133,6 @@ void main() {
         const MaterialApp(
           home: Scaffold(
             body: ResponsiveLayout(
-              useSafeArea: true,
               child: Text('With SafeArea'),
             ),
           ),

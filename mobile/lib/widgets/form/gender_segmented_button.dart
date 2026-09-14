@@ -148,7 +148,7 @@ class _GenderSegmentedLayout extends StatelessWidget {
                 ? colorScheme.surfaceContainer
                 : colorScheme.surfaceContainerLow,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: containerBorderColor, width: 1.0),
+            border: Border.all(color: containerBorderColor),
           ),
           child: Row(
             children: [

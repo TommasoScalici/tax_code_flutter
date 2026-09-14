@@ -1,10 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
-import 'profile/profile_account_section.dart';
-import 'profile/profile_app_info_view.dart';
-import 'profile/profile_data_section.dart';
-import 'profile/profile_legal_section.dart';
-import 'profile/profile_user_section.dart';
+import 'package:tax_code_flutter/widgets/profile/profile_account_section.dart';
+import 'package:tax_code_flutter/widgets/profile/profile_app_info_view.dart';
+import 'package:tax_code_flutter/widgets/profile/profile_data_section.dart';
+import 'package:tax_code_flutter/widgets/profile/profile_legal_section.dart';
+import 'package:tax_code_flutter/widgets/profile/profile_user_section.dart';
 
 /// The view mode inside the profile bottom sheet.
 enum _ProfileSheetView {
@@ -107,7 +107,6 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                   ? Border.all(
                       color: theme.colorScheme.outlineVariant
                           .withValues(alpha: 0.5),
-                      width: 1,
                     )
                   : null,
               boxShadow: widget.isEmbedded

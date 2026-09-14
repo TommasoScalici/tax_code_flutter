@@ -254,7 +254,6 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                       color: colorScheme.primary.withValues(
                         alpha: isDark ? 0.28 : 0.20,
                       ),
-                      width: 1,
                     ),
                   ),
                   child: Row(

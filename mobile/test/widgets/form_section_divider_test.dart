@@ -31,7 +31,7 @@ void main() {
     testWidgets('renders default Italian text in uppercase and two dividers', (
       tester,
     ) async {
-      await tester.pumpWidget(createTestWidget(locale: const Locale('it')));
+      await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
 
       expect(find.text('OPPURE INSERISCI MANUALMENTE'), findsOneWidget);

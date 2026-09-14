@@ -1,10 +1,10 @@
 import 'package:flutter/widget_previews.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_theme.dart';
-import '../../core/theme/app_typography.dart';
-import '../../l10n/app_localizations_setup.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_theme.dart';
+import 'package:tax_code_flutter/core/theme/app_typography.dart';
+import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
 
 /// A preview showcase demonstrating the Emerald Ledger design system tokens,
 /// cards, buttons, inputs, and typography across both dark and light modes.
@@ -209,7 +209,7 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
                             Text(
                               'RSSMRA85D15H501Z',
                               style: AppTypography.barcodeReadableText(
-                                color: AppColors.opticalBlack,
+                                
                               ),
                             ),
                             const SizedBox(height: 6),

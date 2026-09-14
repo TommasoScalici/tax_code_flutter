@@ -71,7 +71,6 @@ class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
   @override
   Widget build(BuildContext context) {
     final fakeAuthService = _HeaderPreviewAuthService(
-      signedIn: true,
       guest: _isGuestMode,
     );
 

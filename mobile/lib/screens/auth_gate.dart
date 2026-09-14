@@ -2,8 +2,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 
-import 'home_page.dart';
-import 'welcome_screen.dart';
+import 'package:tax_code_flutter/screens/home_page.dart';
+import 'package:tax_code_flutter/screens/welcome_screen.dart';
 
 ///
 /// Gatekeeper widget that dynamically routes the user to [HomePage] or [WelcomeScreen]

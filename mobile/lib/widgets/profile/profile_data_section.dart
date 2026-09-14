@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
-import 'profile_action_tile.dart';
+import 'package:tax_code_flutter/widgets/profile/profile_action_tile.dart';
 
 /// The data export and Play Store rating actions section.
 class ProfileDataSection extends StatelessWidget {

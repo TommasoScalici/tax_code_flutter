@@ -39,7 +39,7 @@ void main() {
       gender: 'M',
       taxCode: 'JHNDOE80A01H501A',
       birthPlace: const Birthplace(name: 'Rome', state: 'RM'),
-      birthDate: DateTime(1980, 1, 1),
+      birthDate: DateTime(1980),
       listIndex: 0,
     ),
     Contact(

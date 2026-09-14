@@ -62,7 +62,8 @@ void main() {
     when(() => mockContactRepository.addListener(any())).thenAnswer((
       invocation,
     ) {
-      onContactsChangedCallback = invocation.positionalArguments.first;
+      onContactsChangedCallback =
+          invocation.positionalArguments.first as VoidCallback;
     });
 
     when(() => mockContactRepository.removeListener(any())).thenAnswer((_) {});
@@ -123,7 +124,7 @@ void main() {
           expect(controller.isLaunchingPhoneApp, isFalse);
           expect(notifyCallCount, 2);
           verify(() => mockNativeViewService.launchPhoneApp()).called(1);
-          verifyNever(() => mockLogger.e(any()));
+          verifyNever(() => mockLogger.e(any<Object?>()));
         },
       );
 
@@ -139,9 +140,9 @@ void main() {
         expect(notifyCallCount, 2);
         verify(
           () => mockLogger.e(
-            any(),
+            any<Object?>(),
             error: exception,
-            stackTrace: any(named: 'stackTrace'),
+            stackTrace: any<StackTrace?>(named: 'stackTrace'),
           ),
         ).called(1);
       });

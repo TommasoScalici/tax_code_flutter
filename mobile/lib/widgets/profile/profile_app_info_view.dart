@@ -88,7 +88,6 @@ class ProfileAppInfoView extends StatelessWidget {
                       ),
                       child: SvgPicture.asset(
                         'assets/images/tax_code_icon.svg',
-                        fit: BoxFit.contain,
                       ),
                     ),
                     const SizedBox(height: 12),

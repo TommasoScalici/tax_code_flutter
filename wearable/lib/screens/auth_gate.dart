@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 
-import 'home_page.dart';
+import 'package:tax_code_flutter_wear_os/screens/home_page.dart';
 
 /// Acts as a gate, showing HomePage if the user is signed in,
 /// otherwise showing the login screen.

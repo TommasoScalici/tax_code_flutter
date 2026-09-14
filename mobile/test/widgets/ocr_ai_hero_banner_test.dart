@@ -41,7 +41,7 @@ void main() {
     testWidgets('renders all Italian texts, icons and AI badge correctly', (
       tester,
     ) async {
-      await tester.pumpWidget(createTestWidget(locale: const Locale('it')));
+      await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
 
       expect(find.text('Scansione Smart con Fotocamera'), findsOneWidget);

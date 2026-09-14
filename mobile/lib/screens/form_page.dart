@@ -266,7 +266,7 @@ class _FormViewState extends State<_FormView> {
               // Database sync progress overlay
               if (controller.downloadStep != null &&
                   _birthplaceFocusNode.hasFocus)
-                Container(
+                ColoredBox(
                   color: Colors.black54,
                   child: Center(
                     child: _SyncProgressOverlay(

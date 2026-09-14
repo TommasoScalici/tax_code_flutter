@@ -141,7 +141,7 @@ void main() {
       await pumpApp(
         tester,
         const Scaffold(
-          body: DashboardSearchBar(cardCount: null),
+          body: DashboardSearchBar(),
         ),
       );
 

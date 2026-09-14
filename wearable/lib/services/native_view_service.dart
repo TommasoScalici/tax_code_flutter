@@ -33,7 +33,7 @@ class NativeViewService implements NativeViewServiceAbstract {
         error: e,
         stackTrace: s,
       );
-      throw e.message ?? 'Failed to launch app on phone.';
+      rethrow;
     }
   }
 

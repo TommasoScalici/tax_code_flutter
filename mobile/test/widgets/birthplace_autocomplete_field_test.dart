@@ -47,7 +47,7 @@ void main() {
     testWidgets('renders Italian label, placeholder and helper text by default', (
       tester,
     ) async {
-      await tester.pumpWidget(createStandaloneWidget(locale: const Locale('it')));
+      await tester.pumpWidget(createStandaloneWidget());
       await tester.pumpAndSettle();
 
       expect(find.text('Luogo di Nascita'), findsOneWidget);

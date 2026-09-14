@@ -85,7 +85,6 @@ class OcrAiHeroBanner extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       // Leading Visual: Camera icon with AI sparkle badge
                       Container(
@@ -100,7 +99,6 @@ class OcrAiHeroBanner extends StatelessWidget {
                             color: colorScheme.primary.withValues(
                               alpha: isDark ? 0.40 : 0.30,
                             ),
-                            width: 1.0,
                           ),
                         ),
                         child: Stack(

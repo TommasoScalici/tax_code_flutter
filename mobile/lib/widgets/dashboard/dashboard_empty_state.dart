@@ -66,7 +66,6 @@ class DashboardEmptyState extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Icon container with soft glow / container background
               Container(

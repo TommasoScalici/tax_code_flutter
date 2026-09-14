@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
-import 'app_colors.dart';
-import 'app_typography.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_typography.dart';
 
 /// Central theme configuration for the "Emerald Ledger" design system.
 ///

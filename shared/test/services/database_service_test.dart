@@ -22,7 +22,7 @@ void main() {
       gender: 'M',
       taxCode: 'RSSMRA80A01G273M',
       birthPlace: testBirthplace,
-      birthDate: DateTime(1980, 1, 1),
+      birthDate: DateTime(1980),
       listIndex: 0,
     );
 

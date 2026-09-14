@@ -55,7 +55,7 @@ void main() {
         expect(emptyContact.id, isNotEmpty);
         expect(emptyContact.firstName, '');
         expect(emptyContact.lastName, '');
-        expect(emptyContact.birthDate, DateTime(1970, 1, 1));
+        expect(emptyContact.birthDate, DateTime(1970));
         expect(emptyContact.listIndex, 0);
       });
 

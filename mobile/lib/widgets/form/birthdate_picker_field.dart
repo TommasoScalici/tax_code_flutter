@@ -109,7 +109,7 @@ class _BirthdatePickerContent extends StatelessWidget {
     final now = DateTime.now();
     final effectiveFirstDate = firstDate ?? DateTime(1900);
     final effectiveLastDate = lastDate ?? now;
-    final initialDate = value ?? DateTime(1990, 1, 1);
+    final initialDate = value ?? DateTime(1990);
 
     final picked = await showDatePicker(
       context: context,
@@ -189,7 +189,7 @@ class _BirthdatePickerContent extends StatelessWidget {
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: borderColor, width: 1.0),
+            border: Border.all(color: borderColor),
           ),
           child: Material(
             color: Colors.transparent,

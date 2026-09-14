@@ -1,8 +1,8 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_ui/material_ui.dart';
 
-import 'app_colors.dart';
-import 'test_env.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/test_env.dart';
 
 /// Typography definitions for the "Emerald Ledger" design system.
 ///

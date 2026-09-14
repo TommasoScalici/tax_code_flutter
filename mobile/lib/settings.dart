@@ -1,5 +1,5 @@
 import 'package:material_ui/material_ui.dart';
-import 'core/theme/app_theme.dart';
+import 'package:tax_code_flutter/core/theme/app_theme.dart';
 
 final class Settings {
   Settings._();

@@ -157,7 +157,6 @@ class WelcomeScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(24.0),
                           child: SvgPicture.asset(
                             'assets/images/tax_code_icon.svg',
-                            fit: BoxFit.contain,
                           ),
                         ),
                       ),

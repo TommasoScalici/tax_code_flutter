@@ -1,10 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/models/scanned_data.dart';
-import 'screens/auth_gate.dart';
-import 'screens/camera_page.dart';
-import 'screens/form_page.dart';
-import 'screens/welcome_screen.dart';
+import 'package:tax_code_flutter/screens/auth_gate.dart';
+import 'package:tax_code_flutter/screens/camera_page.dart';
+import 'package:tax_code_flutter/screens/form_page.dart';
+import 'package:tax_code_flutter/screens/welcome_screen.dart';
 
 final class Routes {
   Routes._();

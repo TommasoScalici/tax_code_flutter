@@ -51,7 +51,7 @@ void main() {
       final code = TaxCodeGenerator.generate(
         firstName: 'Li',
         lastName: 'Fo',
-        dateOfBirth: DateTime(2000, 12, 1),
+        dateOfBirth: DateTime(2000, 12),
         gender: 'M',
         birthplaceCode: 'Z210', // Cina
       );

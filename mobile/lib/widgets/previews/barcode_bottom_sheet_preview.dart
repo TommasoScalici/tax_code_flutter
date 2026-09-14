@@ -58,7 +58,7 @@ class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
       firstName: 'Laura',
       lastName: 'Neri',
       gender: 'F',
-      birthDate: DateTime(1980, 1, 1),
+      birthDate: DateTime(1980),
       birthPlace: const Birthplace(name: 'Torino', state: 'TO', code: 'L219'),
       taxCode: 'NRLMRA80A41L219K',
       listIndex: 1,

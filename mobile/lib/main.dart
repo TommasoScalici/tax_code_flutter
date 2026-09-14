@@ -17,11 +17,10 @@ import 'package:shared/services/theme_service.dart';
 import 'package:shared/utils/app_bootstrap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tax_code_flutter/core/providers.dart';
+import 'package:tax_code_flutter/firebase_options.dart';
 import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter/routes.dart';
-
-import 'firebase_options.dart';
-import 'settings.dart';
+import 'package:tax_code_flutter/settings.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
