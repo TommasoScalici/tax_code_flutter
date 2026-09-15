@@ -11,6 +11,7 @@ import 'package:provider/single_child_widget.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/birthplace_service.dart';
+import 'package:shared/services/data_export_service.dart';
 import 'package:shared/services/database_service.dart';
 import 'package:shared/services/gemini_service.dart';
 import 'package:shared/services/hive_local_cache_service.dart';
@@ -77,6 +78,9 @@ List<SingleChildWidget> getAppProviders({
         logger: context.read<Logger>(),
         shareAdapter: AppShareAdapter(),
       ),
+    ),
+    Provider<DataExportServiceAbstract>(
+      create: (_) => const DataExportService(),
     ),
     Provider<GeminiServiceAbstract>(
       create: (context) => GeminiService(

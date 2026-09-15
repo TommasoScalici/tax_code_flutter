@@ -235,6 +235,20 @@
   "@error": {
     "description": "A generic title for an error dialog."
   },
+  "exportAction": "Esporta",
+  "@exportAction": {
+    "description": "Testo del pulsante per confermare ed eseguire l'esportazione dei codici."
+  },
+  "exportCodesCount": "{count, plural, =1{1 codice fiscale pronto per l'esportazione} other{{count} codici fiscali pronti per l'esportazione}}",
+  "@exportCodesCount": {
+    "description": "Etichetta del contatore dei codici fiscali salvati che verranno esportati.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
   "exportDataSubtitle": "Backup offline in formato JSON o CSV",
   "@exportDataSubtitle": {
     "description": "Sottotitolo per la voce di esportazione dei codici salvati."
@@ -242,6 +256,34 @@
   "exportDataTitle": "Esporta codici",
   "@exportDataTitle": {
     "description": "Titolo per la voce di esportazione dei codici salvati."
+  },
+  "exportFormatCsvDesc": "Formato tabellare standard, compatibile con Excel e fogli di calcolo.",
+  "@exportFormatCsvDesc": {
+    "description": "Descrizione per il formato di esportazione CSV."
+  },
+  "exportFormatCsvTitle": "CSV (.csv)",
+  "@exportFormatCsvTitle": {
+    "description": "Titolo per il formato di esportazione CSV."
+  },
+  "exportFormatJsonDesc": "Formato strutturato completo, ideale per archiviazione e backup.",
+  "@exportFormatJsonDesc": {
+    "description": "Descrizione per il formato di esportazione JSON."
+  },
+  "exportFormatJsonTitle": "JSON (.json)",
+  "@exportFormatJsonTitle": {
+    "description": "Titolo per il formato di esportazione JSON."
+  },
+  "exportFormatLabel": "Scegli il formato",
+  "@exportFormatLabel": {
+    "description": "Intestazione della selezione del formato di esportazione."
+  },
+  "exportNoCodes": "Non hai ancora salvato alcun codice fiscale da esportare.",
+  "@exportNoCodes": {
+    "description": "Avviso mostrato quando l'utente non ha alcun codice fiscale salvato."
+  },
+  "exportSuccess": "File di esportazione pronto per il salvataggio o la condivisione.",
+  "@exportSuccess": {
+    "description": "Messaggio di conferma mostrato dopo aver generato il file di esportazione."
   },
   "featureComingSoon": "Funzionalità in arrivo",
   "@featureComingSoon": {

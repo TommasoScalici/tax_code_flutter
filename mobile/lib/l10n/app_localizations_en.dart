@@ -187,10 +187,47 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error => 'Error';
 
   @override
+  String get exportAction => 'Export';
+
+  @override
+  String exportCodesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tax codes ready for export',
+      one: '1 tax code ready for export',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get exportDataSubtitle => 'Offline backup in JSON or CSV format';
 
   @override
   String get exportDataTitle => 'Export codes';
+
+  @override
+  String get exportFormatCsvDesc =>
+      'Standard tabular format, compatible with Excel and spreadsheets.';
+
+  @override
+  String get exportFormatCsvTitle => 'CSV (.csv)';
+
+  @override
+  String get exportFormatJsonDesc =>
+      'Full structured format, ideal for archiving and backup.';
+
+  @override
+  String get exportFormatJsonTitle => 'JSON (.json)';
+
+  @override
+  String get exportFormatLabel => 'Choose format';
+
+  @override
+  String get exportNoCodes => 'You haven\'t saved any tax codes to export yet.';
+
+  @override
+  String get exportSuccess => 'Export file ready for saving or sharing.';
 
   @override
   String get featureComingSoon => 'Feature coming soon';

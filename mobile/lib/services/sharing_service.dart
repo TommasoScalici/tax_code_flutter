@@ -3,6 +3,11 @@ import 'package:share_plus/share_plus.dart';
 
 abstract class ShareAdapter {
   Future<ShareResult> share({required String text});
+  Future<ShareResult> shareFile({
+    required String filePath,
+    required String mimeType,
+    String? subject,
+  });
 }
 
 class AppShareAdapter implements ShareAdapter {
@@ -10,10 +15,29 @@ class AppShareAdapter implements ShareAdapter {
   Future<ShareResult> share({required String text}) {
     return SharePlus.instance.share(ShareParams(text: text));
   }
+
+  @override
+  Future<ShareResult> shareFile({
+    required String filePath,
+    required String mimeType,
+    String? subject,
+  }) {
+    return SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: mimeType)],
+        subject: subject,
+      ),
+    );
+  }
 }
 
 abstract class SharingServiceAbstract {
   Future<ShareResult> share({required String text});
+  Future<ShareResult> shareFile({
+    required String filePath,
+    required String mimeType,
+    String? subject,
+  });
 }
 
 class SharingService implements SharingServiceAbstract {
@@ -32,6 +56,24 @@ class SharingService implements SharingServiceAbstract {
       return await _shareAdapter.share(text: text);
     } on Object catch (e, s) {
       _logger.e('Failed to share content', error: e, stackTrace: s);
+      return ShareResult.unavailable;
+    }
+  }
+
+  @override
+  Future<ShareResult> shareFile({
+    required String filePath,
+    required String mimeType,
+    String? subject,
+  }) async {
+    try {
+      return await _shareAdapter.shareFile(
+        filePath: filePath,
+        mimeType: mimeType,
+        subject: subject,
+      );
+    } on Object catch (e, s) {
+      _logger.e('Failed to share file', error: e, stackTrace: s);
       return ShareResult.unavailable;
     }
   }

@@ -92,5 +92,76 @@ void main() {
         ).called(1);
       },
     );
+
+    group('shareFile', () {
+      const tFilePath = '/tmp/contacts.json';
+      const tMimeType = 'application/json';
+      const tSubject = 'Export';
+
+      test(
+        'should return ShareResult with success status when shareFile is successful',
+        () async {
+          // Arrange
+          const successResult = ShareResult(
+            'com.example.app',
+            ShareResultStatus.success,
+          );
+          when(
+            () => mockShareAdapter.shareFile(
+              filePath: any(named: 'filePath'),
+              mimeType: any(named: 'mimeType'),
+              subject: any(named: 'subject'),
+            ),
+          ).thenAnswer((_) async => successResult);
+
+          // Act
+          final result = await sharingService.shareFile(
+            filePath: tFilePath,
+            mimeType: tMimeType,
+            subject: tSubject,
+          );
+
+          // Assert
+          expect(result.status, ShareResultStatus.success);
+          verify(
+            () => mockShareAdapter.shareFile(
+              filePath: tFilePath,
+              mimeType: tMimeType,
+              subject: tSubject,
+            ),
+          ).called(1);
+        },
+      );
+
+      test(
+        'should return ShareResult.unavailable and log error when shareFile throws',
+        () async {
+          // Arrange
+          when(
+            () => mockShareAdapter.shareFile(
+              filePath: any(named: 'filePath'),
+              mimeType: any(named: 'mimeType'),
+              subject: any(named: 'subject'),
+            ),
+          ).thenThrow(Exception('Platform error'));
+
+          // Act
+          final result = await sharingService.shareFile(
+            filePath: tFilePath,
+            mimeType: tMimeType,
+          );
+
+          // Assert
+          expect(result, ShareResult.unavailable);
+          verify(
+            () => mockLogger.e(
+              any<Object?>(),
+              error: any<Object?>(named: 'error'),
+              stackTrace: any<StackTrace?>(named: 'stackTrace'),
+            ),
+          ).called(1);
+        },
+      );
+    });
   });
 }

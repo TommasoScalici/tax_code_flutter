@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
+import 'package:tax_code_flutter/widgets/export/export_data_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_action_tile.dart';
 
 /// The data export and Play Store rating actions section.
@@ -42,14 +43,7 @@ class ProfileDataSection extends StatelessWidget {
                     'Backup offline in formato JSON o CSV',
                 trailing: const Icon(Icons.chevron_right_rounded, size: 20),
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        l10n?.featureComingSoon ?? 'Funzionalità in arrivo',
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
+                  unawaited(ExportDataBottomSheet.show(context));
                 },
               ),
               const ProfileCardDivider(),

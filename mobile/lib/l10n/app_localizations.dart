@@ -422,6 +422,18 @@ abstract class AppLocalizations {
   /// **'Error'**
   String get error;
 
+  /// Button label to confirm and execute code export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get exportAction;
+
+  /// Label displaying the count of saved tax codes to export.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 tax code ready for export} other{{count} tax codes ready for export}}'**
+  String exportCodesCount(int count);
+
   /// Subtitle for the export saved codes item.
   ///
   /// In en, this message translates to:
@@ -433,6 +445,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export codes'**
   String get exportDataTitle;
+
+  /// Description for CSV export format.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard tabular format, compatible with Excel and spreadsheets.'**
+  String get exportFormatCsvDesc;
+
+  /// Title for CSV export format.
+  ///
+  /// In en, this message translates to:
+  /// **'CSV (.csv)'**
+  String get exportFormatCsvTitle;
+
+  /// Description for JSON export format.
+  ///
+  /// In en, this message translates to:
+  /// **'Full structured format, ideal for archiving and backup.'**
+  String get exportFormatJsonDesc;
+
+  /// Title for JSON export format.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON (.json)'**
+  String get exportFormatJsonTitle;
+
+  /// Header for selecting the export file format.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose format'**
+  String get exportFormatLabel;
+
+  /// Notice shown when the user has no saved tax codes.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t saved any tax codes to export yet.'**
+  String get exportNoCodes;
+
+  /// Success message displayed after generating the export file.
+  ///
+  /// In en, this message translates to:
+  /// **'Export file ready for saving or sharing.'**
+  String get exportSuccess;
 
   /// Informational message for upcoming features.
   ///

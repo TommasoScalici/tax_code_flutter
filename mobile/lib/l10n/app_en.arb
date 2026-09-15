@@ -235,6 +235,20 @@
   "@error": {
     "description": "A generic title for an error dialog."
   },
+  "exportAction": "Export",
+  "@exportAction": {
+    "description": "Button label to confirm and execute code export."
+  },
+  "exportCodesCount": "{count, plural, =1{1 tax code ready for export} other{{count} tax codes ready for export}}",
+  "@exportCodesCount": {
+    "description": "Label displaying the count of saved tax codes to export.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
   "exportDataSubtitle": "Offline backup in JSON or CSV format",
   "@exportDataSubtitle": {
     "description": "Subtitle for the export saved codes item."
@@ -242,6 +256,34 @@
   "exportDataTitle": "Export codes",
   "@exportDataTitle": {
     "description": "Title for the export saved codes item."
+  },
+  "exportFormatCsvDesc": "Standard tabular format, compatible with Excel and spreadsheets.",
+  "@exportFormatCsvDesc": {
+    "description": "Description for CSV export format."
+  },
+  "exportFormatCsvTitle": "CSV (.csv)",
+  "@exportFormatCsvTitle": {
+    "description": "Title for CSV export format."
+  },
+  "exportFormatJsonDesc": "Full structured format, ideal for archiving and backup.",
+  "@exportFormatJsonDesc": {
+    "description": "Description for JSON export format."
+  },
+  "exportFormatJsonTitle": "JSON (.json)",
+  "@exportFormatJsonTitle": {
+    "description": "Title for JSON export format."
+  },
+  "exportFormatLabel": "Choose format",
+  "@exportFormatLabel": {
+    "description": "Header for selecting the export file format."
+  },
+  "exportNoCodes": "You haven't saved any tax codes to export yet.",
+  "@exportNoCodes": {
+    "description": "Notice shown when the user has no saved tax codes."
+  },
+  "exportSuccess": "Export file ready for saving or sharing.",
+  "@exportSuccess": {
+    "description": "Success message displayed after generating the export file."
   },
   "featureComingSoon": "Feature coming soon",
   "@featureComingSoon": {

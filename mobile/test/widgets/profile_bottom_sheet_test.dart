@@ -6,6 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
+import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/sync_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
@@ -13,6 +14,7 @@ import 'package:tax_code_flutter/core/theme/app_theme.dart';
 import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
+import 'package:tax_code_flutter/widgets/export/export_data_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/profile_bottom_sheet.dart';
 
 import '../helpers/mocks.dart';
@@ -32,6 +34,7 @@ void main() {
   late MockInfoService mockInfoService;
   late MockInAppReviewService mockInAppReviewService;
   late MockLogger mockLogger;
+  late MockContactRepository mockContactRepository;
 
   final sampleContacts = [
     Contact(
@@ -64,6 +67,9 @@ void main() {
     mockInfoService = MockInfoService();
     mockInAppReviewService = MockInAppReviewService();
     mockLogger = MockLogger();
+    mockContactRepository = MockContactRepository();
+
+    when(() => mockContactRepository.contacts).thenReturn(sampleContacts);
 
     when(() => mockAuthService.currentUser).thenReturn(mockUser);
     when(() => mockAuthService.isGuest).thenReturn(false);
@@ -105,6 +111,9 @@ void main() {
         Provider<InfoServiceAbstract>.value(value: mockInfoService),
         Provider<InAppReviewService>.value(value: mockInAppReviewService),
         Provider<Logger>.value(value: mockLogger),
+        ChangeNotifierProvider<ContactRepository>.value(
+          value: mockContactRepository,
+        ),
       ],
       child: MaterialApp(
         locale: locale,
@@ -270,7 +279,7 @@ void main() {
       verify(() => mockInAppReviewService.openStoreListing()).called(1);
     });
 
-    testWidgets('tapping Esporta codici shows coming soon SnackBar',
+    testWidgets('tapping Esporta codici opens ExportDataBottomSheet',
         (tester) async {
       setLargeViewport(tester);
 
@@ -280,10 +289,9 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.byKey(const Key('profile_export_codes_tile')));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
-      expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('Funzionalità in arrivo'), findsOneWidget);
+      expect(find.byType(ExportDataBottomSheet), findsOneWidget);
     });
 
     testWidgets("tapping Esci dall'account calls authService.signOut",

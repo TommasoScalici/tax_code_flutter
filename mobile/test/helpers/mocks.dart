@@ -11,6 +11,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/birthplace_service.dart';
+import 'package:shared/services/data_export_service.dart';
 import 'package:shared/services/database_service.dart';
 import 'package:shared/services/gemini_service.dart';
 import 'package:shared/services/tax_code_service.dart';
@@ -76,3 +77,5 @@ class MockUser extends Mock implements User {}
 class MockCameraController extends Mock implements CameraController {}
 
 class FakeCameraDescription extends Fake implements CameraDescription {}
+
+class MockDataExportService extends Mock implements DataExportServiceAbstract {}

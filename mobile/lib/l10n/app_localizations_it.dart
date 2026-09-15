@@ -188,10 +188,49 @@ class AppLocalizationsIt extends AppLocalizations {
   String get error => 'Errore';
 
   @override
+  String get exportAction => 'Esporta';
+
+  @override
+  String exportCodesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count codici fiscali pronti per l\'esportazione',
+      one: '1 codice fiscale pronto per l\'esportazione',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get exportDataSubtitle => 'Backup offline in formato JSON o CSV';
 
   @override
   String get exportDataTitle => 'Esporta codici';
+
+  @override
+  String get exportFormatCsvDesc =>
+      'Formato tabellare standard, compatibile con Excel e fogli di calcolo.';
+
+  @override
+  String get exportFormatCsvTitle => 'CSV (.csv)';
+
+  @override
+  String get exportFormatJsonDesc =>
+      'Formato strutturato completo, ideale per archiviazione e backup.';
+
+  @override
+  String get exportFormatJsonTitle => 'JSON (.json)';
+
+  @override
+  String get exportFormatLabel => 'Scegli il formato';
+
+  @override
+  String get exportNoCodes =>
+      'Non hai ancora salvato alcun codice fiscale da esportare.';
+
+  @override
+  String get exportSuccess =>
+      'File di esportazione pronto per il salvataggio o la condivisione.';
 
   @override
   String get featureComingSoon => 'Funzionalità in arrivo';
