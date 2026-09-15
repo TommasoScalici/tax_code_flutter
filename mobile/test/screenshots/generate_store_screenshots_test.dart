@@ -1,13 +1,15 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
-import 'package:tax_code_flutter/widgets/previews/barcode_bottom_sheet_preview.dart';
+import 'package:tax_code_flutter/core/theme/app_theme.dart';
+import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
+import 'package:tax_code_flutter/widgets/barcode_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_screen_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/form_screen_preview.dart';
 
@@ -29,6 +31,60 @@ class _Scenario {
   final String enHeadline;
   final String enSubtitle;
   final Widget Function(Locale locale) widgetBuilder;
+}
+
+Widget _buildBarcodeScenario(Locale locale, Contact contact) {
+  return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: AppTheme.lightTheme,
+    darkTheme: AppTheme.darkTheme,
+    themeMode: ThemeMode.light,
+    locale: locale,
+    localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          // Background dashboard preview
+          Opacity(
+            opacity: 0.35,
+            child: DashboardScreenPreview(
+              locale: locale,
+              initialContacts: [contact],
+            ),
+          ),
+          // Scrim overlay
+          const ModalBarrier(
+            dismissible: false,
+            color: Colors.black45,
+          ),
+          // Elevated Barcode Card
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x66000000),
+                    blurRadius: 32,
+                    offset: Offset(0, -8),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(28)),
+                child: BarcodeBottomSheet(
+                  contact: contact,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 void main() {
@@ -69,9 +125,14 @@ void main() {
       final miFile = File(materialIconsPath);
       if (miFile.existsSync()) {
         final data = await miFile.readAsBytes();
-        final loader = FontLoader('MaterialIcons')
-          ..addFont(Future.value(ByteData.sublistView(data)));
-        await loader.load();
+        for (final family in [
+          'MaterialIcons',
+          'packages/flutter/MaterialIcons',
+        ]) {
+          final loader = FontLoader(family)
+            ..addFont(Future.value(ByteData.sublistView(data)));
+          await loader.load();
+        }
       }
 
       // 3. MaterialSymbols icons
@@ -88,9 +149,14 @@ void main() {
           final symFile = File(symPath);
           if (symFile.existsSync()) {
             final data = await symFile.readAsBytes();
-            final loader = FontLoader(sym)
-              ..addFont(Future.value(ByteData.sublistView(data)));
-            await loader.load();
+            for (final family in [
+              sym,
+              'packages/material_symbols_icons/$sym',
+            ]) {
+              final loader = FontLoader(family)
+                ..addFont(Future.value(ByteData.sublistView(data)));
+              await loader.load();
+            }
           }
         }
       }
@@ -98,23 +164,23 @@ void main() {
   }
 
   final sampleContact = Contact(
-    id: 'sample-1',
+    id: '1',
     firstName: 'Mario',
     lastName: 'Rossi',
     gender: 'M',
-    birthDate: DateTime(1985, 4, 15),
+    birthDate: DateTime(1980, 1, 15),
     birthPlace: const Birthplace(name: 'Roma', state: 'RM', code: 'H501'),
-    taxCode: 'RSSMRA85D15H501Z',
+    taxCode: 'RSSMRA80A15H501U',
     listIndex: 0,
   );
 
   final scenarios = [
     _Scenario(
       filename: '01_dashboard_empty',
-      itHeadline: 'I tuoi codici fiscali, sempre con te',
+      itHeadline: 'Tutti i tuoi codici fiscali, sempre con te',
       itSubtitle:
           'Archivia, organizza e consulta in qualsiasi momento, anche offline.',
-      enHeadline: 'All your tax codes, always with you',
+      enHeadline: 'Your tax codes, always with you',
       enSubtitle: 'Store, organize and access anytime, fully offline.',
       widgetBuilder: (locale) => DashboardScreenPreview(
         locale: locale,
@@ -151,7 +217,7 @@ void main() {
       enHeadline: 'Digital health card with barcode & QR',
       enSubtitle:
           'Standard Code 39 barcode and QR code ready for pharmacies & clinics.',
-      widgetBuilder: (locale) => BarcodeBottomSheetPreview(locale: locale),
+      widgetBuilder: (locale) => _buildBarcodeScenario(locale, sampleContact),
     ),
     _Scenario(
       filename: '05_ocr_ai',

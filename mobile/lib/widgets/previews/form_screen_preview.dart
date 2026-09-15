@@ -33,7 +33,7 @@ class FormScreenPreview extends StatefulWidget {
     super.key,
     this.locale = const Locale('it'),
     this.initialContact,
-    this.isDarkMode = true,
+    this.isDarkMode = false,
   });
 
   final Locale locale;
