@@ -23,10 +23,10 @@ class ExportDataBottomSheet extends StatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      showDragHandle: false,
+      backgroundColor: AppColors.transparent,
       elevation: 0,
-      barrierColor: Colors.black54,
+      barrierColor: AppColors.modalBarrier,
       builder: (context) => const ExportDataBottomSheet(),
     );
   }
@@ -104,232 +104,257 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
     final l10n = context.l10n;
     final contacts = context.watch<ContactRepository?>()?.contacts ?? [];
     final hasContacts = contacts.isNotEmpty;
+    final isDark = theme.brightness == Brightness.dark;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28.0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.only(
-        left: 20.0,
-        right: 20.0,
-        top: 12.0,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24.0,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Drag handle
-          Center(
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.outlineVariant,
-                borderRadius: BorderRadius.circular(2.0),
-              ),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 520),
+        child: Container(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(28.0),
             ),
-          ),
-          const SizedBox(height: 16),
-
-          // Header
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: AppColors.emeraldPrimary.withValues(alpha: 0.14),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.file_download_outlined,
-                  color: AppColors.emeraldPrimary,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.exportDataTitle,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.2,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      l10n.exportDataSubtitle,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                key: const Key('export_sheet_close_button'),
-                icon: const Icon(Icons.close_rounded),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+            boxShadow: [
+              AppColors.shadowSheet(isDark),
             ],
           ),
-          const SizedBox(height: 18),
-
-          // Contact count badge / empty state
-          if (!hasContacts)
-            Container(
-              padding: const EdgeInsets.all(14.0),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.errorContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(14.0),
-                border: Border.all(
-                  color: theme.colorScheme.error.withValues(alpha: 0.5),
-                ),
+          child: SafeArea(
+            top: false,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: 20.0,
+                right: 20.0,
+                top: 12.0,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 24.0,
               ),
-              child: Row(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Icon(
-                    Icons.info_outline_rounded,
-                    color: theme.colorScheme.error,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      l10n.exportNoCodes,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onErrorContainer,
+                  // Drag handle
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.40,
+                        ),
+                        borderRadius: BorderRadius.circular(2.0),
                       ),
                     ),
                   ),
-                ],
-              ),
-            )
-          else
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 14.0,
-                vertical: 10.0,
-              ),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(14.0),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.badge_outlined,
-                    size: 18,
-                    color: AppColors.emeraldPrimary,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      l10n.exportCodesCount(contacts.length),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          const SizedBox(height: 18),
+                  const SizedBox(height: 16),
 
-          // Format selection section
-          Text(
-            l10n.exportFormatLabel,
-            style: theme.textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 10),
-
-          // Format Cards
-          _FormatOptionCard(
-            key: const Key('export_format_json_card'),
-            title: l10n.exportFormatJsonTitle,
-            description: l10n.exportFormatJsonDesc,
-            icon: Icons.data_object_rounded,
-            isSelected: _selectedFormat == ExportFormat.json,
-            onTap: _isExporting
-                ? null
-                : () => setState(() => _selectedFormat = ExportFormat.json),
-          ),
-          const SizedBox(height: 10),
-          _FormatOptionCard(
-            key: const Key('export_format_csv_card'),
-            title: l10n.exportFormatCsvTitle,
-            description: l10n.exportFormatCsvDesc,
-            icon: Icons.table_chart_outlined,
-            isSelected: _selectedFormat == ExportFormat.csv,
-            onTap: _isExporting
-                ? null
-                : () => setState(() => _selectedFormat = ExportFormat.csv),
-          ),
-          const SizedBox(height: 24),
-
-          // Actions
-          Row(
-            children: [
-              Expanded(
-                child: TextButton(
-                  key: const Key('export_cancel_button'),
-                  onPressed: _isExporting
-                      ? null
-                      : () => Navigator.of(context).pop(),
-                  child: Text(l10n.cancel),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: FilledButton.icon(
-                  key: const Key('export_confirm_button'),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.emeraldPrimary,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 14.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14.0),
-                    ),
-                  ),
-                  onPressed: (!hasContacts || _isExporting)
-                      ? null
-                      : () => _exportData(contacts),
-                  icon: _isExporting
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.2,
-                            color: Colors.black,
+                  // Header
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: isDark ? 0.16 : 0.10,
                           ),
-                        )
-                      : const Icon(Icons.file_download_outlined, size: 20),
-                  label: Text(
-                    l10n.exportAction,
-                    style: const TextStyle(fontWeight: FontWeight.w700),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.file_download_outlined,
+                          color: theme.colorScheme.primary,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.exportDataTitle,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.2,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              l10n.exportDataSubtitle,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        key: const Key('export_sheet_close_button'),
+                        icon: const Icon(Icons.close_rounded),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
                   ),
-                ),
+                  const SizedBox(height: 18),
+
+                  // Contact count badge / empty state
+                  if (!hasContacts)
+                    Container(
+                      padding: const EdgeInsets.all(14.0),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.errorContainer.withValues(
+                          alpha: 0.3,
+                        ),
+                        borderRadius: BorderRadius.circular(14.0),
+                        border: Border.all(
+                          color: theme.colorScheme.error.withValues(alpha: 0.5),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline_rounded,
+                            color: theme.colorScheme.error,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              l10n.exportNoCodes,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onErrorContainer,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14.0,
+                        vertical: 10.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainerHigh,
+                        borderRadius: BorderRadius.circular(14.0),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.badge_outlined,
+                            size: 18,
+                            color: theme.colorScheme.primary,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              l10n.exportCodesCount(contacts.length),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 18),
+
+                  // Format selection section
+                  Text(
+                    l10n.exportFormatLabel,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Format Cards
+                  _FormatOptionCard(
+                    key: const Key('export_format_json_card'),
+                    title: l10n.exportFormatJsonTitle,
+                    description: l10n.exportFormatJsonDesc,
+                    icon: Icons.data_object_rounded,
+                    isSelected: _selectedFormat == ExportFormat.json,
+                    onTap: _isExporting
+                        ? null
+                        : () => setState(
+                            () => _selectedFormat = ExportFormat.json,
+                          ),
+                  ),
+                  const SizedBox(height: 10),
+                  _FormatOptionCard(
+                    key: const Key('export_format_csv_card'),
+                    title: l10n.exportFormatCsvTitle,
+                    description: l10n.exportFormatCsvDesc,
+                    icon: Icons.table_chart_outlined,
+                    isSelected: _selectedFormat == ExportFormat.csv,
+                    onTap: _isExporting
+                        ? null
+                        : () => setState(
+                            () => _selectedFormat = ExportFormat.csv,
+                          ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Actions
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          key: const Key('export_cancel_button'),
+                          onPressed: _isExporting
+                              ? null
+                              : () => Navigator.of(context).pop(),
+                          child: Text(l10n.cancel),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: FilledButton.icon(
+                          key: const Key('export_confirm_button'),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: theme.colorScheme.primary,
+                            foregroundColor: theme.colorScheme.onPrimary,
+                            padding: const EdgeInsets.symmetric(vertical: 14.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14.0),
+                            ),
+                          ),
+                          onPressed: (!hasContacts || _isExporting)
+                              ? null
+                              : () => _exportData(contacts),
+                          icon: _isExporting
+                              ? SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.2,
+                                    color: theme.colorScheme.onPrimary,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.file_download_outlined,
+                                  size: 20,
+                                ),
+                          label: Text(
+                            l10n.exportAction,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: theme.colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -354,12 +379,15 @@ class _FormatOptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     final borderColor = isSelected
-        ? AppColors.emeraldPrimary
+        ? theme.colorScheme.primary
         : theme.colorScheme.outlineVariant;
     final bgColor = isSelected
-        ? AppColors.emeraldPrimary.withValues(alpha: 0.08)
+        ? theme.colorScheme.primary.withValues(
+            alpha: isDark ? 0.12 : 0.06,
+          )
         : theme.colorScheme.surfaceContainer;
 
     return InkWell(
@@ -382,7 +410,9 @@ class _FormatOptionCard extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? AppColors.emeraldPrimary.withValues(alpha: 0.18)
+                    ? theme.colorScheme.primary.withValues(
+                        alpha: isDark ? 0.22 : 0.12,
+                      )
                     : theme.colorScheme.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(10.0),
               ),
@@ -390,7 +420,7 @@ class _FormatOptionCard extends StatelessWidget {
                 icon,
                 size: 22,
                 color: isSelected
-                    ? AppColors.emeraldPrimary
+                    ? theme.colorScheme.primary
                     : theme.colorScheme.onSurfaceVariant,
               ),
             ),
@@ -404,7 +434,7 @@ class _FormatOptionCard extends StatelessWidget {
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: isSelected
-                          ? AppColors.emeraldPrimary
+                          ? theme.colorScheme.primary
                           : theme.colorScheme.onSurface,
                     ),
                   ),
@@ -424,7 +454,7 @@ class _FormatOptionCard extends StatelessWidget {
                   ? Icons.radio_button_checked_rounded
                   : Icons.radio_button_off_rounded,
               color: isSelected
-                  ? AppColors.emeraldPrimary
+                  ? theme.colorScheme.primary
                   : theme.colorScheme.outline,
             ),
           ],

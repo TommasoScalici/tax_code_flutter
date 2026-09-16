@@ -48,11 +48,7 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
                     color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                   ),
                   boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: _isDarkMode ? 0.4 : 0.08),
-                      blurRadius: 24,
-                      offset: const Offset(0, 8),
-                    ),
+                    AppColors.shadowPreviewCard(_isDarkMode),
                   ],
                 ),
                 clipBehavior: Clip.antiAlias,
@@ -128,7 +124,7 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Roma (RM) • 15/04/1985 • Maschile',
+                                'Roma (RM) • 15/04/1985 • ${l10n.genderMale}',
                                 style: theme.textTheme.bodySmall,
                               ),
                             ],
@@ -145,9 +141,9 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
                       const SizedBox(height: 8),
                       TextFormField(
                         initialValue: 'Mario',
-                        decoration: const InputDecoration(
-                          labelText: 'Nome',
-                          prefixIcon: Icon(Icons.person),
+                        decoration: InputDecoration(
+                          labelText: l10n.firstName,
+                          prefixIcon: const Icon(Icons.person),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -215,9 +211,9 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              'Visualizzatore per scanner ottico farmacia',
+                              l10n.barcodeNotice,
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: AppColors.opticalBlack.withValues(alpha: 0.6),
+                                color: AppColors.opticalTextMuted,
                                 fontSize: 11,
                               ),
                             ),

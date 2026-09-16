@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_account_section.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_app_info_view.dart';
@@ -40,10 +41,11 @@ class ProfileBottomSheet extends StatefulWidget {
     return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: true,
+      showDragHandle: false,
       useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       elevation: 0,
-      barrierColor: Colors.black54,
+      barrierColor: AppColors.modalBarrier,
       builder: (context) => ProfileBottomSheet(
         startAtAppInfo: startAtAppInfo,
       ),
@@ -106,16 +108,13 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
               boxShadow: widget.isEmbedded
                   ? null
                   : [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.35),
-                        blurRadius: 30,
-                        offset: const Offset(0, -6),
-                      ),
+                      AppColors.shadowSheet(isDark),
                     ],
             ),
             child: Column(
-              mainAxisSize:
-                  widget.isEmbedded ? MainAxisSize.max : MainAxisSize.min,
+              mainAxisSize: widget.isEmbedded
+                  ? MainAxisSize.max
+                  : MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Top drag handle (standard M3 sheet)
@@ -126,8 +125,9 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                       width: 44,
                       height: 4.5,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.onSurfaceVariant
-                            .withValues(alpha: 0.35),
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.35,
+                        ),
                         borderRadius: BorderRadius.circular(2.5),
                       ),
                     ),

@@ -1,5 +1,4 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// Modern empty state widget for the tax codes dashboard.
@@ -49,13 +48,13 @@ class DashboardEmptyState extends StatelessWidget {
         ? Icons.search_off_rounded
         : Icons.credit_card_off_rounded;
 
-    final iconColor = isSearching ? colorScheme.primary : AppColors.emeraldPrimary;
+    final iconColor = colorScheme.primary;
 
     final iconContainerBg = isSearching
         ? colorScheme.surfaceContainerHighest.withValues(
             alpha: isDark ? 0.6 : 0.45,
           )
-        : (isDark ? AppColors.emeraldContainerDark : AppColors.lightPrimaryContainer);
+        : colorScheme.primaryContainer;
 
     return Center(
       child: SingleChildScrollView(
@@ -76,13 +75,15 @@ class DashboardEmptyState extends StatelessWidget {
                   border: Border.all(
                     color: isSearching
                         ? colorScheme.outlineVariant
-                        : AppColors.emeraldBorder,
+                        : colorScheme.primary.withValues(
+                            alpha: isDark ? 0.25 : 0.35,
+                          ),
                     width: 1.2,
                   ),
                   boxShadow: [
                     if (!isSearching)
                       BoxShadow(
-                        color: AppColors.emeraldPrimary.withValues(
+                        color: colorScheme.primary.withValues(
                           alpha: isDark ? 0.20 : 0.12,
                         ),
                         blurRadius: 20,

@@ -85,9 +85,9 @@ class CameraPreviewOverlay extends StatelessWidget {
         CustomPaint(
           size: Size(size.width, size.height),
           painter: CardCutoutOverlayPainter(
-            scrimColor: Colors.black.withValues(alpha: 0.58),
+            scrimColor: AppColors.cameraScrim,
             guideColor: colorScheme.primary,
-            outlineColor: AppColors.emeraldBorder,
+            outlineColor: colorScheme.primary.withValues(alpha: 0.25),
             cardRect: cardRect,
           ),
         ),
@@ -125,7 +125,7 @@ class CameraPreviewOverlay extends StatelessWidget {
                     child: Text(
                       l10n.cameraCardGuideHint,
                       style: textTheme.labelMedium?.copyWith(
-                        color: Colors.white,
+                        color: AppColors.cameraReticle,
                         fontWeight: FontWeight.w600,
                       ),
                       textAlign: TextAlign.center,
@@ -144,9 +144,9 @@ class CameraPreviewOverlay extends StatelessWidget {
           Stack(
             alignment: Alignment.center,
             children: [
-              ModalBarrier(
+              const ModalBarrier(
                 dismissible: false,
-                color: Colors.black.withValues(alpha: 0.65),
+                color: AppColors.cameraGuidePill,
               ),
               CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),

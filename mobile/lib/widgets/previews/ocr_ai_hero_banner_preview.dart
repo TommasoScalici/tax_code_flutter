@@ -95,7 +95,7 @@ class _OcrAiHeroBannerPreviewState extends State<OcrAiHeroBannerPreview> {
                       onScanPressed: () {
                         _showFeedback(
                           context,
-                          'Avvio scansione Smart OCR con fotocamera...',
+                          l10n.ocrHeroButton,
                         );
                       },
                     ),

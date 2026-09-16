@@ -28,6 +28,7 @@ class ProfileUserSection extends StatelessWidget {
     final photoURL = isGuest ? null : currentUser?.photoURL;
     final isSyncActive = !isGuest && (syncService?.isSyncEnabled ?? false);
     final savedCount = homeController?.contactsToShow.length ?? 0;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(20.0),
@@ -52,7 +53,9 @@ class ProfileUserSection extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppColors.emeraldPrimary.withValues(alpha: 0.5),
+                        color: theme.colorScheme.primary.withValues(
+                          alpha: isDark ? 0.25 : 0.35,
+                        ),
                         width: 2.0,
                       ),
                     ),
@@ -77,7 +80,7 @@ class ProfileUserSection extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: isGuest
                             ? AppColors.warning
-                            : AppColors.emeraldPrimary,
+                            : theme.colorScheme.primary,
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: theme.colorScheme.surfaceContainer,
@@ -118,7 +121,7 @@ class ProfileUserSection extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: isGuest
                                 ? theme.colorScheme.surfaceContainerHighest
-                                : AppColors.emeraldContainerDark,
+                                : theme.colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           child: Text(
@@ -126,7 +129,7 @@ class ProfileUserSection extends StatelessWidget {
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: isGuest
                                   ? theme.colorScheme.onSurfaceVariant
-                                  : AppColors.emeraldPrimary,
+                                  : theme.colorScheme.onPrimaryContainer,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -161,12 +164,16 @@ class ProfileUserSection extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 color: isSyncActive
-                    ? AppColors.emeraldContainerDark
+                    ? theme.colorScheme.primaryContainer.withValues(
+                        alpha: isDark ? 0.3 : 0.5,
+                      )
                     : theme.colorScheme.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(14.0),
                 border: Border.all(
                   color: isSyncActive
-                      ? AppColors.emeraldBorder
+                      ? theme.colorScheme.primary.withValues(
+                          alpha: isDark ? 0.3 : 0.4,
+                        )
                       : theme.colorScheme.outlineVariant,
                 ),
               ),
@@ -178,7 +185,7 @@ class ProfileUserSection extends StatelessWidget {
                         : Icons.cloud_queue_rounded,
                     size: 18,
                     color: isSyncActive
-                        ? AppColors.emeraldPrimary
+                        ? theme.colorScheme.primary
                         : theme.colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(width: 10),
@@ -193,7 +200,7 @@ class ProfileUserSection extends StatelessWidget {
                           style: theme.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: isSyncActive
-                                ? AppColors.emeraldPrimary
+                                ? theme.colorScheme.primary
                                 : theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
@@ -217,18 +224,24 @@ class ProfileUserSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: AppColors.emeraldContainerDark,
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: isDark ? 0.16 : 0.5,
+                ),
                 borderRadius: BorderRadius.circular(16.0),
-                border: Border.all(color: AppColors.emeraldBorder),
+                border: Border.all(
+                  color: theme.colorScheme.primary.withValues(
+                    alpha: isDark ? 0.25 : 0.3,
+                  ),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.cloud_upload_outlined,
-                        color: AppColors.emeraldPrimary,
+                        color: theme.colorScheme.primary,
                         size: 20,
                       ),
                       const SizedBox(width: 8),
@@ -237,7 +250,7 @@ class ProfileUserSection extends StatelessWidget {
                           l10n.cloudBackupBannerTitle,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w700,
-                            color: AppColors.emeraldPrimary,
+                            color: theme.colorScheme.primary,
                           ),
                         ),
                       ),
@@ -257,8 +270,8 @@ class ProfileUserSection extends StatelessWidget {
                     child: FilledButton.icon(
                       key: const Key('profile_guest_google_signin_button'),
                       style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.emeraldPrimary,
-                        foregroundColor: Colors.black,
+                        backgroundColor: theme.colorScheme.primary,
+                        foregroundColor: theme.colorScheme.onPrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
@@ -273,7 +286,7 @@ class ProfileUserSection extends StatelessWidget {
                         l10n.continueWithGoogle,
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: Colors.black,
+                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -306,7 +319,7 @@ class ProfileUserSection extends StatelessWidget {
           initial,
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w800,
-            color: AppColors.emeraldPrimary,
+            color: AppColors.opticalWhite,
           ),
         ),
       ),

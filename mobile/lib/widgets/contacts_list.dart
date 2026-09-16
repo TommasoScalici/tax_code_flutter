@@ -195,7 +195,7 @@ class _ContactsListState extends State<ContactsList> {
             onPressed: () => Navigator.of(dialogContext).pop(true),
             child: Text(
               l10n.delete,
-              style: TextStyle(
+              style: Theme.of(dialogContext).textTheme.labelLarge?.copyWith(
                 color: Theme.of(dialogContext).colorScheme.error,
               ),
             ),

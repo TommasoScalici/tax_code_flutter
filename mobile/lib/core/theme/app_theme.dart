@@ -2,6 +2,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_typography.dart';
 
+export 'package:tax_code_flutter/core/theme/theme_context_extensions.dart';
+
 /// Central theme configuration for the "Emerald Ledger" design system.
 ///
 /// Implements Material 3 with full Dark (OLED-first) and Light mode specifications,

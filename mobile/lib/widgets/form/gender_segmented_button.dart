@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A modern, accessible Material 3 segmented button for selecting gender
@@ -129,10 +130,9 @@ class _GenderSegmentedLayout extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   '*',
-                  style: TextStyle(
+                  style: theme.textTheme.labelMedium?.copyWith(
                     color: colorScheme.primary,
                     fontWeight: FontWeight.w800,
-                    fontSize: 14,
                   ),
                 ),
               ],
@@ -226,7 +226,7 @@ class _GenderSegmentOption extends StatelessWidget {
     );
 
     return Material(
-      color: isSelected ? selectedBg : Colors.transparent,
+      color: isSelected ? selectedBg : AppColors.transparent,
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: onTap,

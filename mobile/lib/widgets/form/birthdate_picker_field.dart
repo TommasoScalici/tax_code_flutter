@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A modern date picker field with emerald calendar icon, 14px rounded corners,
@@ -172,10 +173,9 @@ class _BirthdatePickerContent extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   '*',
-                  style: TextStyle(
+                  style: theme.textTheme.labelMedium?.copyWith(
                     color: colorScheme.primary,
                     fontWeight: FontWeight.w800,
-                    fontSize: 14,
                   ),
                 ),
               ],
@@ -192,7 +192,7 @@ class _BirthdatePickerContent extends StatelessWidget {
             border: Border.all(color: borderColor),
           ),
           child: Material(
-            color: Colors.transparent,
+            color: AppColors.transparent,
             borderRadius: BorderRadius.circular(14),
             child: InkWell(
               key: const Key('birthdate_picker_inkwell'),

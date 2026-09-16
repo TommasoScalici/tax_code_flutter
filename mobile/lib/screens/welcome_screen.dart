@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/profile_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
@@ -126,7 +127,7 @@ class WelcomeScreen extends StatelessWidget {
                   gradient: RadialGradient(
                     colors: [
                       colorScheme.primary.withValues(alpha: isDark ? 0.08 : 0.05),
-                      Colors.transparent,
+                      AppColors.transparent,
                     ],
                   ),
                 ),

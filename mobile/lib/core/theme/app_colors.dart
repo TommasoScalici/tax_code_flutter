@@ -120,8 +120,29 @@ abstract final class AppColors {
   static const Color lightErrorContainer = Color(0xFFFFDAD6);
 
   // ---------------------------------------------------------------------------
-  // Specialized Utility Colors
+  // Specialized Utility Colors & Overlays
   // ---------------------------------------------------------------------------
+  /// Fully transparent color token.
+  static const Color transparent = Color(0x00000000);
+
+  /// Consistent dark modal barrier color (75% black).
+  static const Color modalBarrier = Color(0xBF000000);
+
+  /// High-contrast foreground color on top of vibrant emerald accents.
+  static const Color onEmeraldAccent = Color(0xFF000000);
+
+  /// Camera viewfinder scrim overlay (58% black).
+  static const Color cameraScrim = Color(0x94000000);
+
+  /// Camera target reticle high-visibility white.
+  static const Color cameraReticle = Color(0xFFFFFFFF);
+
+  /// Camera target reticle muted white (70% opacity).
+  static const Color cameraReticleMuted = Color(0xB3FFFFFF);
+
+  /// Camera guideline pill background (65% black).
+  static const Color cameraGuidePill = Color(0xA6000000);
+
   /// Pure white background strictly reserved for the optical barcode/QR display.
   /// Guarantees maximum contrast and reliability for hardware laser scanners.
   static const Color opticalWhite = Color(0xFFFFFFFF);
@@ -153,20 +174,74 @@ abstract final class AppColors {
   /// Translucent warning container tint for badges and chips.
   static const Color warningContainer = Color(0x29FFB74D);
 
+  /// Translucent warning border accent (35% opacity).
+  static const Color warningBorder = Color(0x59FFB74D);
+
   /// Informational accent color (e.g. app info tile, legal notices).
   static const Color info = Color(0xFF42A5F5);
 
   /// Translucent info container tint.
   static const Color infoContainer = Color(0x2942A5F5);
 
+  /// Translucent info border accent (35% opacity).
+  static const Color infoBorder = Color(0x5942A5F5);
+
   /// Pulse badge color indicating active cloud sync.
   static const Color syncPulse = Color(0xFF58C878);
+
+  /// Subtle emerald tint (8% opacity) for unselected/hover states.
+  static const Color emeraldTintSubtle = Color(0x1458C878);
+
+  /// Medium emerald tint (14% opacity) for circular badge icons.
+  static const Color emeraldTintMedium = Color(0x2458C878);
+
+  /// Active emerald tint (18% opacity) for selected icon containers.
+  static const Color emeraldTintActive = Color(0x2E58C878);
 
   /// Brand avatar fallback gradient start color.
   static const Color brandGradientStart = Color(0xFF1B4332);
 
   /// Brand avatar fallback gradient end color.
   static const Color brandGradientEnd = Color(0xFF2D6A4F);
+
+  // ---------------------------------------------------------------------------
+  // Standardized Elevation & Box Shadows
+  // ---------------------------------------------------------------------------
+  /// Standard shadow for list cards and containers.
+  static BoxShadow shadowCard(bool isDark) {
+    return BoxShadow(
+      color: Color(isDark ? 0x4D000000 : 0x0D000000),
+      blurRadius: 16,
+      offset: const Offset(0, 4),
+    );
+  }
+
+  /// Standard shadow for bottom sheets.
+  static BoxShadow shadowSheet(bool isDark) {
+    return BoxShadow(
+      color: Color(isDark ? 0x66000000 : 0x40000000),
+      blurRadius: 32,
+      offset: const Offset(0, -8),
+    );
+  }
+
+  /// Standard shadow for elevated and floating elements (e.g. search bars, headers).
+  static BoxShadow shadowElevated(bool isDark) {
+    return BoxShadow(
+      color: Color(isDark ? 0x59000000 : 0x14000000),
+      blurRadius: 20,
+      offset: const Offset(0, 6),
+    );
+  }
+
+  /// Standard shadow for live preview cards.
+  static BoxShadow shadowPreviewCard(bool isDark) {
+    return BoxShadow(
+      color: Color(isDark ? 0x59000000 : 0x14000000),
+      blurRadius: 24,
+      offset: const Offset(0, 8),
+    );
+  }
 
   // ---------------------------------------------------------------------------
   // Material 3 ColorScheme Builders

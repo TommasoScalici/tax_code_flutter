@@ -1,5 +1,6 @@
 import 'package:flutter/widget_previews.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_theme.dart';
 import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_search_bar.dart';
@@ -113,13 +114,7 @@ class _DashboardSearchBarPreviewState extends State<DashboardSearchBarPreview> {
                           ),
                         ),
                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(
-                              alpha: _isDarkMode ? 0.35 : 0.08,
-                            ),
-                            blurRadius: 16,
-                            offset: const Offset(0, 4),
-                          ),
+                          AppColors.shadowElevated(_isDarkMode),
                         ],
                       ),
                       child: Column(

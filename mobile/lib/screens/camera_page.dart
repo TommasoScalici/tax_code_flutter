@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/gemini_service.dart';
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
@@ -52,10 +53,10 @@ class _CameraView extends StatelessWidget {
           ? null
           : AppBar(
               title: Text(l10n.takePicture),
-              backgroundColor: Colors.transparent,
+              backgroundColor: AppColors.transparent,
               elevation: 0,
             ),
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.opticalBlack,
       body: _buildBody(context, controller, l10n),
     );
   }
@@ -76,14 +77,17 @@ class _CameraView extends StatelessWidget {
       if (scannedData != null) {
         Navigator.pop(context, scannedData);
       } else {
-        final colorScheme = Theme.of(context).colorScheme;
+        final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
         ScaffoldMessenger.of(context)
           ..clearSnackBars()
           ..showSnackBar(
             SnackBar(
               content: Text(
                 l10n.scanFailedErrorMessage,
-                style: TextStyle(color: colorScheme.onError),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onError,
+                ),
               ),
               behavior: SnackBarBehavior.floating,
               backgroundColor: colorScheme.error,
@@ -116,13 +120,15 @@ class _CameraView extends StatelessWidget {
                   const Icon(
                     Icons.no_photography,
                     size: 50,
-                    color: Colors.white70,
+                    color: AppColors.cameraReticleMuted,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     l10n.cameraPermissionInfo,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppColors.cameraReticle,
+                        ),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(

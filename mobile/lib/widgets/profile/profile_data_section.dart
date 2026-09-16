@@ -35,7 +35,7 @@ class ProfileDataSection extends StatelessWidget {
               ProfileActionTile(
                 key: const Key('profile_export_codes_tile'),
                 icon: Icons.file_download_outlined,
-                iconColor: AppColors.emeraldPrimary,
+                iconColor: theme.colorScheme.primary,
                 iconBgColor: theme.colorScheme.surfaceContainerHigh,
                 title: l10n.exportDataTitle,
                 subtitle: l10n.exportDataSubtitle,

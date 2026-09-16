@@ -14,6 +14,7 @@ import 'package:tax_code_flutter/widgets/previews/form_sticky_bottom_bar_preview
 import 'package:tax_code_flutter/widgets/previews/gender_segmented_button_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/ocr_ai_hero_banner_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/profile_bottom_sheet_preview.dart';
+import 'package:tax_code_flutter/widgets/previews/share_contact_bottom_sheet_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/tax_code_live_preview_card_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/theme_showcase_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/welcome_screen_preview.dart';
@@ -138,6 +139,14 @@ void main() {
     await tester.pumpWidget(const ProfileBottomSheetPreview());
     await tester.pumpAndSettle();
     expect(find.byType(ProfileBottomSheetPreview), findsOneWidget);
+  });
+
+  testWidgets('pumps ShareContactBottomSheetPreview without error', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const ShareContactBottomSheetPreview());
+    await tester.pumpAndSettle();
+    expect(find.byType(ShareContactBottomSheetPreview), findsOneWidget);
   });
 }
 

@@ -44,10 +44,9 @@ class ShareContactBottomSheet extends StatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      useSafeArea: true,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      barrierColor: Colors.black54,
+      showDragHandle: false,
+      backgroundColor: AppColors.transparent,
+      barrierColor: AppColors.modalBarrier,
       builder: (_) => ShareContactBottomSheet(contact: contact),
     );
   }
@@ -90,8 +89,8 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
 
       final contactName =
           '${contact.firstName} ${contact.lastName}'.trim().isNotEmpty
-              ? '${contact.firstName} ${contact.lastName}'.trim()
-              : contact.taxCode;
+          ? '${contact.firstName} ${contact.lastName}'.trim()
+          : contact.taxCode;
 
       late final File file;
       late final String mimeType;
@@ -150,225 +149,245 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
+    final isDark = theme.brightness == Brightness.dark;
+
+    final sheetBgColor = isDark
+        ? colorScheme.surfaceContainer
+        : colorScheme.surfaceContainerLow;
+
+    final topBorderColor = colorScheme.outlineVariant.withValues(
+      alpha: isDark ? 0.40 : 0.60,
+    );
+
     final contact = widget.contact;
     final contactDisplayName =
         '${contact.firstName} ${contact.lastName}'.trim().isNotEmpty
-            ? '${contact.firstName} ${contact.lastName}'.trim()
-            : l10n.contactFallback;
+        ? '${contact.firstName} ${contact.lastName}'.trim()
+        : l10n.contactFallback;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28.0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.only(
-        left: 20.0,
-        right: 20.0,
-        top: 12.0,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24.0,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Drag handle
-          Center(
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.outlineVariant,
-                borderRadius: BorderRadius.circular(2.0),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Header
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: AppColors.emeraldPrimary.withValues(alpha: 0.14),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.share_rounded,
-                  color: AppColors.emeraldPrimary,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.shareContactTitle,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.2,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      l10n.shareContactSubtitle,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                key: const Key('share_sheet_close_button'),
-                icon: const Icon(Icons.close_rounded),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 520),
+        child: Container(
+          decoration: BoxDecoration(
+            color: sheetBgColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            border: Border(top: BorderSide(color: topBorderColor)),
+            boxShadow: [
+              AppColors.shadowSheet(isDark),
             ],
           ),
-          const SizedBox(height: 16),
-
-          // Contact Summary Card
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 14.0,
-              vertical: 10.0,
-            ),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHigh,
-              borderRadius: BorderRadius.circular(14.0),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.badge_outlined,
-                  size: 18,
-                  color: AppColors.emeraldPrimary,
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    contactDisplayName,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-                Text(
-                  contact.taxCode,
-                  style: AppTypography.codeDisplay(
-                    color: AppColors.emeraldPrimary,
-                    fontSize: 14,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 18),
-
-          // Option 1: Quick Text
-          _ShareOptionCard(
-            key: const Key('share_format_text_card'),
-            title: l10n.shareOptionTextTitle,
-            description: l10n.shareOptionTextDesc,
-            icon: Icons.text_fields_rounded,
-            isSelected: _selectedFormat == ContactShareFormat.text,
-            onTap: _isSharing
-                ? null
-                : () => setState(
-                      () => _selectedFormat = ContactShareFormat.text,
-                    ),
-          ),
-          const SizedBox(height: 10),
-
-          // Option 2: HD Card Image (PNG)
-          _ShareOptionCard(
-            key: const Key('share_format_image_card'),
-            title: l10n.shareOptionImageTitle,
-            description: l10n.shareOptionImageDesc,
-            icon: Icons.image_outlined,
-            isSelected: _selectedFormat == ContactShareFormat.image,
-            onTap: _isSharing
-                ? null
-                : () => setState(
-                      () => _selectedFormat = ContactShareFormat.image,
-                    ),
-          ),
-          const SizedBox(height: 10),
-
-          // Option 3: PDF Summary Sheet
-          _ShareOptionCard(
-            key: const Key('share_format_pdf_card'),
-            title: l10n.shareOptionPdfTitle,
-            description: l10n.shareOptionPdfDesc,
-            icon: Icons.picture_as_pdf_outlined,
-            isSelected: _selectedFormat == ContactShareFormat.pdf,
-            onTap: _isSharing
-                ? null
-                : () => setState(
-                      () => _selectedFormat = ContactShareFormat.pdf,
-                    ),
-          ),
-          const SizedBox(height: 24),
-
-          // Actions
-          Row(
-            children: [
-              Expanded(
-                child: TextButton(
-                  key: const Key('share_cancel_button'),
-                  onPressed: _isSharing
-                      ? null
-                      : () => Navigator.of(context).pop(),
-                  child: Text(l10n.cancel),
-                ),
+          child: SafeArea(
+            top: false,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: 20.0,
+                right: 20.0,
+                top: 12.0,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 24.0,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: FilledButton.icon(
-                  key: const Key('share_confirm_button'),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.emeraldPrimary,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 14.0),
-                    shape: RoundedRectangleBorder(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // M3 Drag Handle
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.40,
+                        ),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Header
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary.withValues(
+                            alpha: isDark ? 0.16 : 0.10,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.share_rounded,
+                          color: colorScheme.primary,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.shareContactTitle,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.2,
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              l10n.shareContactSubtitle,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Contact Summary Card
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14.0,
+                      vertical: 10.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerHigh,
                       borderRadius: BorderRadius.circular(14.0),
                     ),
-                  ),
-                  onPressed: _isSharing ? null : _handleShare,
-                  icon: _isSharing
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.2,
-                            color: Colors.black,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.badge_outlined,
+                          size: 18,
+                          color: colorScheme.primary,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            contactDisplayName,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: theme.colorScheme.onSurface,
+                            ),
                           ),
-                        )
-                      : const Icon(Icons.share_rounded, size: 20),
-                  label: Text(
-                    l10n.shareContactAction,
-                    style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        Text(
+                          contact.taxCode,
+                          style: AppTypography.codeDisplay(
+                            color: colorScheme.primary,
+                            fontSize: 14,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 18),
+
+                  // Option 1: Quick Text
+                  _ShareOptionCard(
+                    key: const Key('share_format_text_card'),
+                    title: l10n.shareOptionTextTitle,
+                    description: l10n.shareOptionTextDesc,
+                    icon: Icons.text_fields_rounded,
+                    isSelected: _selectedFormat == ContactShareFormat.text,
+                    onTap: _isSharing
+                        ? null
+                        : () => setState(
+                            () => _selectedFormat = ContactShareFormat.text,
+                          ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Option 2: HD Card Image (PNG)
+                  _ShareOptionCard(
+                    key: const Key('share_format_image_card'),
+                    title: l10n.shareOptionImageTitle,
+                    description: l10n.shareOptionImageDesc,
+                    icon: Icons.image_outlined,
+                    isSelected: _selectedFormat == ContactShareFormat.image,
+                    onTap: _isSharing
+                        ? null
+                        : () => setState(
+                            () => _selectedFormat = ContactShareFormat.image,
+                          ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Option 3: PDF Summary Sheet
+                  _ShareOptionCard(
+                    key: const Key('share_format_pdf_card'),
+                    title: l10n.shareOptionPdfTitle,
+                    description: l10n.shareOptionPdfDesc,
+                    icon: Icons.picture_as_pdf_outlined,
+                    isSelected: _selectedFormat == ContactShareFormat.pdf,
+                    onTap: _isSharing
+                        ? null
+                        : () => setState(
+                            () => _selectedFormat = ContactShareFormat.pdf,
+                          ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Actions
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          key: const Key('share_cancel_button'),
+                          onPressed: _isSharing
+                              ? null
+                              : () => Navigator.of(context).pop(),
+                          child: Text(l10n.cancel),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: FilledButton.icon(
+                          key: const Key('share_confirm_button'),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: colorScheme.primary,
+                            foregroundColor: colorScheme.onPrimary,
+                            padding: const EdgeInsets.symmetric(vertical: 14.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14.0),
+                            ),
+                          ),
+                          onPressed: _isSharing ? null : _handleShare,
+                          icon: _isSharing
+                              ? SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.2,
+                                    color: colorScheme.onPrimary,
+                                  ),
+                                )
+                              : const Icon(Icons.share_rounded, size: 20),
+                          label: Text(
+                            l10n.shareContactAction,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -393,12 +412,15 @@ class _ShareOptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     final borderColor = isSelected
-        ? AppColors.emeraldPrimary
+        ? theme.colorScheme.primary
         : theme.colorScheme.outlineVariant;
     final bgColor = isSelected
-        ? AppColors.emeraldPrimary.withValues(alpha: 0.08)
+        ? theme.colorScheme.primary.withValues(
+            alpha: isDark ? 0.12 : 0.06,
+          )
         : theme.colorScheme.surfaceContainer;
 
     return InkWell(
@@ -421,7 +443,9 @@ class _ShareOptionCard extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? AppColors.emeraldPrimary.withValues(alpha: 0.18)
+                    ? theme.colorScheme.primary.withValues(
+                        alpha: isDark ? 0.22 : 0.12,
+                      )
                     : theme.colorScheme.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(10.0),
               ),
@@ -429,7 +453,7 @@ class _ShareOptionCard extends StatelessWidget {
                 icon,
                 size: 22,
                 color: isSelected
-                    ? AppColors.emeraldPrimary
+                    ? theme.colorScheme.primary
                     : theme.colorScheme.onSurfaceVariant,
               ),
             ),
@@ -443,7 +467,7 @@ class _ShareOptionCard extends StatelessWidget {
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: isSelected
-                          ? AppColors.emeraldPrimary
+                          ? theme.colorScheme.primary
                           : theme.colorScheme.onSurface,
                     ),
                   ),
@@ -463,7 +487,7 @@ class _ShareOptionCard extends StatelessWidget {
                   ? Icons.radio_button_checked_rounded
                   : Icons.radio_button_off_rounded,
               color: isSelected
-                  ? AppColors.emeraldPrimary
+                  ? theme.colorScheme.primary
                   : theme.colorScheme.outline,
             ),
           ],

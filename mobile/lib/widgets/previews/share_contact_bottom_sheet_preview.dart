@@ -3,20 +3,36 @@ import 'dart:async';
 import 'package:flutter/widget_previews.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_theme.dart';
 import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
-import 'package:tax_code_flutter/services/brightness_service.dart';
-import 'package:tax_code_flutter/widgets/barcode_bottom_sheet.dart';
+import 'package:tax_code_flutter/services/contact_card_image_service.dart';
+import 'package:tax_code_flutter/services/contact_pdf_service.dart';
+import 'package:tax_code_flutter/services/sharing_service.dart';
+import 'package:tax_code_flutter/widgets/share/share_contact_bottom_sheet.dart';
 
-/// Interactive preview for [BarcodeBottomSheet] (Task 7.1).
-///
-/// Showcases high-contrast 1D Barcode (Code 128) and 2D QR Code rendering,
-/// brightness service integration, copy functionality, and theme adaptability.
-class BarcodeBottomSheetPreview extends StatefulWidget {
-  @Preview(name: 'Barcode & QR Bottom Sheet')
-  const BarcodeBottomSheetPreview({
+class _PreviewSharingService implements SharingServiceAbstract {
+  const _PreviewSharingService();
+
+  @override
+  Future<ShareResult> share({required String text}) async =>
+      const ShareResult('', ShareResultStatus.success);
+
+  @override
+  Future<ShareResult> shareFile({
+    required String filePath,
+    required String mimeType,
+    String? subject,
+  }) async => const ShareResult('', ShareResultStatus.success);
+}
+
+/// Interactive standalone preview for [ShareContactBottomSheet] (Tessera PNG, PDF, Text).
+class ShareContactBottomSheetPreview extends StatefulWidget {
+  @Preview(name: 'Share Contact Bottom Sheet')
+  const ShareContactBottomSheetPreview({
     super.key,
     this.locale = const Locale('it'),
     this.isDarkMode = false,
@@ -26,34 +42,14 @@ class BarcodeBottomSheetPreview extends StatefulWidget {
   final bool isDarkMode;
 
   @override
-  State<BarcodeBottomSheetPreview> createState() =>
-      _BarcodeBottomSheetPreviewState();
+  State<ShareContactBottomSheetPreview> createState() =>
+      _ShareContactBottomSheetPreviewState();
 }
 
-class _MockBrightnessService implements BrightnessServiceAbstract {
-  bool isMaxBrightness = false;
-
-  @override
-  Future<void> setMaxBrightness() async {
-    isMaxBrightness = true;
-  }
-
-  @override
-  Future<void> resetBrightness() async {
-    isMaxBrightness = false;
-  }
-}
-
-class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
+class _ShareContactBottomSheetPreviewState
+    extends State<ShareContactBottomSheetPreview> {
   late bool _isDarkMode;
   int _selectedContactIndex = 0;
-  final _mockBrightnessService = _MockBrightnessService();
-
-  @override
-  void initState() {
-    super.initState();
-    _isDarkMode = widget.isDarkMode;
-  }
 
   static final List<Contact> _sampleContacts = [
     Contact(
@@ -71,37 +67,53 @@ class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
       firstName: 'Laura',
       lastName: 'Neri',
       gender: 'F',
-      birthDate: DateTime(1980),
-      birthPlace: const Birthplace(name: 'Torino', state: 'TO', code: 'L219'),
-      taxCode: 'NRLMRA80A41L219K',
+      birthDate: DateTime(1990, 8, 20),
+      birthPlace: const Birthplace(name: 'Milano', state: 'MI', code: 'F205'),
+      taxCode: 'NRLMRA90M60F205K',
       listIndex: 1,
     ),
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _isDarkMode = widget.isDarkMode;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final contact = _sampleContacts[_selectedContactIndex];
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      locale: widget.locale,
-      localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Provider<BrightnessServiceAbstract>.value(
-        value: _mockBrightnessService,
-        child: Builder(
+    return MultiProvider(
+      providers: [
+        Provider<SharingServiceAbstract>.value(
+          value: const _PreviewSharingService(),
+        ),
+        Provider<ContactCardImageServiceAbstract>.value(
+          value: const ContactCardImageService(),
+        ),
+        Provider<ContactPdfServiceAbstract>.value(
+          value: const ContactPdfService(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
+        locale: widget.locale,
+        localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Builder(
           builder: (context) {
             final theme = Theme.of(context);
-            final colorScheme = theme.colorScheme;
+            final l10n = context.l10n;
 
             return Scaffold(
-              backgroundColor: colorScheme.surface,
+              backgroundColor: theme.scaffoldBackgroundColor,
               appBar: AppBar(
                 title: Text(
-                  context.l10n.barcodeQrCode,
+                  l10n.shareContactTitle,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -114,8 +126,8 @@ class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
                           : Icons.dark_mode_rounded,
                     ),
                     tooltip: _isDarkMode
-                        ? context.l10n.switchToLightMode
-                        : context.l10n.switchToDarkMode,
+                        ? l10n.switchToLightMode
+                        : l10n.switchToDarkMode,
                     onPressed: () => setState(() => _isDarkMode = !_isDarkMode),
                   ),
                 ],
@@ -124,14 +136,17 @@ class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
                 padding: EdgeInsets.zero,
                 children: [
                   // Controls Toolbar
-                  Padding(
+                  Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
+                      horizontal: 16.0,
+                      vertical: 10.0,
                     ),
+                    color: _isDarkMode
+                        ? AppColors.darkSurfaceContainerLowest
+                        : AppColors.lightSurfaceContainerLow,
                     child: Wrap(
                       spacing: 12,
-                      runSpacing: 10,
+                      runSpacing: 8,
                       alignment: WrapAlignment.center,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
@@ -155,13 +170,12 @@ class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
                         ),
                         FilledButton.icon(
                           icon: const Icon(Icons.open_in_browser_rounded),
-                          label: Text(context.l10n.openModal),
+                          label: Text(l10n.openAsBottomSheet),
                           onPressed: () {
                             unawaited(
-                              BarcodeBottomSheet.show(
+                              ShareContactBottomSheet.show(
                                 context,
                                 contact: contact,
-                                brightnessService: _mockBrightnessService,
                               ),
                             );
                           },
@@ -178,10 +192,7 @@ class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
                       horizontal: 12,
                       vertical: 16,
                     ),
-                    child: BarcodeBottomSheet(
-                      contact: contact,
-                      brightnessService: _mockBrightnessService,
-                    ),
+                    child: ShareContactBottomSheet(contact: contact),
                   ),
                 ],
               ),

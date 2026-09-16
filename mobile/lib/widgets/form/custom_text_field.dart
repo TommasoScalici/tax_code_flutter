@@ -77,10 +77,9 @@ class CustomTextField extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   '*',
-                  style: TextStyle(
+                  style: theme.textTheme.labelMedium?.copyWith(
                     color: colorScheme.primary,
                     fontWeight: FontWeight.w800,
-                    fontSize: 14,
                   ),
                 ),
               ],

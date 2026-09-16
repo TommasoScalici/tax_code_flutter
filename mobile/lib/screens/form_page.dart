@@ -8,6 +8,7 @@ import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/utils/error_dialog_helper.dart';
@@ -256,7 +257,7 @@ class _FormViewState extends State<_FormView> {
               if (controller.isLoading)
                 const ModalBarrier(
                   dismissible: false,
-                  color: Colors.black26,
+                  color: AppColors.modalBarrier,
                 ),
               if (controller.isLoading)
                 const Center(
@@ -267,7 +268,7 @@ class _FormViewState extends State<_FormView> {
               if (controller.downloadStep != null &&
                   _birthplaceFocusNode.hasFocus)
                 ColoredBox(
-                  color: Colors.black54,
+                  color: AppColors.modalBarrier,
                   child: Center(
                     child: _SyncProgressOverlay(
                       controller: controller,

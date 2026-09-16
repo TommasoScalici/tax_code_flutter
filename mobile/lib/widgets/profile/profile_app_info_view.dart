@@ -77,13 +77,7 @@ class ProfileAppInfoView extends StatelessWidget {
                         color: theme.colorScheme.surface,
                         borderRadius: BorderRadius.circular(14.0),
                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(
-                              alpha: isDark ? 0.35 : 0.08,
-                            ),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
+                          AppColors.shadowElevated(isDark),
                         ],
                       ),
                       child: SvgPicture.asset(
@@ -106,14 +100,18 @@ class ProfileAppInfoView extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.emeraldContainerDark,
+                        color: theme.colorScheme.primaryContainer,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppColors.emeraldBorder),
+                        border: Border.all(
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: isDark ? 0.25 : 0.35,
+                          ),
+                        ),
                       ),
                       child: Text(
                         'v${packageInfo.version} (${packageInfo.buildNumber})',
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: AppColors.emeraldPrimary,
+                          color: theme.colorScheme.onPrimaryContainer,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -141,7 +139,7 @@ class ProfileAppInfoView extends StatelessWidget {
                   color: theme.colorScheme.surfaceContainer,
                   borderRadius: BorderRadius.circular(20.0),
                   border: Border.all(
-                    color: AppColors.warning.withValues(alpha: 0.35),
+                    color: AppColors.warningBorder,
                   ),
                 ),
                 child: Row(
@@ -201,10 +199,10 @@ class ProfileAppInfoView extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.security_rounded,
                           size: 20,
-                          color: AppColors.emeraldPrimary,
+                          color: theme.colorScheme.primary,
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -254,21 +252,27 @@ class ProfileAppInfoView extends StatelessWidget {
               OutlinedButton.icon(
                 key: const Key('profile_open_online_policy_button'),
                 onPressed: () => _openUrl(policyUrl),
-                icon: const Icon(
+                icon: Icon(
                   Icons.open_in_new_rounded,
                   size: 18,
-                  color: AppColors.emeraldPrimary,
+                  color: theme.colorScheme.primary,
                 ),
                 label: Text(
                   l10n.readFullPrivacyPolicy,
                   style: theme.textTheme.labelLarge?.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: AppColors.emeraldPrimary,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: AppColors.emeraldContainerDark,
-                  side: const BorderSide(color: AppColors.emeraldBorder),
+                  backgroundColor: theme.colorScheme.primaryContainer.withValues(
+                    alpha: isDark ? 0.3 : 0.4,
+                  ),
+                  side: BorderSide(
+                    color: theme.colorScheme.primary.withValues(
+                      alpha: isDark ? 0.3 : 0.4,
+                    ),
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.0),
                   ),
@@ -321,7 +325,7 @@ class ProfileAppInfoView extends StatelessWidget {
         Icon(
           icon,
           size: 18,
-          color: AppColors.emeraldPrimary,
+          color: theme.colorScheme.primary,
         ),
         const SizedBox(width: 12),
         Expanded(

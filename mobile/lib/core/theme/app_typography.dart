@@ -80,7 +80,7 @@ abstract final class AppTypography {
       fontWeight: fontWeight,
       letterSpacing: letterSpacing,
       height: 1.3,
-      color: color ?? AppColors.emeraldPrimary,
+      color: color,
     );
   }
 
@@ -95,12 +95,12 @@ abstract final class AppTypography {
       fontWeight: fontWeight,
       letterSpacing: 1.6,
       height: 1.2,
-      color: color ?? AppColors.emeraldPrimary,
+      color: color,
     );
   }
 
   /// Style for human-readable text beneath optical barcodes.
-  static TextStyle barcodeReadableText({Color color = Colors.black}) {
+  static TextStyle barcodeReadableText({Color color = AppColors.opticalBlack}) {
     return _fontJetBrainsMono(
       fontSize: 13.0,
       fontWeight: FontWeight.w700,

@@ -3,6 +3,7 @@ import 'package:flutter/widget_previews.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_theme.dart';
 import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter/screens/welcome_screen.dart';
@@ -94,11 +95,7 @@ class _WelcomeScreenPreviewState extends State<WelcomeScreenPreview> {
                     color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
                   ),
                   boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: _isDarkMode ? 0.4 : 0.08),
-                      blurRadius: 24,
-                      offset: const Offset(0, 8),
-                    ),
+                    AppColors.shadowPreviewCard(_isDarkMode),
                   ],
                 ),
                 clipBehavior: Clip.antiAlias,

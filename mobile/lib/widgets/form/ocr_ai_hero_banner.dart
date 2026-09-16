@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// An attention-grabbing hero card promoting optical OCR / AI scanning
@@ -77,7 +78,7 @@ class OcrAiHeroBanner extends StatelessWidget {
 
             // Interactive surface
             Material(
-              color: Colors.transparent,
+              color: AppColors.transparent,
               child: InkWell(
                 key: const Key('ocr_ai_hero_banner_ink_well'),
                 onTap: onScanPressed,

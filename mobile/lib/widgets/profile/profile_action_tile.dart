@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 
 /// An interactive list tile adhering to the Stitch grouped card container style.
 class ProfileActionTile extends StatelessWidget {
@@ -44,7 +45,7 @@ class ProfileActionTile extends StatelessWidget {
     final isEnabled = onTap != null;
 
     return Material(
-      color: Colors.transparent,
+      color: AppColors.transparent,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16.0),

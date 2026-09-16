@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
@@ -87,7 +88,7 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
             : null,
       ),
       child: Material(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           key: const Key('tax_code_live_preview_inkwell'),

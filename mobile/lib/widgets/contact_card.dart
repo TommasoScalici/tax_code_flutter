@@ -91,15 +91,11 @@ class ContactCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: cardBorderColor),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.30 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
+          AppColors.shadowCard(isDark),
         ],
       ),
       child: Material(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         borderRadius: BorderRadius.circular(20),
         clipBehavior: Clip.antiAlias,
         child: Padding(
@@ -213,7 +209,9 @@ class ContactCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: AppColors.emeraldBorder,
+                          color: colorScheme.primary.withValues(
+                            alpha: isDark ? 0.25 : 0.35,
+                          ),
                           width: 1.2,
                         ),
                       ),
@@ -277,7 +275,7 @@ class ContactCard extends StatelessWidget {
                   ),
                   Text(
                     '•',
-                    style: TextStyle(
+                    style: theme.textTheme.bodySmall?.copyWith(
                       color: colorScheme.outlineVariant,
                       fontWeight: FontWeight.w900,
                     ),
