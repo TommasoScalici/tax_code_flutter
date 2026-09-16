@@ -8,8 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_typography.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
+import 'package:tax_code_flutter/widgets/share/share_contact_bottom_sheet.dart';
 
 /// Modal bottom sheet displaying high-contrast 1D Barcode (Code 128) and 2D QR Code
 /// for the Italian Tax Code, strictly styled according to the Stitch design specifications.
@@ -91,7 +92,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = context.l10n;
     final isDark = theme.brightness == Brightness.dark;
 
     final sheetBgColor = isDark
@@ -441,27 +442,65 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Dismiss Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 48,
-                    child: OutlinedButton.icon(
-                      key: const Key('barcode_bottom_sheet_close_button'),
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.expand_more_rounded, size: 20),
-                      label: Text(
-                        l10n.close,
-                        style: const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
+                  // Action Buttons Row: Close & Share
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 48,
+                          child: OutlinedButton.icon(
+                            key: const Key('barcode_bottom_sheet_close_button'),
+                            onPressed: () => Navigator.pop(context),
+                            icon:
+                                const Icon(Icons.expand_more_rounded, size: 20),
+                            label: Text(
+                              l10n.close,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w700),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              side: BorderSide(
+                                color: colorScheme.outlineVariant
+                                    .withValues(alpha: 0.5),
+                              ),
+                            ),
+                          ),
                         ),
-                        side: BorderSide(
-                          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: SizedBox(
+                          height: 48,
+                          child: FilledButton.icon(
+                            key: const Key('barcode_bottom_sheet_share_button'),
+                            onPressed: () {
+                              unawaited(
+                                ShareContactBottomSheet.show(
+                                  context,
+                                  contact: widget.contact,
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.share_rounded, size: 18),
+                            label: Text(
+                              l10n.share,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w700),
+                            ),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: AppColors.emeraldPrimary,
+                              foregroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),

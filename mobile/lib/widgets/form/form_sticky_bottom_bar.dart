@@ -1,5 +1,5 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A sticky bottom action bar containing the primary full-width "Salva Codice" button,
 /// styled with emerald primary fill, calculate icon, and loading state.
@@ -13,13 +13,13 @@ class FormStickyBottomBar extends StatelessWidget {
   /// Whether the save button is enabled.
   final bool isEnabled;
 
-  /// Whether a save or network operation is in progress.
+  /// Whether the button is currently in a loading state.
   final bool isLoading;
 
-  /// Optional custom label text.
+  /// Optional custom label text for the save action button.
   final String? labelText;
 
-  /// Optional custom icon. Defaults to [Icons.calculate_rounded].
+  /// Optional leading icon for the save button.
   final IconData icon;
 
   const FormStickyBottomBar({
@@ -36,10 +36,10 @@ class FormStickyBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final isDark = theme.brightness == Brightness.dark;
 
-    final resolvedLabel = labelText ?? l10n?.saveCode ?? 'Salva Codice';
+    final resolvedLabel = labelText ?? l10n.saveCode;
 
     final topBorderColor = colorScheme.outlineVariant.withValues(
       alpha: isDark ? 0.40 : 0.60,

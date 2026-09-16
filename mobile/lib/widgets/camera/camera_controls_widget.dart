@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 class CameraControlsWidget extends StatelessWidget {
   final Future<void> Function() onMainButtonPressed;
@@ -15,7 +15,7 @@ class CameraControlsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<CameraPageController>();
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = context.l10n;
     final colorScheme = Theme.of(context).colorScheme;
     final safeAreaPadding = MediaQuery.paddingOf(context);
 

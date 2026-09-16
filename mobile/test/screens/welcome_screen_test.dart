@@ -142,11 +142,13 @@ void main() {
         mockAuthService: mockAuthService,
       );
 
-      await tester.tap(find.text('Continue as guest'));
+      final guestBtn = find.text('Continue as guest');
+      await tester.ensureVisible(guestBtn);
+      await tester.tap(guestBtn);
       await tester.pumpAndSettle();
 
       expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('Sign-in failed. Please try again.'), findsOneWidget);
+      expect(find.text('Sign in failed. Please try again.'), findsOneWidget);
     });
 
     testWidgets('tapping terms link opens ProfileBottomSheet with legal info', (tester) async {

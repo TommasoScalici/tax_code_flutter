@@ -34,6 +34,7 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
         builder: (context) {
           final theme = Theme.of(context);
           final colorScheme = theme.colorScheme;
+          final l10n = context.l10n;
 
           return Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
@@ -58,13 +59,13 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
                 child: Scaffold(
                   backgroundColor: theme.scaffoldBackgroundColor,
                   appBar: AppBar(
-                    title: const Text('Theme Showcase'),
+                    title: Text(l10n.themeShowcase),
                     actions: [
                       IconButton(
                         icon: Icon(
                           _isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
                         ),
-                        tooltip: _isDarkMode ? 'Passa a tema chiaro' : 'Passa a tema scuro',
+                        tooltip: _isDarkMode ? l10n.switchToLightMode : l10n.switchToDarkMode,
                         onPressed: () {
                           setState(() {
                             _isDarkMode = !_isDarkMode;
@@ -76,7 +77,7 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
                   floatingActionButton: FloatingActionButton.extended(
                     onPressed: () {},
                     icon: const Icon(Icons.add),
-                    label: const Text('NUOVO CODICE'),
+                    label: Text(l10n.addCode.toUpperCase()),
                   ),
                   body: ListView(
                     padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 96.0),
@@ -151,16 +152,16 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
                       ),
                       const SizedBox(height: 12),
                       SegmentedButton<String>(
-                        segments: const [
+                        segments: [
                           ButtonSegment(
                             value: 'M',
-                            label: Text('Maschile (M)'),
-                            icon: Icon(Icons.male),
+                            label: Text(l10n.genderMale),
+                            icon: const Icon(Icons.male),
                           ),
                           ButtonSegment(
                             value: 'F',
-                            label: Text('Femminile (F)'),
-                            icon: Icon(Icons.female),
+                            label: Text(l10n.genderFemale),
+                            icon: const Icon(Icons.female),
                           ),
                         ],
                         selected: {_selectedGender},
@@ -181,13 +182,13 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
                       FilledButton.icon(
                         onPressed: () {},
                         icon: const Icon(Icons.calculate),
-                        label: const Text('CALCOLA E SALVA'),
+                        label: Text(l10n.saveCode.toUpperCase()),
                       ),
                       const SizedBox(height: 10),
                       OutlinedButton.icon(
                         onPressed: () {},
                         icon: const Icon(Icons.qr_code_2),
-                        label: const Text('MOSTRA BARCODE'),
+                        label: Text(l10n.tooltipShowBarcode.toUpperCase()),
                       ),
                       const SizedBox(height: 24),
 

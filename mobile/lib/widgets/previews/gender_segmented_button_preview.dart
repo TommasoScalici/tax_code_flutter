@@ -34,6 +34,7 @@ class _GenderSegmentedButtonPreviewState
       home: Builder(
         builder: (context) {
           final theme = Theme.of(context);
+          final l10n = context.l10n;
 
           return Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
@@ -59,7 +60,7 @@ class _GenderSegmentedButtonPreviewState
                                   : Icons.light_mode_rounded,
                               size: 16,
                             ),
-                            label: Text(_isDarkMode ? 'Scuro' : 'Chiaro'),
+                            label: Text(_isDarkMode ? l10n.themeDark : l10n.themeLight),
                             onPressed: () {
                               setState(() {
                                 _isDarkMode = !_isDarkMode;
@@ -67,7 +68,7 @@ class _GenderSegmentedButtonPreviewState
                             },
                           ),
                           FilterChip(
-                            label: const Text('Simula Errore'),
+                            label: Text(l10n.simulateError),
                             selected: _showError,
                             onSelected: (val) {
                               setState(() {
@@ -87,12 +88,12 @@ class _GenderSegmentedButtonPreviewState
                           _selectedGender = newVal;
                         });
                       },
-                      errorText: _showError ? 'Il campo è obbligatorio' : null,
+                      errorText: _showError ? l10n.required : null,
                     ),
 
                     const SizedBox(height: 20),
                     Text(
-                      'Valore selezionato: ${_selectedGender ?? "Nessuno"}',
+                      l10n.selectedValue(_selectedGender ?? l10n.none),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),

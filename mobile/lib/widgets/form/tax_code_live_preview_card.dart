@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tax_code_flutter/core/theme/app_typography.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A card that dynamically previews the calculated Italian Tax Code (Codice Fiscale)
 /// in real time as the user fills out the form.
@@ -27,7 +27,7 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
 
   bool get _isComplete => taxCode != null && taxCode!.trim().length == 16;
 
-  Future<void> _copyCode(BuildContext context, String code, AppLocalizations? l10n) async {
+  Future<void> _copyCode(BuildContext context, String code, AppLocalizations l10n) async {
     onCopied?.call();
 
     try {
@@ -37,27 +37,28 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
       // Ignored in test / headless environments
     }
 
-    if (context.mounted && l10n != null) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
         SnackBar(
           content: Text(l10n.taxCodeCopied),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
         ),
       );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final isDark = theme.brightness == Brightness.dark;
 
-    final resolvedTitle = l10n?.taxCodeLivePreviewTitle ?? 'Codice Calcolato in Anteprima';
-    final resolvedHint = l10n?.taxCodeLivePreviewHint ?? 'Compila tutti i campi per il calcolo automatico';
+    final resolvedTitle = l10n.taxCodeLivePreviewTitle;
+    final resolvedHint = l10n.taxCodeLivePreviewHint;
 
     final effectiveCode = (taxCode != null && taxCode!.isNotEmpty) ? taxCode!.toUpperCase() : null;
 
@@ -160,7 +161,7 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
                       size: 18,
                       color: colorScheme.primary,
                     ),
-                    tooltip: l10n?.copyTaxCode,
+                    tooltip: l10n.copyTaxCode,
                     onPressed: () => _copyCode(context, effectiveCode!, l10n),
                   ),
               ],

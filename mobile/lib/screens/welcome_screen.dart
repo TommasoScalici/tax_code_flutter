@@ -4,8 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
-import 'package:tax_code_flutter/l10n/app_localizations_it.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/profile_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
@@ -37,7 +36,7 @@ class WelcomeScreen extends StatelessWidget {
     if (!context.mounted) return;
 
     if (!success && authService.errorKey != null) {
-      final l10n = AppLocalizations.of(context) ?? AppLocalizationsIt();
+      final l10n = context.l10n;
       final message = switch (authService.errorKey) {
         'networkError' => l10n.networkError,
         'reauthFailed' => l10n.reauthFailed,
@@ -65,7 +64,7 @@ class WelcomeScreen extends StatelessWidget {
     if (!context.mounted) return;
 
     if (!success && authService.errorKey != null) {
-      final l10n = AppLocalizations.of(context) ?? AppLocalizationsIt();
+      final l10n = context.l10n;
       final message = switch (authService.errorKey) {
         'networkError' => l10n.networkError,
         _ => l10n.signInFailed,
@@ -83,7 +82,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context) ?? AppLocalizationsIt();
+    final l10n = context.l10n;
     final isDark = theme.brightness == Brightness.dark;
     final authService = context.watch<AuthService>();
     final isLoading = authService.isLoading;

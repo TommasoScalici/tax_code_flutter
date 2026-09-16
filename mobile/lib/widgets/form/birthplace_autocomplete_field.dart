@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
 import 'package:shared/models/birthplace.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A modern autocomplete field for Italian municipalities and foreign countries,
 /// featuring location pin icon, clear button, cadastral code badge, and helper text.
@@ -10,36 +10,40 @@ class BirthplaceAutocompleteField extends StatelessWidget {
   /// Reactive form control name when used inside [ReactiveForm].
   final String? formControlName;
 
-  /// External focus node to coordinate scroll / keyboard behaviour.
+  /// Direct reactive control instance.
+  final AbstractControl<dynamic>? formControl;
+
+  /// External focus node to synchronize with page scrolling.
   final FocusNode? focusNode;
 
-  /// Custom label text above the field.
+  /// Optional custom label text.
   final String? labelText;
 
-  /// Whether the field requires input (displays asterisk).
-  final bool isRequired;
-
-  /// List of available birthplaces for autocompletion.
+  /// Full collection of birthplaces for filtering.
   final List<Birthplace> birthplaces;
 
-  /// Standalone selected birthplace value.
-  final Birthplace? value;
-
-  /// Standalone callback when selection changes.
+  /// Callback when a birthplace is selected.
   final ValueChanged<Birthplace?>? onChanged;
 
-  /// Standalone error text.
+  /// Current value when used in standalone mode without ReactiveForms.
+  final Birthplace? value;
+
+  /// Whether the field is required (displays asterisk when true).
+  final bool isRequired;
+
+  /// Custom error message to display in standalone mode.
   final String? errorText;
 
   const BirthplaceAutocompleteField({
     super.key,
     this.formControlName,
+    this.formControl,
     this.focusNode,
     this.labelText,
-    this.isRequired = true,
-    required this.birthplaces,
-    this.value,
+    this.birthplaces = const [],
     this.onChanged,
+    this.value,
+    this.isRequired = true,
     this.errorText,
   });
 
@@ -47,16 +51,15 @@ class BirthplaceAutocompleteField extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final isDark = theme.brightness == Brightness.dark;
 
-    final resolvedLabel = labelText ?? l10n?.birthPlace ?? 'Luogo di Nascita';
-    final placeholder = l10n?.birthplacePlaceholder ?? 'Comune o Stato estero';
-    final helperText = l10n?.birthplaceHelperText ??
-        'Digita il nome del comune per la ricerca rapida del codice catastale (es. H501).';
+    final resolvedLabel = labelText ?? l10n.birthPlace;
+    final placeholder = l10n.birthplacePlaceholder;
+    final helperText = l10n.birthplaceHelperText;
 
     // Standalone mode if formControlName is omitted
-    if (formControlName == null) {
+    if (formControlName == null && formControl == null) {
       return _StandaloneBirthplaceAutocomplete(
         focusNode: focusNode,
         birthplaces: birthplaces,
@@ -111,7 +114,7 @@ class BirthplaceAutocompleteField extends StatelessWidget {
           formControlName: formControlName,
           focusNode: focusNode,
           validationMessages: {
-            ValidationMessage.required: (error) => l10n?.required ?? 'Campo obbligatorio',
+            ValidationMessage.required: (error) => l10n.required,
           },
           optionsBuilder: (textEditingValue) {
             if (textEditingValue.text.length < 2) {
@@ -134,9 +137,7 @@ class BirthplaceAutocompleteField extends StatelessWidget {
               builder: (context, currentControl, child) {
                 final hasError =
                     currentControl.invalid && currentControl.touched;
-                final fieldError = hasError
-                    ? (l10n?.required ?? 'Campo obbligatorio')
-                    : null;
+                final fieldError = hasError ? l10n.required : null;
 
                 final borderColor = hasError
                     ? colorScheme.error

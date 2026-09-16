@@ -12,6 +12,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountAndSettings => 'Account & Settings';
 
   @override
+  String actionLabel(String action) {
+    return 'Action: $action';
+  }
+
+  @override
+  String get addCode => 'Add Code';
+
+  @override
   String appInfoSubtitle(String version) {
     return 'Version $version • Legal notes and Privacy Policy';
   }
@@ -84,6 +92,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cardActionEdit => 'Edit';
 
   @override
+  String get cardBelfioreLabel => 'BELFIORE CODE';
+
+  @override
+  String get cardBornOnLabel => 'BORN ON';
+
+  @override
+  String get cardCitizenFallback => 'CITIZEN';
+
+  @override
+  String get cardImageFooter =>
+      'Generated offline with the Tax Code app by Tommaso Scalici';
+
+  @override
+  String get cardMunicipalityCountryLabel => 'MUNICIPALITY / COUNTRY';
+
+  @override
+  String get cardPersonalCardHeader => 'PERSONAL CARD';
+
+  @override
+  String get cardQrCodeLabel => 'QR CODE';
+
+  @override
+  String get cardRepublicHeader => 'ITALIAN REPUBLIC';
+
+  @override
   String get close => 'Close';
 
   @override
@@ -107,6 +140,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cloudSyncOn => 'Cloud sync active';
 
   @override
+  String codeSavedSuccess(String code) {
+    return 'Tax code saved successfully: $code';
+  }
+
+  @override
+  String get contactFallback => 'Contact';
+
+  @override
   String get continueAsGuest => 'Continue as guest';
 
   @override
@@ -117,6 +158,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copyTaxCode => 'Copy tax code';
+
+  @override
+  String get createMode => 'Create Mode';
 
   @override
   String get dashboardTitle => 'My Codes';
@@ -160,10 +204,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edit => 'Edit';
 
   @override
-  String get editTaxCodeTitle => 'Edit Tax Code';
+  String get editMode => 'Edit Mode';
 
   @override
-  String get addCode => 'Add Code';
+  String get editTaxCodeTitle => 'Edit Tax Code';
 
   @override
   String get emptyDashboardDescription =>
@@ -182,6 +226,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emptySearchTitle => 'No codes found';
+
+  @override
+  String get enabledStatus => 'Enabled';
 
   @override
   String get error => 'Error';
@@ -230,7 +277,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportSuccess => 'Export file ready for saving or sharing.';
 
   @override
+  String get extended => 'Extended';
+
+  @override
   String get featureComingSoon => 'Feature coming soon';
+
+  @override
+  String get filterComplete => 'Complete';
+
+  @override
+  String get filterEmpty => 'Empty';
+
+  @override
+  String get filterPartial => 'Partial';
 
   @override
   String get firstName => 'First Name';
@@ -272,6 +331,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastNamePlaceholder => 'e.g. Smith';
 
   @override
+  String get loadingStatus => 'Loading';
+
+  @override
   String get networkError =>
       'No internet connection. Please check your network and try again.';
 
@@ -280,6 +342,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get newTaxCodeTooltip => 'Create or scan a new tax code';
+
+  @override
+  String get none => 'None';
 
   @override
   String get ocrHeroButton => 'Scan';
@@ -292,10 +357,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ocrHeroTitle => 'Smart Camera Scan';
 
   @override
+  String get ocrScanSuccess =>
+      'Data successfully scanned with AI and populated!';
+
+  @override
+  String get openAsBottomSheet => 'Open as Bottom Sheet';
+
+  @override
+  String get openModal => 'Open Modal';
+
+  @override
   String get openSettings => 'Open Settings';
 
   @override
   String get packageName => 'Package Name';
+
+  @override
+  String get pdfCadastralCodeLabel => 'Cadastral Code (Belfiore)';
+
+  @override
+  String pdfGeneratedOnFooter(String date) {
+    return 'Generated on $date with the Tax Code app by Tommaso Scalici';
+  }
+
+  @override
+  String get pdfOpticalCodesHeader => 'OPTICAL CODES FOR AUTOMATED READING';
+
+  @override
+  String get pdfPersonalDataHeader => 'PERSONAL DETAILS';
+
+  @override
+  String get pdfPersonalUseBadge => 'PERSONAL USE';
+
+  @override
+  String get pdfSummarySubtitle => 'Personal Summary Sheet';
+
+  @override
+  String get pdfUnofficialDisclaimer => 'Unofficial copy for personal use';
 
   @override
   String get privacyDataOwnership => 'Data Ownership';
@@ -345,7 +443,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get readFullPrivacyPolicy => 'Read Full Privacy Policy Online';
 
   @override
+  String get reauthFailed => 'Re-authentication failed. Please try again.';
+
+  @override
   String get required => 'This field is required';
+
+  @override
+  String get returnToDashboard => 'Return to dashboard';
 
   @override
   String get saveCode => 'Save Code';
@@ -361,6 +465,9 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get savingCodeInProgress => 'Saving tax code...';
 
   @override
   String get scanFailedErrorMessage =>
@@ -387,6 +494,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sectionLegalAndAppInfo => 'Legal Information';
 
   @override
+  String selectedValue(String value) {
+    return 'Selected value: $value';
+  }
+
+  @override
   String get serviceUnavailable =>
       'The service is temporarily unavailable. Please try again later.';
 
@@ -398,19 +510,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String get share => 'Share';
 
   @override
+  String shareCardSubject(String name) {
+    return 'Tax Code Card - $name';
+  }
+
+  @override
+  String get shareContactAction => 'Share';
+
+  @override
+  String get shareContactSubtitle => 'Choose how to share the card or details';
+
+  @override
+  String get shareContactSuccess => 'File ready for sharing or saving.';
+
+  @override
+  String get shareContactTitle => 'Share code';
+
+  @override
+  String get shareOptionImageDesc =>
+      'Full HD graphic card with barcode and QR Code.';
+
+  @override
+  String get shareOptionImageTitle => 'Card image (PNG)';
+
+  @override
+  String get shareOptionPdfDesc =>
+      'Printable A4 document with personal details and optical codes.';
+
+  @override
+  String get shareOptionPdfTitle => 'Summary sheet (PDF)';
+
+  @override
+  String get shareOptionTextDesc => 'Send only the tax code as plain text.';
+
+  @override
+  String get shareOptionTextTitle => 'Quick text';
+
+  @override
+  String sharePdfSubject(String name) {
+    return 'Tax Code Summary Sheet - $name';
+  }
+
+  @override
   String get showTerms => 'View Terms & Conditions';
 
   @override
-  String get signInFailed => 'Sign-in failed. Please try again.';
-
-  @override
-  String get reauthFailed => 'Re-authentication failed. Please try again.';
+  String get signInFailed => 'Sign in failed. Please try again.';
 
   @override
   String get signOut => 'Sign Out';
 
   @override
   String get signOutSubtitle => 'Disconnect Google profile from this device';
+
+  @override
+  String get simulateError => 'Simulate Error';
 
   @override
   String get stepBirthplacesChecking => 'Checking birthplaces database...';
@@ -427,6 +581,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get switchTheme => 'Toggle theme';
+
+  @override
+  String get switchToDarkMode => 'Switch to dark mode';
+
+  @override
+  String get switchToLightMode => 'Switch to light mode';
 
   @override
   String syncSavedCodesCount(int count) {
@@ -455,6 +615,15 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get termsAndCondition =>
       'By proceeding, you agree to our Terms and Conditions.';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeShowcase => 'Theme Showcase';
 
   @override
   String get tooltipConfirmPicture => 'Confirm picture';

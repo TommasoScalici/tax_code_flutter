@@ -89,6 +89,7 @@ class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
         builder: (context) {
           final theme = Theme.of(context);
           final colorScheme = theme.colorScheme;
+          final l10n = context.l10n;
 
           return Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
@@ -120,7 +121,7 @@ class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
                             },
                           ),
                           ChoiceChip(
-                            label: const Text('Ospite (Guest)'),
+                            label: Text(l10n.guestBadge),
                             selected: _isGuestMode,
                             onSelected: (val) {
                               if (val) {
@@ -196,9 +197,9 @@ class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
                           },
                           onProfileTap: () {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Tap su Profilo'),
-                                duration: Duration(seconds: 1),
+                              SnackBar(
+                                content: Text(l10n.profilePageTitle),
+                                duration: const Duration(seconds: 1),
                               ),
                             );
                           },

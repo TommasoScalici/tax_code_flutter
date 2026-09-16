@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A modern, accessible Material 3 segmented button for selecting gender
 /// ('M' for Male, 'F' for Female).
@@ -95,14 +95,14 @@ class _GenderSegmentedLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final isDark = theme.brightness == Brightness.dark;
 
     final hasError = errorText != null && errorText!.isNotEmpty;
 
-    final resolvedLabel = labelText ?? l10n?.gender ?? 'Sesso';
-    final maleLabel = l10n?.genderMale ?? 'Maschile (M)';
-    final femaleLabel = l10n?.genderFemale ?? 'Femminile (F)';
+    final resolvedLabel = labelText ?? l10n.gender;
+    final maleLabel = l10n.genderMale;
+    final femaleLabel = l10n.genderFemale;
 
     final containerBorderColor = hasError
         ? colorScheme.error

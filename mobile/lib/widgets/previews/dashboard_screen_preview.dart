@@ -163,7 +163,7 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
         builder: (context) {
-          final l10n = AppLocalizations.of(context)!;
+          final l10n = context.l10n;
           final displayedContacts = _filteredContacts;
 
           return ChangeNotifierProvider<AuthService>.value(

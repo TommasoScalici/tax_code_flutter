@@ -5,7 +5,7 @@ import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/review_service.dart';
 import 'package:shared/services/sync_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/widgets/contacts_list.dart';
@@ -38,7 +38,7 @@ final class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final syncService = context.watch<SyncService?>();
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: DashboardHeader(
@@ -50,7 +50,7 @@ final class HomePage extends StatelessWidget {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(l10n?.cloudSyncGuestTooltip ?? ''),
+                content: Text(l10n.cloudSyncGuestTooltip),
                 behavior: SnackBarBehavior.floating,
               ),
             );

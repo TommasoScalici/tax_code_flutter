@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A modern date picker field with emerald calendar icon, 14px rounded corners,
 /// and full dual-mode support (standalone or reactive via [formControlName]).
@@ -132,12 +132,12 @@ class _BirthdatePickerContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final isDark = theme.brightness == Brightness.dark;
 
     final hasError = errorText != null && errorText!.isNotEmpty;
-    final resolvedLabel = labelText ?? l10n?.birthDate ?? 'Data di Nascita';
-    final placeholder = l10n?.birthdateHint ?? 'GG/MM/AAAA';
+    final resolvedLabel = labelText ?? l10n.birthDate;
+    final placeholder = l10n.birthdateHint;
 
     final formattedDate = value != null
         ? DateFormat.yMd(Localizations.localeOf(context).toString()).format(value!)
@@ -224,7 +224,7 @@ class _BirthdatePickerContent extends StatelessWidget {
                         visualDensity: VisualDensity.compact,
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
-                        tooltip: l10n?.close,
+                        tooltip: l10n.close,
                         onPressed: () => onChanged?.call(null),
                       )
                     else

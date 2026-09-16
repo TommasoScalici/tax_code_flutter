@@ -12,6 +12,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accountAndSettings => 'Account & Impostazioni';
 
   @override
+  String actionLabel(String action) {
+    return 'Azione: $action';
+  }
+
+  @override
+  String get addCode => 'Aggiungi Codice';
+
+  @override
   String appInfoSubtitle(String version) {
     return 'Versione $version • Note legali e Privacy Policy';
   }
@@ -85,6 +93,31 @@ class AppLocalizationsIt extends AppLocalizations {
   String get cardActionEdit => 'Modifica';
 
   @override
+  String get cardBelfioreLabel => 'BELFIORE';
+
+  @override
+  String get cardBornOnLabel => 'NATO/A IL';
+
+  @override
+  String get cardCitizenFallback => 'CITTADINO';
+
+  @override
+  String get cardImageFooter =>
+      'Generato offline con l\'app Codice Fiscale di Tommaso Scalici';
+
+  @override
+  String get cardMunicipalityCountryLabel => 'COMUNE / STATO ESTERO';
+
+  @override
+  String get cardPersonalCardHeader => 'TESSERA PERSONALE';
+
+  @override
+  String get cardQrCodeLabel => 'QR CODE';
+
+  @override
+  String get cardRepublicHeader => 'REPUBBLICA ITALIANA';
+
+  @override
   String get close => 'Chiudi';
 
   @override
@@ -108,6 +141,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get cloudSyncOn => 'Sincronizzazione cloud attiva';
 
   @override
+  String codeSavedSuccess(String code) {
+    return 'Codice fiscale salvato con successo: $code';
+  }
+
+  @override
+  String get contactFallback => 'Contatto';
+
+  @override
   String get continueAsGuest => 'Continua come ospite';
 
   @override
@@ -118,6 +159,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get copyTaxCode => 'Copia codice fiscale';
+
+  @override
+  String get createMode => 'Modalità Crea';
 
   @override
   String get dashboardTitle => 'I Miei Codici';
@@ -161,10 +205,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get edit => 'Modifica';
 
   @override
-  String get editTaxCodeTitle => 'Modifica Codice Fiscale';
+  String get editMode => 'Modalità Modifica';
 
   @override
-  String get addCode => 'Aggiungi Codice';
+  String get editTaxCodeTitle => 'Modifica Codice Fiscale';
 
   @override
   String get emptyDashboardDescription =>
@@ -183,6 +227,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get emptySearchTitle => 'Nessun codice trovato';
+
+  @override
+  String get enabledStatus => 'Abilitato';
 
   @override
   String get error => 'Errore';
@@ -233,7 +280,19 @@ class AppLocalizationsIt extends AppLocalizations {
       'File di esportazione pronto per il salvataggio o la condivisione.';
 
   @override
+  String get extended => 'Esteso';
+
+  @override
   String get featureComingSoon => 'Funzionalità in arrivo';
+
+  @override
+  String get filterComplete => 'Completo';
+
+  @override
+  String get filterEmpty => 'Vuoto';
+
+  @override
+  String get filterPartial => 'Parziale';
 
   @override
   String get firstName => 'Nome';
@@ -275,6 +334,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get lastNamePlaceholder => 'es. Rossi';
 
   @override
+  String get loadingStatus => 'In Caricamento';
+
+  @override
   String get networkError =>
       'Nessuna connessione internet. Controlla la tua rete e riprova.';
 
@@ -283,6 +345,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get newTaxCodeTooltip => 'Crea o scansiona un nuovo Codice Fiscale';
+
+  @override
+  String get none => 'Nessuno';
 
   @override
   String get ocrHeroButton => 'Scansiona';
@@ -295,10 +360,43 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ocrHeroTitle => 'Scansione Smart con Fotocamera';
 
   @override
+  String get ocrScanSuccess =>
+      'Dati scansionati con AI e inseriti con successo!';
+
+  @override
+  String get openAsBottomSheet => 'Apri come Bottom Sheet';
+
+  @override
+  String get openModal => 'Apri Modal';
+
+  @override
   String get openSettings => 'Apri Impostazioni';
 
   @override
   String get packageName => 'Nome Pacchetto';
+
+  @override
+  String get pdfCadastralCodeLabel => 'Codice Catastale (Belfiore)';
+
+  @override
+  String pdfGeneratedOnFooter(String date) {
+    return 'Generato il $date con l\'app Codice Fiscale di Tommaso Scalici';
+  }
+
+  @override
+  String get pdfOpticalCodesHeader => 'CODICI OTTICI PER LETTURA AUTOMATICA';
+
+  @override
+  String get pdfPersonalDataHeader => 'DATI ANAGRAFICI';
+
+  @override
+  String get pdfPersonalUseBadge => 'USO PERSONALE';
+
+  @override
+  String get pdfSummarySubtitle => 'Scheda Riepilogativa Personale';
+
+  @override
+  String get pdfUnofficialDisclaimer => 'Copia non ufficiale per uso personale';
 
   @override
   String get privacyDataOwnership => 'Dati e Proprietà';
@@ -348,7 +446,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get readFullPrivacyPolicy => 'Leggi l\'Informativa Completa Online';
 
   @override
+  String get reauthFailed => 'Riautenticazione non riuscita. Riprova.';
+
+  @override
   String get required => 'Questo campo è obbligatorio';
+
+  @override
+  String get returnToDashboard => 'Torna alla dashboard';
 
   @override
   String get saveCode => 'Salva Codice';
@@ -364,6 +468,9 @@ class AppLocalizationsIt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get savingCodeInProgress => 'Salvataggio codice in corso...';
 
   @override
   String get scanFailedErrorMessage =>
@@ -390,6 +497,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get sectionLegalAndAppInfo => 'Informazioni Legali';
 
   @override
+  String selectedValue(String value) {
+    return 'Valore selezionato: $value';
+  }
+
+  @override
   String get serviceUnavailable =>
       'Il servizio è temporaneamente non disponibile. Riprova più tardi.';
 
@@ -401,13 +513,55 @@ class AppLocalizationsIt extends AppLocalizations {
   String get share => 'Condividi';
 
   @override
+  String shareCardSubject(String name) {
+    return 'Tessera Codice Fiscale - $name';
+  }
+
+  @override
+  String get shareContactAction => 'Condividi';
+
+  @override
+  String get shareContactSubtitle =>
+      'Scegli come condividere la tessera o i dati';
+
+  @override
+  String get shareContactSuccess =>
+      'File pronto per la condivisione o il salvataggio.';
+
+  @override
+  String get shareContactTitle => 'Condividi codice';
+
+  @override
+  String get shareOptionImageDesc =>
+      'Tessera grafica HD completa con codice a barre e QR Code.';
+
+  @override
+  String get shareOptionImageTitle => 'Immagine tessera (PNG)';
+
+  @override
+  String get shareOptionPdfDesc =>
+      'Documento A4 stampabile con dati anagrafici e codici ottici.';
+
+  @override
+  String get shareOptionPdfTitle => 'Scheda riepilogativa (PDF)';
+
+  @override
+  String get shareOptionTextDesc =>
+      'Invia solo il codice fiscale come testo semplice.';
+
+  @override
+  String get shareOptionTextTitle => 'Testo rapido';
+
+  @override
+  String sharePdfSubject(String name) {
+    return 'Scheda Codice Fiscale - $name';
+  }
+
+  @override
   String get showTerms => 'Visualizza Termini e Condizioni';
 
   @override
   String get signInFailed => 'Accesso non riuscito. Riprova.';
-
-  @override
-  String get reauthFailed => 'Riautenticazione non riuscita. Riprova.';
 
   @override
   String get signOut => 'Esci';
@@ -415,6 +569,9 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get signOutSubtitle =>
       'Scollega il profilo Google da questo dispositivo';
+
+  @override
+  String get simulateError => 'Simula Errore';
 
   @override
   String get stepBirthplacesChecking =>
@@ -433,6 +590,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get switchTheme => 'Cambia tema';
+
+  @override
+  String get switchToDarkMode => 'Passa a tema scuro';
+
+  @override
+  String get switchToLightMode => 'Passa a tema chiaro';
 
   @override
   String syncSavedCodesCount(int count) {
@@ -461,6 +624,15 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get termsAndCondition =>
       'Procedendo, accetti i nostri Termini e Condizioni.';
+
+  @override
+  String get themeDark => 'Scuro';
+
+  @override
+  String get themeLight => 'Chiaro';
+
+  @override
+  String get themeShowcase => 'Theme Showcase';
 
   @override
   String get tooltipConfirmPicture => 'Conferma foto';

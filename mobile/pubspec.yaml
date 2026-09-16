@@ -27,6 +27,7 @@ dependencies:
   image: ^4.5.3
   intl: ^0.20.0
   logger: ^2.8.0
+  pdf: ^3.11.3
   provider: ^6.1.0
   shared_preferences: ^2.2.3
   uuid: ^4.6.0

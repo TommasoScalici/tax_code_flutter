@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_action_tile.dart';
 
@@ -19,15 +19,14 @@ class ProfileLegalSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final infoService = context.watch<InfoServiceAbstract?>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ProfileSectionHeader(
-          title: l10n?.sectionLegalAndAppInfo.toUpperCase() ??
-              'INFORMAZIONI LEGALI',
+          title: l10n.sectionLegalAndAppInfo.toUpperCase(),
         ),
         const SizedBox(height: 8),
         Container(
@@ -39,12 +38,12 @@ class ProfileLegalSection extends StatelessWidget {
           child: FutureBuilder<PackageInfo>(
             future: infoService?.getPackageInfo() ??
                 Future.value(
-                    PackageInfo(
-                      appName: l10n?.appName ?? 'Codice Fiscale',
-                      packageName: 'tommasoscalici.taxcode',
-                      version: '2.0.0',
-                      buildNumber: '1',
-                    ),
+                  PackageInfo(
+                    appName: l10n.appName,
+                    packageName: 'tommasoscalici.taxcode',
+                    version: '2.0.0',
+                    buildNumber: '1',
+                  ),
                 ),
             builder: (context, snapshot) {
               final version = snapshot.data?.version ?? '2.0.0';
@@ -53,9 +52,8 @@ class ProfileLegalSection extends StatelessWidget {
                 icon: Icons.info_outline_rounded,
                 iconColor: AppColors.info,
                 iconBgColor: theme.colorScheme.surfaceContainerHigh,
-                title: l10n?.appInfoTitle ?? "Informazioni sull'app",
-                subtitle: l10n?.appInfoSubtitle(version) ??
-                    'Versione $version • Note legali e Privacy Policy',
+                title: l10n.appInfoTitle,
+                subtitle: l10n.appInfoSubtitle(version),
                 trailing: const Icon(Icons.chevron_right_rounded, size: 20),
                 onTap: onOpenAppInfo,
               );

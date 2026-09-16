@@ -11,7 +11,11 @@ import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/core/theme/app_theme.dart';
 import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
+import 'package:tax_code_flutter/services/contact_card_image_service.dart';
+import 'package:tax_code_flutter/services/contact_pdf_service.dart';
+import 'package:tax_code_flutter/services/sharing_service.dart';
 import 'package:tax_code_flutter/widgets/barcode_bottom_sheet.dart';
+import 'package:tax_code_flutter/widgets/share/share_contact_bottom_sheet.dart';
 
 import '../helpers/mocks.dart';
 import '../helpers/test_setup.dart';
@@ -20,6 +24,9 @@ void main() {
   setUpAll(setupTests);
 
   late MockBrightnessService mockBrightnessService;
+  late MockSharingService mockSharingService;
+  late MockContactCardImageService mockImageService;
+  late MockContactPdfService mockPdfService;
 
   final testContact = Contact(
     id: '1',
@@ -34,6 +41,10 @@ void main() {
 
   setUp(() {
     mockBrightnessService = MockBrightnessService();
+    mockSharingService = MockSharingService();
+    mockImageService = MockContactCardImageService();
+    mockPdfService = MockContactPdfService();
+
     when(() => mockBrightnessService.setMaxBrightness())
         .thenAnswer((_) async {});
     when(() => mockBrightnessService.resetBrightness())
@@ -44,8 +55,13 @@ void main() {
     required Widget child,
     Locale locale = const Locale('it'),
   }) {
-    return Provider<BrightnessServiceAbstract>.value(
-      value: mockBrightnessService,
+    return MultiProvider(
+      providers: [
+        Provider<BrightnessServiceAbstract>.value(value: mockBrightnessService),
+        Provider<SharingServiceAbstract>.value(value: mockSharingService),
+        Provider<ContactCardImageServiceAbstract>.value(value: mockImageService),
+        Provider<ContactPdfServiceAbstract>.value(value: mockPdfService),
+      ],
       child: MaterialApp(
         locale: locale,
         localizationsDelegates: const [
@@ -249,6 +265,29 @@ void main() {
         find.byKey(const Key('barcode_bottom_sheet_close_button')),
         findsOneWidget,
       );
+    });
+
+    testWidgets('tapping share button opens ShareContactBottomSheet', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTestApp(
+          child: BarcodeBottomSheet(
+            contact: testContact,
+            brightnessService: mockBrightnessService,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final shareBtnFinder =
+          find.byKey(const Key('barcode_bottom_sheet_share_button'));
+      expect(shareBtnFinder, findsOneWidget);
+      await tester.ensureVisible(shareBtnFinder);
+      await tester.tap(shareBtnFinder);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ShareContactBottomSheet), findsOneWidget);
     });
   });
 }

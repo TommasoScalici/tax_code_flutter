@@ -24,10 +24,10 @@ class _FormStickyBottomBarPreviewState
   void _showFeedback(BuildContext context) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Salvataggio codice in corso...'),
+      SnackBar(
+        content: Text(context.l10n.savingCodeInProgress),
         behavior: SnackBarBehavior.floating,
-        duration: Duration(seconds: 1),
+        duration: const Duration(seconds: 1),
       ),
     );
   }
@@ -45,6 +45,7 @@ class _FormStickyBottomBarPreviewState
       home: Builder(
         builder: (context) {
           final theme = Theme.of(context);
+          final l10n = context.l10n;
 
           return Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
@@ -66,7 +67,7 @@ class _FormStickyBottomBarPreviewState
                                   : Icons.light_mode_rounded,
                               size: 16,
                             ),
-                            label: Text(_isDarkMode ? 'Scuro' : 'Chiaro'),
+                            label: Text(_isDarkMode ? l10n.themeDark : l10n.themeLight),
                             onPressed: () {
                               setState(() {
                                 _isDarkMode = !_isDarkMode;
@@ -74,7 +75,7 @@ class _FormStickyBottomBarPreviewState
                             },
                           ),
                           FilterChip(
-                            label: const Text('Abilitato'),
+                            label: Text(l10n.enabledStatus),
                             selected: _isEnabled,
                             onSelected: (val) {
                               setState(() {
@@ -83,7 +84,7 @@ class _FormStickyBottomBarPreviewState
                             },
                           ),
                           FilterChip(
-                            label: const Text('In Caricamento'),
+                            label: Text(l10n.loadingStatus),
                             selected: _isLoading,
                             onSelected: (val) {
                               setState(() {

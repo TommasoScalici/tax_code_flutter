@@ -1,5 +1,5 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_account_section.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_app_info_view.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_data_section.dart';
@@ -81,7 +81,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
 
     return PopScope(
       canPop: _currentView == _ProfileSheetView.main || widget.startAtAppInfo,
@@ -101,49 +101,45 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                   ? theme.colorScheme.surfaceContainer
                   : theme.colorScheme.surface,
               borderRadius: widget.isEmbedded
-                  ? BorderRadius.circular(24.0)
+                  ? BorderRadius.zero
                   : const BorderRadius.vertical(top: Radius.circular(28.0)),
-              border: isDark
-                  ? Border.all(
-                      color: theme.colorScheme.outlineVariant
-                          .withValues(alpha: 0.5),
-                    )
-                  : null,
               boxShadow: widget.isEmbedded
                   ? null
                   : [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.35),
-                        blurRadius: 32,
-                        offset: const Offset(0, -4),
+                        blurRadius: 30,
+                        offset: const Offset(0, -6),
                       ),
                     ],
             ),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize:
+                  widget.isEmbedded ? MainAxisSize.max : MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // 1. Drag Handle
+                // Top drag handle (standard M3 sheet)
                 if (!widget.isEmbedded)
                   Center(
                     child: Container(
-                      margin: const EdgeInsets.only(top: 12.0, bottom: 8.0),
-                      width: 36,
-                      height: 4,
+                      margin: const EdgeInsets.only(top: 12.0, bottom: 4.0),
+                      width: 44,
+                      height: 4.5,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.outlineVariant,
-                        borderRadius: BorderRadius.circular(2.0),
+                        color: theme.colorScheme.onSurfaceVariant
+                            .withValues(alpha: 0.35),
+                        borderRadius: BorderRadius.circular(2.5),
                       ),
                     ),
                   ),
 
-                // 2. Dynamic Header
+                // Dynamic Header (Title + Back/Close buttons)
                 _buildHeader(theme, l10n),
 
-                // 3. Dynamic Body View
+                // Active View Content
                 Flexible(
                   child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
+                    duration: const Duration(milliseconds: 220),
                     switchInCurve: Curves.easeOutCubic,
                     switchOutCurve: Curves.easeInCubic,
                     child: _currentView == _ProfileSheetView.main
@@ -161,7 +157,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
     );
   }
 
-  Widget _buildHeader(ThemeData theme, AppLocalizations? l10n) {
+  Widget _buildHeader(ThemeData theme, AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 4.0, 12.0, 12.0),
       child: Row(
@@ -182,8 +178,8 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
           Expanded(
             child: Text(
               _currentView == _ProfileSheetView.main
-                  ? (l10n?.accountAndSettings ?? 'Account & Impostazioni')
-                  : (l10n?.appInfoTitle ?? "Informazioni sull'app"),
+                  ? l10n.accountAndSettings
+                  : l10n.appInfoTitle,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
                 letterSpacing: -0.3,

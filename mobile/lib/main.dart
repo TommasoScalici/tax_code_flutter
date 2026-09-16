@@ -103,7 +103,7 @@ final class TaxCodeApp extends StatelessWidget {
     final themeService = context.watch<ThemeService>();
 
     return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+      onGenerateTitle: (context) => context.l10n.appTitle,
       localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: themeService.theme == AppThemeMode.dark

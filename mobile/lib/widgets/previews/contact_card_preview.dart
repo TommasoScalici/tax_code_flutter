@@ -34,7 +34,7 @@ class _ContactCardPreviewState extends State<ContactCardPreview> {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Azione: $action'),
+        content: Text(context.l10n.actionLabel(action)),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 1),
       ),
@@ -54,7 +54,7 @@ class _ContactCardPreviewState extends State<ContactCardPreview> {
       home: Builder(
         builder: (context) {
           final theme = Theme.of(context);
-          final l10n = AppLocalizations.of(context)!;
+          final l10n = context.l10n;
 
           return Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
@@ -84,7 +84,7 @@ class _ContactCardPreviewState extends State<ContactCardPreview> {
                                   : Icons.light_mode_rounded,
                               size: 16,
                             ),
-                            label: Text(_isDarkMode ? 'Scuro' : 'Chiaro'),
+                            label: Text(_isDarkMode ? l10n.themeDark : l10n.themeLight),
                             onPressed: () {
                               setState(() {
                                 _isDarkMode = !_isDarkMode;

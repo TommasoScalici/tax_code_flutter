@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,12 +24,12 @@ class ProfileAppInfoView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final locale = Localizations.localeOf(context);
     final infoService = context.watch<InfoServiceAbstract?>();
 
     final defaultPackageInfo = PackageInfo(
-      appName: l10n?.appName ?? 'Codice Fiscale',
+      appName: l10n.appName,
       packageName: 'tommasoscalici.taxcode',
       version: '2.0.0',
       buildNumber: '1',
@@ -41,7 +41,7 @@ class ProfileAppInfoView extends StatelessWidget {
         final packageInfo = snapshot.data ?? defaultPackageInfo;
         final rawAppName = packageInfo.appName;
         final appDisplayName = (rawAppName.isEmpty || rawAppName == 'Error')
-            ? (l10n?.appName ?? 'Codice Fiscale')
+            ? l10n.appName
             : rawAppName;
         final rawPackageName = packageInfo.packageName;
         final appPackageId =
@@ -165,7 +165,7 @@ class ProfileAppInfoView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l10n?.disclaimerTitle ?? 'Disclaimer Istituzionale',
+                            l10n.disclaimerTitle,
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: theme.colorScheme.onSurface,
@@ -173,8 +173,7 @@ class ProfileAppInfoView extends StatelessWidget {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            l10n?.disclaimerBody ??
-                                "Questa applicazione non rappresenta né è affiliata ad alcuna agenzia governativa. È uno strumento di terze parti per calcolare e memorizzare il Codice Fiscale tramite l'algoritmo pubblico.",
+                            l10n.disclaimerBody,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                               height: 1.45,
@@ -209,8 +208,7 @@ class ProfileAppInfoView extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          l10n?.privacyHighlightsTitle ??
-                              'Privacy & Protezione Dati',
+                          l10n.privacyHighlightsTitle,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.onSurface,
@@ -222,34 +220,29 @@ class ProfileAppInfoView extends StatelessWidget {
                     _buildHighlightItem(
                       theme: theme,
                       icon: Icons.lock_outline_rounded,
-                      title: l10n?.privacyDataOwnership ?? 'Dati e Proprietà',
-                      description: l10n?.privacyDataOwnershipDesc ??
-                          'I tuoi codici rimangono di tua proprietà, salvati sul dispositivo o nel tuo cloud cifrato.',
+                      title: l10n.privacyDataOwnership,
+                      description: l10n.privacyDataOwnershipDesc,
                     ),
                     _buildHighlightDivider(theme),
                     _buildHighlightItem(
                       theme: theme,
                       icon: Icons.shield_outlined,
-                      title: l10n?.privacyNoTracking ?? 'Zero Tracciamento',
-                      description: l10n?.privacyNoTrackingDesc ??
-                          'Nessun dato personale viene venduto o utilizzato per profilazione commerciale.',
+                      title: l10n.privacyNoTracking,
+                      description: l10n.privacyNoTrackingDesc,
                     ),
                     _buildHighlightDivider(theme),
                     _buildHighlightItem(
                       theme: theme,
                       icon: Icons.document_scanner_outlined,
-                      title: l10n?.privacySmartOcr ?? 'Scansione Documenti',
-                      description: l10n?.privacySmartOcrDesc ??
-                          "L'OCR AI per la lettura delle tessere opera con standard elevati di sicurezza.",
+                      title: l10n.privacySmartOcr,
+                      description: l10n.privacySmartOcrDesc,
                     ),
                     _buildHighlightDivider(theme),
                     _buildHighlightItem(
                       theme: theme,
                       icon: Icons.delete_sweep_outlined,
-                      title: l10n?.privacyGdprRights ??
-                          "Diritto all'Oblio (GDPR)",
-                      description: l10n?.privacyGdprRightsDesc ??
-                          'Puoi esportare o eliminare definitivamente il tuo account e i dati in qualsiasi momento.',
+                      title: l10n.privacyGdprRights,
+                      description: l10n.privacyGdprRightsDesc,
                     ),
                   ],
                 ),
@@ -267,8 +260,7 @@ class ProfileAppInfoView extends StatelessWidget {
                   color: AppColors.emeraldPrimary,
                 ),
                 label: Text(
-                  l10n?.readFullPrivacyPolicy ??
-                      "Leggi l'Informativa Completa Online",
+                  l10n.readFullPrivacyPolicy,
                   style: theme.textTheme.labelLarge?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: AppColors.emeraldPrimary,
@@ -300,7 +292,7 @@ class ProfileAppInfoView extends StatelessWidget {
                       vertical: 6.0,
                     ),
                     child: Text(
-                      l10n?.developedBy ?? 'Sviluppata da Tommaso Scalici',
+                      l10n.developedBy,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant
                             .withValues(alpha: 0.7),

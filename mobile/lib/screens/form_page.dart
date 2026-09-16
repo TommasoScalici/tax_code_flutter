@@ -8,7 +8,7 @@ import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/utils/error_dialog_helper.dart';
 import 'package:tax_code_flutter/widgets/form/birthdate_picker_field.dart';
@@ -102,7 +102,7 @@ class _FormViewState extends State<_FormView> {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<FormPageController>();
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = context.l10n;
     final theme = Theme.of(context);
 
     final title = controller.isEditing

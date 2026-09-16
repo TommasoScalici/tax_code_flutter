@@ -253,79 +253,85 @@ class _ProfileBottomSheetPreviewState extends State<ProfileBottomSheetPreview> {
         themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
         localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(
-          body: SafeArea(
-            child: Column(
-              children: [
-                // Preview Toolbar Controls
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  color: _isDarkMode
-                      ? AppColors.darkSurfaceContainerLowest
-                      : AppColors.lightSurfaceContainerLow,
-                  child: Wrap(
-                    spacing: 8.0,
-                    runSpacing: 4.0,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      // Theme Switch
-                      ActionChip(
-                        avatar: Icon(
-                          _isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                          size: 16,
-                        ),
-                        label: Text(_isDarkMode ? 'Dark Mode' : 'Light Mode'),
-                        onPressed: () {
-                          setState(() {
-                            _isDarkMode = !_isDarkMode;
-                          });
-                        },
-                      ),
+        home: Builder(
+          builder: (context) {
+            final l10n = context.l10n;
 
-                      // User Mode Switch
-                      FilterChip(
-                        label: Text(_isGuestMode ? 'Ospite (Guest)' : 'Google (Mario Rossi)'),
-                        selected: _isGuestMode,
-                        onSelected: (val) {
-                          setState(() {
-                            _isGuestMode = val;
-                            _authService.setGuest(val);
-                          });
-                        },
-                      ),
-
-                      // Open Modal Bottom Sheet button
-                      Builder(
-                        builder: (btnContext) => FilledButton.icon(
-                          icon: const Icon(Icons.open_in_browser, size: 16),
-                          label: const Text('Apri come Bottom Sheet'),
-                          style: FilledButton.styleFrom(
-                            visualDensity: VisualDensity.compact,
+            return Scaffold(
+              body: SafeArea(
+                child: Column(
+                  children: [
+                    // Preview Toolbar Controls
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      color: _isDarkMode
+                          ? AppColors.darkSurfaceContainerLowest
+                          : AppColors.lightSurfaceContainerLow,
+                      child: Wrap(
+                        spacing: 8.0,
+                        runSpacing: 4.0,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          // Theme Switch
+                          ActionChip(
+                            avatar: Icon(
+                              _isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                              size: 16,
+                            ),
+                            label: Text(_isDarkMode ? l10n.themeDark : l10n.themeLight),
+                            onPressed: () {
+                              setState(() {
+                                _isDarkMode = !_isDarkMode;
+                              });
+                            },
                           ),
-                          onPressed: () {
-                            unawaited(ProfileBottomSheet.show(btnContext));
-                          },
+
+                          // User Mode Switch
+                          FilterChip(
+                            label: Text(_isGuestMode
+                                ? l10n.guestBadge
+                                : 'Google (Mario Rossi)'),
+                            selected: _isGuestMode,
+                            onSelected: (val) {
+                              setState(() {
+                                _isGuestMode = val;
+                                _authService.setGuest(val);
+                              });
+                            },
+                          ),
+
+                          // Open Modal Bottom Sheet button
+                          FilledButton.icon(
+                            icon: const Icon(Icons.open_in_browser, size: 16),
+                            label: Text(l10n.openAsBottomSheet),
+                            style: FilledButton.styleFrom(
+                              visualDensity: VisualDensity.compact,
+                            ),
+                            onPressed: () {
+                              unawaited(ProfileBottomSheet.show(context));
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Embedded Sheet Viewport
+                    Expanded(
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 412.0,
+                          ),
+                          child: const ProfileBottomSheet(isEmbedded: true),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-
-                // Embedded Sheet Viewport
-                Expanded(
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: 412.0,
-                      ),
-                      child: const ProfileBottomSheet(isEmbedded: true),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

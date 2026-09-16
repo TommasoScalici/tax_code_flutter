@@ -5,7 +5,7 @@ import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/sync_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// The user identity, cloud sync status, and guest upgrade section.
 class ProfileUserSection extends StatelessWidget {
@@ -14,7 +14,7 @@ class ProfileUserSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final authService = context.watch<AuthService?>();
     final syncService = context.watch<SyncService?>();
     final homeController = context.watch<HomePageController?>();
@@ -22,8 +22,8 @@ class ProfileUserSection extends StatelessWidget {
     final isGuest = authService?.isGuest ?? false;
     final currentUser = authService?.currentUser;
     final displayName = isGuest
-        ? (l10n?.guestBadge ?? 'Ospite')
-        : (currentUser?.displayName ?? 'Utente');
+        ? l10n.guestBadge
+        : (currentUser?.displayName ?? l10n.contactFallback);
     final email = isGuest ? null : currentUser?.email;
     final photoURL = isGuest ? null : currentUser?.photoURL;
     final isSyncActive = !isGuest && (syncService?.isSyncEnabled ?? false);
@@ -122,9 +122,7 @@ class ProfileUserSection extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           child: Text(
-                            isGuest
-                                ? (l10n?.guestBadge ?? 'Ospite')
-                                : (l10n?.googleBadge ?? 'Google'),
+                            isGuest ? l10n.guestBadge : l10n.googleBadge,
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: isGuest
                                   ? theme.colorScheme.onSurfaceVariant
@@ -190,8 +188,8 @@ class ProfileUserSection extends StatelessWidget {
                       children: [
                         Text(
                           isSyncActive
-                              ? (l10n?.cloudSyncActive ?? 'Sincronizzazione attiva')
-                              : (l10n?.cloudSyncOff ?? 'Sincronizzazione non attiva'),
+                              ? l10n.cloudSyncActive
+                              : l10n.cloudSyncOff,
                           style: theme.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: isSyncActive
@@ -201,7 +199,7 @@ class ProfileUserSection extends StatelessWidget {
                         ),
                         if (isSyncActive)
                           Text(
-                            ' • ${l10n?.syncSavedCodesCount(savedCount) ?? '$savedCount codici salvati'}',
+                            ' • ${l10n.syncSavedCodesCount(savedCount)}',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurface
                                   .withValues(alpha: 0.7),
@@ -214,13 +212,13 @@ class ProfileUserSection extends StatelessWidget {
                 ],
               ),
             )
-          else ...[
-            // Guest mode upgrade card
+          else
+            // Guest Mode Upgrade Card
             Container(
-              padding: const EdgeInsets.all(14.0),
+              padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: AppColors.emeraldContainerDark,
-                borderRadius: BorderRadius.circular(14.0),
+                borderRadius: BorderRadius.circular(16.0),
                 border: Border.all(color: AppColors.emeraldBorder),
               ),
               child: Column(
@@ -229,35 +227,42 @@ class ProfileUserSection extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(
-                        Icons.cloud_upload_rounded,
-                        size: 20,
+                        Icons.cloud_upload_outlined,
                         color: AppColors.emeraldPrimary,
+                        size: 20,
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        l10n?.cloudBackupBannerTitle ??
-                            'Attiva il Backup Cloud',
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.emeraldPrimary,
+                      Expanded(
+                        child: Text(
+                          l10n.cloudBackupBannerTitle,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.emeraldPrimary,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    l10n?.cloudBackupBannerSubtitle ??
-                        'Accedi con Google per sincronizzare i tuoi codici fiscali su tutti i tuoi dispositivi e non perderli mai.',
+                    l10n.cloudBackupBannerSubtitle,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
-                      height: 1.35,
                     ),
                   ),
                   const SizedBox(height: 12),
                   SizedBox(
                     width: double.infinity,
-                    child: OutlinedButton.icon(
+                    height: 44,
+                    child: FilledButton.icon(
                       key: const Key('profile_guest_google_signin_button'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.emeraldPrimary,
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
                       onPressed: () => authService?.signInWithGoogle(),
                       icon: SvgPicture.asset(
                         'assets/images/google_logo.svg',
@@ -265,28 +270,17 @@ class ProfileUserSection extends StatelessWidget {
                         height: 18,
                       ),
                       label: Text(
-                        l10n?.continueWithGoogle ?? 'Continua con Google',
+                        l10n.continueWithGoogle,
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.onSurface,
+                          color: Colors.black,
                         ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.surfaceContainer,
-                        side: BorderSide(
-                          color: theme.colorScheme.outlineVariant,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-          ],
         ],
       ),
     );

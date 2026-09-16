@@ -5,6 +5,20 @@
   "@accountAndSettings": {
     "description": "Titolo dell'header del bottom sheet profilo e impostazioni."
   },
+  "actionLabel": "Azione: {action}",
+  "@actionLabel": {
+    "description": "Feedback message showing user action performed.",
+    "placeholders": {
+      "action": {
+        "type": "String",
+        "example": "Condividi"
+      }
+    }
+  },
+  "addCode": "Aggiungi Codice",
+  "@addCode": {
+    "description": "Label del pulsante per aggiungere o creare un nuovo codice fiscale."
+  },
   "appInfoSubtitle": "Versione {version} • Note legali e Privacy Policy",
   "@appInfoSubtitle": {
     "description": "Sottotitolo per la voce informazioni sull'app con versione dinamica.",
@@ -99,6 +113,38 @@
   "@cardActionEdit": {
     "description": "Label for the button editing the contact details."
   },
+  "cardBelfioreLabel": "BELFIORE",
+  "@cardBelfioreLabel": {
+    "description": "Cadastral code label on generated HD card image."
+  },
+  "cardBornOnLabel": "NATO/A IL",
+  "@cardBornOnLabel": {
+    "description": "Date of birth label on generated HD card image."
+  },
+  "cardCitizenFallback": "CITTADINO",
+  "@cardCitizenFallback": {
+    "description": "Fallback name when contact name is empty on generated card image."
+  },
+  "cardImageFooter": "Generato offline con l'app Codice Fiscale di Tommaso Scalici",
+  "@cardImageFooter": {
+    "description": "Footer watermark text on the generated HD contact card image."
+  },
+  "cardMunicipalityCountryLabel": "COMUNE / STATO ESTERO",
+  "@cardMunicipalityCountryLabel": {
+    "description": "Birthplace label on generated HD card image."
+  },
+  "cardPersonalCardHeader": "TESSERA PERSONALE",
+  "@cardPersonalCardHeader": {
+    "description": "Top-right category label on generated HD card image."
+  },
+  "cardQrCodeLabel": "QR CODE",
+  "@cardQrCodeLabel": {
+    "description": "Sub-label below QR code on generated HD card image."
+  },
+  "cardRepublicHeader": "REPUBBLICA ITALIANA",
+  "@cardRepublicHeader": {
+    "description": "Top-left header on generated HD card image."
+  },
   "close": "Chiudi",
   "@close": {
     "description": "Label for a button to close a screen or dialog."
@@ -127,6 +173,20 @@
   "@cloudSyncOn": {
     "description": "Tooltip and message when cloud synchronization is enabled."
   },
+  "codeSavedSuccess": "Codice fiscale salvato con successo: {code}",
+  "@codeSavedSuccess": {
+    "description": "Notification indicating tax code was saved successfully.",
+    "placeholders": {
+      "code": {
+        "type": "String",
+        "example": "RSSMRA85D15H501Z"
+      }
+    }
+  },
+  "contactFallback": "Contatto",
+  "@contactFallback": {
+    "description": "Nome generico utilizzato come fallback quando il contatto non ha nome o cognome specificati."
+  },
   "continueAsGuest": "Continua come ospite",
   "@continueAsGuest": {
     "description": "Label for the secondary button to access and use the app in guest mode without signing in."
@@ -142,6 +202,10 @@
   "copyTaxCode": "Copia codice fiscale",
   "@copyTaxCode": {
     "description": "Tooltip for the button or box to copy the tax code to clipboard."
+  },
+  "createMode": "Modalità Crea",
+  "@createMode": {
+    "description": "Tooltip for create mode toggle."
   },
   "dashboardTitle": "I Miei Codici",
   "@dashboardTitle": {
@@ -197,13 +261,13 @@
   "@edit": {
     "description": "Label for an edit button."
   },
+  "editMode": "Modalità Modifica",
+  "@editMode": {
+    "description": "Tooltip for edit mode toggle."
+  },
   "editTaxCodeTitle": "Modifica Codice Fiscale",
   "@editTaxCodeTitle": {
     "description": "Titolo dell'app bar nella schermata di modifica del codice fiscale."
-  },
-  "addCode": "Aggiungi Codice",
-  "@addCode": {
-    "description": "Label del pulsante per aggiungere o creare un nuovo codice fiscale."
   },
   "emptyDashboardDescription": "Aggiungi il tuo primo Codice Fiscale per averlo sempre a portata di mano anche offline.",
   "@emptyDashboardDescription": {
@@ -230,6 +294,10 @@
   "emptySearchTitle": "Nessun codice trovato",
   "@emptySearchTitle": {
     "description": "Title shown when a search filter yields no results."
+  },
+  "enabledStatus": "Abilitato",
+  "@enabledStatus": {
+    "description": "Chip label indicating enabled state."
   },
   "error": "Errore",
   "@error": {
@@ -285,9 +353,25 @@
   "@exportSuccess": {
     "description": "Messaggio di conferma mostrato dopo aver generato il file di esportazione."
   },
+  "extended": "Esteso",
+  "@extended": {
+    "description": "Chip label for extended state."
+  },
   "featureComingSoon": "Funzionalità in arrivo",
   "@featureComingSoon": {
     "description": "Messaggio informativo per funzionalità non ancora disponibili."
+  },
+  "filterComplete": "Completo",
+  "@filterComplete": {
+    "description": "Filter chip label for complete state preview."
+  },
+  "filterEmpty": "Vuoto",
+  "@filterEmpty": {
+    "description": "Filter chip label for empty state preview."
+  },
+  "filterPartial": "Parziale",
+  "@filterPartial": {
+    "description": "Filter chip label for partial state preview."
   },
   "firstName": "Nome",
   "@firstName": {
@@ -341,6 +425,10 @@
   "@lastNamePlaceholder": {
     "description": "Testo segnaposto di esempio per il campo Cognome."
   },
+  "loadingStatus": "In Caricamento",
+  "@loadingStatus": {
+    "description": "Chip label indicating loading state."
+  },
   "networkError": "Nessuna connessione internet. Controlla la tua rete e riprova.",
   "@networkError": {
     "description": "Error message when there is no internet connectivity."
@@ -352,6 +440,10 @@
   "newTaxCodeTooltip": "Crea o scansiona un nuovo Codice Fiscale",
   "@newTaxCodeTooltip": {
     "description": "Tooltip for the dashboard floating action button."
+  },
+  "none": "Nessuno",
+  "@none": {
+    "description": "Label indicating no selection or empty value."
   },
   "ocrHeroButton": "Scansiona",
   "@ocrHeroButton": {
@@ -365,6 +457,18 @@
   "@ocrHeroTitle": {
     "description": "Titolo della card hero nel form per la scansione smart con fotocamera."
   },
+  "ocrScanSuccess": "Dati scansionati con AI e inseriti con successo!",
+  "@ocrScanSuccess": {
+    "description": "Snackbar message when OCR simulated scan completes."
+  },
+  "openAsBottomSheet": "Apri come Bottom Sheet",
+  "@openAsBottomSheet": {
+    "description": "Button label to display content as a bottom sheet."
+  },
+  "openModal": "Apri Modal",
+  "@openModal": {
+    "description": "Button label to trigger a modal bottom sheet."
+  },
   "openSettings": "Apri Impostazioni",
   "@openSettings": {
     "description": "Label for a button that navigates the user to the app's settings page."
@@ -372,6 +476,40 @@
   "packageName": "Nome Pacchetto",
   "@packageName": {
     "description": "Label for the package name field in an info screen."
+  },
+  "pdfCadastralCodeLabel": "Codice Catastale (Belfiore)",
+  "@pdfCadastralCodeLabel": {
+    "description": "Row label for cadastral code in PDF."
+  },
+  "pdfGeneratedOnFooter": "Generato il {date} con l'app Codice Fiscale di Tommaso Scalici",
+  "@pdfGeneratedOnFooter": {
+    "description": "Timestamped footer in PDF export.",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "16/09/2026 11:30"
+      }
+    }
+  },
+  "pdfOpticalCodesHeader": "CODICI OTTICI PER LETTURA AUTOMATICA",
+  "@pdfOpticalCodesHeader": {
+    "description": "Section header for barcode and QR code in PDF."
+  },
+  "pdfPersonalDataHeader": "DATI ANAGRAFICI",
+  "@pdfPersonalDataHeader": {
+    "description": "Section header for demographic table in PDF."
+  },
+  "pdfPersonalUseBadge": "USO PERSONALE",
+  "@pdfPersonalUseBadge": {
+    "description": "Badge text on PDF header."
+  },
+  "pdfSummarySubtitle": "Scheda Riepilogativa Personale",
+  "@pdfSummarySubtitle": {
+    "description": "Subtitle for PDF export document."
+  },
+  "pdfUnofficialDisclaimer": "Copia non ufficiale per uso personale",
+  "@pdfUnofficialDisclaimer": {
+    "description": "Legal disclaimer at bottom of PDF export."
   },
   "privacyDataOwnership": "Dati e Proprietà",
   "@privacyDataOwnership": {
@@ -429,9 +567,17 @@
   "@readFullPrivacyPolicy": {
     "description": "Etichetta del pulsante per aprire la privacy policy completa sul sito web."
   },
+  "reauthFailed": "Riautenticazione non riuscita. Riprova.",
+  "@reauthFailed": {
+    "description": "Messaggio di errore mostrato quando la riautenticazione Google fallisce o viene annullata durante operazioni critiche come l'eliminazione dell'account."
+  },
   "required": "Questo campo è obbligatorio",
   "@required": {
     "description": "A validation error message for a required form field."
+  },
+  "returnToDashboard": "Torna alla dashboard",
+  "@returnToDashboard": {
+    "description": "Snackbar message when navigating back to dashboard."
   },
   "saveCode": "Salva Codice",
   "@saveCode": {
@@ -446,6 +592,10 @@
         "example": "3"
       }
     }
+  },
+  "savingCodeInProgress": "Salvataggio codice in corso...",
+  "@savingCodeInProgress": {
+    "description": "Snackbar message indicating tax code save is in progress."
   },
   "scanFailedErrorMessage": "Impossibile leggere i dati dalla foto. Prova a scattarne una nuova più a fuoco.",
   "@scanFailedErrorMessage": {
@@ -481,6 +631,16 @@
   "@sectionLegalAndAppInfo": {
     "description": "Intestazione della sezione informazioni legali nel bottom sheet profilo."
   },
+  "selectedValue": "Valore selezionato: {value}",
+  "@selectedValue": {
+    "description": "Text indicating the currently selected value in preview or debug controls.",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "M"
+      }
+    }
+  },
   "serviceUnavailable": "Il servizio è temporaneamente non disponibile. Riprova più tardi.",
   "@serviceUnavailable": {
     "description": "Error message when the backend service is down or returning an error."
@@ -493,6 +653,64 @@
   "@share": {
     "description": "Label for a share button."
   },
+  "shareCardSubject": "Tessera Codice Fiscale - {name}",
+  "@shareCardSubject": {
+    "description": "Oggetto della condivisione per l'immagine della tessera.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shareContactAction": "Condividi",
+  "@shareContactAction": {
+    "description": "Testo del pulsante di conferma per la condivisione del contatto."
+  },
+  "shareContactSubtitle": "Scegli come condividere la tessera o i dati",
+  "@shareContactSubtitle": {
+    "description": "Sottotitolo per il modal bottom sheet di condivisione contatto."
+  },
+  "shareContactSuccess": "File pronto per la condivisione o il salvataggio.",
+  "@shareContactSuccess": {
+    "description": "Messaggio di notifica dopo aver generato il file per la condivisione."
+  },
+  "shareContactTitle": "Condividi codice",
+  "@shareContactTitle": {
+    "description": "Titolo per il modal bottom sheet di condivisione contatto."
+  },
+  "shareOptionImageDesc": "Tessera grafica HD completa con codice a barre e QR Code.",
+  "@shareOptionImageDesc": {
+    "description": "Descrizione per l'opzione di condivisione immagine tessera in PNG."
+  },
+  "shareOptionImageTitle": "Immagine tessera (PNG)",
+  "@shareOptionImageTitle": {
+    "description": "Titolo per l'opzione di condivisione immagine tessera in PNG."
+  },
+  "shareOptionPdfDesc": "Documento A4 stampabile con dati anagrafici e codici ottici.",
+  "@shareOptionPdfDesc": {
+    "description": "Descrizione per l'opzione di condivisione scheda PDF stampabile."
+  },
+  "shareOptionPdfTitle": "Scheda riepilogativa (PDF)",
+  "@shareOptionPdfTitle": {
+    "description": "Titolo per l'opzione di condivisione scheda PDF stampabile."
+  },
+  "shareOptionTextDesc": "Invia solo il codice fiscale come testo semplice.",
+  "@shareOptionTextDesc": {
+    "description": "Descrizione per l'opzione di condivisione rapida del codice fiscale come testo."
+  },
+  "shareOptionTextTitle": "Testo rapido",
+  "@shareOptionTextTitle": {
+    "description": "Titolo per l'opzione di condivisione rapida del codice fiscale come testo."
+  },
+  "sharePdfSubject": "Scheda Codice Fiscale - {name}",
+  "@sharePdfSubject": {
+    "description": "Oggetto della condivisione per il documento PDF riepilogativo.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "showTerms": "Visualizza Termini e Condizioni",
   "@showTerms": {
     "description": "Label for a button to display the terms and conditions."
@@ -501,10 +719,6 @@
   "@signInFailed": {
     "description": "Error message displayed when an authentication attempt encounters an error."
   },
-  "reauthFailed": "Riautenticazione non riuscita. Riprova.",
-  "@reauthFailed": {
-    "description": "Messaggio di errore mostrato quando la riautenticazione Google fallisce o viene annullata durante operazioni critiche come l'eliminazione dell'account."
-  },
   "signOut": "Esci",
   "@signOut": {
     "description": "Label for a button to sign out of the application."
@@ -512,6 +726,10 @@
   "signOutSubtitle": "Scollega il profilo Google da questo dispositivo",
   "@signOutSubtitle": {
     "description": "Sottotitolo per la voce di disconnessione dall'account."
+  },
+  "simulateError": "Simula Errore",
+  "@simulateError": {
+    "description": "Chip label to toggle simulated error in preview widgets."
   },
   "stepBirthplacesChecking": "Controllo del database dei luoghi di nascita...",
   "@stepBirthplacesChecking": {
@@ -532,6 +750,14 @@
   "switchTheme": "Cambia tema",
   "@switchTheme": {
     "description": "Tooltip for the theme mode toggle button."
+  },
+  "switchToDarkMode": "Passa a tema scuro",
+  "@switchToDarkMode": {
+    "description": "Tooltip to switch to dark theme."
+  },
+  "switchToLightMode": "Passa a tema chiaro",
+  "@switchToLightMode": {
+    "description": "Tooltip to switch to light theme."
   },
   "syncSavedCodesCount": "{count, plural, =1{1 codice salvato} other{{count} codici salvati}}",
   "@syncSavedCodesCount": {
@@ -562,6 +788,18 @@
   "termsAndCondition": "Procedendo, accetti i nostri Termini e Condizioni.",
   "@termsAndCondition": {
     "description": "A notice about agreeing to terms and conditions."
+  },
+  "themeDark": "Scuro",
+  "@themeDark": {
+    "description": "Label for dark theme option or chip."
+  },
+  "themeLight": "Chiaro",
+  "@themeLight": {
+    "description": "Label for light theme option or chip."
+  },
+  "themeShowcase": "Theme Showcase",
+  "@themeShowcase": {
+    "description": "Title for theme showcase preview."
   },
   "tooltipConfirmPicture": "Conferma foto",
   "@tooltipConfirmPicture": {

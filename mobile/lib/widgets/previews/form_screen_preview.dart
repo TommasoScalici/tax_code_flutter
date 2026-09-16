@@ -105,10 +105,10 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
 
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Dati scansionati con AI e inseriti con successo!'),
+      SnackBar(
+        content: Text(context.l10n.ocrScanSuccess),
         behavior: SnackBarBehavior.floating,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -183,7 +183,7 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Codice fiscale salvato con successo: $code'),
+          content: Text(context.l10n.codeSavedSuccess(code)),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 3),
         ),
@@ -203,7 +203,7 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
         builder: (context) {
-          final l10n = AppLocalizations.of(context)!;
+          final l10n = context.l10n;
           final theme = Theme.of(context);
 
           return Scaffold(
@@ -212,9 +212,9 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
                 icon: const Icon(Icons.arrow_back_rounded),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Torna alla dashboard'),
-                      duration: Duration(seconds: 1),
+                    SnackBar(
+                      content: Text(l10n.returnToDashboard),
+                      duration: const Duration(seconds: 1),
                     ),
                   );
                 },
@@ -230,7 +230,7 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
               actions: [
                 // Toggle mode (New vs Edit)
                 IconButton(
-                  tooltip: _isEditing ? 'Modalità Crea' : 'Modalità Modifica',
+                  tooltip: _isEditing ? l10n.createMode : l10n.editMode,
                   icon: Icon(
                     _isEditing
                         ? Icons.add_circle_outline_rounded
@@ -240,7 +240,9 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
                 ),
                 // Toggle Theme
                 IconButton(
-                  tooltip: _isDarkMode ? 'Tema Chiaro' : 'Tema Scuro',
+                  tooltip: _isDarkMode
+                      ? l10n.switchToLightMode
+                      : l10n.switchToDarkMode,
                   icon: Icon(
                     _isDarkMode
                         ? Icons.light_mode_rounded

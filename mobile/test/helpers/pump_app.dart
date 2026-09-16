@@ -168,7 +168,7 @@ Future<void> pumpApp(
       ],
       child: MaterialApp(
         locale: locale,
-        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+        onGenerateTitle: (context) => context.l10n.appTitle,
         localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         // MaterialUiCompatibilityBridge is deprecated by Flutter to denote temporary migration utility.

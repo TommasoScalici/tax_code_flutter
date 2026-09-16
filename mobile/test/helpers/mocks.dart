@@ -21,6 +21,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
+import 'package:tax_code_flutter/services/contact_card_image_service.dart';
+import 'package:tax_code_flutter/services/contact_pdf_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
@@ -79,3 +81,8 @@ class MockCameraController extends Mock implements CameraController {}
 class FakeCameraDescription extends Fake implements CameraDescription {}
 
 class MockDataExportService extends Mock implements DataExportServiceAbstract {}
+
+class MockContactPdfService extends Mock implements ContactPdfServiceAbstract {}
+
+class MockContactCardImageService extends Mock
+    implements ContactCardImageServiceAbstract {}

@@ -1,5 +1,5 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// An attention-grabbing hero card promoting optical OCR / AI scanning
 /// of health cards (Tessera Sanitaria) or electronic IDs (CIE) to automatically
@@ -24,7 +24,7 @@ class OcrAiHeroBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = context.l10n;
     final isDark = theme.brightness == Brightness.dark;
 
     final borderColor = colorScheme.primary.withValues(

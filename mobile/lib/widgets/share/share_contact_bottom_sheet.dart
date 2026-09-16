@@ -1,25 +1,46 @@
 import 'dart:io';
 
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
-import 'package:shared/repositories/contact_repository.dart';
-import 'package:shared/services/data_export_service.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
+import 'package:tax_code_flutter/services/contact_card_image_service.dart';
+import 'package:tax_code_flutter/services/contact_pdf_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
 
-/// Modal bottom sheet allowing users to export their saved contacts
-/// as either JSON or CSV offline backup files.
-class ExportDataBottomSheet extends StatefulWidget {
-  /// Creates an [ExportDataBottomSheet].
-  const ExportDataBottomSheet({super.key});
+/// Available formats for sharing a single contact's tax code data.
+enum ContactShareFormat {
+  /// Plain text tax code string.
+  text,
 
-  /// Displays the export bottom sheet modally.
-  static Future<void> show(BuildContext context) {
+  /// High-resolution graphical card with 1D Barcode and 2D QR Code.
+  image,
+
+  /// Printable A4 summary document with complete personal details.
+  pdf,
+}
+
+/// Modal bottom sheet allowing users to share a contact via text,
+/// high-resolution PNG card, or printable A4 PDF.
+class ShareContactBottomSheet extends StatefulWidget {
+  /// The contact to share.
+  final Contact contact;
+
+  /// Creates a [ShareContactBottomSheet].
+  const ShareContactBottomSheet({
+    required this.contact,
+    super.key,
+  });
+
+  /// Displays the share contact sheet modally.
+  static Future<void> show(
+    BuildContext context, {
+    required Contact contact,
+  }) {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -27,56 +48,84 @@ class ExportDataBottomSheet extends StatefulWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       barrierColor: Colors.black54,
-      builder: (context) => const ExportDataBottomSheet(),
+      builder: (_) => ShareContactBottomSheet(contact: contact),
     );
   }
 
   @override
-  State<ExportDataBottomSheet> createState() => _ExportDataBottomSheetState();
+  State<ShareContactBottomSheet> createState() =>
+      _ShareContactBottomSheetState();
 }
 
-class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
-  ExportFormat _selectedFormat = ExportFormat.json;
-  bool _isExporting = false;
+class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
+  ContactShareFormat _selectedFormat = ContactShareFormat.text;
+  bool _isSharing = false;
 
-  Future<void> _exportData(List<Contact> contacts) async {
-    if (contacts.isEmpty || _isExporting) {
-      return;
-    }
+  Future<void> _handleShare() async {
+    if (_isSharing) return;
 
-    setState(() => _isExporting = true);
+    setState(() => _isSharing = true);
 
     try {
-      final exportService = context.read<DataExportServiceAbstract>();
       final sharingService = context.read<SharingServiceAbstract>();
+      final contact = widget.contact;
 
-      final dataString = exportService.formatContacts(
-        contacts: contacts,
-        format: _selectedFormat,
-      );
-
-      final ext = exportService.fileExtension(_selectedFormat);
-      final mimeType = exportService.mimeType(_selectedFormat);
-
-      final now = DateTime.now();
-      final timestamp = DateFormat('yyyyMMdd_HHmmss').format(now);
-      final fileName = 'codici_fiscali_$timestamp.$ext';
-
-      final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/$fileName');
-      await file.writeAsString(dataString);
-
-      if (!mounted) return;
+      if (_selectedFormat == ContactShareFormat.text) {
+        if (!mounted) return;
+        Navigator.of(context).pop();
+        await sharingService.share(text: contact.taxCode);
+        return;
+      }
 
       final l10n = context.l10n;
       final scaffoldMessenger = ScaffoldMessenger.of(context);
       final navigator = Navigator.of(context);
+      final imageService = context.read<ContactCardImageServiceAbstract>();
+      final pdfService = context.read<ContactPdfServiceAbstract>();
+
+      final tempDir = await getTemporaryDirectory();
+      final sanitizedCode = contact.taxCode.isNotEmpty
+          ? contact.taxCode
+          : 'codice_fiscale';
+
+      final contactName =
+          '${contact.firstName} ${contact.lastName}'.trim().isNotEmpty
+              ? '${contact.firstName} ${contact.lastName}'.trim()
+              : contact.taxCode;
+
+      late final File file;
+      late final String mimeType;
+      late final String subject;
+
+      if (_selectedFormat == ContactShareFormat.image) {
+        final bytes = await imageService.generateCardImage(
+          contact: contact,
+          l10n: l10n,
+        );
+        final fileName = 'tessera_$sanitizedCode.png';
+        file = File('${tempDir.path}/$fileName');
+        await file.writeAsBytes(bytes);
+        mimeType = 'image/png';
+        subject = l10n.shareCardSubject(contactName);
+      } else {
+        final bytes = await pdfService.generateContactPdf(
+          contact: contact,
+          l10n: l10n,
+        );
+        final fileName = 'scheda_$sanitizedCode.pdf';
+        file = File('${tempDir.path}/$fileName');
+        await file.writeAsBytes(bytes);
+        mimeType = 'application/pdf';
+        subject = l10n.sharePdfSubject(contactName);
+      }
+
+      if (!mounted) return;
 
       navigator.pop();
 
       scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text(l10n.exportSuccess),
+          content: Text(l10n.shareContactSuccess),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -84,16 +133,16 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
       await sharingService.shareFile(
         filePath: file.path,
         mimeType: mimeType,
-        subject: fileName,
+        subject: subject,
       );
     } on Object catch (e, s) {
       if (mounted) {
         final logger = context.read<Logger?>();
-        logger?.e('Failed to export contacts', error: e, stackTrace: s);
+        logger?.e('Failed to share contact', error: e, stackTrace: s);
       }
     } finally {
       if (mounted) {
-        setState(() => _isExporting = false);
+        setState(() => _isSharing = false);
       }
     }
   }
@@ -102,8 +151,11 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
-    final contacts = context.watch<ContactRepository?>()?.contacts ?? [];
-    final hasContacts = contacts.isNotEmpty;
+    final contact = widget.contact;
+    final contactDisplayName =
+        '${contact.firstName} ${contact.lastName}'.trim().isNotEmpty
+            ? '${contact.firstName} ${contact.lastName}'.trim()
+            : l10n.contactFallback;
 
     return Container(
       decoration: BoxDecoration(
@@ -150,7 +202,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.file_download_outlined,
+                  Icons.share_rounded,
                   color: AppColors.emeraldPrimary,
                   size: 24,
                 ),
@@ -161,7 +213,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10n.exportDataTitle,
+                      l10n.shareContactTitle,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.2,
@@ -170,7 +222,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      l10n.exportDataSubtitle,
+                      l10n.shareContactSubtitle,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -179,107 +231,96 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                 ),
               ),
               IconButton(
-                key: const Key('export_sheet_close_button'),
+                key: const Key('share_sheet_close_button'),
                 icon: const Icon(Icons.close_rounded),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 16),
 
-          // Contact count badge / empty state
-          if (!hasContacts)
-            Container(
-              padding: const EdgeInsets.all(14.0),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.errorContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(14.0),
-                border: Border.all(
-                  color: theme.colorScheme.error.withValues(alpha: 0.5),
+          // Contact Summary Card
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14.0,
+              vertical: 10.0,
+            ),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(14.0),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.badge_outlined,
+                  size: 18,
+                  color: AppColors.emeraldPrimary,
                 ),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.info_outline_rounded,
-                    color: theme.colorScheme.error,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      l10n.exportNoCodes,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onErrorContainer,
-                      ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    contactDisplayName,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
-                ],
-              ),
-            )
-          else
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 14.0,
-                vertical: 10.0,
-              ),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(14.0),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.badge_outlined,
-                    size: 18,
+                ),
+                Text(
+                  contact.taxCode,
+                  style: AppTypography.codeDisplay(
                     color: AppColors.emeraldPrimary,
+                    fontSize: 14,
+                    letterSpacing: 1.0,
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      l10n.exportCodesCount(contacts.length),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
           const SizedBox(height: 18),
 
-          // Format selection section
-          Text(
-            l10n.exportFormatLabel,
-            style: theme.textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
+          // Option 1: Quick Text
+          _ShareOptionCard(
+            key: const Key('share_format_text_card'),
+            title: l10n.shareOptionTextTitle,
+            description: l10n.shareOptionTextDesc,
+            icon: Icons.text_fields_rounded,
+            isSelected: _selectedFormat == ContactShareFormat.text,
+            onTap: _isSharing
+                ? null
+                : () => setState(
+                      () => _selectedFormat = ContactShareFormat.text,
+                    ),
           ),
           const SizedBox(height: 10),
 
-          // Format Cards
-          _FormatOptionCard(
-            key: const Key('export_format_json_card'),
-            title: l10n.exportFormatJsonTitle,
-            description: l10n.exportFormatJsonDesc,
-            icon: Icons.data_object_rounded,
-            isSelected: _selectedFormat == ExportFormat.json,
-            onTap: _isExporting
+          // Option 2: HD Card Image (PNG)
+          _ShareOptionCard(
+            key: const Key('share_format_image_card'),
+            title: l10n.shareOptionImageTitle,
+            description: l10n.shareOptionImageDesc,
+            icon: Icons.image_outlined,
+            isSelected: _selectedFormat == ContactShareFormat.image,
+            onTap: _isSharing
                 ? null
-                : () => setState(() => _selectedFormat = ExportFormat.json),
+                : () => setState(
+                      () => _selectedFormat = ContactShareFormat.image,
+                    ),
           ),
           const SizedBox(height: 10),
-          _FormatOptionCard(
-            key: const Key('export_format_csv_card'),
-            title: l10n.exportFormatCsvTitle,
-            description: l10n.exportFormatCsvDesc,
-            icon: Icons.table_chart_outlined,
-            isSelected: _selectedFormat == ExportFormat.csv,
-            onTap: _isExporting
+
+          // Option 3: PDF Summary Sheet
+          _ShareOptionCard(
+            key: const Key('share_format_pdf_card'),
+            title: l10n.shareOptionPdfTitle,
+            description: l10n.shareOptionPdfDesc,
+            icon: Icons.picture_as_pdf_outlined,
+            isSelected: _selectedFormat == ContactShareFormat.pdf,
+            onTap: _isSharing
                 ? null
-                : () => setState(() => _selectedFormat = ExportFormat.csv),
+                : () => setState(
+                      () => _selectedFormat = ContactShareFormat.pdf,
+                    ),
           ),
           const SizedBox(height: 24),
 
@@ -288,8 +329,8 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
             children: [
               Expanded(
                 child: TextButton(
-                  key: const Key('export_cancel_button'),
-                  onPressed: _isExporting
+                  key: const Key('share_cancel_button'),
+                  onPressed: _isSharing
                       ? null
                       : () => Navigator.of(context).pop(),
                   child: Text(l10n.cancel),
@@ -299,7 +340,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
               Expanded(
                 flex: 2,
                 child: FilledButton.icon(
-                  key: const Key('export_confirm_button'),
+                  key: const Key('share_confirm_button'),
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.emeraldPrimary,
                     foregroundColor: Colors.black,
@@ -308,10 +349,8 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                       borderRadius: BorderRadius.circular(14.0),
                     ),
                   ),
-                  onPressed: (!hasContacts || _isExporting)
-                      ? null
-                      : () => _exportData(contacts),
-                  icon: _isExporting
+                  onPressed: _isSharing ? null : _handleShare,
+                  icon: _isSharing
                       ? const SizedBox(
                           width: 18,
                           height: 18,
@@ -320,9 +359,9 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                             color: Colors.black,
                           ),
                         )
-                      : const Icon(Icons.file_download_outlined, size: 20),
+                      : const Icon(Icons.share_rounded, size: 20),
                   label: Text(
-                    l10n.exportAction,
+                    l10n.shareContactAction,
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                 ),
@@ -335,8 +374,8 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
   }
 }
 
-class _FormatOptionCard extends StatelessWidget {
-  const _FormatOptionCard({
+class _ShareOptionCard extends StatelessWidget {
+  const _ShareOptionCard({
     required this.title,
     required this.description,
     required this.icon,

@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 class CameraPreviewOverlay extends StatelessWidget {
   const CameraPreviewOverlay({super.key});
@@ -30,7 +30,7 @@ class CameraPreviewOverlay extends StatelessWidget {
 
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = context.l10n;
     final size = MediaQuery.sizeOf(context);
 
     // Calculate responsive ID-1 card bounding box

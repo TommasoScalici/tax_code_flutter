@@ -39,6 +39,7 @@ class _TaxCodeLivePreviewCardPreviewState
       home: Builder(
         builder: (context) {
           final theme = Theme.of(context);
+          final l10n = context.l10n;
 
           return Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
@@ -64,7 +65,7 @@ class _TaxCodeLivePreviewCardPreviewState
                                   : Icons.light_mode_rounded,
                               size: 16,
                             ),
-                            label: Text(_isDarkMode ? 'Scuro' : 'Chiaro'),
+                            label: Text(_isDarkMode ? l10n.themeDark : l10n.themeLight),
                             onPressed: () {
                               setState(() {
                                 _isDarkMode = !_isDarkMode;
@@ -72,21 +73,21 @@ class _TaxCodeLivePreviewCardPreviewState
                             },
                           ),
                           ChoiceChip(
-                            label: const Text('Vuoto'),
+                            label: Text(l10n.filterEmpty),
                             selected: _stateIndex == 0,
                             onSelected: (selected) {
                               if (selected) setState(() => _stateIndex = 0);
                             },
                           ),
                           ChoiceChip(
-                            label: const Text('Parziale'),
+                            label: Text(l10n.filterPartial),
                             selected: _stateIndex == 1,
                             onSelected: (selected) {
                               if (selected) setState(() => _stateIndex = 1);
                             },
                           ),
                           ChoiceChip(
-                            label: const Text('Completo'),
+                            label: Text(l10n.filterComplete),
                             selected: _stateIndex == 2,
                             onSelected: (selected) {
                               if (selected) setState(() => _stateIndex = 2);

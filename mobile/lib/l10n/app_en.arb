@@ -5,6 +5,20 @@
   "@accountAndSettings": {
     "description": "Header title for profile and settings bottom sheet."
   },
+  "actionLabel": "Action: {action}",
+  "@actionLabel": {
+    "description": "Feedback message showing user action performed.",
+    "placeholders": {
+      "action": {
+        "type": "String",
+        "example": "Share"
+      }
+    }
+  },
+  "addCode": "Add Code",
+  "@addCode": {
+    "description": "Button label to add or create a new tax code."
+  },
   "appInfoSubtitle": "Version {version} • Legal notes and Privacy Policy",
   "@appInfoSubtitle": {
     "description": "Subtitle for app information item with dynamic version.",
@@ -99,6 +113,38 @@
   "@cardActionEdit": {
     "description": "Label for the button editing the contact details."
   },
+  "cardBelfioreLabel": "BELFIORE CODE",
+  "@cardBelfioreLabel": {
+    "description": "Cadastral code label on generated HD card image."
+  },
+  "cardBornOnLabel": "BORN ON",
+  "@cardBornOnLabel": {
+    "description": "Date of birth label on generated HD card image."
+  },
+  "cardCitizenFallback": "CITIZEN",
+  "@cardCitizenFallback": {
+    "description": "Fallback name when contact name is empty on generated card image."
+  },
+  "cardImageFooter": "Generated offline with the Tax Code app by Tommaso Scalici",
+  "@cardImageFooter": {
+    "description": "Footer watermark text on the generated HD contact card image."
+  },
+  "cardMunicipalityCountryLabel": "MUNICIPALITY / COUNTRY",
+  "@cardMunicipalityCountryLabel": {
+    "description": "Birthplace label on generated HD card image."
+  },
+  "cardPersonalCardHeader": "PERSONAL CARD",
+  "@cardPersonalCardHeader": {
+    "description": "Top-right category label on generated HD card image."
+  },
+  "cardQrCodeLabel": "QR CODE",
+  "@cardQrCodeLabel": {
+    "description": "Sub-label below QR code on generated HD card image."
+  },
+  "cardRepublicHeader": "ITALIAN REPUBLIC",
+  "@cardRepublicHeader": {
+    "description": "Top-left header on generated HD card image."
+  },
   "close": "Close",
   "@close": {
     "description": "Label for a button to close a screen or dialog."
@@ -127,6 +173,20 @@
   "@cloudSyncOn": {
     "description": "Tooltip and message when cloud synchronization is enabled."
   },
+  "codeSavedSuccess": "Tax code saved successfully: {code}",
+  "@codeSavedSuccess": {
+    "description": "Notification indicating tax code was saved successfully.",
+    "placeholders": {
+      "code": {
+        "type": "String",
+        "example": "RSSMRA85D15H501Z"
+      }
+    }
+  },
+  "contactFallback": "Contact",
+  "@contactFallback": {
+    "description": "Fallback label when a contact has no name specified."
+  },
   "continueAsGuest": "Continue as guest",
   "@continueAsGuest": {
     "description": "Label for the secondary button to access and use the app in guest mode without signing in."
@@ -142,6 +202,10 @@
   "copyTaxCode": "Copy tax code",
   "@copyTaxCode": {
     "description": "Tooltip for the button or box to copy the tax code to clipboard."
+  },
+  "createMode": "Create Mode",
+  "@createMode": {
+    "description": "Tooltip for create mode toggle."
   },
   "dashboardTitle": "My Codes",
   "@dashboardTitle": {
@@ -197,13 +261,13 @@
   "@edit": {
     "description": "Label for an edit button."
   },
+  "editMode": "Edit Mode",
+  "@editMode": {
+    "description": "Tooltip for edit mode toggle."
+  },
   "editTaxCodeTitle": "Edit Tax Code",
   "@editTaxCodeTitle": {
     "description": "App bar title in the edit tax code screen."
-  },
-  "addCode": "Add Code",
-  "@addCode": {
-    "description": "Button label to add or create a new tax code."
   },
   "emptyDashboardDescription": "Add your first Italian Tax Code to keep it handy anytime, even offline.",
   "@emptyDashboardDescription": {
@@ -230,6 +294,10 @@
   "emptySearchTitle": "No codes found",
   "@emptySearchTitle": {
     "description": "Title shown when a search filter yields no results."
+  },
+  "enabledStatus": "Enabled",
+  "@enabledStatus": {
+    "description": "Chip label indicating enabled state."
   },
   "error": "Error",
   "@error": {
@@ -285,9 +353,25 @@
   "@exportSuccess": {
     "description": "Success message displayed after generating the export file."
   },
+  "extended": "Extended",
+  "@extended": {
+    "description": "Chip label for extended state."
+  },
   "featureComingSoon": "Feature coming soon",
   "@featureComingSoon": {
     "description": "Informational message for upcoming features."
+  },
+  "filterComplete": "Complete",
+  "@filterComplete": {
+    "description": "Filter chip label for complete state preview."
+  },
+  "filterEmpty": "Empty",
+  "@filterEmpty": {
+    "description": "Filter chip label for empty state preview."
+  },
+  "filterPartial": "Partial",
+  "@filterPartial": {
+    "description": "Filter chip label for partial state preview."
   },
   "firstName": "First Name",
   "@firstName": {
@@ -341,6 +425,10 @@
   "@lastNamePlaceholder": {
     "description": "Example placeholder text for the Last Name input field."
   },
+  "loadingStatus": "Loading",
+  "@loadingStatus": {
+    "description": "Chip label indicating loading state."
+  },
   "networkError": "No internet connection. Please check your network and try again.",
   "@networkError": {
     "description": "Error message when there is no internet connectivity."
@@ -352,6 +440,10 @@
   "newTaxCodeTooltip": "Create or scan a new tax code",
   "@newTaxCodeTooltip": {
     "description": "Tooltip for the dashboard floating action button."
+  },
+  "none": "None",
+  "@none": {
+    "description": "Label indicating no selection or empty value."
   },
   "ocrHeroButton": "Scan",
   "@ocrHeroButton": {
@@ -365,6 +457,18 @@
   "@ocrHeroTitle": {
     "description": "Titolo della card hero nel form per la scansione smart con fotocamera."
   },
+  "ocrScanSuccess": "Data successfully scanned with AI and populated!",
+  "@ocrScanSuccess": {
+    "description": "Snackbar message when OCR simulated scan completes."
+  },
+  "openAsBottomSheet": "Open as Bottom Sheet",
+  "@openAsBottomSheet": {
+    "description": "Button label to display content as a bottom sheet."
+  },
+  "openModal": "Open Modal",
+  "@openModal": {
+    "description": "Button label to trigger a modal bottom sheet."
+  },
   "openSettings": "Open Settings",
   "@openSettings": {
     "description": "Label for a button that navigates the user to the app's settings page."
@@ -372,6 +476,40 @@
   "packageName": "Package Name",
   "@packageName": {
     "description": "Label for the package name field in an info screen."
+  },
+  "pdfCadastralCodeLabel": "Cadastral Code (Belfiore)",
+  "@pdfCadastralCodeLabel": {
+    "description": "Row label for cadastral code in PDF."
+  },
+  "pdfGeneratedOnFooter": "Generated on {date} with the Tax Code app by Tommaso Scalici",
+  "@pdfGeneratedOnFooter": {
+    "description": "Timestamped footer in PDF export.",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "09/16/2026 11:30"
+      }
+    }
+  },
+  "pdfOpticalCodesHeader": "OPTICAL CODES FOR AUTOMATED READING",
+  "@pdfOpticalCodesHeader": {
+    "description": "Section header for barcode and QR code in PDF."
+  },
+  "pdfPersonalDataHeader": "PERSONAL DETAILS",
+  "@pdfPersonalDataHeader": {
+    "description": "Section header for demographic table in PDF."
+  },
+  "pdfPersonalUseBadge": "PERSONAL USE",
+  "@pdfPersonalUseBadge": {
+    "description": "Badge text on PDF header."
+  },
+  "pdfSummarySubtitle": "Personal Summary Sheet",
+  "@pdfSummarySubtitle": {
+    "description": "Subtitle for PDF export document."
+  },
+  "pdfUnofficialDisclaimer": "Unofficial copy for personal use",
+  "@pdfUnofficialDisclaimer": {
+    "description": "Legal disclaimer at bottom of PDF export."
   },
   "privacyDataOwnership": "Data Ownership",
   "@privacyDataOwnership": {
@@ -429,9 +567,17 @@
   "@readFullPrivacyPolicy": {
     "description": "Label for button opening full online privacy policy on website."
   },
+  "reauthFailed": "Re-authentication failed. Please try again.",
+  "@reauthFailed": {
+    "description": "Error message displayed when Google re-authentication fails or is cancelled during sensitive operations like account deletion."
+  },
   "required": "This field is required",
   "@required": {
     "description": "A validation error message for a required form field."
+  },
+  "returnToDashboard": "Return to dashboard",
+  "@returnToDashboard": {
+    "description": "Snackbar message when navigating back to dashboard."
   },
   "saveCode": "Save Code",
   "@saveCode": {
@@ -446,6 +592,10 @@
         "example": "3"
       }
     }
+  },
+  "savingCodeInProgress": "Saving tax code...",
+  "@savingCodeInProgress": {
+    "description": "Snackbar message indicating tax code save is in progress."
   },
   "scanFailedErrorMessage": "Could not read data from the picture. Please try taking a new, more focused one.",
   "@scanFailedErrorMessage": {
@@ -481,6 +631,16 @@
   "@sectionLegalAndAppInfo": {
     "description": "Header for legal information section in profile bottom sheet."
   },
+  "selectedValue": "Selected value: {value}",
+  "@selectedValue": {
+    "description": "Text indicating the currently selected value in preview or debug controls.",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "M"
+      }
+    }
+  },
   "serviceUnavailable": "The service is temporarily unavailable. Please try again later.",
   "@serviceUnavailable": {
     "description": "Error message when the backend service is down or returning an error."
@@ -493,17 +653,71 @@
   "@share": {
     "description": "Label for a share button."
   },
+  "shareCardSubject": "Tax Code Card - {name}",
+  "@shareCardSubject": {
+    "description": "Share subject for the card image.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shareContactAction": "Share",
+  "@shareContactAction": {
+    "description": "Confirmation button label for sharing a contact."
+  },
+  "shareContactSubtitle": "Choose how to share the card or details",
+  "@shareContactSubtitle": {
+    "description": "Subtitle for the contact sharing modal bottom sheet."
+  },
+  "shareContactSuccess": "File ready for sharing or saving.",
+  "@shareContactSuccess": {
+    "description": "Notification message after generating the file for sharing."
+  },
+  "shareContactTitle": "Share code",
+  "@shareContactTitle": {
+    "description": "Title for the contact sharing modal bottom sheet."
+  },
+  "shareOptionImageDesc": "Full HD graphic card with barcode and QR Code.",
+  "@shareOptionImageDesc": {
+    "description": "Description for the card image PNG share option."
+  },
+  "shareOptionImageTitle": "Card image (PNG)",
+  "@shareOptionImageTitle": {
+    "description": "Title for the card image PNG share option."
+  },
+  "shareOptionPdfDesc": "Printable A4 document with personal details and optical codes.",
+  "@shareOptionPdfDesc": {
+    "description": "Description for the printable PDF summary sheet option."
+  },
+  "shareOptionPdfTitle": "Summary sheet (PDF)",
+  "@shareOptionPdfTitle": {
+    "description": "Title for the printable PDF summary sheet option."
+  },
+  "shareOptionTextDesc": "Send only the tax code as plain text.",
+  "@shareOptionTextDesc": {
+    "description": "Description for the quick plain text share option."
+  },
+  "shareOptionTextTitle": "Quick text",
+  "@shareOptionTextTitle": {
+    "description": "Title for the quick plain text share option."
+  },
+  "sharePdfSubject": "Tax Code Summary Sheet - {name}",
+  "@sharePdfSubject": {
+    "description": "Share subject for the summary PDF document.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "showTerms": "View Terms & Conditions",
   "@showTerms": {
     "description": "Label for a button to display the terms and conditions."
   },
-  "signInFailed": "Sign-in failed. Please try again.",
+  "signInFailed": "Sign in failed. Please try again.",
   "@signInFailed": {
     "description": "Error message displayed when an authentication attempt encounters an error."
-  },
-  "reauthFailed": "Re-authentication failed. Please try again.",
-  "@reauthFailed": {
-    "description": "Error message displayed when Google re-authentication fails or is cancelled during sensitive operations like account deletion."
   },
   "signOut": "Sign Out",
   "@signOut": {
@@ -512,6 +726,10 @@
   "signOutSubtitle": "Disconnect Google profile from this device",
   "@signOutSubtitle": {
     "description": "Subtitle for sign out action."
+  },
+  "simulateError": "Simulate Error",
+  "@simulateError": {
+    "description": "Chip label to toggle simulated error in preview widgets."
   },
   "stepBirthplacesChecking": "Checking birthplaces database...",
   "@stepBirthplacesChecking": {
@@ -532,6 +750,14 @@
   "switchTheme": "Toggle theme",
   "@switchTheme": {
     "description": "Tooltip for the theme mode toggle button."
+  },
+  "switchToDarkMode": "Switch to dark mode",
+  "@switchToDarkMode": {
+    "description": "Tooltip to switch to dark theme."
+  },
+  "switchToLightMode": "Switch to light mode",
+  "@switchToLightMode": {
+    "description": "Tooltip to switch to light theme."
   },
   "syncSavedCodesCount": "{count, plural, =1{1 saved code} other{{count} saved codes}}",
   "@syncSavedCodesCount": {
@@ -562,6 +788,18 @@
   "termsAndCondition": "By proceeding, you agree to our Terms and Conditions.",
   "@termsAndCondition": {
     "description": "A notice about agreeing to terms and conditions."
+  },
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Label for dark theme option or chip."
+  },
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Label for light theme option or chip."
+  },
+  "themeShowcase": "Theme Showcase",
+  "@themeShowcase": {
+    "description": "Title for theme showcase preview."
   },
   "tooltipConfirmPicture": "Confirm picture",
   "@tooltipConfirmPicture": {

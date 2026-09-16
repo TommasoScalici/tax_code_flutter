@@ -40,6 +40,7 @@ class _DashboardSearchBarPreviewState extends State<DashboardSearchBarPreview> {
         builder: (context) {
           final theme = Theme.of(context);
           final colorScheme = theme.colorScheme;
+          final l10n = context.l10n;
 
           return Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
@@ -58,7 +59,7 @@ class _DashboardSearchBarPreviewState extends State<DashboardSearchBarPreview> {
                         runSpacing: 8,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          // Theme Switch Chip
+                          // Theme Switch
                           ActionChip(
                             avatar: Icon(
                               _isDarkMode
@@ -66,7 +67,7 @@ class _DashboardSearchBarPreviewState extends State<DashboardSearchBarPreview> {
                                   : Icons.light_mode_rounded,
                               size: 16,
                             ),
-                            label: Text(_isDarkMode ? 'Scuro' : 'Chiaro'),
+                            label: Text(_isDarkMode ? l10n.themeDark : l10n.themeLight),
                             onPressed: () {
                               setState(() {
                                 _isDarkMode = !_isDarkMode;
@@ -76,21 +77,21 @@ class _DashboardSearchBarPreviewState extends State<DashboardSearchBarPreview> {
 
                           // Card Count selector chips
                           ChoiceChip(
-                            label: const Text('0 tessere'),
+                            label: Text(l10n.savedCardsCount(0)),
                             selected: _cardCount == 0,
                             onSelected: (val) {
                               if (val) setState(() => _cardCount = 0);
                             },
                           ),
                           ChoiceChip(
-                            label: const Text('1 tessera'),
+                            label: Text(l10n.savedCardsCount(1)),
                             selected: _cardCount == 1,
                             onSelected: (val) {
                               if (val) setState(() => _cardCount = 1);
                             },
                           ),
                           ChoiceChip(
-                            label: const Text('3 tessere'),
+                            label: Text(l10n.savedCardsCount(3)),
                             selected: _cardCount == 3,
                             onSelected: (val) {
                               if (val) setState(() => _cardCount = 3);

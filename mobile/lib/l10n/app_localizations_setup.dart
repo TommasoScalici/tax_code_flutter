@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:tax_code_flutter/l10n/app_localizations.dart';
 
-export 'package:tax_code_flutter/l10n/app_localizations.dart';
+export 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// Centralized localization configuration providing both app strings and
 /// modern Material UI localization delegates.

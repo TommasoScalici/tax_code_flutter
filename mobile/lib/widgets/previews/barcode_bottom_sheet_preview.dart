@@ -111,7 +111,9 @@ class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
                           ? Icons.light_mode_rounded
                           : Icons.dark_mode_rounded,
                     ),
-                    tooltip: 'Toggle Theme',
+                    tooltip: _isDarkMode
+                        ? context.l10n.switchToLightMode
+                        : context.l10n.switchToDarkMode,
                     onPressed: () => setState(() => _isDarkMode = !_isDarkMode),
                   ),
                 ],
@@ -151,7 +153,7 @@ class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
                         ),
                         FilledButton.icon(
                           icon: const Icon(Icons.open_in_browser_rounded),
-                          label: const Text('Apri Modal'),
+                          label: Text(context.l10n.openModal),
                           onPressed: () {
                             unawaited(
                               BarcodeBottomSheet.show(

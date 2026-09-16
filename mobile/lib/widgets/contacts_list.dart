@@ -7,13 +7,14 @@ import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/services/review_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/widgets/barcode_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/contact_card.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_empty_state.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_search_bar.dart';
+import 'package:tax_code_flutter/widgets/share/share_contact_bottom_sheet.dart';
 
 final class ContactsList extends StatefulWidget {
   final double? cardHeight;
@@ -96,7 +97,7 @@ class _ContactsListState extends State<ContactsList> {
       key: ValueKey(contact.id),
       child: ContactCard(
         contact: contact,
-        onShare: () => controller.shareContact(contact),
+        onShare: () => _onShare(context, contact),
         onShowBarcode: () => _onShowBarcode(context, contact),
         onEdit: () => _onEdit(context, controller, contact),
         onDelete: () => _onDelete(context, controller, contact),
@@ -179,7 +180,7 @@ class _ContactsListState extends State<ContactsList> {
     HomePageController controller,
     Contact contact,
   ) async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = context.l10n;
     final bool? isConfirmed = await showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -192,7 +193,12 @@ class _ContactsListState extends State<ContactsList> {
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
+            child: Text(
+              l10n.delete,
+              style: TextStyle(
+                color: Theme.of(dialogContext).colorScheme.error,
+              ),
+            ),
           ),
         ],
       ),
@@ -204,5 +210,9 @@ class _ContactsListState extends State<ContactsList> {
 
   void _onShowBarcode(BuildContext context, Contact contact) {
     unawaited(BarcodeBottomSheet.show(context, contact: contact));
+  }
+
+  void _onShare(BuildContext context, Contact contact) {
+    unawaited(ShareContactBottomSheet.show(context, contact: contact));
   }
 }

@@ -32,6 +32,7 @@ class _BirthdatePickerFieldPreviewState
       home: Builder(
         builder: (context) {
           final theme = Theme.of(context);
+          final l10n = context.l10n;
 
           return Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
@@ -52,7 +53,7 @@ class _BirthdatePickerFieldPreviewState
                               : Icons.light_mode_rounded,
                           size: 16,
                         ),
-                        label: Text(_isDarkMode ? 'Scuro' : 'Chiaro'),
+                        label: Text(_isDarkMode ? l10n.themeDark : l10n.themeLight),
                         onPressed: () {
                           setState(() {
                             _isDarkMode = !_isDarkMode;

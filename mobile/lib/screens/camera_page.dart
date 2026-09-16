@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/gemini_service.dart';
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 import 'package:tax_code_flutter/widgets/camera/camera_controls_widget.dart';
@@ -41,7 +41,7 @@ class _CameraView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<CameraPageController>();
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = context.l10n;
     final isScanning =
         controller.status == CameraStatus.readyToScan ||
         controller.status == CameraStatus.pictureTaken ||

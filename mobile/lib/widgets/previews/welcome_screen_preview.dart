@@ -81,6 +81,7 @@ class _WelcomeScreenPreviewState extends State<WelcomeScreenPreview> {
       home: Builder(
         builder: (context) {
           final theme = Theme.of(context);
+          final l10n = context.l10n;
           return Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
             body: Center(
@@ -117,7 +118,9 @@ class _WelcomeScreenPreviewState extends State<WelcomeScreenPreview> {
                           shape: const CircleBorder(),
                           elevation: 2,
                           child: IconButton(
-                            tooltip: _isDarkMode ? 'Passa a tema chiaro' : 'Passa a tema scuro',
+                            tooltip: _isDarkMode
+                                ? l10n.switchToLightMode
+                                : l10n.switchToDarkMode,
                             icon: Icon(
                               _isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
                               color: theme.colorScheme.onSurfaceVariant,

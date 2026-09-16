@@ -1,6 +1,5 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
-import 'package:tax_code_flutter/l10n/app_localizations_it.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A modern search bar for the Dashboard following the Emerald Ledger design system.
 ///
@@ -129,7 +128,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context) ?? AppLocalizationsIt();
+    final l10n = context.l10n;
     final isDark = theme.brightness == Brightness.dark;
 
     final containerColor = isDark

@@ -1,5 +1,5 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// An elegant horizontal divider with a centered uppercase label,
 /// used to visually separate form sections (e.g., between the OCR AI scan
@@ -25,12 +25,11 @@ class FormSectionDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final isDark = theme.brightness == Brightness.dark;
 
     final displayText =
-        (label ?? l10n?.formOrManualEntry ?? 'Oppure inserisci manualmente')
-            .toUpperCase();
+        (label ?? l10n.formOrManualEntry).toUpperCase();
 
     final lineColor = colorScheme.outlineVariant.withValues(
       alpha: isDark ? 0.40 : 0.55,

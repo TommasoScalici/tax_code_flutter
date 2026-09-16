@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:material_ui/material_ui.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 class ErrorDialogHelper {
   static void showErrorDialog(BuildContext context, String errorKey) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = context.l10n;
     String message;
 
     switch (errorKey) {

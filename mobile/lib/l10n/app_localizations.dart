@@ -104,6 +104,18 @@ abstract class AppLocalizations {
   /// **'Account & Settings'**
   String get accountAndSettings;
 
+  /// Feedback message showing user action performed.
+  ///
+  /// In en, this message translates to:
+  /// **'Action: {action}'**
+  String actionLabel(String action);
+
+  /// Button label to add or create a new tax code.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Code'**
+  String get addCode;
+
   /// Subtitle for app information item with dynamic version.
   ///
   /// In en, this message translates to:
@@ -236,6 +248,54 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get cardActionEdit;
 
+  /// Cadastral code label on generated HD card image.
+  ///
+  /// In en, this message translates to:
+  /// **'BELFIORE CODE'**
+  String get cardBelfioreLabel;
+
+  /// Date of birth label on generated HD card image.
+  ///
+  /// In en, this message translates to:
+  /// **'BORN ON'**
+  String get cardBornOnLabel;
+
+  /// Fallback name when contact name is empty on generated card image.
+  ///
+  /// In en, this message translates to:
+  /// **'CITIZEN'**
+  String get cardCitizenFallback;
+
+  /// Footer watermark text on the generated HD contact card image.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated offline with the Tax Code app by Tommaso Scalici'**
+  String get cardImageFooter;
+
+  /// Birthplace label on generated HD card image.
+  ///
+  /// In en, this message translates to:
+  /// **'MUNICIPALITY / COUNTRY'**
+  String get cardMunicipalityCountryLabel;
+
+  /// Top-right category label on generated HD card image.
+  ///
+  /// In en, this message translates to:
+  /// **'PERSONAL CARD'**
+  String get cardPersonalCardHeader;
+
+  /// Sub-label below QR code on generated HD card image.
+  ///
+  /// In en, this message translates to:
+  /// **'QR CODE'**
+  String get cardQrCodeLabel;
+
+  /// Top-left header on generated HD card image.
+  ///
+  /// In en, this message translates to:
+  /// **'ITALIAN REPUBLIC'**
+  String get cardRepublicHeader;
+
   /// Label for a button to close a screen or dialog.
   ///
   /// In en, this message translates to:
@@ -278,6 +338,18 @@ abstract class AppLocalizations {
   /// **'Cloud sync active'**
   String get cloudSyncOn;
 
+  /// Notification indicating tax code was saved successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax code saved successfully: {code}'**
+  String codeSavedSuccess(String code);
+
+  /// Fallback label when a contact has no name specified.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get contactFallback;
+
   /// Label for the secondary button to access and use the app in guest mode without signing in.
   ///
   /// In en, this message translates to:
@@ -301,6 +373,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy tax code'**
   String get copyTaxCode;
+
+  /// Tooltip for create mode toggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Mode'**
+  String get createMode;
 
   /// Title of the main dashboard screen listing saved tax codes.
   ///
@@ -374,17 +452,17 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get edit;
 
+  /// Tooltip for edit mode toggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Mode'**
+  String get editMode;
+
   /// App bar title in the edit tax code screen.
   ///
   /// In en, this message translates to:
   /// **'Edit Tax Code'**
   String get editTaxCodeTitle;
-
-  /// Button label to add or create a new tax code.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Code'**
-  String get addCode;
 
   /// Description shown in the empty dashboard when no cards are saved yet.
   ///
@@ -415,6 +493,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No codes found'**
   String get emptySearchTitle;
+
+  /// Chip label indicating enabled state.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get enabledStatus;
 
   /// A generic title for an error dialog.
   ///
@@ -488,11 +572,35 @@ abstract class AppLocalizations {
   /// **'Export file ready for saving or sharing.'**
   String get exportSuccess;
 
+  /// Chip label for extended state.
+  ///
+  /// In en, this message translates to:
+  /// **'Extended'**
+  String get extended;
+
   /// Informational message for upcoming features.
   ///
   /// In en, this message translates to:
   /// **'Feature coming soon'**
   String get featureComingSoon;
+
+  /// Filter chip label for complete state preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get filterComplete;
+
+  /// Filter chip label for empty state preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty'**
+  String get filterEmpty;
+
+  /// Filter chip label for partial state preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Partial'**
+  String get filterPartial;
 
   /// Label for the first name input field.
   ///
@@ -572,6 +680,12 @@ abstract class AppLocalizations {
   /// **'e.g. Smith'**
   String get lastNamePlaceholder;
 
+  /// Chip label indicating loading state.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading'**
+  String get loadingStatus;
+
   /// Error message when there is no internet connectivity.
   ///
   /// In en, this message translates to:
@@ -589,6 +703,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create or scan a new tax code'**
   String get newTaxCodeTooltip;
+
+  /// Label indicating no selection or empty value.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get none;
 
   /// Label del pulsante pill nella card hero per avviare la scansione della tessera con fotocamera.
   ///
@@ -608,6 +728,24 @@ abstract class AppLocalizations {
   /// **'Smart Camera Scan'**
   String get ocrHeroTitle;
 
+  /// Snackbar message when OCR simulated scan completes.
+  ///
+  /// In en, this message translates to:
+  /// **'Data successfully scanned with AI and populated!'**
+  String get ocrScanSuccess;
+
+  /// Button label to display content as a bottom sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Open as Bottom Sheet'**
+  String get openAsBottomSheet;
+
+  /// Button label to trigger a modal bottom sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Modal'**
+  String get openModal;
+
   /// Label for a button that navigates the user to the app's settings page.
   ///
   /// In en, this message translates to:
@@ -619,6 +757,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Package Name'**
   String get packageName;
+
+  /// Row label for cadastral code in PDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Cadastral Code (Belfiore)'**
+  String get pdfCadastralCodeLabel;
+
+  /// Timestamped footer in PDF export.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated on {date} with the Tax Code app by Tommaso Scalici'**
+  String pdfGeneratedOnFooter(String date);
+
+  /// Section header for barcode and QR code in PDF.
+  ///
+  /// In en, this message translates to:
+  /// **'OPTICAL CODES FOR AUTOMATED READING'**
+  String get pdfOpticalCodesHeader;
+
+  /// Section header for demographic table in PDF.
+  ///
+  /// In en, this message translates to:
+  /// **'PERSONAL DETAILS'**
+  String get pdfPersonalDataHeader;
+
+  /// Badge text on PDF header.
+  ///
+  /// In en, this message translates to:
+  /// **'PERSONAL USE'**
+  String get pdfPersonalUseBadge;
+
+  /// Subtitle for PDF export document.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Summary Sheet'**
+  String get pdfSummarySubtitle;
+
+  /// Legal disclaimer at bottom of PDF export.
+  ///
+  /// In en, this message translates to:
+  /// **'Unofficial copy for personal use'**
+  String get pdfUnofficialDisclaimer;
 
   /// Title for data ownership highlight.
   ///
@@ -704,11 +884,23 @@ abstract class AppLocalizations {
   /// **'Read Full Privacy Policy Online'**
   String get readFullPrivacyPolicy;
 
+  /// Error message displayed when Google re-authentication fails or is cancelled during sensitive operations like account deletion.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-authentication failed. Please try again.'**
+  String get reauthFailed;
+
   /// A validation error message for a required form field.
   ///
   /// In en, this message translates to:
   /// **'This field is required'**
   String get required;
+
+  /// Snackbar message when navigating back to dashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Return to dashboard'**
+  String get returnToDashboard;
 
   /// Primary button to save the calculated tax code in the form.
   ///
@@ -721,6 +913,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{No saved cards} =1{1 saved card} other{{count} saved cards}}'**
   String savedCardsCount(int count);
+
+  /// Snackbar message indicating tax code save is in progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving tax code...'**
+  String get savingCodeInProgress;
 
   /// Error message shown when the scan fails to extract data from a document photo. It prompts the user to retry with a better picture.
   ///
@@ -764,6 +962,12 @@ abstract class AppLocalizations {
   /// **'Legal Information'**
   String get sectionLegalAndAppInfo;
 
+  /// Text indicating the currently selected value in preview or debug controls.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected value: {value}'**
+  String selectedValue(String value);
+
   /// Error message when the backend service is down or returning an error.
   ///
   /// In en, this message translates to:
@@ -782,6 +986,78 @@ abstract class AppLocalizations {
   /// **'Share'**
   String get share;
 
+  /// Share subject for the card image.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax Code Card - {name}'**
+  String shareCardSubject(String name);
+
+  /// Confirmation button label for sharing a contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareContactAction;
+
+  /// Subtitle for the contact sharing modal bottom sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how to share the card or details'**
+  String get shareContactSubtitle;
+
+  /// Notification message after generating the file for sharing.
+  ///
+  /// In en, this message translates to:
+  /// **'File ready for sharing or saving.'**
+  String get shareContactSuccess;
+
+  /// Title for the contact sharing modal bottom sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Share code'**
+  String get shareContactTitle;
+
+  /// Description for the card image PNG share option.
+  ///
+  /// In en, this message translates to:
+  /// **'Full HD graphic card with barcode and QR Code.'**
+  String get shareOptionImageDesc;
+
+  /// Title for the card image PNG share option.
+  ///
+  /// In en, this message translates to:
+  /// **'Card image (PNG)'**
+  String get shareOptionImageTitle;
+
+  /// Description for the printable PDF summary sheet option.
+  ///
+  /// In en, this message translates to:
+  /// **'Printable A4 document with personal details and optical codes.'**
+  String get shareOptionPdfDesc;
+
+  /// Title for the printable PDF summary sheet option.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary sheet (PDF)'**
+  String get shareOptionPdfTitle;
+
+  /// Description for the quick plain text share option.
+  ///
+  /// In en, this message translates to:
+  /// **'Send only the tax code as plain text.'**
+  String get shareOptionTextDesc;
+
+  /// Title for the quick plain text share option.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick text'**
+  String get shareOptionTextTitle;
+
+  /// Share subject for the summary PDF document.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax Code Summary Sheet - {name}'**
+  String sharePdfSubject(String name);
+
   /// Label for a button to display the terms and conditions.
   ///
   /// In en, this message translates to:
@@ -791,14 +1067,8 @@ abstract class AppLocalizations {
   /// Error message displayed when an authentication attempt encounters an error.
   ///
   /// In en, this message translates to:
-  /// **'Sign-in failed. Please try again.'**
+  /// **'Sign in failed. Please try again.'**
   String get signInFailed;
-
-  /// Error message displayed when Google re-authentication fails or is cancelled during sensitive operations like account deletion.
-  ///
-  /// In en, this message translates to:
-  /// **'Re-authentication failed. Please try again.'**
-  String get reauthFailed;
 
   /// Label for a button to sign out of the application.
   ///
@@ -811,6 +1081,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Disconnect Google profile from this device'**
   String get signOutSubtitle;
+
+  /// Chip label to toggle simulated error in preview widgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulate Error'**
+  String get simulateError;
 
   /// Initial step indicating the service is checking whether birthplace data needs to be downloaded.
   ///
@@ -841,6 +1117,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Toggle theme'**
   String get switchTheme;
+
+  /// Tooltip to switch to dark theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to dark mode'**
+  String get switchToDarkMode;
+
+  /// Tooltip to switch to light theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to light mode'**
+  String get switchToLightMode;
 
   /// Count of saved tax codes for sync status pill.
   ///
@@ -877,6 +1165,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'By proceeding, you agree to our Terms and Conditions.'**
   String get termsAndCondition;
+
+  /// Label for dark theme option or chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// Label for light theme option or chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// Title for theme showcase preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Showcase'**
+  String get themeShowcase;
 
   /// Tooltip for the button to confirm the captured picture and proceed.
   ///

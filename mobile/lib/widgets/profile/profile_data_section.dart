@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
-import 'package:tax_code_flutter/l10n/app_localizations.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/widgets/export/export_data_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_action_tile.dart';
@@ -14,15 +14,14 @@ class ProfileDataSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final inAppReviewService = context.watch<InAppReviewService?>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ProfileSectionHeader(
-          title: l10n?.sectionDataAndUtilities.toUpperCase() ??
-              'DATI E FUNZIONI',
+          title: l10n.sectionDataAndUtilities.toUpperCase(),
         ),
         const SizedBox(height: 8),
         Container(
@@ -38,9 +37,8 @@ class ProfileDataSection extends StatelessWidget {
                 icon: Icons.file_download_outlined,
                 iconColor: AppColors.emeraldPrimary,
                 iconBgColor: theme.colorScheme.surfaceContainerHigh,
-                title: l10n?.exportDataTitle ?? 'Esporta codici',
-                subtitle: l10n?.exportDataSubtitle ??
-                    'Backup offline in formato JSON o CSV',
+                title: l10n.exportDataTitle,
+                subtitle: l10n.exportDataSubtitle,
                 trailing: const Icon(Icons.chevron_right_rounded, size: 20),
                 onTap: () {
                   unawaited(ExportDataBottomSheet.show(context));
@@ -52,9 +50,8 @@ class ProfileDataSection extends StatelessWidget {
                 icon: Icons.star_rounded,
                 iconColor: AppColors.starGold,
                 iconBgColor: theme.colorScheme.surfaceContainerHigh,
-                title: l10n?.rateAppTitle ?? 'Valuta sul Play Store',
-                subtitle: l10n?.rateAppSubtitle ??
-                    "Supporta lo sviluppo dell'app",
+                title: l10n.rateAppTitle,
+                subtitle: l10n.rateAppSubtitle,
                 trailing: const Icon(Icons.open_in_new_rounded, size: 18),
                 onTap: () {
                   unawaited(inAppReviewService?.openStoreListing());
