@@ -83,21 +83,24 @@ class WearContactCard extends StatelessWidget {
                     width: 0.8,
                   ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      contact.taxCode,
-                      style: WearTypography.codeDisplayCard(),
-                      maxLines: 1,
-                    ),
-                    const SizedBox(width: 4.0),
-                    Icon(
-                      Icons.qr_code_2_rounded,
-                      size: WearDimensions.iconSmall,
-                      color: AppColors.emeraldLight.withValues(alpha: 0.85),
-                    ),
-                  ],
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        contact.taxCode,
+                        style: WearTypography.codeDisplayCard(),
+                        maxLines: 1,
+                      ),
+                      const SizedBox(width: 4.0),
+                      Icon(
+                        Icons.qr_code_2_rounded,
+                        size: WearDimensions.iconSmall,
+                        color: AppColors.emeraldLight.withValues(alpha: 0.85),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 

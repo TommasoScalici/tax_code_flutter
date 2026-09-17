@@ -13,9 +13,9 @@ abstract final class WearTypography {
   /// Compact monospace style for Codice Fiscale inside list cards.
   static TextStyle codeDisplayCard({
     Color? color,
-    double fontSize = 12.0,
+    double fontSize = 11.0,
     FontWeight fontWeight = FontWeight.w700,
-    double letterSpacing = 1.2,
+    double letterSpacing = 0.6,
   }) {
     return TextStyle(
       fontFamily: 'monospace',

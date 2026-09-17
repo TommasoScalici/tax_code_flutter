@@ -48,8 +48,8 @@ abstract final class WearDimensions {
   // ---------------------------------------------------------------------------
   /// Internal padding for contact cards.
   static const EdgeInsets cardPadding = EdgeInsets.symmetric(
-    horizontal: 10.0,
-    vertical: 8.0,
+    horizontal: 8.0,
+    vertical: 7.0,
   );
 
   /// Vertical margin between cards in the list.
@@ -57,12 +57,40 @@ abstract final class WearDimensions {
 
   /// Internal padding for the Codice Fiscale pill inside the card.
   static const EdgeInsets pillPadding = EdgeInsets.symmetric(
-    horizontal: 8.0,
-    vertical: 2.5,
+    horizontal: 6.0,
+    vertical: 2.0,
   );
 
   /// Padding inside the high-contrast optical white container.
-  static const EdgeInsets opticalPadding = EdgeInsets.all(12.0);
+  static const EdgeInsets opticalPadding = EdgeInsets.all(10.0);
+
+  // ---------------------------------------------------------------------------
+  // Dialog Insets (Calibrated for Circular Wear OS Displays)
+  // ---------------------------------------------------------------------------
+  /// Outer dialog insets preventing vertical screen overflow.
+  static const EdgeInsets dialogInsetPadding = EdgeInsets.symmetric(
+    horizontal: 14.0,
+    vertical: 8.0,
+  );
+
+  /// Dialog title padding.
+  static const EdgeInsets dialogTitlePadding = EdgeInsets.fromLTRB(
+    14.0,
+    14.0,
+    14.0,
+    6.0,
+  );
+
+  /// Dialog action buttons row padding.
+  static const EdgeInsets dialogActionsPadding = EdgeInsets.fromLTRB(
+    14.0,
+    0.0,
+    14.0,
+    8.0,
+  );
+
+  /// Size of circular touch buttons inside Wear OS dialogs.
+  static const double dialogButtonSize = 36.0;
 
   // ---------------------------------------------------------------------------
   // Interactive Elements & Touch Targets

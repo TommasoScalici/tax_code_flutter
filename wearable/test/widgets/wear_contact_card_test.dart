@@ -82,5 +82,19 @@ void main() {
       // Should display tax code as title as well
       expect(find.text('RSSMRA80A01H501U'), findsNWidgets(2));
     });
+
+    testWidgets('renders without overflow on small round display (192x192 dp)',
+        (tester) async {
+      tester.view.physicalSize = const Size(384, 384);
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        buildTestCard(contact: testContact, onTap: () {}),
+      );
+
+      expect(tester.takeException(), isNull);
+      expect(find.byType(WearContactCard), findsOneWidget);
+    });
   });
 }

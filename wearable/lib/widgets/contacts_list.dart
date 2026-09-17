@@ -63,6 +63,9 @@ class _ContactsListState extends State<ContactsList> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(WearDimensions.dialogRadius),
         ),
+        insetPadding: WearDimensions.dialogInsetPadding,
+        titlePadding: WearDimensions.dialogTitlePadding,
+        actionsPadding: WearDimensions.dialogActionsPadding,
         title: Text(
           l10n.logoutConfirmation,
           style: WearTypography.cardTitle(),
@@ -70,19 +73,31 @@ class _ContactsListState extends State<ContactsList> {
         ),
         actionsAlignment: MainAxisAlignment.spaceEvenly,
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.close_rounded,
-              color: AppColors.darkOnSurfaceVariant,
+          SizedBox(
+            width: WearDimensions.dialogButtonSize,
+            height: WearDimensions.dialogButtonSize,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(
+                Icons.close_rounded,
+                size: 20,
+                color: AppColors.darkOnSurfaceVariant,
+              ),
+              onPressed: () => Navigator.of(ctx).pop(false),
             ),
-            onPressed: () => Navigator.of(ctx).pop(false),
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.check_rounded,
-              color: AppColors.emeraldLight,
+          SizedBox(
+            width: WearDimensions.dialogButtonSize,
+            height: WearDimensions.dialogButtonSize,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(
+                Icons.check_rounded,
+                size: 20,
+                color: AppColors.emeraldLight,
+              ),
+              onPressed: () => Navigator.of(ctx).pop(true),
             ),
-            onPressed: () => Navigator.of(ctx).pop(true),
           ),
         ],
       ),

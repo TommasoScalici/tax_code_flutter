@@ -124,5 +124,33 @@ void main() {
 
       verify(() => mockController.launchPhoneApp()).called(1);
     });
+
+    testWidgets(
+      'renders sign out confirmation dialog without overflow on 192x192 dp',
+      (tester) async {
+        tester.view.physicalSize = const Size(384, 384);
+        tester.view.devicePixelRatio = 2.0;
+        addTearDown(tester.view.reset);
+
+        await pumpWidget(tester);
+
+        // Find and tap Sign out button
+        final signOutButton = find.text('Sign out');
+        expect(signOutButton, findsOneWidget);
+        await tester.ensureVisible(signOutButton);
+        await tester.pumpAndSettle();
+        await tester.tap(signOutButton);
+        await tester.pumpAndSettle();
+
+        // Verify dialog is shown without any overflow
+        expect(find.byType(AlertDialog), findsOneWidget);
+        expect(tester.takeException(), isNull);
+
+        // Dismiss dialog
+        await tester.tap(find.byIcon(Icons.close_rounded));
+        await tester.pumpAndSettle();
+        expect(find.byType(AlertDialog), findsNothing);
+      },
+    );
   });
 }
