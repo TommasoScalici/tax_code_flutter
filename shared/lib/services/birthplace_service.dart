@@ -60,7 +60,7 @@ class BirthplaceService implements BirthplaceServiceAbstract {
   Future<List<Birthplace>> loadBirthplaces() async {
     if (_cachedBirthplaces != null) return _cachedBirthplaces!;
     _initializationFuture ??= _performLoad();
-    return _initializationFuture!;
+    return await _initializationFuture!;
   }
 
   Future<List<Birthplace>> _performLoad() async {

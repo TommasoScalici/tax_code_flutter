@@ -4,8 +4,6 @@ import 'package:tax_code_flutter/core/theme/app_theme.dart';
 final class Settings {
   Settings._();
 
-  static String get googleProviderClientId => 'google_provider_client_id';
-
   static ThemeData getLightTheme() => AppTheme.lightTheme;
   static ThemeData getDarkTheme() => AppTheme.darkTheme;
 }

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as legacy;
 import 'package:flutter/services.dart';
@@ -35,18 +34,6 @@ Future<void> main() async {
   await configureApp(
     logger: logger,
     configure: () async {
-      await FirebaseRemoteConfig.instance.activate();
-      unawaited(
-        FirebaseRemoteConfig.instance.fetchAndActivate().catchError((Object e, StackTrace s) {
-          logger.e(
-            'Failed to fetch/activate remote config',
-            error: e,
-            stackTrace: s,
-          );
-          return false;
-        }),
-      );
-
       await FirebaseAppCheck.instance.activate(
         providerAndroid: kDebugMode
             ? const AndroidDebugProvider()

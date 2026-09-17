@@ -298,7 +298,7 @@ class ContactPdfService implements ContactPdfServiceAbstract {
       ),
     );
 
-    return pdf.save();
+    return await pdf.save();
   }
 
   static pw.Widget _buildTableRow(

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
@@ -29,22 +28,20 @@ class ErrorDialogHelper {
         break;
     }
 
-    unawaited(
-      showDialog<void>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(l10n.error),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(l10n.close),
-              ),
-            ],
-          );
-        },
-      ),
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(l10n.error),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.close),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart' as legacy;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -63,7 +62,6 @@ Future<void> pumpApp(
   final firebaseCrashlytics = MockFirebaseCrashlytics();
   final firebaseFirestore = MockFirebaseFirestore();
   final firebaseFunctions = MockFirebaseFunctions();
-  final remoteConfig = MockFirebaseRemoteConfig();
   final databaseService = MockDatabaseService();
   final brightnessService = MockBrightnessService();
   final sharingService = MockSharingService();
@@ -102,7 +100,6 @@ Future<void> pumpApp(
   }
 
   when(() => themeService.theme).thenReturn(AppThemeMode.light);
-  when(() => remoteConfig.getString(any<String>())).thenReturn('');
 
   when(
     () => logger.e(
@@ -135,7 +132,6 @@ Future<void> pumpApp(
         Provider<FirebaseCrashlytics>.value(value: firebaseCrashlytics),
         Provider<FirebaseFirestore>.value(value: firebaseFirestore),
         Provider<FirebaseFunctions>.value(value: firebaseFunctions),
-        Provider<FirebaseRemoteConfig>.value(value: remoteConfig),
 
         // --- Level 2: Specialized, Self-Contained Services ---
         Provider<PermissionServiceAbstract>.value(value: permissionService),

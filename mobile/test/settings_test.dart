@@ -6,11 +6,6 @@ import 'package:tax_code_flutter/settings.dart';
 void main() {
   group('Settings', () {
 
-    test('API key getters return correct constant values', () {
-      // Act & Assert
-      expect(Settings.googleProviderClientId, 'google_provider_client_id');
-    });
-
     test(
       'getLightTheme returns a ThemeData object with correct light properties',
       () {

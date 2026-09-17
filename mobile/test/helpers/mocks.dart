@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
@@ -48,8 +47,6 @@ class MockFirebaseCrashlytics extends Mock implements FirebaseCrashlytics {}
 class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
 
 class MockFirebaseFunctions extends Mock implements FirebaseFunctions {}
-
-class MockFirebaseRemoteConfig extends Mock implements FirebaseRemoteConfig {}
 
 class MockPermissionService extends Mock implements PermissionServiceAbstract {}
 

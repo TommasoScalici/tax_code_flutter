@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -48,7 +47,6 @@ List<SingleChildWidget> getAppProviders({
     Provider<FirebaseFunctions>.value(
       value: FirebaseFunctions.instanceFor(region: 'us-central1'),
     ),
-    Provider<FirebaseRemoteConfig>.value(value: FirebaseRemoteConfig.instance),
 
     // --- Level 2: Specialized, Self-Contained Services ---
     Provider<PermissionServiceAbstract>(

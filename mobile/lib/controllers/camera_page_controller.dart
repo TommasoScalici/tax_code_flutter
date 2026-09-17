@@ -38,7 +38,7 @@ Future<String> defaultImageProcessor(
   int maxDimension = 1280,
   int quality = 80,
 }) async {
-  return Isolate.run(() {
+  return await Isolate.run(() {
     final rawBytes = File(filePath).readAsBytesSync();
     try {
       final decoded = img.decodeImage(rawBytes);
