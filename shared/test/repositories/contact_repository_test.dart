@@ -86,6 +86,9 @@ void main() {
       () => mockDbService.saveAllContacts(any(), any()),
     ).thenAnswer((_) async {});
     when(
+      () => mockDbService.getContacts(any()),
+    ).thenAnswer((_) async => <Contact>[]);
+    when(
       () => mockLogger.e(
         any<Object?>(),
         error: any<Object?>(named: 'error'),
@@ -599,7 +602,7 @@ void main() {
       syncRepo.dispose();
     });
 
-    test('disabling sync clears cloud contacts and cancels subscription', () async {
+    test('disabling sync cancels subscription without deleting cloud contacts', () async {
       await pumpEventQueue();
       clearInteractions(mockDbService);
 
@@ -608,10 +611,10 @@ void main() {
       listener();
       await pumpEventQueue();
 
-      verify(() => mockDbService.saveAllContacts(fakeUser.uid, <Contact>[])).called(1);
+      verifyNever(() => mockDbService.saveAllContacts(any(), any()));
     });
 
-    test('enabling sync uploads local contacts first before listening to stream', () async {
+    test('enabling sync reconciles local and remote contacts before listening to stream', () async {
       await pumpEventQueue();
 
       // Disable first
@@ -626,29 +629,59 @@ void main() {
 
       // Re-enable sync
       when(() => mockSyncService.isSyncEnabled).thenReturn(true);
+      when(() => mockDbService.getContacts(fakeUser.uid)).thenAnswer((_) async => <Contact>[]);
       listener();
       await pumpEventQueue();
 
       verifyInOrder([
+        () => mockDbService.getContacts(fakeUser.uid),
         () => mockDbService.saveAllContacts(fakeUser.uid, [contact1]),
         () => mockDbService.getContactsStream(fakeUser.uid),
       ]);
     });
 
-    test('remote empty contacts do not wipe existing local contacts', () async {
+    test('remote empty contacts update local state to empty without re-upload', () async {
       while (syncRepo.isLoading) {
         await pumpEventQueue();
       }
       await syncRepo.addOrUpdateContact(contact1);
       clearInteractions(mockDbService);
 
-      // Remote stream unexpectedly emits empty list
+      // Remote stream legitimately emits empty list (e.g. user deleted contacts on another device)
       contactsStreamController.add([]);
       await pumpEventQueue();
 
-      // Contacts in repo must still contain contact1!
-      expect(syncRepo.contacts, contains(contact1));
-      verify(() => mockDbService.saveAllContacts(fakeUser.uid, [contact1])).called(1);
+      // Contacts in repo must now reflect the empty remote list without resurrecting contacts
+      expect(syncRepo.contacts, isEmpty);
+      verifyNever(() => mockDbService.saveAllContacts(any(), any()));
+    });
+
+    test('reconciliation resolves conflicts using updatedAt timestamp', () async {
+      await pumpEventQueue();
+
+      // Disable first
+      when(() => mockSyncService.isSyncEnabled).thenReturn(false);
+      final listener = verify(() => mockSyncService.addListener(captureAny())).captured.first as VoidCallback;
+      listener();
+      await pumpEventQueue();
+
+      // Local contact modified more recently
+      final olderTime = DateTime(2025);
+      final newerTime = DateTime(2025, 6);
+      final localContact = contact1.copyWith(firstName: 'Mario-Local', updatedAt: newerTime);
+      final remoteContact = contact1.copyWith(firstName: 'Mario-Remote', updatedAt: olderTime);
+
+      await syncRepo.addOrUpdateContact(localContact);
+      clearInteractions(mockDbService);
+
+      when(() => mockSyncService.isSyncEnabled).thenReturn(true);
+      when(() => mockDbService.getContacts(fakeUser.uid)).thenAnswer((_) async => [remoteContact]);
+      listener();
+      await pumpEventQueue();
+
+      // Newer local contact should win over older remote contact
+      expect(syncRepo.contacts.first.firstName, 'Mario-Local');
+      verify(() => mockDbService.saveAllContacts(fakeUser.uid, any(that: contains(localContact)))).called(1);
     });
 
     test('migrates guest contacts to Google account on sign-in without losing cloud contacts', () async {

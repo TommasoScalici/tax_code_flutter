@@ -37,6 +37,9 @@ class Contact extends Equatable {
   @HiveField(7)
   final int listIndex;
 
+  @HiveField(8)
+  final DateTime? updatedAt;
+
   const Contact({
     required this.id,
     required this.firstName,
@@ -46,6 +49,7 @@ class Contact extends Equatable {
     required this.birthPlace,
     required this.birthDate,
     required this.listIndex,
+    this.updatedAt,
   });
 
   /// Creates a new [Contact] with a generated UUID, current timestamp,
@@ -60,6 +64,7 @@ class Contact extends Equatable {
       birthPlace: const Birthplace(name: '', state: ''),
       birthDate: DateTime(1970),
       listIndex: 0,
+      updatedAt: DateTime.now(),
     );
   }
 
@@ -72,6 +77,7 @@ class Contact extends Equatable {
     Birthplace? birthPlace,
     DateTime? birthDate,
     int? listIndex,
+    DateTime? updatedAt,
   }) {
     return Contact(
       id: id ?? this.id,
@@ -82,6 +88,7 @@ class Contact extends Equatable {
       birthPlace: birthPlace ?? this.birthPlace,
       birthDate: birthDate ?? this.birthDate,
       listIndex: listIndex ?? this.listIndex,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 

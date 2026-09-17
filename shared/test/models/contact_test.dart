@@ -30,6 +30,7 @@ void main() {
         'birthPlace': {'name': 'Roma', 'state': 'RM', 'code': 'H501'},
         'birthDate': Timestamp.fromDate(birthDate),
         'listIndex': 0,
+        'updatedAt': null,
       };
 
       /// Tests for converting JSON to the model
@@ -57,6 +58,7 @@ void main() {
         expect(emptyContact.lastName, '');
         expect(emptyContact.birthDate, DateTime(1970));
         expect(emptyContact.listIndex, 0);
+        expect(emptyContact.updatedAt, isNotNull);
       });
 
       /// Tests for the copyWith method

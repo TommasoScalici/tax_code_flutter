@@ -81,18 +81,7 @@ class ContactRepository with ChangeNotifier {
     if (isSyncActive) {
       if (_contactsSubscription == null && _userId != null) {
         final userId = _userId!;
-        final localContacts = List<Contact>.from(_contacts);
-        if (localContacts.isNotEmpty) {
-          try {
-            await _dbService.saveAllContacts(userId, localContacts);
-          } on Object catch (e, s) {
-            _logger.e(
-              'Error syncing contacts to Firebase on re-enable',
-              error: e,
-              stackTrace: s,
-            );
-          }
-        }
+        await _reconcileLocalAndRemoteContacts(userId);
         if (_isDisposed || !isSyncActive) return;
         _listenToRemoteContacts(userId);
       }
@@ -102,21 +91,63 @@ class ContactRepository with ChangeNotifier {
         await subscription.cancel();
         _contactsSubscription = null;
       }
-      final userId = _userId;
-      if (userId != null) {
-        try {
-          await _dbService.saveAllContacts(userId, <Contact>[]);
-        } on Object catch (e, s) {
-          _logger.e(
-            'Error clearing cloud contacts on sync disable',
-            error: e,
-            stackTrace: s,
-          );
-        }
-      }
+      // Note: We deliberately do NOT wipe cloud contacts when sync is toggled off locally.
+      // Cloud contacts remain safe for other devices, preventing accidental data loss.
     }
     if (!_isDisposed) {
       notifyListeners();
+    }
+  }
+
+  /// Reconciles local and remote contacts non-destructively, resolving conflicts via [Contact.updatedAt].
+  Future<void> _reconcileLocalAndRemoteContacts(String userId) async {
+    try {
+      final remoteContacts = await _dbService.getContacts(userId);
+      if (remoteContacts.isEmpty && _contacts.isEmpty) {
+        return;
+      }
+
+      final mergedMap = <String, Contact>{};
+
+      // 1. Seed with remote contacts
+      for (final remote in remoteContacts) {
+        mergedMap[remote.id] = remote;
+      }
+
+      // 2. Merge local contacts with timestamp-based conflict resolution
+      for (final local in _contacts) {
+        final existing = mergedMap[local.id];
+        if (existing == null) {
+          // Contact exists only locally (created offline) -> keep it to upload
+          mergedMap[local.id] = local;
+        } else {
+          // Contact exists in both -> compare updatedAt
+          if (local.updatedAt != null && existing.updatedAt != null) {
+            if (local.updatedAt!.isAfter(existing.updatedAt!)) {
+              mergedMap[local.id] = local;
+            }
+          } else if (local.updatedAt != null) {
+            mergedMap[local.id] = local;
+          }
+          // Otherwise existing (remote) is preserved
+        }
+      }
+
+      final mergedList = mergedMap.values.toList();
+      for (var i = 0; i < mergedList.length; i++) {
+        mergedList[i] = mergedList[i].copyWith(listIndex: i);
+      }
+      mergedList.sort((a, b) => a.listIndex.compareTo(b.listIndex));
+
+      _contacts = mergedList;
+      await _dbService.saveAllContacts(userId, _contacts);
+      await _saveContactsToLocalCache();
+    } on Object catch (e, s) {
+      _logger.e(
+        'Error during local-remote contacts reconciliation',
+        error: e,
+        stackTrace: s,
+      );
     }
   }
 
@@ -127,11 +158,13 @@ class ContactRepository with ChangeNotifier {
   Future<void> addOrUpdateContact(Contact contact) async {
     if (_userId == null) return;
 
-    final index = _contacts.indexWhere((c) => c.id == contact.id);
+    final stampedContact = contact.copyWith(updatedAt: DateTime.now());
+
+    final index = _contacts.indexWhere((c) => c.id == stampedContact.id);
     if (index != -1) {
-      _contacts[index] = contact;
+      _contacts[index] = stampedContact;
     } else {
-      _contacts.add(contact);
+      _contacts.add(stampedContact);
     }
     _contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
 
@@ -140,7 +173,7 @@ class ContactRepository with ChangeNotifier {
 
     if (isSyncActive) {
       try {
-        await _dbService.addOrUpdateContact(_userId!, contact);
+        await _dbService.addOrUpdateContact(_userId!, stampedContact);
       } on Exception catch (e, s) {
         _logger.e(
           'Error adding/updating contact in Firebase',
@@ -409,25 +442,6 @@ class ContactRepository with ChangeNotifier {
   }
 
   Future<void> _processContactsUpdate(List<Contact> remoteContacts) async {
-    if (remoteContacts.isEmpty && _contacts.isNotEmpty) {
-      _logger.w(
-        'Received empty remote contacts while local contacts exist. Re-uploading local contacts.',
-      );
-      final userId = _userId;
-      if (userId != null) {
-        try {
-          await _dbService.saveAllContacts(userId, _contacts);
-        } on Object catch (e, s) {
-          _logger.e(
-            'Error re-uploading local contacts to Firebase',
-            error: e,
-            stackTrace: s,
-          );
-        }
-      }
-      return;
-    }
-
     _contacts = List.from(remoteContacts)
       ..sort((a, b) => a.listIndex.compareTo(b.listIndex));
 
