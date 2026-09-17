@@ -16,7 +16,7 @@ export 'package:tax_code_flutter/core/theme/theme_context_extensions.dart';
 abstract final class AppTheme {
   /// Dark Theme (OLED First).
   static ThemeData get darkTheme {
-    final colorScheme = AppColors.darkColorScheme();
+    final colorScheme = _darkColorScheme();
     final textTheme = AppTypography.createTextTheme(
       onSurface: colorScheme.onSurface,
       onSurfaceVariant: colorScheme.onSurfaceVariant,
@@ -191,7 +191,7 @@ abstract final class AppTheme {
 
   /// Light Theme.
   static ThemeData get lightTheme {
-    final colorScheme = AppColors.lightColorScheme();
+    final colorScheme = _lightColorScheme();
     final textTheme = AppTypography.createTextTheme(
       onSurface: colorScheme.onSurface,
       onSurfaceVariant: colorScheme.onSurfaceVariant,
@@ -361,6 +361,86 @@ abstract final class AppTheme {
         thickness: 1,
         space: 1,
       ),
+    );
+  }
+
+  /// Constructs the Material 3 [ColorScheme] for the Emerald Ledger dark mode.
+  static ColorScheme _darkColorScheme() {
+    return const ColorScheme(
+      brightness: Brightness.dark,
+      primary: AppColors.emeraldPrimary,
+      onPrimary: Color(0xFF000000),
+      primaryContainer: AppColors.emeraldContainerDark,
+      onPrimaryContainer: AppColors.emeraldLight,
+      secondary: Color(0xFFC8C6C5),
+      onSecondary: Color(0xFF1E1E1E),
+      secondaryContainer: Color(0xFF353534),
+      onSecondaryContainer: Color(0xFFE5E2E1),
+      tertiary: Color(0xFF81C784),
+      onTertiary: Color(0xFF003314),
+      tertiaryContainer: Color(0xFF1B4332),
+      onTertiaryContainer: Color(0xFFA3E9A4),
+      error: AppColors.darkError,
+      onError: AppColors.darkOnError,
+      errorContainer: AppColors.darkErrorContainer,
+      onErrorContainer: Color(0xFFFFDAD6),
+      surface: AppColors.darkSurface,
+      onSurface: AppColors.darkOnSurface,
+      surfaceDim: AppColors.darkSurface,
+      surfaceBright: Color(0xFF2C2C2C),
+      surfaceContainerLowest: AppColors.darkSurfaceContainerLowest,
+      surfaceContainerLow: AppColors.darkSurfaceContainerLow,
+      surfaceContainer: AppColors.darkSurfaceContainer,
+      surfaceContainerHigh: AppColors.darkSurfaceContainerHigh,
+      surfaceContainerHighest: AppColors.darkSurfaceContainerHighest,
+      onSurfaceVariant: AppColors.darkOnSurfaceVariant,
+      outline: AppColors.darkOutline,
+      outlineVariant: AppColors.darkOutlineVariant,
+      shadow: Color(0xFF000000),
+      scrim: Color(0xFF000000),
+      inverseSurface: Color(0xFFE5E2E1),
+      onInverseSurface: Color(0xFF1E1E1E),
+      inversePrimary: Color(0xFF006D36),
+    );
+  }
+
+  /// Constructs the Material 3 [ColorScheme] for the Emerald Ledger light mode.
+  static ColorScheme _lightColorScheme() {
+    return const ColorScheme(
+      brightness: Brightness.light,
+      primary: AppColors.lightPrimary,
+      onPrimary: Color(0xFFFFFFFF),
+      primaryContainer: AppColors.lightPrimaryContainer,
+      onPrimaryContainer: AppColors.lightOnPrimaryContainer,
+      secondary: Color(0xFF505F76),
+      onSecondary: Color(0xFFFFFFFF),
+      secondaryContainer: Color(0xFFD8E2F9),
+      onSecondaryContainer: Color(0xFF0E1B2E),
+      tertiary: Color(0xFF2E6B47),
+      onTertiary: Color(0xFFFFFFFF),
+      tertiaryContainer: Color(0xFFB1F1C5),
+      onTertiaryContainer: Color(0xFF00210E),
+      error: AppColors.lightError,
+      onError: Color(0xFFFFFFFF),
+      errorContainer: AppColors.lightErrorContainer,
+      onErrorContainer: Color(0xFF410002),
+      surface: AppColors.lightSurface,
+      onSurface: AppColors.lightOnSurface,
+      surfaceDim: Color(0xFFE2E8F0),
+      surfaceBright: Color(0xFFFFFFFF),
+      surfaceContainerLowest: Color(0xFFFFFFFF),
+      surfaceContainerLow: AppColors.lightSurfaceContainerLow,
+      surfaceContainer: AppColors.lightSurfaceContainer,
+      surfaceContainerHigh: AppColors.lightSurfaceContainerHigh,
+      surfaceContainerHighest: AppColors.lightSurfaceContainerHighest,
+      onSurfaceVariant: AppColors.lightOnSurfaceVariant,
+      outline: AppColors.lightOutline,
+      outlineVariant: AppColors.lightOutlineVariant,
+      shadow: Color(0xFF000000),
+      scrim: Color(0xFF000000),
+      inverseSurface: Color(0xFF1E1E1E),
+      onInverseSurface: Color(0xFFF1F5F9),
+      inversePrimary: AppColors.emeraldLight,
     );
   }
 }
