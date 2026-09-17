@@ -102,16 +102,3 @@ class Contact extends Equatable {
   @override
   List<Object?> get props => [id];
 }
-
-extension ContactNativeMapper on Contact {
-  Map<String, dynamic> toNativeMap() => {
-    'id': id,
-    'firstName': firstName,
-    'lastName': lastName,
-    'gender': gender,
-    'taxCode': taxCode,
-    'birthPlace': {'name': birthPlace.name, 'state': birthPlace.state},
-    'birthDate': birthDate.toString(),
-    'listIndex': listIndex,
-  };
-}

@@ -1,7 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
+import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 
@@ -11,9 +10,11 @@ class ContactsListController with ChangeNotifier {
   final Logger _logger;
 
   bool _isLaunchingPhoneApp = false;
-  bool _nativeViewIsActive = false;
 
   bool get isLaunchingPhoneApp => _isLaunchingPhoneApp;
+  bool get isLoading => _contactRepository.isLoading;
+  bool get hasContacts => _contactRepository.contacts.isNotEmpty;
+  List<Contact> get contacts => _contactRepository.contacts;
 
   ContactsListController({
     required ContactRepository contactRepository,
@@ -23,11 +24,7 @@ class ContactsListController with ChangeNotifier {
        _nativeViewService = nativeViewService,
        _logger = logger {
     _contactRepository.addListener(_onContactsChanged);
-    _onContactsChanged();
   }
-
-  bool get isLoading => _contactRepository.isLoading;
-  bool get hasContacts => _contactRepository.contacts.isNotEmpty;
 
   @override
   void dispose() {
@@ -35,10 +32,8 @@ class ContactsListController with ChangeNotifier {
     super.dispose();
   }
 
-  ///
   /// Handles the action of launching the companion app on the phone,
   /// updating the loading state for the UI.
-  ///
   Future<void> launchPhoneApp() async {
     _isLaunchingPhoneApp = true;
     notifyListeners();
@@ -54,16 +49,6 @@ class ContactsListController with ChangeNotifier {
   }
 
   void _onContactsChanged() {
-    final contacts = _contactRepository.contacts;
-    if (contacts.isNotEmpty && !_nativeViewIsActive) {
-      _nativeViewIsActive = true;
-      unawaited(_nativeViewService.showContactList(contacts));
-    } else if (contacts.isNotEmpty && _nativeViewIsActive) {
-      unawaited(_nativeViewService.updateContactList(contacts));
-    } else if (contacts.isEmpty && _nativeViewIsActive) {
-      _nativeViewIsActive = false;
-      unawaited(_nativeViewService.closeContactList());
-    }
     notifyListeners();
   }
 }

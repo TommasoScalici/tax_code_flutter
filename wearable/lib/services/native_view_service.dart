@@ -1,12 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:shared/models/contact.dart';
 
 abstract class NativeViewServiceAbstract {
   Future<void> launchPhoneApp();
-  Future<void> closeContactList();
-  Future<void> showContactList(List<Contact> contacts);
-  Future<void> updateContactList(List<Contact> contacts);
   Future<void> enableHighBrightnessMode();
   Future<void> disableHighBrightnessMode();
 }
@@ -37,57 +33,7 @@ class NativeViewService implements NativeViewServiceAbstract {
     }
   }
 
-  @override
-  Future<void> closeContactList() async {
-    try {
-      await _platform.invokeMethod<void>('closeNativeContactList');
-    } on PlatformException catch (e, s) {
-      _logger.e(
-        "Failed to invoke native closeContactList: '${e.message}'.",
-        error: e,
-        stackTrace: s,
-      );
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> showContactList(List<Contact> contacts) async {
-    try {
-      final contactsData = contacts.map((c) => c.toNativeMap()).toList();
-      await _platform.invokeMethod('openNativeContactList', {
-        'contacts': contactsData,
-      });
-    } on PlatformException catch (e, s) {
-      _logger.e(
-        'Failed to invoke native method: "${e.message}".',
-        error: e,
-        stackTrace: s,
-      );
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> updateContactList(List<Contact> contacts) async {
-    try {
-      final contactsData = contacts.map((c) => c.toNativeMap()).toList();
-      await _platform.invokeMethod('updateContactList', {
-        'contacts': contactsData,
-      });
-    } on PlatformException catch (e, s) {
-      _logger.e(
-        'Failed to invoke native method: "${e.message}".',
-        error: e,
-        stackTrace: s,
-      );
-      rethrow;
-    }
-  }
-
-  ///
-  /// Enables the high brightness mode on the native side.
-  ///
+  /// Enables high brightness mode on the native display.
   @override
   Future<void> enableHighBrightnessMode() async {
     try {
@@ -102,9 +48,7 @@ class NativeViewService implements NativeViewServiceAbstract {
     }
   }
 
-  ///
-  /// Disables the high brightness mode on the native side.
-  ///
+  /// Disables high brightness mode on the native display.
   @override
   Future<void> disableHighBrightnessMode() async {
     try {

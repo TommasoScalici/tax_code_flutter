@@ -90,16 +90,5 @@ void main() {
         expect(contact, isNot(equals(contactWithDifferentId)));
       });
     });
-
-    /// Grouping tests for extensions
-    group('Extensions', () {
-      /// Tests for the toNativeMap method
-      test('toNativeMap should return a map with a String date', () {
-        final nativeMap = contact.toNativeMap();
-
-        expect(nativeMap['birthDate'], isA<String>());
-        expect(nativeMap['birthDate'], birthDate.toString());
-      });
-    });
   });
 }

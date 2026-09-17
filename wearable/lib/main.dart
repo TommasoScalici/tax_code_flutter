@@ -32,7 +32,16 @@ Future<void> main() async {
   await configureApp(
     logger: logger,
     configure: () async {
-      await FirebaseRemoteConfig.instance.fetchAndActivate();
+      await FirebaseRemoteConfig.instance.activate();
+      unawaited(
+        FirebaseRemoteConfig.instance.fetchAndActivate().catchError((
+          Object error,
+          StackTrace stackTrace,
+        ) {
+          logger.w('Remote config fetch failed: $error');
+          return false;
+        }),
+      );
 
       const appCheckProvider = kDebugMode
           ? AndroidDebugProvider()
