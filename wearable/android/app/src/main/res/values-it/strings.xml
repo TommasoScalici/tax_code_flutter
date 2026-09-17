@@ -3,10 +3,6 @@
     <!-- App Title -->
     <string name="app_name">Codice Fiscale</string>
 
-    <!-- Contact item -->
-    <string name="contact_name_format">%1$s %2$s (%3$s)</string>
-    <string name="birth_place_format">%1$s (%2$s)</string>
-
     <!-- Error Messages -->
     <string name="phone_not_connected">Telefono non connesso</string>
     <string name="app_opened">App aperta sul telefono</string>
