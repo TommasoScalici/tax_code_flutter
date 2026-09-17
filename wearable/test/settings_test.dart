@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared/theme/app_colors.dart';
+import 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/settings.dart';
 
 void main() {
   group('Settings', () {
     test(
-      'getWearTheme should return a ThemeData object with correct properties',
+      'getWearTheme should return an Emerald Ledger ThemeData calibrated for Wear OS',
       () {
-        // Arrange
-        final expectedColorScheme = ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 38, 128, 0),
-          brightness: Brightness.dark,
-        );
-
         // Act
         final theme = Settings.getWearTheme();
 
@@ -20,16 +16,23 @@ void main() {
         expect(theme, isA<ThemeData>());
         expect(theme.useMaterial3, isTrue);
         expect(theme.visualDensity, VisualDensity.compact);
+        expect(theme.brightness, Brightness.dark);
+        expect(theme.scaffoldBackgroundColor, AppColors.darkBackground);
 
-        // Verify ColorScheme properties by comparing against a reference
-        expect(theme.colorScheme.brightness, expectedColorScheme.brightness);
-        expect(theme.colorScheme.primary, expectedColorScheme.primary);
-        expect(theme.colorScheme.secondary, expectedColorScheme.secondary);
+        // Verify ColorScheme properties
+        expect(theme.colorScheme.brightness, Brightness.dark);
+        expect(theme.colorScheme.primary, AppColors.emeraldPrimary);
+        expect(theme.colorScheme.surface, AppColors.darkSurface);
+        expect(theme.colorScheme.surfaceContainer, AppColors.darkSurfaceContainer);
 
-        // Verify ElevatedButtonTheme properties
-        final elevatedButtonBackgroundColor =
-            theme.elevatedButtonTheme.style?.backgroundColor;
-        expect(elevatedButtonBackgroundColor?.resolve({}), Colors.grey[800]);
+        // Verify CardTheme
+        expect(theme.cardTheme.color, AppColors.darkSurfaceContainer);
+        expect(theme.cardTheme.elevation, 0);
+        final cardShape = theme.cardTheme.shape! as RoundedRectangleBorder;
+        expect(cardShape.borderRadius, BorderRadius.circular(WearDimensions.cardRadius));
+
+        // Verify FilledButton
+        expect(theme.filledButtonTheme.style?.backgroundColor?.resolve({}), AppColors.emeraldPrimary);
       },
     );
   });

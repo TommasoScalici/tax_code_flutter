@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tax_code_flutter_wear_os/core/theme/wear_theme.dart';
 
-class Settings {
-  static ThemeData getWearTheme() {
-    return ThemeData(
-      visualDensity: VisualDensity.compact,
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color.fromARGB(255, 38, 128, 0),
-        brightness: Brightness.dark,
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[800]),
-      ),
-    );
-  }
+/// Application-wide settings and theme providers for Wear OS.
+final class Settings {
+  Settings._();
+
+  /// Returns the Material 3 "Emerald Ledger" theme optimized for Wear OS.
+  static ThemeData getWearTheme() => WearTheme.darkTheme;
 }
