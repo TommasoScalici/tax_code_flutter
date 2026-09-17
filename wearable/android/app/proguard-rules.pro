@@ -1,47 +1,32 @@
-# Flutter
--keep class io.flutter.** { *; }
--keep class io.flutter.embedding.** { *; }
--dontwarn io.flutter.embedding.**
+# ==============================================================================
+# R8 / ProGuard Optimization Rules for Tax Code Wear OS
+# ==============================================================================
 
-# Firebase
--keep class com.google.firebase.** { *; }
--keep class com.google.android.gms.** { *; }
--dontwarn com.google.firebase.**
--dontwarn com.google.android.gms.**
-
-# Firebase Crashlytics — preserve stack traces
+# Crashlytics: Preserve line numbers and source files for de-obfuscation in Firebase Console
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
--keep class com.google.firebase.crashlytics.** { *; }
--dontwarn com.google.firebase.crashlytics.**
 
-# Firebase App Check
--keep class com.google.firebase.appcheck.** { *; }
--dontwarn com.google.firebase.appcheck.**
-
-# Keep annotations used by Gson / Firestore serialization
+# Serialization & Reflection: Preserve annotations and generic signatures
 -keepattributes *Annotation*
 -keepattributes Signature
 -keepattributes Exceptions
+-keepattributes InnerClasses
+-keepattributes EnclosingMethod
 
 # Kotlin
--keep class kotlin.** { *; }
--keep class kotlin.Metadata { *; }
 -dontwarn kotlin.**
 -keepclassmembers class **$WhenMappings { <fields>; }
--keepclassmembers class kotlin.Metadata {
-    public <methods>;
-}
 
 # Coroutines
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
 -keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
 -dontwarn kotlinx.coroutines.**
 
-# OkHttp / Networking (used transitively by Firebase)
+# Warnings suppression for optional / transitive dependencies
+-dontwarn io.flutter.embedding.**
+-dontwarn com.google.firebase.**
+-dontwarn com.google.android.gms.**
 -dontwarn okhttp3.**
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 
-# Google Sign-In
--keep class com.google.android.gms.auth.** { *; }
