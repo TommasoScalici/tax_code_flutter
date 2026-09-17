@@ -49,6 +49,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get swipeToClose => 'Swipe right to close';
 
   @override
+  String get syncTakesFewMinutes => 'Sync may take a few minutes';
+
+  @override
   String get tapToSwitchBarcode => 'Tap to toggle QR code';
 
   @override

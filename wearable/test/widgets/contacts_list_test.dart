@@ -92,6 +92,7 @@ void main() {
           find.text('No contacts found. Add them on your phone.'),
           findsOneWidget,
         );
+        expect(find.text('Sync may take a few minutes'), findsOneWidget);
         expect(find.text('Open on phone'), findsOneWidget);
         expect(find.byIcon(Icons.phone_android), findsOneWidget);
         expect(find.byType(WearTimeHeader), findsOneWidget);

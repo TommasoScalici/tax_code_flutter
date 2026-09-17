@@ -53,6 +53,10 @@
   "@swipeToClose": {
     "description": "Hint text explaining how to dismiss the barcode presentation screen."
   },
+  "syncTakesFewMinutes": "Sync may take a few minutes",
+  "@syncTakesFewMinutes": {
+    "description": "Informational note for the user indicating that cloud contact synchronization may take a few minutes."
+  },
   "tapToSwitchBarcode": "Tap to toggle QR code",
   "@tapToSwitchBarcode": {
     "description": "Hint text explaining that tapping the optical card toggles between 1D barcode and 2D QR code."

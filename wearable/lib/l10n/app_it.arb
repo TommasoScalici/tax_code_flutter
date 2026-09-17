@@ -53,6 +53,10 @@
   "@swipeToClose": {
     "description": "Suggerimento che spiega come chiudere la schermata di presentazione del codice a barre."
   },
+  "syncTakesFewMinutes": "La sincronizzazione può richiedere qualche minuto",
+  "@syncTakesFewMinutes": {
+    "description": "Nota informativa per l'utente che indica che la sincronizzazione cloud dei contatti potrebbe richiedere alcuni minuti."
+  },
   "tapToSwitchBarcode": "Tocca per passare a QR code",
   "@tapToSwitchBarcode": {
     "description": "Suggerimento che spiega che toccando la tessera si alterna tra codice 1D e QR 2D."

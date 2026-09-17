@@ -49,6 +49,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get swipeToClose => 'Scorri a destra per chiudere';
 
   @override
+  String get syncTakesFewMinutes =>
+      'La sincronizzazione può richiedere qualche minuto';
+
+  @override
   String get tapToSwitchBarcode => 'Tocca per passare a QR code';
 
   @override

@@ -176,6 +176,12 @@ abstract class AppLocalizations {
   /// **'Swipe right to close'**
   String get swipeToClose;
 
+  /// Informational note for the user indicating that cloud contact synchronization may take a few minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync may take a few minutes'**
+  String get syncTakesFewMinutes;
+
   /// Hint text explaining that tapping the optical card toggles between 1D barcode and 2D QR code.
   ///
   /// In en, this message translates to:

@@ -165,7 +165,15 @@ class _ContactsListState extends State<ContactsList> {
               textAlign: TextAlign.center,
               style: WearTypography.cardSubtitle(color: AppColors.darkOnSurface),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 4),
+            Text(
+              l10n.syncTakesFewMinutes,
+              textAlign: TextAlign.center,
+              style: WearTypography.hint(
+                color: AppColors.darkOnSurfaceVariant.withValues(alpha: 0.8),
+              ),
+            ),
+            const SizedBox(height: 10),
             if (controller.isLaunchingPhoneApp)
               const SizedBox(
                 height: 24,
