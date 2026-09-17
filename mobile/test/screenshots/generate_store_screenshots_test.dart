@@ -92,12 +92,42 @@ void main() {
     TestWidgetsFlutterBinding.ensureInitialized();
   });
 
+  String? findFlutterRoot() {
+    final flutterRootEnv = Platform.environment['FLUTTER_ROOT'];
+    if (flutterRootEnv != null && flutterRootEnv.isNotEmpty) {
+      return flutterRootEnv;
+    }
+    final pathEnv = Platform.environment['PATH'] ?? '';
+    final separator = Platform.isWindows ? ';' : ':';
+    for (final dir in pathEnv.split(separator)) {
+      if (dir.isEmpty) continue;
+      final cleanDir = dir.replaceAll('"', '');
+      final flutterExe = File(
+        Platform.isWindows ? '$cleanDir\\flutter.bat' : '$cleanDir/flutter',
+      );
+      if (flutterExe.existsSync()) {
+        return Directory(cleanDir).parent.path;
+      }
+    }
+    final localAppData = Platform.environment['LOCALAPPDATA'];
+    if (localAppData != null) {
+      final candidate = '$localAppData\\flutter';
+      if (Directory(candidate).existsSync()) {
+        return candidate;
+      }
+    }
+    return null;
+  }
+
   Future<void> loadFonts(WidgetTester tester) async {
     await tester.runAsync(() async {
       // 1. Text fonts (Inter, Arial, JetBrains Mono, Roboto)
+      final winDir = Platform.environment['WINDIR'] ??
+          Platform.environment['SYSTEMROOT'] ??
+          r'C:\Windows';
       final fontFiles = [
-        r'C:\Windows\Fonts\segoeui.ttf',
-        r'C:\Windows\Fonts\arial.ttf',
+        '$winDir\\Fonts\\segoeui.ttf',
+        '$winDir\\Fonts\\arial.ttf',
       ];
 
       for (final path in fontFiles) {
@@ -120,42 +150,61 @@ void main() {
       }
 
       // 2. MaterialIcons font
-      const materialIconsPath =
-          r'C:\Users\Tommaso\AppData\Local\flutter\bin\cache\artifacts\material_fonts\materialicons-regular.otf';
-      final miFile = File(materialIconsPath);
-      if (miFile.existsSync()) {
-        final data = await miFile.readAsBytes();
-        for (final family in [
-          'MaterialIcons',
-          'packages/flutter/MaterialIcons',
-        ]) {
-          final loader = FontLoader(family)
-            ..addFont(Future.value(ByteData.sublistView(data)));
-          await loader.load();
+      final flutterRoot = findFlutterRoot();
+      if (flutterRoot != null) {
+        final miFile = File(
+          Platform.isWindows
+              ? '$flutterRoot\\bin\\cache\\artifacts\\material_fonts\\materialicons-regular.otf'
+              : '$flutterRoot/bin/cache/artifacts/material_fonts/materialicons-regular.otf',
+        );
+        if (miFile.existsSync()) {
+          final data = await miFile.readAsBytes();
+          for (final family in [
+            'MaterialIcons',
+            'packages/flutter/MaterialIcons',
+          ]) {
+            final loader = FontLoader(family)
+              ..addFont(Future.value(ByteData.sublistView(data)));
+            await loader.load();
+          }
         }
       }
 
       // 3. MaterialSymbols icons
-      final pubCache = Platform.environment['LOCALAPPDATA'];
+      final pubCache = Platform.environment['PUB_CACHE'] ??
+          (Platform.environment['LOCALAPPDATA'] != null
+              ? '${Platform.environment['LOCALAPPDATA']}\\Pub\\Cache'
+              : (Platform.environment['USERPROFILE'] != null
+                  ? '${Platform.environment['USERPROFILE']}\\.pub-cache'
+                  : null));
       if (pubCache != null) {
-        final symbolsFiles = [
-          'MaterialSymbolsRounded',
-          'MaterialSymbolsOutlined',
-          'MaterialSymbolsSharp',
-        ];
-        for (final sym in symbolsFiles) {
-          final symPath =
-              '$pubCache\\Pub\\Cache\\hosted\\pub.dev\\material_symbols_icons-4.2960.0\\lib\\fonts\\$sym.ttf';
-          final symFile = File(symPath);
-          if (symFile.existsSync()) {
-            final data = await symFile.readAsBytes();
-            for (final family in [
-              sym,
-              'packages/material_symbols_icons/$sym',
-            ]) {
-              final loader = FontLoader(family)
-                ..addFont(Future.value(ByteData.sublistView(data)));
-              await loader.load();
+        final hostedDir = Directory('$pubCache\\hosted\\pub.dev');
+        if (hostedDir.existsSync()) {
+          final matchedDirs = hostedDir
+              .listSync()
+              .whereType<Directory>()
+              .where((d) => d.path.contains('material_symbols_icons'))
+              .toList();
+          if (matchedDirs.isNotEmpty) {
+            final symbolsDir = matchedDirs.first;
+            final symbolsFiles = [
+              'MaterialSymbolsRounded',
+              'MaterialSymbolsOutlined',
+              'MaterialSymbolsSharp',
+            ];
+            for (final sym in symbolsFiles) {
+              final symFile = File('${symbolsDir.path}\\lib\\fonts\\$sym.ttf');
+              if (symFile.existsSync()) {
+                final data = await symFile.readAsBytes();
+                for (final family in [
+                  sym,
+                  'packages/material_symbols_icons/$sym',
+                ]) {
+                  final loader = FontLoader(family)
+                    ..addFont(Future.value(ByteData.sublistView(data)));
+                  await loader.load();
+                }
+              }
             }
           }
         }

@@ -2,7 +2,7 @@
 
 A modern, fast, and user-friendly cross-platform application to calculate and manage Italian Tax Codes (*Codici Fiscali*) with offline calculation, cloud synchronization, AI-powered document scanning, and Wear OS companion support.
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![Version](https://img.shields.io/badge/version-2.0.1-blue)
 ![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Wear%20OS-brightgreen)
 ![Flutter](https://img.shields.io/badge/flutter-3.22%2B-02569B?logo=flutter)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -136,6 +136,12 @@ tax_code_flutter/
    ```bash
    # Format and sort all ARB localization files alphabetically
    dart scripts/sort_arb.dart
+
+   # Generate Play Store showcase screenshots (Mobile)
+   cd mobile && flutter test test/screenshots/generate_store_screenshots_test.dart
+
+   # Generate Play Store showcase screenshots (Wear OS)
+   cd wearable && flutter test test/screenshots/generate_wear_screenshots_test.dart
    ```
 
 ---

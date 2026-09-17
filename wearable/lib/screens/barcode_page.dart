@@ -22,11 +22,13 @@ class BarcodePage extends StatefulWidget {
   const BarcodePage({
     required this.taxCode,
     this.contact,
+    this.initialIsQrCode = false,
     super.key,
   });
 
   final String taxCode;
   final Contact? contact;
+  final bool initialIsQrCode;
 
   @override
   State<BarcodePage> createState() => _BarcodePageState();
@@ -34,11 +36,12 @@ class BarcodePage extends StatefulWidget {
 
 class _BarcodePageState extends State<BarcodePage> {
   late final NativeViewServiceAbstract _nativeViewService;
-  bool _isQrCode = false;
+  late bool _isQrCode;
 
   @override
   void initState() {
     super.initState();
+    _isQrCode = widget.initialIsQrCode;
     _nativeViewService = context.read<NativeViewServiceAbstract>();
     unawaited(_enableBrightness());
   }

@@ -40,15 +40,22 @@ Future<void> main() async {
             : const AndroidPlayIntegrityProvider(),
       );
 
-      FlutterError.onError =
-          FirebaseCrashlytics.instance.recordFlutterFatalError;
+      if (kDebugMode) {
+        await FirebaseCrashlytics.instance
+            .setCrashlyticsCollectionEnabled(false);
+      } else {
+        await FirebaseCrashlytics.instance
+            .setCrashlyticsCollectionEnabled(true);
+        FlutterError.onError =
+            FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-      PlatformDispatcher.instance.onError = (error, stack) {
-        unawaited(
-          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true),
-        );
-        return true;
-      };
+        PlatformDispatcher.instance.onError = (error, stack) {
+          unawaited(
+            FirebaseCrashlytics.instance.recordError(error, stack, fatal: true),
+          );
+          return true;
+        };
+      }
     },
   );
 
