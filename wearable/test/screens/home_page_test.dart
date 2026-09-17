@@ -7,7 +7,6 @@ import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'package:tax_code_flutter_wear_os/screens/home_page.dart';
 import 'package:tax_code_flutter_wear_os/widgets/contacts_list.dart';
 
-//--- Mock ---//
 class MockContactsListController extends Mock
     implements ContactsListController {}
 
@@ -38,30 +37,11 @@ void main() {
   });
 
   group('HomePage Widget', () {
-    testWidgets('renders its structure and child widgets correctly', (
-      tester,
-    ) async {
-      // Act
+    testWidgets('renders Scaffold and child ContactsList', (tester) async {
       await pumpWidget(tester);
 
-      // Assert
-      final scaffoldFinder = find.byType(Scaffold);
-      expect(scaffoldFinder, findsOneWidget);
-
-      final paddingFinder = find.ancestor(
-        of: find.byType(ContactsList),
-        matching: find.byType(Padding),
-      );
-      expect(paddingFinder, findsOneWidget);
-
-      final paddingWidget = tester.widget<Padding>(paddingFinder);
-      expect(paddingWidget.padding, const EdgeInsets.all(20.0));
-
-      final contactsListFinder = find.descendant(
-        of: paddingFinder,
-        matching: find.byType(ContactsList),
-      );
-      expect(contactsListFinder, findsOneWidget);
+      expect(find.byType(Scaffold), findsOneWidget);
+      expect(find.byType(ContactsList), findsOneWidget);
     });
   });
 }

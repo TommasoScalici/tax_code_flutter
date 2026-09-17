@@ -5,17 +5,57 @@
   "@appTitle": {
     "description": "The title of the application, shown in the header."
   },
+  "barcode1D": "Barcode 1D",
+  "@barcode1D": {
+    "description": "Label for the traditional 1D Code 128 barcode format."
+  },
+  "barcodePageTitle": "Tax Code Barcode",
+  "@barcodePageTitle": {
+    "description": "Title for the page displaying the barcode."
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Generic cancel button label for dialogs."
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Generic confirmation button label for dialogs."
+  },
   "loginError": "Login failed. Please try again.",
   "@loginError": {
     "description": "Error message shown when an unexpected login error occurs."
+  },
+  "logout": "Sign out",
+  "@logout": {
+    "description": "Button label to sign out from the current Google account."
+  },
+  "logoutConfirmation": "Do you want to sign out?",
+  "@logoutConfirmation": {
+    "description": "Confirmation prompt displayed before signing out."
+  },
+  "noContactsFoundMessage": "No contacts found. Add them on your phone.",
+  "@noContactsFoundMessage": {
+    "description": "Message shown on the main screen when the contact list is empty."
+  },
+  "openOnPhone": "Open on phone",
+  "@openOnPhone": {
+    "description": "Call to action button to open the companion app on the user's phone."
+  },
+  "qrCode2D": "QR Code",
+  "@qrCode2D": {
+    "description": "Label for the 2D QR code format."
   },
   "signInWithGoogle": "Sign In with Google",
   "@signInWithGoogle": {
     "description": "Label for the Google Sign-In button."
   },
-  "openOnPhone": "Open on phone",
-  "@openOnPhone": {
-    "description": "Call to action button to open the companion app on the user's phone."
+  "swipeToClose": "Swipe right to close",
+  "@swipeToClose": {
+    "description": "Hint text explaining how to dismiss the barcode presentation screen."
+  },
+  "tapToSwitchBarcode": "Tap to toggle QR code",
+  "@tapToSwitchBarcode": {
+    "description": "Hint text explaining that tapping the optical card toggles between 1D barcode and 2D QR code."
   },
   "welcomeMessage": "Welcome to {appName}",
   "@welcomeMessage": {
@@ -26,13 +66,5 @@
         "example": "Tax Code"
       }
     }
-  },
-  "noContactsFoundMessage": "No contacts found. Add them on your phone.",
-  "@noContactsFoundMessage": {
-    "description": "Message shown on the main screen when the contact list is empty."
-  },
-  "barcodePageTitle": "Tax Code Barcode",
-  "@barcodePageTitle": {
-    "description": "Title for the page displaying the barcode."
   }
 }

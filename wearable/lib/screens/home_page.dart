@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tax_code_flutter_wear_os/core/theme/wear_colors.dart';
 import 'package:tax_code_flutter_wear_os/widgets/contacts_list.dart';
 
 class HomePage extends StatelessWidget {
@@ -7,8 +8,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Colors.black,
-      body: Padding(padding: EdgeInsets.all(20.0), child: ContactsList()),
+      backgroundColor: AppColors.darkBackground,
+      body: ContactsList(),
     );
   }
 }

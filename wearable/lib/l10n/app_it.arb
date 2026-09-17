@@ -5,17 +5,57 @@
   "@appTitle": {
     "description": "The title of the application, shown in the header."
   },
+  "barcode1D": "Codice a barre 1D",
+  "@barcode1D": {
+    "description": "Etichetta per il formato tradizionale 1D Code 128."
+  },
+  "barcodePageTitle": "Codice a Barre",
+  "@barcodePageTitle": {
+    "description": "Title for the page displaying the barcode."
+  },
+  "cancel": "Annulla",
+  "@cancel": {
+    "description": "Etichetta generica per annullare un'azione o chiudere un dialogo."
+  },
+  "confirm": "Conferma",
+  "@confirm": {
+    "description": "Etichetta generica per confermare un'operazione."
+  },
   "loginError": "Login fallito. Riprova.",
   "@loginError": {
     "description": "Error message shown when an unexpected login error occurs."
+  },
+  "logout": "Esci",
+  "@logout": {
+    "description": "Etichetta del pulsante per disconnettersi dall'account Google corrente."
+  },
+  "logoutConfirmation": "Vuoi uscire dall'account?",
+  "@logoutConfirmation": {
+    "description": "Messaggio di conferma visualizzato prima di effettuare il logout."
+  },
+  "noContactsFoundMessage": "Nessun contatto. Aggiungili dal telefono.",
+  "@noContactsFoundMessage": {
+    "description": "Message shown on the main screen when the contact list is empty."
+  },
+  "openOnPhone": "Apri sul telefono",
+  "@openOnPhone": {
+    "description": "Pulsante di call to action per aprire l'app companion sul telefono dell'utente."
+  },
+  "qrCode2D": "QR Code",
+  "@qrCode2D": {
+    "description": "Etichetta per il formato bidimensionale QR Code."
   },
   "signInWithGoogle": "Accedi con Google",
   "@signInWithGoogle": {
     "description": "Label for the Google Sign-In button."
   },
-  "openOnPhone": "Apri sul telefono",
-  "@openOnPhone": {
-    "description": "Pulsante di call to action per aprire l'app companion sul telefono dell'utente."
+  "swipeToClose": "Scorri a destra per chiudere",
+  "@swipeToClose": {
+    "description": "Suggerimento che spiega come chiudere la schermata di presentazione del codice a barre."
+  },
+  "tapToSwitchBarcode": "Tocca per passare a QR code",
+  "@tapToSwitchBarcode": {
+    "description": "Suggerimento che spiega che toccando la tessera si alterna tra codice 1D e QR 2D."
   },
   "welcomeMessage": "Benvenuto su {appName}",
   "@welcomeMessage": {
@@ -26,13 +66,5 @@
         "example": "Codice Fiscale"
       }
     }
-  },
-  "noContactsFoundMessage": "Nessun contatto. Aggiungili dal telefono.",
-  "@noContactsFoundMessage": {
-    "description": "Message shown on the main screen when the contact list is empty."
-  },
-  "barcodePageTitle": "Codice a Barre",
-  "@barcodePageTitle": {
-    "description": "Title for the page displaying the barcode."
   }
 }

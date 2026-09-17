@@ -12,23 +12,47 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Tax Code';
 
   @override
+  String get barcode1D => 'Barcode 1D';
+
+  @override
+  String get barcodePageTitle => 'Tax Code Barcode';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
   String get loginError => 'Login failed. Please try again.';
 
   @override
-  String get signInWithGoogle => 'Sign In with Google';
+  String get logout => 'Sign out';
 
   @override
-  String get openOnPhone => 'Open on phone';
-
-  @override
-  String welcomeMessage(String appName) {
-    return 'Welcome to $appName';
-  }
+  String get logoutConfirmation => 'Do you want to sign out?';
 
   @override
   String get noContactsFoundMessage =>
       'No contacts found. Add them on your phone.';
 
   @override
-  String get barcodePageTitle => 'Tax Code Barcode';
+  String get openOnPhone => 'Open on phone';
+
+  @override
+  String get qrCode2D => 'QR Code';
+
+  @override
+  String get signInWithGoogle => 'Sign In with Google';
+
+  @override
+  String get swipeToClose => 'Swipe right to close';
+
+  @override
+  String get tapToSwitchBarcode => 'Tap to toggle QR code';
+
+  @override
+  String welcomeMessage(String appName) {
+    return 'Welcome to $appName';
+  }
 }

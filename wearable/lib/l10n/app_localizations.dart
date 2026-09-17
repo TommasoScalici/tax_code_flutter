@@ -104,29 +104,47 @@ abstract class AppLocalizations {
   /// **'Tax Code'**
   String get appTitle;
 
+  /// Label for the traditional 1D Code 128 barcode format.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode 1D'**
+  String get barcode1D;
+
+  /// Title for the page displaying the barcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax Code Barcode'**
+  String get barcodePageTitle;
+
+  /// Generic cancel button label for dialogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Generic confirmation button label for dialogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
   /// Error message shown when an unexpected login error occurs.
   ///
   /// In en, this message translates to:
   /// **'Login failed. Please try again.'**
   String get loginError;
 
-  /// Label for the Google Sign-In button.
+  /// Button label to sign out from the current Google account.
   ///
   /// In en, this message translates to:
-  /// **'Sign In with Google'**
-  String get signInWithGoogle;
+  /// **'Sign out'**
+  String get logout;
 
-  /// Call to action button to open the companion app on the user's phone.
+  /// Confirmation prompt displayed before signing out.
   ///
   /// In en, this message translates to:
-  /// **'Open on phone'**
-  String get openOnPhone;
-
-  /// A welcome message displayed on the login screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome to {appName}'**
-  String welcomeMessage(String appName);
+  /// **'Do you want to sign out?'**
+  String get logoutConfirmation;
 
   /// Message shown on the main screen when the contact list is empty.
   ///
@@ -134,11 +152,41 @@ abstract class AppLocalizations {
   /// **'No contacts found. Add them on your phone.'**
   String get noContactsFoundMessage;
 
-  /// Title for the page displaying the barcode.
+  /// Call to action button to open the companion app on the user's phone.
   ///
   /// In en, this message translates to:
-  /// **'Tax Code Barcode'**
-  String get barcodePageTitle;
+  /// **'Open on phone'**
+  String get openOnPhone;
+
+  /// Label for the 2D QR code format.
+  ///
+  /// In en, this message translates to:
+  /// **'QR Code'**
+  String get qrCode2D;
+
+  /// Label for the Google Sign-In button.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In with Google'**
+  String get signInWithGoogle;
+
+  /// Hint text explaining how to dismiss the barcode presentation screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe right to close'**
+  String get swipeToClose;
+
+  /// Hint text explaining that tapping the optical card toggles between 1D barcode and 2D QR code.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to toggle QR code'**
+  String get tapToSwitchBarcode;
+
+  /// A welcome message displayed on the login screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to {appName}'**
+  String welcomeMessage(String appName);
 }
 
 class _AppLocalizationsDelegate

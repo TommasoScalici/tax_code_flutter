@@ -6,17 +6,50 @@ import 'dart:convert';
 import 'dart:io';
 
 void main(List<String> args) {
+  final List<String> filePaths = <String>[];
+
   if (args.isEmpty) {
-    print('Usage: dart scripts/sort_arb.dart <path_to_arb_file>');
-    exit(1);
+    print('No specific path provided. Scanning workspace for all .arb files...');
+    final Directory rootDir = Directory.current;
+
+    void scanDir(Directory dir) {
+      try {
+        final List<FileSystemEntity> entities = dir.listSync(followLinks: false);
+        for (final FileSystemEntity entity in entities) {
+          if (entity is Directory) {
+            final String dirName = entity.path.split(Platform.pathSeparator).last;
+            if (!dirName.startsWith('.') && dirName != 'build') {
+              scanDir(entity);
+            }
+          } else if (entity is File && entity.path.endsWith('.arb')) {
+            filePaths.add(entity.path);
+          }
+        }
+      } on Exception {
+        // Skip inaccessible folders
+      }
+    }
+
+    scanDir(rootDir);
+  } else {
+    filePaths.addAll(args);
   }
 
-  final String filePath = args[0];
+  if (filePaths.isEmpty) {
+    print('No .arb files found to sort.');
+    exit(0);
+  }
+
+  print('Found ${filePaths.length} .arb file(s) to sort.');
+  filePaths.forEach(_sortFile);
+}
+
+void _sortFile(String filePath) {
   final File file = File(filePath);
 
   if (!file.existsSync()) {
     print('Error: File not found at $filePath');
-    exit(1);
+    return;
   }
 
   try {
@@ -32,8 +65,7 @@ void main(List<String> args) {
     file.writeAsStringSync('$sortedContent\n');
     print('Successfully sorted $filePath');
   } on Exception catch (e) {
-    print('Error processing ARB file: $e');
-    exit(1);
+    print('Error processing ARB file $filePath: $e');
   }
 }
 

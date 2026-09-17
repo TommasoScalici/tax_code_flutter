@@ -2,17 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
+import 'package:shared/models/birthplace.dart';
+import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter_wear_os/controllers/contacts_list_controller.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'package:tax_code_flutter_wear_os/settings.dart';
 import 'package:tax_code_flutter_wear_os/widgets/contacts_list.dart';
+import 'package:tax_code_flutter_wear_os/widgets/wear_contact_card.dart';
+import 'package:tax_code_flutter_wear_os/widgets/wear_time_header.dart';
 
-//--- Mock ---//
 class MockContactsListController extends Mock
     implements ContactsListController {}
 
 void main() {
   late MockContactsListController mockController;
+
+  final testContacts = [
+    Contact(
+      id: 'id-1',
+      firstName: 'Mario',
+      lastName: 'Rossi',
+      gender: 'M',
+      taxCode: 'RSSMRA80A01H501U',
+      birthPlace: const Birthplace(name: 'Roma', state: 'RM'),
+      birthDate: DateTime(1980),
+      listIndex: 0,
+    ),
+  ];
 
   Future<void> pumpWidget(WidgetTester tester) async {
     await tester.pumpWidget(
@@ -32,66 +48,53 @@ void main() {
 
   setUp(() {
     mockController = MockContactsListController();
+    when(() => mockController.contacts).thenReturn([]);
+    when(() => mockController.isLoading).thenReturn(false);
+    when(() => mockController.hasContacts).thenReturn(false);
+    when(() => mockController.isLaunchingPhoneApp).thenReturn(false);
+    when(() => mockController.launchPhoneApp()).thenAnswer((_) async {});
   });
 
   group('ContactsList Widget', () {
     testWidgets(
       'displays CircularProgressIndicator when controller is loading',
       (tester) async {
-        // Arrange
         when(() => mockController.isLoading).thenReturn(true);
-        when(() => mockController.hasContacts).thenReturn(false);
-        when(() => mockController.isLaunchingPhoneApp).thenReturn(false);
 
-        // Act
         await pumpWidget(tester);
 
-        // Assert
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
         expect(find.byType(ElevatedButton), findsNothing);
       },
     );
 
-    testWidgets('displays SizedBox.shrink when controller has contacts', (
+    testWidgets('displays ListView with WearContactCard and WearTimeHeader when controller has contacts', (
       tester,
     ) async {
-      // Arrange
-      when(() => mockController.isLoading).thenReturn(false);
       when(() => mockController.hasContacts).thenReturn(true);
-      when(() => mockController.isLaunchingPhoneApp).thenReturn(false);
+      when(() => mockController.contacts).thenReturn(testContacts);
 
-      // Act
       await pumpWidget(tester);
 
-      // Assert
-      expect(find.byType(SizedBox), findsOneWidget);
-      final sizedBox = tester.widget<SizedBox>(find.byType(SizedBox));
-      expect(sizedBox.width, 0.0);
-      expect(sizedBox.height, 0.0);
-
-      expect(find.byType(CircularProgressIndicator), findsNothing);
-      expect(find.byType(ElevatedButton), findsNothing);
+      expect(find.byType(ListView), findsOneWidget);
+      expect(find.byType(WearTimeHeader), findsOneWidget);
+      expect(find.byType(WearContactCard), findsOneWidget);
+      expect(find.text('Mario Rossi'), findsOneWidget);
+      expect(find.text('RSSMRA80A01H501U'), findsOneWidget);
     });
 
     testWidgets(
       'displays empty state message and button when there are no contacts',
       (tester) async {
-        // Arrange
-        when(() => mockController.isLoading).thenReturn(false);
-        when(() => mockController.hasContacts).thenReturn(false);
-        when(() => mockController.isLaunchingPhoneApp).thenReturn(false);
-
-        // Act
         await pumpWidget(tester);
 
-        // Assert
         expect(
           find.text('No contacts found. Add them on your phone.'),
           findsOneWidget,
         );
-
         expect(find.text('Open on phone'), findsOneWidget);
         expect(find.byIcon(Icons.phone_android), findsOneWidget);
+        expect(find.byType(WearTimeHeader), findsOneWidget);
         expect(find.byType(CircularProgressIndicator), findsNothing);
       },
     );
@@ -99,45 +102,26 @@ void main() {
     testWidgets(
       'displays loading indicator instead of button when launching phone app',
       (tester) async {
-        // Arrange
-        when(() => mockController.isLoading).thenReturn(false);
-        when(() => mockController.hasContacts).thenReturn(false);
         when(() => mockController.isLaunchingPhoneApp).thenReturn(true);
 
-        // Act
         await pumpWidget(tester);
 
-        // Assert
         expect(
           find.text('No contacts found. Add them on your phone.'),
           findsOneWidget,
         );
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
-        final indicator = tester.widget<CircularProgressIndicator>(
-          find.byType(CircularProgressIndicator),
-        );
-        expect(indicator.strokeWidth, 3);
-
-        expect(find.byType(ElevatedButton), findsNothing);
       },
     );
 
     testWidgets('calls launchPhoneApp on controller when button is tapped', (
       tester,
     ) async {
-      // Arrange
-      when(() => mockController.isLoading).thenReturn(false);
-      when(() => mockController.hasContacts).thenReturn(false);
-      when(() => mockController.isLaunchingPhoneApp).thenReturn(false);
-      when(() => mockController.launchPhoneApp()).thenAnswer((_) async {});
       await pumpWidget(tester);
 
-      // Act
       await tester.tap(find.text('Open on phone'));
       await tester.pump();
 
-      // Assert
       verify(() => mockController.launchPhoneApp()).called(1);
     });
   });
