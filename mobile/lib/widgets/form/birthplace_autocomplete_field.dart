@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
 import 'package:shared/models/birthplace.dart';
+import 'package:shared/utils/birthplace_search_filter.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A modern autocomplete field for Italian municipalities and foreign countries,
@@ -116,14 +117,10 @@ class BirthplaceAutocompleteField extends StatelessWidget {
             ValidationMessage.required: (error) => l10n.required,
           },
           optionsBuilder: (textEditingValue) {
-            if (textEditingValue.text.length < 2) {
-              return const Iterable<Birthplace>.empty();
-            }
-            final query = textEditingValue.text.toLowerCase();
-            return birthplaces
-                .where((b) => b.name.toLowerCase().contains(query))
-                .take(20)
-                .toList();
+            return BirthplaceSearchFilter.search(
+              birthplaces,
+              textEditingValue.text,
+            );
           },
           fieldViewBuilder: (
             context,
@@ -346,14 +343,10 @@ class _StandaloneBirthplaceAutocompleteState
           focusNode: _effectiveFocusNode,
           textEditingController: _controller,
           optionsBuilder: (textEditingValue) {
-            if (textEditingValue.text.length < 2) {
-              return const Iterable<Birthplace>.empty();
-            }
-            final query = textEditingValue.text.toLowerCase();
-            return widget.birthplaces
-                .where((b) => b.name.toLowerCase().contains(query))
-                .take(20)
-                .toList();
+            return BirthplaceSearchFilter.search(
+              widget.birthplaces,
+              textEditingValue.text,
+            );
           },
           displayStringForOption: (option) => option.toString(),
           onSelected: (option) {

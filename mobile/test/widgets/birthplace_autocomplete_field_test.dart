@@ -154,5 +154,27 @@ void main() {
       expect(form.control('birthPlace').value, isNull);
       expect(find.byKey(const Key('birthplace_autocomplete_textfield')), findsOneWidget);
     });
+
+    testWidgets('smart search suggests Roma on typo "romma"', (tester) async {
+      Birthplace? selected;
+      await tester.pumpWidget(
+        createStandaloneWidget(
+          onChanged: (val) => selected = val,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final textFieldFinder = find.byKey(
+        const Key('birthplace_autocomplete_textfield'),
+      );
+      await tester.enterText(textFieldFinder, 'romma');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Roma'), findsOneWidget);
+      await tester.tap(find.text('Roma'));
+      await tester.pumpAndSettle();
+
+      expect(selected, const Birthplace(name: 'Roma', state: 'RM'));
+    });
   });
 }
