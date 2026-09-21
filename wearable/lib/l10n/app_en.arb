@@ -21,6 +21,22 @@
   "@confirm": {
     "description": "Generic confirmation button label for dialogs."
   },
+  "demoMode": "Demo Mode",
+  "@demoMode": {
+    "description": "Label for the button that allows exploring the app in demo mode without signing in."
+  },
+  "demoModeBadge": "DEMO",
+  "@demoModeBadge": {
+    "description": "Compact badge text shown when the application is operating in demo mode."
+  },
+  "exitDemo": "Exit Demo",
+  "@exitDemo": {
+    "description": "Button label to exit demo mode and return to the login screen."
+  },
+  "exitDemoConfirmation": "Do you want to exit demo mode?",
+  "@exitDemoConfirmation": {
+    "description": "Confirmation prompt displayed before exiting demo mode."
+  },
   "loginError": "Login failed. Please try again.",
   "@loginError": {
     "description": "Error message shown when an unexpected login error occurs."

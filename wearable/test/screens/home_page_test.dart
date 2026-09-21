@@ -33,6 +33,7 @@ void main() {
     when(() => mockController.removeListener(any())).thenAnswer((_) {});
     when(() => mockController.isLoading).thenReturn(false);
     when(() => mockController.hasContacts).thenReturn(false);
+    when(() => mockController.isDemoMode).thenReturn(false);
     when(() => mockController.isLaunchingPhoneApp).thenReturn(false);
   });
 

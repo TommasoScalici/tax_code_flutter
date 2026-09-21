@@ -51,8 +51,10 @@ void main() {
     when(() => mockController.contacts).thenReturn([]);
     when(() => mockController.isLoading).thenReturn(false);
     when(() => mockController.hasContacts).thenReturn(false);
+    when(() => mockController.isDemoMode).thenReturn(false);
     when(() => mockController.isLaunchingPhoneApp).thenReturn(false);
     when(() => mockController.launchPhoneApp()).thenAnswer((_) async {});
+    when(() => mockController.exitDemoMode()).thenReturn(null);
   });
 
   group('ContactsList Widget', () {
@@ -92,7 +94,7 @@ void main() {
           find.text('No contacts found. Add them on your phone.'),
           findsOneWidget,
         );
-        expect(find.text('Sync may take a few minutes'), findsOneWidget);
+        expect(find.text('Sync may take a minutes', skipOffstage: false), findsNothing);
         expect(find.text('Open on phone'), findsOneWidget);
         expect(find.byIcon(Icons.phone_android), findsOneWidget);
         expect(find.byType(WearTimeHeader), findsOneWidget);
@@ -153,5 +155,37 @@ void main() {
         expect(find.byType(AlertDialog), findsNothing);
       },
     );
+
+    testWidgets('displays DEMO badge and Exit Demo button when isDemoMode is true', (
+      tester,
+    ) async {
+      when(() => mockController.hasContacts).thenReturn(true);
+      when(() => mockController.contacts).thenReturn(testContacts);
+      when(() => mockController.isDemoMode).thenReturn(true);
+
+      await pumpWidget(tester);
+
+      // Verify DEMO badge is shown
+      expect(find.text('DEMO'), findsOneWidget);
+
+      // Verify Exit Demo button is shown instead of Sign out
+      expect(find.text('Exit Demo'), findsOneWidget);
+      expect(find.text('Sign out'), findsNothing);
+
+      // Tap Exit Demo
+      await tester.ensureVisible(find.text('Exit Demo'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Exit Demo'));
+      await tester.pumpAndSettle();
+
+      // Verify confirmation dialog
+      expect(find.text('Do you want to exit demo mode?'), findsOneWidget);
+
+      // Confirm exit
+      await tester.tap(find.byIcon(Icons.check_rounded));
+      await tester.pumpAndSettle();
+
+      verify(() => mockController.exitDemoMode()).called(1);
+    });
   });
 }

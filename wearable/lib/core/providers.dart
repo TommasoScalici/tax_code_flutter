@@ -11,6 +11,7 @@ import 'package:shared/services/hive_local_cache_service.dart';
 import 'package:shared/services/local_cache_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tax_code_flutter_wear_os/controllers/contacts_list_controller.dart';
+import 'package:tax_code_flutter_wear_os/services/demo_mode_service.dart';
 import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 
 List<SingleChildWidget> getAppProviders({
@@ -39,6 +40,9 @@ List<SingleChildWidget> getAppProviders({
     ),
 
     // --- Level 3: State Services ---
+    ChangeNotifierProvider<DemoModeServiceAbstract>(
+      create: (_) => DemoModeService(),
+    ),
     ChangeNotifierProvider<AuthService>(
       create: (context) => AuthService(
         auth: context.read<FirebaseAuth>(),
@@ -62,6 +66,7 @@ List<SingleChildWidget> getAppProviders({
     ChangeNotifierProvider<ContactsListController>(
       create: (context) => ContactsListController(
         contactRepository: context.read<ContactRepository>(),
+        demoModeService: context.read<DemoModeServiceAbstract>(),
         nativeViewService: context.read<NativeViewServiceAbstract>(),
         logger: context.read<Logger>(),
       ),

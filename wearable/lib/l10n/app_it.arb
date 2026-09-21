@@ -21,6 +21,22 @@
   "@confirm": {
     "description": "Etichetta generica per confermare un'operazione."
   },
+  "demoMode": "Modalità Demo",
+  "@demoMode": {
+    "description": "Etichetta per il pulsante che consente di esplorare l'applicazione in modalità demo senza effettuare il login."
+  },
+  "demoModeBadge": "DEMO",
+  "@demoModeBadge": {
+    "description": "Testo compatto del badge mostrato quando l'applicazione opera in modalità demo."
+  },
+  "exitDemo": "Esci dalla demo",
+  "@exitDemo": {
+    "description": "Etichetta del pulsante per uscire dalla modalità demo e tornare alla schermata di accesso."
+  },
+  "exitDemoConfirmation": "Vuoi uscire dalla modalità demo?",
+  "@exitDemoConfirmation": {
+    "description": "Messaggio di conferma visualizzato prima di uscire dalla modalità demo."
+  },
   "loginError": "Login fallito. Riprova.",
   "@loginError": {
     "description": "Error message shown when an unexpected login error occurs."

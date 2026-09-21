@@ -112,6 +112,63 @@ class _ContactsListState extends State<ContactsList> {
     }
   }
 
+  Future<void> _confirmExitDemo(
+    BuildContext context,
+    ContactsListController controller,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.darkSurfaceContainerHigh,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(WearDimensions.dialogRadius),
+        ),
+        insetPadding: WearDimensions.dialogInsetPadding,
+        titlePadding: WearDimensions.dialogTitlePadding,
+        actionsPadding: WearDimensions.dialogActionsPadding,
+        title: Text(
+          l10n.exitDemoConfirmation,
+          style: WearTypography.cardTitle(),
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.spaceEvenly,
+        actions: [
+          SizedBox(
+            width: WearDimensions.dialogButtonSize,
+            height: WearDimensions.dialogButtonSize,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(
+                Icons.close_rounded,
+                size: 20,
+                color: AppColors.darkOnSurfaceVariant,
+              ),
+              onPressed: () => Navigator.of(ctx).pop(false),
+            ),
+          ),
+          SizedBox(
+            width: WearDimensions.dialogButtonSize,
+            height: WearDimensions.dialogButtonSize,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(
+                Icons.check_rounded,
+                size: 20,
+                color: AppColors.emeraldLight,
+              ),
+              onPressed: () => Navigator.of(ctx).pop(true),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      controller.exitDemoMode();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<ContactsListController>();
@@ -202,7 +259,10 @@ class _ContactsListState extends State<ContactsList> {
                 ),
               ),
             const SizedBox(height: 8),
-            _buildSignOutButton(context, l10n),
+            if (controller.isDemoMode)
+              _buildExitDemoButton(context, l10n, controller)
+            else
+              _buildSignOutButton(context, l10n),
           ],
         ),
       ),
@@ -224,7 +284,41 @@ class _ContactsListState extends State<ContactsList> {
         itemCount: contacts.length + 2,
         itemBuilder: (context, index) {
           if (index == 0) {
-            return const WearTimeHeader();
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const WearTimeHeader(),
+                if (controller.isDemoMode) ...[
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.emeraldContainerDark.withValues(
+                        alpha: 0.35,
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        WearDimensions.pillRadius,
+                      ),
+                      border: Border.all(
+                        color: AppColors.emeraldPrimary.withValues(alpha: 0.5),
+                        width: 0.8,
+                      ),
+                    ),
+                    child: Text(
+                      l10n.demoModeBadge,
+                      style: WearTypography.codeDisplayCard(
+                        color: AppColors.emeraldLight,
+                        fontSize: 9.5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                ],
+              ],
+            );
           }
 
           if (index <= contacts.length) {
@@ -235,7 +329,7 @@ class _ContactsListState extends State<ContactsList> {
             );
           }
 
-          // Footer actions (open on phone + sign out)
+          // Footer actions (open on phone + sign out / exit demo)
           return Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 12.0),
             child: Column(
@@ -264,11 +358,36 @@ class _ContactsListState extends State<ContactsList> {
                   ),
                 ),
                 const SizedBox(height: 6.0),
-                _buildSignOutButton(context, l10n),
+                if (controller.isDemoMode)
+                  _buildExitDemoButton(context, l10n, controller)
+                else
+                  _buildSignOutButton(context, l10n),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildExitDemoButton(
+    BuildContext context,
+    AppLocalizations l10n,
+    ContactsListController controller,
+  ) {
+    return SizedBox(
+      height: 28,
+      child: TextButton.icon(
+        icon: const Icon(
+          Icons.logout_rounded,
+          size: 14,
+          color: AppColors.darkOnSurfaceVariant,
+        ),
+        label: Text(
+          l10n.exitDemo,
+          style: WearTypography.hint(color: AppColors.darkOnSurfaceVariant),
+        ),
+        onPressed: () => _confirmExitDemo(context, controller),
       ),
     );
   }

@@ -5,11 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
+import 'package:tax_code_flutter_wear_os/services/demo_mode_service.dart';
 import 'package:tax_code_flutter_wear_os/settings.dart';
 
 //--- Mocks & Fakes ---//
 
 class MockAuthService extends Mock implements AuthService {}
+
+class MockDemoModeService extends Mock implements DemoModeServiceAbstract {}
 
 class FakeHomePage extends StatelessWidget {
   const FakeHomePage({super.key});
@@ -19,6 +22,7 @@ class FakeHomePage extends StatelessWidget {
 
 void main() {
   late MockAuthService mockAuthService;
+  late MockDemoModeService mockDemoModeService;
 
   Future<void> pumpWidget(WidgetTester tester) async {
     await tester.pumpWidget(
@@ -26,8 +30,13 @@ void main() {
         theme: Settings.getWearTheme(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: ChangeNotifierProvider<AuthService>.value(
-          value: mockAuthService,
+        home: MultiProvider(
+          providers: [
+            ChangeNotifierProvider<AuthService>.value(value: mockAuthService),
+            ChangeNotifierProvider<DemoModeServiceAbstract>.value(
+              value: mockDemoModeService,
+            ),
+          ],
           child: const AuthGate(homePage: FakeHomePage()),
         ),
       ),
@@ -36,6 +45,7 @@ void main() {
 
   setUp(() {
     mockAuthService = MockAuthService();
+    mockDemoModeService = MockDemoModeService();
 
     when(() => mockAuthService.addListener(any())).thenAnswer((_) {});
     when(() => mockAuthService.removeListener(any())).thenAnswer((_) {});
@@ -46,6 +56,11 @@ void main() {
     when(() => mockAuthService.status).thenReturn(AuthStatus.unauthenticated);
     when(() => mockAuthService.isLoading).thenReturn(false);
     when(() => mockAuthService.errorMessage).thenReturn(null);
+
+    when(() => mockDemoModeService.addListener(any())).thenAnswer((_) {});
+    when(() => mockDemoModeService.removeListener(any())).thenAnswer((_) {});
+    when(() => mockDemoModeService.isDemoMode).thenReturn(false);
+    when(() => mockDemoModeService.enableDemoMode()).thenReturn(null);
   });
 
   group('AuthGate Widget', () {
@@ -75,7 +90,19 @@ void main() {
       expect(find.byType(FakeHomePage), findsOneWidget);
     });
 
-    testWidgets('displays LoginView when user is signed out (idle state)', (
+    testWidgets('displays HomePage when isDemoMode is true', (tester) async {
+      // Arrange
+      when(() => mockAuthService.status).thenReturn(AuthStatus.unauthenticated);
+      when(() => mockDemoModeService.isDemoMode).thenReturn(true);
+
+      // Act
+      await pumpWidget(tester);
+
+      // Assert
+      expect(find.byType(FakeHomePage), findsOneWidget);
+    });
+
+    testWidgets('displays LoginView with demo button when user is signed out', (
       tester,
     ) async {
       // Arrange
@@ -90,11 +117,12 @@ void main() {
       expect(find.byType(FakeHomePage), findsNothing);
       expect(find.text('Welcome to Tax Code'), findsOneWidget);
       expect(find.text('Sign In with Google'), findsOneWidget);
+      expect(find.text('Demo Mode'), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsNothing);
       expect(find.text('Login failed. Please try again.'), findsNothing);
     });
 
-    testWidgets('displays loading indicator when authService is loading', (
+    testWidgets('displays loading indicator and disables demo button when loading', (
       tester,
     ) async {
       // Arrange
@@ -108,8 +136,10 @@ void main() {
       // Assert
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
       await tester.tap(find.text('Sign In with Google'));
+      await tester.tap(find.text('Demo Mode'));
 
       verifyNever(() => mockAuthService.signInWithGoogleForWearable());
+      verifyNever(() => mockDemoModeService.enableDemoMode());
     });
 
     testWidgets('displays error message when authService has an error', (
@@ -149,6 +179,23 @@ void main() {
 
       // Assert
       verify(() => mockAuthService.signInWithGoogleForWearable()).called(1);
+    });
+
+    testWidgets('calls enableDemoMode when Demo Mode button is tapped', (
+      tester,
+    ) async {
+      // Arrange
+      when(() => mockAuthService.status).thenReturn(AuthStatus.unauthenticated);
+      when(() => mockAuthService.isLoading).thenReturn(false);
+      when(() => mockAuthService.errorMessage).thenReturn(null);
+
+      await pumpWidget(tester);
+
+      // Act
+      await tester.tap(find.text('Demo Mode'));
+
+      // Assert
+      verify(() => mockDemoModeService.enableDemoMode()).called(1);
     });
   });
 }

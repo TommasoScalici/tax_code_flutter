@@ -24,6 +24,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get confirm => 'Conferma';
 
   @override
+  String get demoMode => 'Modalità Demo';
+
+  @override
+  String get demoModeBadge => 'DEMO';
+
+  @override
+  String get exitDemo => 'Esci dalla demo';
+
+  @override
+  String get exitDemoConfirmation => 'Vuoi uscire dalla modalità demo?';
+
+  @override
   String get loginError => 'Login fallito. Riprova.';
 
   @override

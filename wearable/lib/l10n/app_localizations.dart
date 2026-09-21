@@ -128,6 +128,30 @@ abstract class AppLocalizations {
   /// **'Confirm'**
   String get confirm;
 
+  /// Label for the button that allows exploring the app in demo mode without signing in.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo Mode'**
+  String get demoMode;
+
+  /// Compact badge text shown when the application is operating in demo mode.
+  ///
+  /// In en, this message translates to:
+  /// **'DEMO'**
+  String get demoModeBadge;
+
+  /// Button label to exit demo mode and return to the login screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit Demo'**
+  String get exitDemo;
+
+  /// Confirmation prompt displayed before exiting demo mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to exit demo mode?'**
+  String get exitDemoConfirmation;
+
   /// Error message shown when an unexpected login error occurs.
   ///
   /// In en, this message translates to:

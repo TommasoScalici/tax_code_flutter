@@ -190,6 +190,7 @@ void main() {
     when(() => mockEmptyController.contacts).thenReturn([]);
     when(() => mockEmptyController.hasContacts).thenReturn(false);
     when(() => mockEmptyController.isLoading).thenReturn(false);
+    when(() => mockEmptyController.isDemoMode).thenReturn(false);
     when(() => mockEmptyController.isLaunchingPhoneApp).thenReturn(false);
 
     mockLoadedController = MockContactsListController();
@@ -200,6 +201,7 @@ void main() {
     ).thenReturn([sampleMarioRossi, sampleLauraBianchi]);
     when(() => mockLoadedController.hasContacts).thenReturn(true);
     when(() => mockLoadedController.isLoading).thenReturn(false);
+    when(() => mockLoadedController.isDemoMode).thenReturn(false);
     when(() => mockLoadedController.isLaunchingPhoneApp).thenReturn(false);
 
     mockNativeViewService = MockNativeViewService();
