@@ -10,6 +10,7 @@ import 'package:tax_code_flutter_wear_os/core/theme/wear_typography.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'package:tax_code_flutter_wear_os/screens/barcode_page.dart';
 import 'package:tax_code_flutter_wear_os/widgets/wear_contact_card.dart';
+import 'package:tax_code_flutter_wear_os/widgets/wear_scrollbar.dart';
 import 'package:tax_code_flutter_wear_os/widgets/wear_time_header.dart';
 
 /// The primary contact list view for Wear OS.
@@ -195,75 +196,83 @@ class _ContactsListState extends State<ContactsList> {
     AppLocalizations l10n,
     ContactsListController controller,
   ) {
-    return Center(
-      child: SingleChildScrollView(
-        padding: WearDimensions.listPadding,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const WearTimeHeader(),
-            const SizedBox(height: 8),
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: AppColors.emeraldContainerDark.withValues(alpha: 0.25),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.credit_card_off_rounded,
-                size: WearDimensions.iconLarge,
-                color: AppColors.emeraldLight,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.noContactsFoundMessage,
-              textAlign: TextAlign.center,
-              style: WearTypography.cardSubtitle(color: AppColors.darkOnSurface),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              l10n.syncTakesFewMinutes,
-              textAlign: TextAlign.center,
-              style: WearTypography.hint(
-                color: AppColors.darkOnSurfaceVariant.withValues(alpha: 0.8),
-              ),
-            ),
-            const SizedBox(height: 10),
-            if (controller.isLaunchingPhoneApp)
-              const SizedBox(
-                height: 24,
-                width: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  color: AppColors.emeraldPrimary,
-                ),
-              )
-            else
-              SizedBox(
-                height: WearDimensions.buttonCompactHeight,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.phone_android, size: 16),
-                  label: Text(
-                    l10n.openOnPhone,
-                    style: WearTypography.hint(color: Colors.white),
+    return Listener(
+      onPointerSignal: _onPointerSignal,
+      child: Center(
+        child: WearScrollbar(
+          controller: _scrollController,
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: WearDimensions.listPadding,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const WearTimeHeader(),
+                const SizedBox(height: 8),
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.emeraldContainerDark.withValues(alpha: 0.25),
+                    shape: BoxShape.circle,
                   ),
-                  onPressed: controller.launchPhoneApp,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.emeraldPrimary,
-                    foregroundColor: Colors.white,
-                    shape: const StadiumBorder(),
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: const Icon(
+                    Icons.credit_card_off_rounded,
+                    size: WearDimensions.iconLarge,
+                    color: AppColors.emeraldLight,
                   ),
                 ),
-              ),
-            const SizedBox(height: 8),
-            if (controller.isDemoMode)
-              _buildExitDemoButton(context, l10n, controller)
-            else
-              _buildSignOutButton(context, l10n),
-          ],
+                const SizedBox(height: 8),
+                Text(
+                  l10n.noContactsFoundMessage,
+                  textAlign: TextAlign.center,
+                  style: WearTypography.cardSubtitle(color: AppColors.darkOnSurface),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  l10n.syncTakesFewMinutes,
+                  textAlign: TextAlign.center,
+                  style: WearTypography.hint(
+                    color: AppColors.darkOnSurfaceVariant.withValues(alpha: 0.8),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                if (controller.isLaunchingPhoneApp)
+                  const SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      color: AppColors.emeraldPrimary,
+                    ),
+                  )
+                else
+                  SizedBox(
+                    height: WearDimensions.buttonCompactHeight,
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.phone_android, size: 16),
+                      label: Text(
+                        l10n.openOnPhone,
+                        style: WearTypography.hint(color: Colors.white),
+                      ),
+                      onPressed: controller.launchPhoneApp,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.emeraldPrimary,
+                        foregroundColor: Colors.white,
+                        shape: const StadiumBorder(),
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 8),
+                if (controller.isDemoMode)
+                  _buildExitDemoButton(context, l10n, controller)
+                else
+                  _buildSignOutButton(context, l10n),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -278,8 +287,10 @@ class _ContactsListState extends State<ContactsList> {
 
     return Listener(
       onPointerSignal: _onPointerSignal,
-      child: ListView.builder(
+      child: WearScrollbar(
         controller: _scrollController,
+        child: ListView.builder(
+          controller: _scrollController,
         padding: WearDimensions.listPadding,
         itemCount: contacts.length + 2,
         itemBuilder: (context, index) {
@@ -367,7 +378,8 @@ class _ContactsListState extends State<ContactsList> {
           );
         },
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildExitDemoButton(

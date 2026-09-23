@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
@@ -9,6 +10,7 @@ import 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_typography.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
+import 'package:tax_code_flutter_wear_os/widgets/wear_scrollbar.dart';
 
 /// Presentation screen for displaying the Italian Tax Code as an optical 1D
 /// barcode (Code 128) or 2D QR Code, maximized for scanning speed and readability.
@@ -35,6 +37,7 @@ class BarcodePage extends StatefulWidget {
 }
 
 class _BarcodePageState extends State<BarcodePage> {
+  final ScrollController _scrollController = ScrollController();
   late final NativeViewServiceAbstract _nativeViewService;
   late bool _isQrCode;
 
@@ -48,8 +51,17 @@ class _BarcodePageState extends State<BarcodePage> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     unawaited(_disableBrightness());
     super.dispose();
+  }
+
+  void _onPointerSignal(PointerSignalEvent event) {
+    if (event is PointerScrollEvent && _scrollController.hasClients) {
+      final target = (_scrollController.offset + event.scrollDelta.dy)
+          .clamp(0.0, _scrollController.position.maxScrollExtent);
+      _scrollController.jumpTo(target);
+    }
   }
 
   Future<void> _enableBrightness() async {
@@ -83,12 +95,18 @@ class _BarcodePageState extends State<BarcodePage> {
             Navigator.of(context).maybePop();
           }
         },
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: WearDimensions.screenPaddingHorizontal,
-              vertical: 10.0,
-            ),
+        child: Listener(
+          onPointerSignal: _onPointerSignal,
+          child: Center(
+            child: WearScrollbar(
+              controller: _scrollController,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: WearDimensions.screenPaddingHorizontal,
+                  vertical: 10.0,
+                ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -191,6 +209,8 @@ class _BarcodePageState extends State<BarcodePage> {
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 }

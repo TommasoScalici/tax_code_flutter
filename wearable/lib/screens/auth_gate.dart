@@ -8,6 +8,7 @@ import 'package:tax_code_flutter_wear_os/core/theme/wear_typography.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'package:tax_code_flutter_wear_os/screens/home_page.dart';
 import 'package:tax_code_flutter_wear_os/services/demo_mode_service.dart';
+import 'package:tax_code_flutter_wear_os/widgets/wear_scrollbar.dart';
 
 /// Acts as a gate, showing HomePage if the user is signed in or in demo mode,
 /// otherwise showing the login screen.
@@ -86,10 +87,12 @@ class _LoginViewState extends State<_LoginView> {
       backgroundColor: AppColors.darkBackground,
       body: Listener(
         onPointerSignal: _onPointerSignal,
-        child: SingleChildScrollView(
+        child: WearScrollbar(
           controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: WearDimensions.listPadding,
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: WearDimensions.listPadding,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -205,6 +208,7 @@ class _LoginViewState extends State<_LoginView> {
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 }
