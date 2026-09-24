@@ -40,6 +40,7 @@ class _BarcodePageState extends State<BarcodePage> {
   final ScrollController _scrollController = ScrollController();
   late final NativeViewServiceAbstract _nativeViewService;
   late bool _isQrCode;
+  double _dragDistance = 0.0;
 
   @override
   void initState() {
@@ -89,128 +90,145 @@ class _BarcodePageState extends State<BarcodePage> {
       backgroundColor: AppColors.darkBackground,
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
+        onHorizontalDragStart: (_) {
+          _dragDistance = 0.0;
+        },
+        onHorizontalDragUpdate: (details) {
+          _dragDistance += details.primaryDelta ?? 0.0;
+        },
         onHorizontalDragEnd: (details) {
-          // Swipe from left to right dismisses the screen
-          if ((details.primaryVelocity ?? 0) > 200) {
+          // Swipe from left to right dismisses the screen:
+          // Triggers on either quick flick (velocity > 150) or steady drag (distance > 45px).
+          if ((details.primaryVelocity ?? 0.0) > 150.0 || _dragDistance > 45.0) {
             Navigator.of(context).maybePop();
           }
         },
         child: Listener(
           onPointerSignal: _onPointerSignal,
-          child: Center(
-            child: WearScrollbar(
+          child: WearScrollbar(
+            controller: _scrollController,
+            child: SingleChildScrollView(
               controller: _scrollController,
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: WearDimensions.screenPaddingHorizontal,
-                  vertical: 10.0,
-                ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Contact name if present
-                if (fullName.isNotEmpty) ...[
-                  Text(
-                    fullName,
-                    style: WearTypography.cardTitle(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 4.0),
-                ],
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(
+                WearDimensions.screenPaddingHorizontal,
+                30.0,
+                WearDimensions.screenPaddingHorizontal,
+                54.0,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Contact name if present (with safe horizontal margins and multi-line wrapping)
+                  if (fullName.isNotEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text(
+                        fullName,
+                        style: WearTypography.cardTitle(),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 6.0),
+                  ],
 
-                // Optical scanning surface
-                Material(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(WearDimensions.opticalRadius),
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
+                  // Optical scanning surface
+                  Material(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(WearDimensions.opticalRadius),
+                    clipBehavior: Clip.antiAlias,
+                    child: InkWell(
+                      onTap: _toggleFormat,
+                      child: Padding(
+                        padding: WearDimensions.opticalPadding,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (_isQrCode)
+                              BarcodeWidget(
+                                barcode: Barcode.qrCode(),
+                                data: widget.taxCode,
+                                width: 76,
+                                height: 76,
+                                drawText: false,
+                                backgroundColor: Colors.white,
+                              )
+                            else
+                              BarcodeWidget(
+                                barcode: Barcode.code128(),
+                                data: widget.taxCode,
+                                width: double.infinity,
+                                height: 42,
+                                drawText: false,
+                                backgroundColor: Colors.white,
+                              ),
+                            const SizedBox(height: 6.0),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                widget.taxCode,
+                                style: WearTypography.codeDisplayPresentation(),
+                                maxLines: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 8.0),
+
+                  // Format toggle button
+                  InkWell(
                     onTap: _toggleFormat,
+                    borderRadius: BorderRadius.circular(WearDimensions.stadiumRadius),
                     child: Padding(
-                      padding: WearDimensions.opticalPadding,
-                      child: Column(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                        vertical: 4.0,
+                      ),
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (_isQrCode)
-                            BarcodeWidget(
-                              barcode: Barcode.qrCode(),
-                              data: widget.taxCode,
-                              width: 84,
-                              height: 84,
-                              drawText: false,
-                              backgroundColor: Colors.white,
-                            )
-                          else
-                            BarcodeWidget(
-                              barcode: Barcode.code128(),
-                              data: widget.taxCode,
-                              width: double.infinity,
-                              height: 42,
-                              drawText: false,
-                              backgroundColor: Colors.white,
-                            ),
-                          const SizedBox(height: 6.0),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
+                          Icon(
+                            _isQrCode ? Icons.barcode_reader : Icons.qr_code_2_rounded,
+                            size: WearDimensions.iconSmall,
+                            color: AppColors.emeraldLight,
+                          ),
+                          const SizedBox(width: 5.0),
+                          Flexible(
                             child: Text(
-                              widget.taxCode,
-                              style: WearTypography.codeDisplayPresentation(),
+                              _isQrCode ? l10n.barcode1D : l10n.qrCode2D,
+                              style: WearTypography.hint(color: AppColors.emeraldLight),
                               maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 6.0),
-
-                // Format toggle button
-                InkWell(
-                  onTap: _toggleFormat,
-                  borderRadius: BorderRadius.circular(WearDimensions.stadiumRadius),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                      vertical: 2.0,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          _isQrCode ? Icons.barcode_reader : Icons.qr_code_2_rounded,
-                          size: WearDimensions.iconSmall,
-                          color: AppColors.emeraldLight,
-                        ),
-                        const SizedBox(width: 4.0),
-                        Text(
-                          _isQrCode ? l10n.barcode1D : l10n.qrCode2D,
-                          style: WearTypography.hint(color: AppColors.emeraldLight),
-                        ),
-                      ],
+                  const SizedBox(height: 4.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      l10n.swipeToClose,
+                      style: WearTypography.hint(
+                        color: AppColors.darkOnSurfaceVariant.withValues(alpha: 0.7),
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 2.0),
-                Text(
-                  l10n.swipeToClose,
-                  style: WearTypography.hint(
-                    color: AppColors.darkOnSurfaceVariant.withValues(alpha: 0.7),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-  ),
-);
+    );
   }
 }

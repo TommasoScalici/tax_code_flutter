@@ -9,13 +9,13 @@ abstract final class WearDimensions {
   // Screen & Scroll Padding (Circular Safe Insets)
   // ---------------------------------------------------------------------------
   /// Horizontal padding for watch screens.
-  static const double screenPaddingHorizontal = 12.0;
+  static const double screenPaddingHorizontal = 14.0;
 
-  /// Top padding for scrollable lists, leaving room for the system clock header.
-  static const double screenPaddingTop = 22.0;
+  /// Top padding for scrollable lists, leaving safe clearance for circular bezels and clock header.
+  static const double screenPaddingTop = 28.0;
 
-  /// Generous bottom padding allowing the last card to scroll comfortably to the screen center.
-  static const double screenPaddingBottom = 44.0;
+  /// Generous bottom padding allowing the last card or element to scroll comfortably into the safe center area.
+  static const double screenPaddingBottom = 52.0;
 
   /// EdgeInsets for main watch scroll views on round screens.
   static const EdgeInsets listPadding = EdgeInsets.fromLTRB(

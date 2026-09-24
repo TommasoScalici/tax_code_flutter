@@ -9,6 +9,7 @@ import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'package:tax_code_flutter_wear_os/screens/home_page.dart';
 import 'package:tax_code_flutter_wear_os/services/demo_mode_service.dart';
 import 'package:tax_code_flutter_wear_os/widgets/wear_scrollbar.dart';
+import 'package:tax_code_flutter_wear_os/widgets/wear_time_header.dart';
 
 /// Acts as a gate, showing HomePage if the user is signed in or in demo mode,
 /// otherwise showing the login screen.
@@ -96,6 +97,10 @@ class _LoginViewState extends State<_LoginView> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Clock header
+              const WearTimeHeader(),
+              const SizedBox(height: 4),
+
               // Emerald Ledger Badge Icon
               Container(
                 width: 32,
@@ -123,8 +128,10 @@ class _LoginViewState extends State<_LoginView> {
               ),
               const SizedBox(height: 10),
 
-              SizedBox(
-                height: WearDimensions.buttonCompactHeight,
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: WearDimensions.buttonCompactHeight,
+                ),
                 child: ElevatedButton.icon(
                   onPressed: authService.isLoading
                       ? null
@@ -150,8 +157,10 @@ class _LoginViewState extends State<_LoginView> {
               ),
               const SizedBox(height: 6),
 
-              SizedBox(
-                height: WearDimensions.buttonCompactHeight,
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: WearDimensions.buttonCompactHeight,
+                ),
                 child: OutlinedButton.icon(
                   onPressed: authService.isLoading
                       ? null

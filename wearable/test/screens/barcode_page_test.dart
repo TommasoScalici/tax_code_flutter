@@ -109,5 +109,78 @@ void main() {
 
       verify(() => mockNativeViewService.disableHighBrightnessMode()).called(1);
     });
+
+    testWidgets('renders without overflow with large font scale (1.3x)', (tester) async {
+      tester.view.physicalSize = const Size(390, 390);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: MediaQuery(
+            data: const MediaQueryData(
+              size: Size(390, 390),
+              textScaler: TextScaler.linear(1.3),
+            ),
+            child: Provider<NativeViewServiceAbstract>.value(
+              value: mockNativeViewService,
+              child: BarcodePage(
+                taxCode: testTaxCode,
+                contact: testContact,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Mario Rossi'), findsOneWidget);
+      expect(find.text(testTaxCode), findsOneWidget);
+    });
+
+    testWidgets('dismisses via swipe to right gesture', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => Provider<NativeViewServiceAbstract>.value(
+                        value: mockNativeViewService,
+                        child: BarcodePage(
+                          taxCode: testTaxCode,
+                          contact: testContact,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('Open'),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BarcodePage), findsOneWidget);
+
+      await tester.dragFrom(const Offset(20.0, 100.0), const Offset(200.0, 0.0));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BarcodePage), findsNothing);
+    });
   });
 }

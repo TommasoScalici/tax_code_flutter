@@ -198,73 +198,74 @@ class _ContactsListState extends State<ContactsList> {
   ) {
     return Listener(
       onPointerSignal: _onPointerSignal,
-      child: Center(
-        child: WearScrollbar(
+      child: WearScrollbar(
+        controller: _scrollController,
+        child: SingleChildScrollView(
           controller: _scrollController,
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: WearDimensions.listPadding,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const WearTimeHeader(),
-                const SizedBox(height: 8),
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.emeraldContainerDark.withValues(alpha: 0.25),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.credit_card_off_rounded,
-                    size: WearDimensions.iconLarge,
-                    color: AppColors.emeraldLight,
-                  ),
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: WearDimensions.listPadding,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const WearTimeHeader(),
+              const SizedBox(height: 8),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: AppColors.emeraldContainerDark.withValues(alpha: 0.25),
+                  shape: BoxShape.circle,
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  l10n.noContactsFoundMessage,
-                  textAlign: TextAlign.center,
-                  style: WearTypography.cardSubtitle(color: AppColors.darkOnSurface),
+                child: const Icon(
+                  Icons.credit_card_off_rounded,
+                  size: WearDimensions.iconLarge,
+                  color: AppColors.emeraldLight,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  l10n.syncTakesFewMinutes,
-                  textAlign: TextAlign.center,
-                  style: WearTypography.hint(
-                    color: AppColors.darkOnSurfaceVariant.withValues(alpha: 0.8),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.noContactsFoundMessage,
+                textAlign: TextAlign.center,
+                style: WearTypography.cardSubtitle(color: AppColors.darkOnSurface),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                l10n.syncTakesFewMinutes,
+                textAlign: TextAlign.center,
+                style: WearTypography.hint(
+                  color: AppColors.darkOnSurfaceVariant.withValues(alpha: 0.8),
+                ),
+              ),
+              const SizedBox(height: 10),
+              if (controller.isLaunchingPhoneApp)
+                const SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    color: AppColors.emeraldPrimary,
                   ),
-                ),
-                const SizedBox(height: 10),
-                if (controller.isLaunchingPhoneApp)
-                  const SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      color: AppColors.emeraldPrimary,
+                )
+              else
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minHeight: WearDimensions.buttonCompactHeight,
+                  ),
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.phone_android, size: 16),
+                    label: Text(
+                      l10n.openOnPhone,
+                      style: WearTypography.hint(color: Colors.white),
                     ),
-                  )
-                else
-                  SizedBox(
-                    height: WearDimensions.buttonCompactHeight,
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.phone_android, size: 16),
-                      label: Text(
-                        l10n.openOnPhone,
-                        style: WearTypography.hint(color: Colors.white),
-                      ),
-                      onPressed: controller.launchPhoneApp,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.emeraldPrimary,
-                        foregroundColor: Colors.white,
-                        shape: const StadiumBorder(),
-                        padding: const EdgeInsets.symmetric(horizontal: 14),
-                      ),
+                    onPressed: controller.launchPhoneApp,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.emeraldPrimary,
+                      foregroundColor: Colors.white,
+                      shape: const StadiumBorder(),
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
                     ),
                   ),
+                ),
                 const SizedBox(height: 8),
                 if (controller.isDemoMode)
                   _buildExitDemoButton(context, l10n, controller)
@@ -274,8 +275,7 @@ class _ContactsListState extends State<ContactsList> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildContactsList(
@@ -346,8 +346,10 @@ class _ContactsListState extends State<ContactsList> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
-                  height: WearDimensions.buttonCompactHeight,
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minHeight: WearDimensions.buttonCompactHeight,
+                  ),
                   child: OutlinedButton.icon(
                     icon: const Icon(Icons.phone_android, size: 14),
                     label: Text(
@@ -387,8 +389,8 @@ class _ContactsListState extends State<ContactsList> {
     AppLocalizations l10n,
     ContactsListController controller,
   ) {
-    return SizedBox(
-      height: 28,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 28),
       child: TextButton.icon(
         icon: const Icon(
           Icons.logout_rounded,
@@ -405,8 +407,8 @@ class _ContactsListState extends State<ContactsList> {
   }
 
   Widget _buildSignOutButton(BuildContext context, AppLocalizations l10n) {
-    return SizedBox(
-      height: 28,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 28),
       child: TextButton.icon(
         icon: const Icon(
           Icons.logout_rounded,

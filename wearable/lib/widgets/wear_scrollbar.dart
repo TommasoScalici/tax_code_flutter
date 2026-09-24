@@ -86,7 +86,7 @@ class _WearScrollbarState extends State<WearScrollbar>
 
     widget.controller?.addListener(_onControllerChange);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _onControllerChange(triggerShow: false);
+      _onControllerChange();
     });
   }
 
