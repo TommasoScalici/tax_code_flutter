@@ -50,16 +50,22 @@ class _ContactsListState extends State<ContactsList> {
       );
     }
 
-    return Column(
-      children: [
-        DashboardSearchBar(
-          controller: _searchController,
-          cardCount: controller.contactsToShow.length,
-          onChanged: controller.filterContacts,
-          onClear: () {
-            FocusScope.of(context).unfocus();
-          },
-        ),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: DashboardSearchBar(
+              controller: _searchController,
+              cardCount: controller.contactsToShow.length,
+              onChanged: controller.filterContacts,
+              onClear: () {
+                FocusScope.of(context).unfocus();
+              },
+            ),
+          ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 90.0),
@@ -79,7 +85,8 @@ class _ContactsListState extends State<ContactsList> {
           ),
         ),
       ],
-    );
+    ),
+  );
   }
 
   @override
@@ -96,6 +103,7 @@ class _ContactsListState extends State<ContactsList> {
     return Center(
       key: ValueKey(contact.id),
       child: ContactCard(
+        margin: EdgeInsets.zero,
         contact: contact,
         onShare: () => _onShare(context, contact),
         onShowBarcode: () => _onShowBarcode(context, contact),
@@ -111,15 +119,15 @@ class _ContactsListState extends State<ContactsList> {
   ) {
     const fixedGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
       crossAxisSpacing: 16,
-      mainAxisSpacing: 12,
-      mainAxisExtent: 280,
+      mainAxisSpacing: 10,
+      mainAxisExtent: 228,
       maxCrossAxisExtent: 800,
     );
 
     final gridDelegate = widget.cardHeight != null
         ? SliverGridDelegateWithMaxCrossAxisExtent(
             crossAxisSpacing: 16,
-            mainAxisSpacing: 12,
+            mainAxisSpacing: 10,
             mainAxisExtent: widget.cardHeight,
             maxCrossAxisExtent: 800,
           )
@@ -144,6 +152,7 @@ class _ContactsListState extends State<ContactsList> {
     return GridView.builder(
       itemCount: controller.contactsToShow.length,
       shrinkWrap: true,
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       gridDelegate: gridDelegate,
       itemBuilder: (context, index) {
         final contact = controller.contactsToShow[index];

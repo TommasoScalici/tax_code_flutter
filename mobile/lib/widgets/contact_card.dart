@@ -35,6 +35,9 @@ class ContactCard extends StatelessWidget {
   /// Optional callback invoked when the tax code is copied to the clipboard.
   final VoidCallback? onCopy;
 
+  /// Optional margin around the card container. Defaults to [EdgeInsets.symmetric(vertical: 4.0)].
+  final EdgeInsetsGeometry? margin;
+
   const ContactCard({
     super.key,
     required this.contact,
@@ -43,6 +46,7 @@ class ContactCard extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     this.onCopy,
+    this.margin,
   });
 
   Future<void> _copyTaxCode(BuildContext context, AppLocalizations l10n) async {
@@ -85,7 +89,7 @@ class ContactCard extends StatelessWidget {
 
     return Container(
       constraints: const BoxConstraints(maxWidth: 520),
-      margin: const EdgeInsets.symmetric(vertical: 6.0),
+      margin: margin ?? const EdgeInsets.symmetric(vertical: 4.0),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(20),

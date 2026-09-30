@@ -31,10 +31,11 @@ abstract final class AppTheme {
 
       // AppBar
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.surface.withValues(alpha: 0.85),
+        backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
         elevation: 0,
-        scrolledUnderElevation: 2,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: AppColors.transparent,
         centerTitle: false,
         titleTextStyle: textTheme.headlineSmall?.copyWith(
           fontWeight: FontWeight.w600,
@@ -206,10 +207,11 @@ abstract final class AppTheme {
 
       // AppBar
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.surface.withValues(alpha: 0.9),
+        backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
         elevation: 0,
-        scrolledUnderElevation: 2,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: AppColors.transparent,
         centerTitle: false,
         titleTextStyle: textTheme.headlineSmall?.copyWith(
           fontWeight: FontWeight.w600,

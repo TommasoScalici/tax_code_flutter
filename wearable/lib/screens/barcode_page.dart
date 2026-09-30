@@ -112,9 +112,9 @@ class _BarcodePageState extends State<BarcodePage> {
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(
                 WearDimensions.screenPaddingHorizontal,
-                30.0,
+                WearDimensions.screenPaddingTop,
                 WearDimensions.screenPaddingHorizontal,
-                54.0,
+                WearDimensions.screenPaddingBottom,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -136,7 +136,7 @@ class _BarcodePageState extends State<BarcodePage> {
 
                   // Optical scanning surface
                   Material(
-                    color: Colors.white,
+                    color: AppColors.opticalWhite,
                     borderRadius: BorderRadius.circular(WearDimensions.opticalRadius),
                     clipBehavior: Clip.antiAlias,
                     child: InkWell(
@@ -153,7 +153,7 @@ class _BarcodePageState extends State<BarcodePage> {
                                 width: 76,
                                 height: 76,
                                 drawText: false,
-                                backgroundColor: Colors.white,
+                                backgroundColor: AppColors.opticalWhite,
                               )
                             else
                               BarcodeWidget(
@@ -162,7 +162,7 @@ class _BarcodePageState extends State<BarcodePage> {
                                 width: double.infinity,
                                 height: 42,
                                 drawText: false,
-                                backgroundColor: Colors.white,
+                                backgroundColor: AppColors.opticalWhite,
                               ),
                             const SizedBox(height: 6.0),
                             FittedBox(

@@ -186,6 +186,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                   focusNode: _focusNode,
                   autofocus: widget.autofocus,
                   textInputAction: TextInputAction.search,
+                  onTapOutside: (_) => _focusNode.unfocus(),
                   onChanged: widget.onChanged,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurface,

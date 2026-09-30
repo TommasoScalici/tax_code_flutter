@@ -186,6 +186,9 @@ void main() {
         reorderedList[1].firstName,
         'John',
       ); // John was at index 0, moved to 1
+
+      expect(homePageController.contactsToShow[0].firstName, 'Jane');
+      expect(homePageController.contactsToShow[1].firstName, 'John');
     });
 
     test('saveContact calls repository addOrUpdateContact', () {

@@ -250,26 +250,32 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
                 onSyncToggle: () =>
                     _showFeedback(context, l10n.cloudSyncOn),
               ),
-              body: ResponsiveLayout(
-                maxWidth: 600.0,
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              body: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: ResponsiveLayout(
+                  maxWidth: 600.0,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
                     // Search Bar with real-time query filtering & card counter
-                    DashboardSearchBar(
-                      controller: _searchController,
-                      cardCount: _contacts.length,
-                      onChanged: (val) {
-                        setState(() {
-                          _searchQuery = val;
-                        });
-                      },
-                      onClear: () {
-                        setState(() {
-                          _searchQuery = '';
-                          _searchController.clear();
-                        });
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0),
+                      child: DashboardSearchBar(
+                        controller: _searchController,
+                        cardCount: _contacts.length,
+                        onChanged: (val) {
+                          setState(() {
+                            _searchQuery = val;
+                          });
+                        },
+                        onClear: () {
+                          setState(() {
+                            _searchQuery = '';
+                            _searchController.clear();
+                          });
+                        },
+                      ),
                     ),
 
                     // Content Area
@@ -293,6 +299,8 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
                               },
                             )
                           : ListView.builder(
+                              keyboardDismissBehavior:
+                                  ScrollViewKeyboardDismissBehavior.onDrag,
                               padding: const EdgeInsets.only(
                                 top: 4.0,
                                 bottom: 90.0,
@@ -330,6 +338,7 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
                   ],
                 ),
               ),
+            ),
               floatingActionButton: _contacts.isNotEmpty
                   ? DashboardFab(
                       onPressed: () {

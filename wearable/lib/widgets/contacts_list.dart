@@ -255,12 +255,12 @@ class _ContactsListState extends State<ContactsList> {
                     icon: const Icon(Icons.phone_android, size: 16),
                     label: Text(
                       l10n.openOnPhone,
-                      style: WearTypography.hint(color: Colors.white),
+                      style: WearTypography.hint(color: AppColors.onEmeraldAccent),
                     ),
                     onPressed: controller.launchPhoneApp,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.emeraldPrimary,
-                      foregroundColor: Colors.white,
+                      foregroundColor: AppColors.onEmeraldAccent,
                       shape: const StadiumBorder(),
                       padding: const EdgeInsets.symmetric(horizontal: 14),
                     ),

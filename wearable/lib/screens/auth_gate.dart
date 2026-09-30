@@ -141,7 +141,7 @@ class _LoginViewState extends State<_LoginView> {
                   icon: const Icon(Icons.login, size: 16),
                   label: Text(
                     l10n.signInWithGoogle,
-                    style: WearTypography.hint(color: Colors.white),
+                    style: WearTypography.hint(color: AppColors.darkOnSurface),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.darkSurfaceContainerHigh,

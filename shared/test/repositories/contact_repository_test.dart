@@ -684,6 +684,38 @@ void main() {
       verify(() => mockDbService.saveAllContacts(fakeUser.uid, any(that: contains(localContact)))).called(1);
     });
 
+    test('reconciliation preserves reordered contacts order across sync', () async {
+      await pumpEventQueue();
+
+      final listener = verify(() => mockSyncService.addListener(captureAny())).captured.first as VoidCallback;
+
+      // Local contacts were reordered: contact2 is first (listIndex: 0), contact1 is second (listIndex: 1)
+      final reorderedTime = DateTime.now();
+      final localContact2 = contact2.copyWith(listIndex: 0, updatedAt: reorderedTime);
+      final localContact1 = contact1.copyWith(listIndex: 1, updatedAt: reorderedTime);
+
+      // Disable sync to simulate offline reordering
+      when(() => mockSyncService.isSyncEnabled).thenReturn(false);
+      listener();
+      await pumpEventQueue();
+
+      await syncRepo.updateContacts([localContact2, localContact1]);
+      clearInteractions(mockDbService);
+
+      // Re-enable sync. Remote returns contacts in doc ID order (contact1, then contact2)
+      when(() => mockSyncService.isSyncEnabled).thenReturn(true);
+      when(() => mockDbService.getContacts(fakeUser.uid)).thenAnswer(
+        (_) async => [contact1.copyWith(listIndex: 0), contact2.copyWith(listIndex: 1)],
+      );
+      listener();
+      await pumpEventQueue();
+
+      // The reordered order [contact2, contact1] must be preserved
+      expect(syncRepo.contacts.map((c) => c.id).toList(), [contact2.id, contact1.id]);
+      expect(syncRepo.contacts[0].listIndex, 0);
+      expect(syncRepo.contacts[1].listIndex, 1);
+    });
+
     test('migrates guest contacts to Google account on sign-in without losing cloud contacts', () async {
       final guestContact = contact1.copyWith(id: 'guest_1', taxCode: 'RSSMRA90A01H501Z');
       final cloudContact = contact2.copyWith(id: 'cloud_1', taxCode: 'VRDLGU92B02F205Y');

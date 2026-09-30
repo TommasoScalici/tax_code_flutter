@@ -59,11 +59,15 @@ final class HomePage extends StatelessWidget {
           await syncService?.toggleSync();
         },
       ),
-      body: ResponsiveLayout(
-        maxWidth: 600.0,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: ContactsList(
-          onAddContact: () => _onAddContact(context),
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: ResponsiveLayout(
+          maxWidth: 600.0,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: ContactsList(
+            onAddContact: () => _onAddContact(context),
+          ),
         ),
       ),
       floatingActionButton:

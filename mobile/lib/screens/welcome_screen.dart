@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
-import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/profile_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
@@ -90,206 +89,141 @@ class WelcomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      body: Stack(
-        children: [
-          // Background Atmospheric Radial Glows
-          Positioned(
-            top: -80,
-            left: 0,
-            right: 0,
-            child: IgnorePointer(
-              child: Center(
-                child: Container(
-                  width: 320,
-                  height: 320,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        colorScheme.primary.withValues(alpha: isDark ? 0.12 : 0.08),
-                        Colors.transparent,
-                      ],
+      body: SafeArea(
+        child: ResponsiveLayout(
+          maxWidth: 480.0,
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 16),
+
+                  // App Icon (Clean brand card graphic)
+                  SvgPicture.asset(
+                    'assets/images/tax_code_icon.svg',
+                    width: 120,
+                    height: 120,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Headline
+                  Text(
+                    l10n.welcomeTitle,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.headlineLarge?.copyWith(
+                      letterSpacing: -0.5,
                     ),
                   ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -60,
-            right: -60,
-            child: IgnorePointer(
-              child: Container(
-                width: 260,
-                height: 260,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      colorScheme.primary.withValues(alpha: isDark ? 0.08 : 0.05),
-                      AppColors.transparent,
-                    ],
+                  const SizedBox(height: 16),
+
+                  // Subtitle
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 320),
+                    child: Text(
+                      l10n.welcomeSubtitle,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                        height: 1.45,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ),
 
-          // Main Content
-          SafeArea(
-            child: ResponsiveLayout(
-              maxWidth: 480.0,
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 16),
+                  const SizedBox(height: 32),
 
-                      // App Icon
-                      Container(
-                        width: 104,
-                        height: 104,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: colorScheme.shadow.withValues(alpha: 0.18),
-                              blurRadius: 24,
-                              offset: const Offset(0, 8),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24.0),
-                          child: SvgPicture.asset(
-                            'assets/images/tax_code_icon.svg',
-                          ),
+                  // Primary Action: Google SSO Pill
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: isLoading
+                          ? null
+                          : () => _handleGoogleSignIn(context, authService),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isDark
+                            ? colorScheme.surfaceContainerHigh
+                            : colorScheme.surface,
+                        foregroundColor: colorScheme.onSurface,
+                        elevation: isDark ? 0 : 2,
+                        shadowColor: colorScheme.shadow.withValues(alpha: 0.2),
+                        shape: const StadiumBorder(),
+                        side: BorderSide(
+                          color: isDark
+                              ? colorScheme.outlineVariant.withValues(alpha: 0.7)
+                              : colorScheme.outline.withValues(alpha: 0.4),
                         ),
                       ),
-                      const SizedBox(height: 36),
-
-                      // Headline
-                      Text(
-                        l10n.welcomeTitle,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.headlineLarge?.copyWith(
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Subtitle
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 320),
-                        child: Text(
-                          l10n.welcomeSubtitle,
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                            height: 1.45,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 32),
-
-                      // Primary Action: Google SSO Pill
-                      SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: ElevatedButton(
-                          onPressed: isLoading
-                              ? null
-                              : () => _handleGoogleSignIn(context, authService),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: isDark
-                                ? colorScheme.onSurface
-                                : colorScheme.surface,
-                            foregroundColor: isDark
-                                ? colorScheme.surface
-                                : colorScheme.onSurface,
-                            elevation: 2,
-                            shadowColor: colorScheme.shadow.withValues(alpha: 0.2),
-                            shape: const StadiumBorder(),
-                            side: isDark
-                                ? BorderSide.none
-                                : BorderSide(
-                                    color: colorScheme.outline.withValues(alpha: 0.4),
-                                  ),
-                          ),
-                          child: isLoading
-                              ? SizedBox(
+                      child: isLoading
+                          ? SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  colorScheme.primary,
+                                ),
+                              ),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/google_logo.svg',
                                   width: 22,
                                   height: 22,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2.5,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      isDark
-                                          ? colorScheme.surface
-                                          : colorScheme.primary,
+                                ),
+                                const SizedBox(width: 12),
+                                Flexible(
+                                  child: Text(
+                                    l10n.continueWithGoogle,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.labelLarge?.copyWith(
+                                      fontSize: 16,
+                                      letterSpacing: 0.1,
+                                      color: colorScheme.onSurface,
                                     ),
                                   ),
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/google_logo.svg',
-                                      width: 22,
-                                      height: 22,
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Flexible(
-                                      child: Text(
-                                        l10n.continueWithGoogle,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: theme.textTheme.labelLarge?.copyWith(
-                                          fontSize: 16,
-                                          letterSpacing: 0.1,
-                                          color: isDark
-                                              ? colorScheme.surface
-                                              : colorScheme.onSurface,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
+                              ],
+                            ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
 
-                      // Secondary Action: Guest Mode Pill
-                      SizedBox(
-                        width: double.infinity,
-                        height: 52,
-                        child: OutlinedButton.icon(
-                          onPressed: isLoading
-                              ? null
-                              : () => _handleGuestSignIn(context, authService),
-                          icon: Icon(
-                            Icons.person_outline_rounded,
-                            size: 20,
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                          label: Text(
-                            l10n.continueAsGuest,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              color: colorScheme.outline.withValues(alpha: 0.25),
-                            ),
+                  // Secondary Action: Guest Mode Pill
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: OutlinedButton.icon(
+                      onPressed: isLoading
+                          ? null
+                          : () => _handleGuestSignIn(context, authService),
+                      icon: Icon(
+                        Icons.person_outline_rounded,
+                        size: 20,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      label: Text(
+                        l10n.continueAsGuest,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                          color: colorScheme.outlineVariant.withValues(
+                            alpha: isDark ? 0.6 : 0.4,
                           ),
                         ),
                       ),
+                    ),
+                  ),
 
                       const SizedBox(height: 20),
 
@@ -331,8 +265,6 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
-    );
+      );
+    }
   }
-}

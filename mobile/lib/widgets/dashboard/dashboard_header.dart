@@ -74,9 +74,10 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       automaticallyImplyLeading: false,
       titleSpacing: 16.0,
-      backgroundColor: colorScheme.surface.withValues(alpha: isDark ? 0.85 : 0.90),
+      backgroundColor: colorScheme.surface,
       elevation: 0,
-      scrolledUnderElevation: 2,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: AppColors.transparent,
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

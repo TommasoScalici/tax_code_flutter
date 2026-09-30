@@ -133,11 +133,11 @@ class ContactRepository with ChangeNotifier {
         }
       }
 
-      final mergedList = mergedMap.values.toList();
+      final mergedList = mergedMap.values.toList()
+        ..sort((a, b) => a.listIndex.compareTo(b.listIndex));
       for (var i = 0; i < mergedList.length; i++) {
         mergedList[i] = mergedList[i].copyWith(listIndex: i);
       }
-      mergedList.sort((a, b) => a.listIndex.compareTo(b.listIndex));
 
       _contacts = mergedList;
       await _dbService.saveAllContacts(userId, _contacts);
@@ -216,9 +216,10 @@ class ContactRepository with ChangeNotifier {
   /// and persists the new order to Firestore and local cache.
   ///
   Future<void> updateContacts(List<Contact> contacts) async {
+    final now = DateTime.now();
     _contacts = contacts;
     for (var i = 0; i < _contacts.length; i++) {
-      _contacts[i] = _contacts[i].copyWith(listIndex: i);
+      _contacts[i] = _contacts[i].copyWith(listIndex: i, updatedAt: now);
     }
 
     if (_isDisposed) return;
@@ -232,10 +233,11 @@ class ContactRepository with ChangeNotifier {
   /// Ideal for operations that affect the entire list, like reordering.
   ///
   Future<void> saveContacts() async {
-    if (_userId == null) return;
+    final uid = _userId ?? _cachedUserId;
+    if (uid == null) return;
     if (isSyncActive) {
       try {
-        await _dbService.saveAllContacts(_userId!, _contacts);
+        await _dbService.saveAllContacts(uid, _contacts);
       } on Exception catch (e, s) {
         _logger.e(
           'Error while saving contacts to Firebase',
@@ -364,12 +366,17 @@ class ContactRepository with ChangeNotifier {
       final remoteContacts = await _dbService.getContacts(targetUserId);
 
       // 2. Perform intelligent merge: preserve remote contacts, add guest contacts if not already present
-      final mergedContacts = List<Contact>.from(remoteContacts);
+      final sortedRemoteContacts = List<Contact>.from(remoteContacts)
+        ..sort((a, b) => a.listIndex.compareTo(b.listIndex));
+      final sortedGuestContacts = List<Contact>.from(guestContacts)
+        ..sort((a, b) => a.listIndex.compareTo(b.listIndex));
+
+      final mergedContacts = List<Contact>.from(sortedRemoteContacts);
       final existingTaxCodes =
           mergedContacts.map((c) => c.taxCode.toUpperCase()).toSet();
       final existingIds = mergedContacts.map((c) => c.id).toSet();
 
-      for (final guestContact in guestContacts) {
+      for (final guestContact in sortedGuestContacts) {
         final taxCodeUpper = guestContact.taxCode.toUpperCase();
         if (!existingTaxCodes.contains(taxCodeUpper) &&
             !existingIds.contains(guestContact.id)) {
@@ -465,6 +472,9 @@ class ContactRepository with ChangeNotifier {
   }
 
   Future<void> _saveContactsToLocalCache() async {
-    await _cacheService.saveContacts(_cachedUserId!, _contacts);
+    final uid = _cachedUserId ?? _userId;
+    if (uid != null) {
+      await _cacheService.saveContacts(uid, _contacts);
+    }
   }
 }

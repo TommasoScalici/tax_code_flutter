@@ -44,6 +44,8 @@ interface class HomePageController with ChangeNotifier {
     final reorderedContacts = List<Contact>.from(_allContacts);
     final contact = reorderedContacts.removeAt(oldIndex);
     reorderedContacts.insert(newIndex, contact);
+    _allContacts = reorderedContacts;
+    _applyFilter();
     unawaited(_contactRepository.updateContacts(reorderedContacts));
   }
 
