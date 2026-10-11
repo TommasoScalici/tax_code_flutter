@@ -71,6 +71,48 @@ abstract final class AppColors {
   /// Text on error container.
   static const Color darkOnError = Color(0xFFFFFFFF);
 
+  /// High-contrast black on primary emerald accent in dark mode.
+  static const Color darkOnPrimary = Color(0xFF000000);
+
+  /// Secondary color in dark mode (soft warm gray).
+  static const Color darkSecondary = Color(0xFFC8C6C5);
+
+  /// Contrast foreground on secondary color in dark mode.
+  static const Color darkOnSecondary = Color(0xFF1E1E1E);
+
+  /// Secondary container color in dark mode.
+  static const Color darkSecondaryContainer = Color(0xFF353534);
+
+  /// Contrast foreground on secondary container in dark mode.
+  static const Color darkOnSecondaryContainer = Color(0xFFE5E2E1);
+
+  /// Tertiary color in dark mode (soft light emerald).
+  static const Color darkTertiary = Color(0xFF81C784);
+
+  /// Contrast foreground on tertiary color in dark mode.
+  static const Color darkOnTertiary = Color(0xFF003314);
+
+  /// Tertiary container color in dark mode.
+  static const Color darkTertiaryContainer = Color(0xFF1B4332);
+
+  /// Contrast foreground on tertiary container in dark mode.
+  static const Color darkOnTertiaryContainer = Color(0xFFA3E9A4);
+
+  /// Error container foreground text/icon color in dark mode.
+  static const Color darkOnErrorContainer = Color(0xFFFFDAD6);
+
+  /// Bright surface variant in dark mode.
+  static const Color darkSurfaceBright = Color(0xFF2C2C2C);
+
+  /// Inverse surface in dark mode.
+  static const Color darkInverseSurface = Color(0xFFE5E2E1);
+
+  /// Inverse on-surface in dark mode.
+  static const Color darkOnInverseSurface = Color(0xFF1E1E1E);
+
+  /// Inverse primary in dark mode.
+  static const Color darkInversePrimary = Color(0xFF006D36);
+
   // ---------------------------------------------------------------------------
   // Light Palette
   // ---------------------------------------------------------------------------
@@ -79,6 +121,15 @@ abstract final class AppColors {
 
   /// Base light surface color.
   static const Color lightSurface = Color(0xFFF8FAFC);
+
+  /// Dim surface color in light mode.
+  static const Color lightSurfaceDim = Color(0xFFE2E8F0);
+
+  /// Bright surface color in light mode.
+  static const Color lightSurfaceBright = Color(0xFFFFFFFF);
+
+  /// Lowest surface container in light mode.
+  static const Color lightSurfaceContainerLowest = Color(0xFFFFFFFF);
 
   /// Light surface container low.
   static const Color lightSurfaceContainerLow = Color(0xFFF1F5F9);
@@ -107,17 +158,56 @@ abstract final class AppColors {
   /// Primary green for light mode with accessible contrast ratio.
   static const Color lightPrimary = Color(0xFF008744);
 
+  /// High-contrast white on primary in light mode.
+  static const Color lightOnPrimary = Color(0xFFFFFFFF);
+
   /// Light mode primary container.
   static const Color lightPrimaryContainer = Color(0xFFD1F2D9);
 
   /// Text on primary container in light mode.
   static const Color lightOnPrimaryContainer = Color(0xFF005025);
 
+  /// Secondary color in light mode (cool slate).
+  static const Color lightSecondary = Color(0xFF505F76);
+
+  /// Contrast foreground on secondary color in light mode.
+  static const Color lightOnSecondary = Color(0xFFFFFFFF);
+
+  /// Secondary container color in light mode.
+  static const Color lightSecondaryContainer = Color(0xFFD8E2F9);
+
+  /// Contrast foreground on secondary container in light mode.
+  static const Color lightOnSecondaryContainer = Color(0xFF0E1B2E);
+
+  /// Tertiary color in light mode (deep forest green).
+  static const Color lightTertiary = Color(0xFF2E6B47);
+
+  /// Contrast foreground on tertiary color in light mode.
+  static const Color lightOnTertiary = Color(0xFFFFFFFF);
+
+  /// Tertiary container color in light mode.
+  static const Color lightTertiaryContainer = Color(0xFFB1F1C5);
+
+  /// Contrast foreground on tertiary container in light mode.
+  static const Color lightOnTertiaryContainer = Color(0xFF00210E);
+
   /// Error color in light mode.
   static const Color lightError = Color(0xFFBA1A1A);
 
+  /// Text/icon on error color in light mode.
+  static const Color lightOnError = Color(0xFFFFFFFF);
+
   /// Error container in light mode.
   static const Color lightErrorContainer = Color(0xFFFFDAD6);
+
+  /// Error container foreground text/icon color in light mode.
+  static const Color lightOnErrorContainer = Color(0xFF410002);
+
+  /// Inverse surface in light mode.
+  static const Color lightInverseSurface = Color(0xFF1E1E1E);
+
+  /// Inverse on-surface in light mode.
+  static const Color lightOnInverseSurface = Color(0xFFF1F5F9);
 
   // ---------------------------------------------------------------------------
   // Specialized Utility Colors & Overlays
@@ -251,25 +341,25 @@ abstract final class AppColors {
     return const ColorScheme(
       brightness: Brightness.dark,
       primary: emeraldPrimary,
-      onPrimary: Color(0xFF000000),
+      onPrimary: darkOnPrimary,
       primaryContainer: emeraldContainerDark,
       onPrimaryContainer: emeraldLight,
-      secondary: Color(0xFFC8C6C5),
-      onSecondary: Color(0xFF1E1E1E),
-      secondaryContainer: Color(0xFF353534),
-      onSecondaryContainer: Color(0xFFE5E2E1),
-      tertiary: Color(0xFF81C784),
-      onTertiary: Color(0xFF003314),
-      tertiaryContainer: Color(0xFF1B4332),
-      onTertiaryContainer: Color(0xFFA3E9A4),
+      secondary: darkSecondary,
+      onSecondary: darkOnSecondary,
+      secondaryContainer: darkSecondaryContainer,
+      onSecondaryContainer: darkOnSecondaryContainer,
+      tertiary: darkTertiary,
+      onTertiary: darkOnTertiary,
+      tertiaryContainer: darkTertiaryContainer,
+      onTertiaryContainer: darkOnTertiaryContainer,
       error: darkError,
       onError: darkOnError,
       errorContainer: darkErrorContainer,
-      onErrorContainer: Color(0xFFFFDAD6),
+      onErrorContainer: darkOnErrorContainer,
       surface: darkSurface,
       onSurface: darkOnSurface,
       surfaceDim: darkSurface,
-      surfaceBright: Color(0xFF2C2C2C),
+      surfaceBright: darkSurfaceBright,
       surfaceContainerLowest: darkSurfaceContainerLowest,
       surfaceContainerLow: darkSurfaceContainerLow,
       surfaceContainer: darkSurfaceContainer,
@@ -278,11 +368,11 @@ abstract final class AppColors {
       onSurfaceVariant: darkOnSurfaceVariant,
       outline: darkOutline,
       outlineVariant: darkOutlineVariant,
-      shadow: Color(0xFF000000),
-      scrim: Color(0xFF000000),
-      inverseSurface: Color(0xFFE5E2E1),
-      onInverseSurface: Color(0xFF1E1E1E),
-      inversePrimary: Color(0xFF006D36),
+      shadow: opticalBlack,
+      scrim: opticalBlack,
+      inverseSurface: darkInverseSurface,
+      onInverseSurface: darkOnInverseSurface,
+      inversePrimary: darkInversePrimary,
     );
   }
 
@@ -291,26 +381,26 @@ abstract final class AppColors {
     return const ColorScheme(
       brightness: Brightness.light,
       primary: lightPrimary,
-      onPrimary: Color(0xFFFFFFFF),
+      onPrimary: lightOnPrimary,
       primaryContainer: lightPrimaryContainer,
       onPrimaryContainer: lightOnPrimaryContainer,
-      secondary: Color(0xFF505F76),
-      onSecondary: Color(0xFFFFFFFF),
-      secondaryContainer: Color(0xFFD8E2F9),
-      onSecondaryContainer: Color(0xFF0E1B2E),
-      tertiary: Color(0xFF2E6B47),
-      onTertiary: Color(0xFFFFFFFF),
-      tertiaryContainer: Color(0xFFB1F1C5),
-      onTertiaryContainer: Color(0xFF00210E),
+      secondary: lightSecondary,
+      onSecondary: lightOnSecondary,
+      secondaryContainer: lightSecondaryContainer,
+      onSecondaryContainer: lightOnSecondaryContainer,
+      tertiary: lightTertiary,
+      onTertiary: lightOnTertiary,
+      tertiaryContainer: lightTertiaryContainer,
+      onTertiaryContainer: lightOnTertiaryContainer,
       error: lightError,
-      onError: Color(0xFFFFFFFF),
+      onError: lightOnError,
       errorContainer: lightErrorContainer,
-      onErrorContainer: Color(0xFF410002),
+      onErrorContainer: lightOnErrorContainer,
       surface: lightSurface,
       onSurface: lightOnSurface,
-      surfaceDim: Color(0xFFE2E8F0),
-      surfaceBright: Color(0xFFFFFFFF),
-      surfaceContainerLowest: Color(0xFFFFFFFF),
+      surfaceDim: lightSurfaceDim,
+      surfaceBright: lightSurfaceBright,
+      surfaceContainerLowest: lightSurfaceContainerLowest,
       surfaceContainerLow: lightSurfaceContainerLow,
       surfaceContainer: lightSurfaceContainer,
       surfaceContainerHigh: lightSurfaceContainerHigh,
@@ -318,10 +408,10 @@ abstract final class AppColors {
       onSurfaceVariant: lightOnSurfaceVariant,
       outline: lightOutline,
       outlineVariant: lightOutlineVariant,
-      shadow: Color(0xFF000000),
-      scrim: Color(0xFF000000),
-      inverseSurface: Color(0xFF1E1E1E),
-      onInverseSurface: Color(0xFFF1F5F9),
+      shadow: opticalBlack,
+      scrim: opticalBlack,
+      inverseSurface: lightInverseSurface,
+      onInverseSurface: lightOnInverseSurface,
       inversePrimary: emeraldLight,
     );
   }
