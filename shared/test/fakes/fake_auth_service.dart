@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:shared/utils/error_mapper.dart';
 
 import 'fake_user.dart';
 
@@ -32,6 +33,9 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
 
   @override
   String? get errorKey => _errorMessage;
+
+  @override
+  AppFailure? get failure => _errorMessage != null ? ErrorMapper.fromKey(_errorMessage) : null;
 
   @override
   Future<bool> signInWithGoogle() async {

@@ -4,7 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
+import 'package:shared/models/app_failure.dart';
 import 'package:shared/services/database_service.dart';
+
+export 'package:shared/models/app_failure.dart';
 
 enum AuthStatus { initializing, authenticated, unauthenticated }
 
@@ -20,7 +23,7 @@ class AuthService with ChangeNotifier {
   AuthStatus _status = AuthStatus.initializing;
   StreamSubscription<User?>? _authSubscription;
   User? _currentUser;
-  String? _errorKey;
+  AppFailure? _failure;
   bool _isLoading = false;
 
   /// The current authentication status.
@@ -38,12 +41,15 @@ class AuthService with ChangeNotifier {
   /// Returns true if an authentication operation is in progress.
   bool get isLoading => _isLoading;
 
+  /// Strongly typed failure representing the last error encountered during authentication operations.
+  AppFailure? get failure => _failure;
+
   /// Semantic error key for localized UI presentation (e.g. 'networkError', 'signInFailed', 'reauthFailed').
-  String? get errorKey => _errorKey;
+  String? get errorKey => _failure?.toKey();
 
   /// An error message resulting from a failed authentication attempt, or null.
   /// Maintained for backwards compatibility.
-  String? get errorMessage => _errorKey;
+  String? get errorMessage => errorKey;
 
   ///
   /// The main constructor for the authentication service.
@@ -120,7 +126,9 @@ class AuthService with ChangeNotifier {
         error: e,
         stackTrace: s,
       );
-      _errorKey = e.code == 'network-request-failed' ? 'networkError' : 'reauthFailed';
+      _failure = e.code == 'network-request-failed'
+          ? const NetworkFailure()
+          : const ReauthFailedFailure();
       return false;
     } on Exception catch (e, s) {
       _logger.e(
@@ -128,7 +136,7 @@ class AuthService with ChangeNotifier {
         error: e,
         stackTrace: s,
       );
-      _errorKey = 'reauthFailed';
+      _failure = const ReauthFailedFailure();
       return false;
     } finally {
       _setLoading(false);
@@ -177,11 +185,13 @@ class AuthService with ChangeNotifier {
       return true;
     } on FirebaseAuthException catch (e, s) {
       _logger.e('Error during Google Sign-In: ${e.code}', error: e, stackTrace: s);
-      _errorKey = e.code == 'network-request-failed' ? 'networkError' : 'signInFailed';
+      _failure = e.code == 'network-request-failed'
+          ? const NetworkFailure()
+          : const SignInFailedFailure();
       return false;
     } on Exception catch (e, s) {
       _logger.e('Error during Google Sign-In', error: e, stackTrace: s);
-      _errorKey = 'signInFailed';
+      _failure = const SignInFailedFailure();
       return false;
     } finally {
       _setLoading(false);
@@ -200,11 +210,13 @@ class AuthService with ChangeNotifier {
       return true;
     } on FirebaseAuthException catch (e, s) {
       _logger.e('Error during anonymous sign-in: ${e.code}', error: e, stackTrace: s);
-      _errorKey = e.code == 'network-request-failed' ? 'networkError' : 'signInFailed';
+      _failure = e.code == 'network-request-failed'
+          ? const NetworkFailure()
+          : const SignInFailedFailure();
       return false;
     } on Exception catch (e, s) {
       _logger.e('Error during anonymous sign-in', error: e, stackTrace: s);
-      _errorKey = 'signInFailed';
+      _failure = const SignInFailedFailure();
       return false;
     } finally {
       _setLoading(false);
@@ -324,7 +336,7 @@ class AuthService with ChangeNotifier {
 
     _isLoading = loading;
     if (loading) {
-      _errorKey = null;
+      _failure = null;
     }
 
     notifyListeners();

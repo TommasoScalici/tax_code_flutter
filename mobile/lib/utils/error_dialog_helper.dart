@@ -1,32 +1,22 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:shared/utils/error_mapper.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
+import 'package:tax_code_flutter/utils/app_failure_l10n.dart';
 
 class ErrorDialogHelper {
-  static void showErrorDialog(BuildContext context, String errorKey) {
+  /// Displays a localized error dialog for an [AppFailure], semantic error key [String], or exception [Object].
+  static void showErrorDialog(BuildContext context, Object errorOrFailure) {
     final l10n = context.l10n;
-    String message;
-
-    switch (errorKey) {
-      case 'deadlineExceeded':
-        message = l10n.deadlineExceeded;
-        break;
-      case 'rateLimitExceeded':
-        message = l10n.rateLimitExceeded;
-        break;
-      case 'serviceUnavailable':
-        message = l10n.serviceUnavailable;
-        break;
-      case 'networkError':
-        message = l10n.networkError;
-        break;
-      case 'sessionExpired':
-        message = l10n.sessionExpired;
-        break;
-      case 'genericError':
-      default:
-        message = l10n.genericError;
-        break;
+    final AppFailure failure;
+    if (errorOrFailure is AppFailure) {
+      failure = errorOrFailure;
+    } else if (errorOrFailure is String) {
+      failure = ErrorMapper.fromKey(errorOrFailure);
+    } else {
+      failure = ErrorMapper.fromException(errorOrFailure);
     }
+
+    final message = failure.toLocalizedMessage(l10n);
 
     showDialog<void>(
       context: context,
@@ -45,3 +35,4 @@ class ErrorDialogHelper {
     );
   }
 }
+

@@ -4,7 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:shared/utils/error_mapper.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
+import 'package:tax_code_flutter/utils/app_failure_l10n.dart';
 import 'package:tax_code_flutter/widgets/profile_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
@@ -37,11 +39,8 @@ class WelcomeScreen extends StatelessWidget {
 
     if (!success && authService.errorKey != null) {
       final l10n = context.l10n;
-      final message = switch (authService.errorKey) {
-        'networkError' => l10n.networkError,
-        'reauthFailed' => l10n.reauthFailed,
-        _ => l10n.signInFailed,
-      };
+      final failure = ErrorMapper.fromKey(authService.errorKey);
+      final message = failure.toLocalizedMessage(l10n);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
@@ -65,10 +64,8 @@ class WelcomeScreen extends StatelessWidget {
 
     if (!success && authService.errorKey != null) {
       final l10n = context.l10n;
-      final message = switch (authService.errorKey) {
-        'networkError' => l10n.networkError,
-        _ => l10n.signInFailed,
-      };
+      final failure = ErrorMapper.fromKey(authService.errorKey);
+      final message = failure.toLocalizedMessage(l10n);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),

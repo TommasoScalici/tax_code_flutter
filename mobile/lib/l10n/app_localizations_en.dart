@@ -63,6 +63,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Start typing the municipality or country of birth and select it from the menu.';
 
   @override
+  String get birthplaceNotFound =>
+      'Birthplace not found. Please check the name and try again.';
+
+  @override
   String get birthplacePlaceholder => 'Municipality or foreign country';
 
   @override
@@ -70,6 +74,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get buildNumber => 'Build Number';
+
+  @override
+  String get calculationFailed =>
+      'Could not calculate the tax code. Please check the entered data.';
 
   @override
   String get cameraCardGuideHint =>
@@ -332,6 +340,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loadingStatus => 'Loading';
+
+  @override
+  String get missingBirthplaceCode =>
+      'The selected birthplace is missing its cadastral code (Belfiore).';
 
   @override
   String get networkError =>

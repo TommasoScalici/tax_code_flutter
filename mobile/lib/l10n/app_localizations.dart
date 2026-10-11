@@ -194,6 +194,12 @@ abstract class AppLocalizations {
   /// **'Start typing the municipality or country of birth and select it from the menu.'**
   String get birthplaceHelperText;
 
+  /// Error message displayed when the entered birthplace cannot be found in the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthplace not found. Please check the name and try again.'**
+  String get birthplaceNotFound;
+
   /// Placeholder for the place or foreign country of birth field.
   ///
   /// In en, this message translates to:
@@ -211,6 +217,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Build Number'**
   String get buildNumber;
+
+  /// Error message displayed when tax code calculation fails unexpectedly.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not calculate the tax code. Please check the entered data.'**
+  String get calculationFailed;
 
   /// Instructional text displayed above the camera card framing guide.
   ///
@@ -685,6 +697,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading'**
   String get loadingStatus;
+
+  /// Error message displayed when the birthplace lacks a valid 4-character Belfiore code.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected birthplace is missing its cadastral code (Belfiore).'**
+  String get missingBirthplaceCode;
 
   /// Error message when there is no internet connectivity.
   ///

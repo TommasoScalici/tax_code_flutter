@@ -511,7 +511,7 @@ void main() {
           birthPlaceName: any(named: 'birthPlaceName'),
           birthPlaceState: any(named: 'birthPlaceState'),
         ),
-      ).thenThrow(TaxCodeApiNetworkException());
+      ).thenThrow(const TaxCodeApiNetworkException());
 
       // Act
       await pumpApp(

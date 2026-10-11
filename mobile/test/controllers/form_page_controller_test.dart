@@ -315,13 +315,14 @@ void main() {
             birthPlaceName: any(named: 'birthPlaceName'),
             birthPlaceState: any(named: 'birthPlaceState'),
           ),
-        ).thenThrow(TaxCodeApiNetworkException());
+        ).thenThrow(const TaxCodeApiNetworkException());
 
         // Act
         final result = await formPageController.submitForm();
 
         // Assert
         expect(result, isNull);
+        expect(formPageController.failure, isA<NetworkFailure>());
         expect(formPageController.errorKey, 'networkError');
       });
 
@@ -344,30 +345,64 @@ void main() {
             birthPlaceName: any(named: 'birthPlaceName'),
             birthPlaceState: any(named: 'birthPlaceState'),
           ),
-        ).thenThrow(TaxCodeApiServerException('resource-exhausted'));
+        ).thenThrow(const TaxCodeApiServerException('resource-exhausted'));
 
         // Act
         final result = await formPageController.submitForm();
 
         // Assert
         expect(result, isNull);
+        expect(formPageController.failure, isA<RateLimitFailure>());
         expect(formPageController.errorKey, 'rateLimitExceeded');
+      });
+
+      test('sets birthplaceNotFound failure when BirthplaceNotFoundFailure is thrown', () async {
+        // Arrange
+        await createController();
+        formPageController.form.patchValue({
+          'firstName': 'Guido',
+          'lastName': 'Bianchi',
+          'gender': 'M',
+          'birthDate': DateTime(1975, 3, 10),
+          'birthPlace': sampleBirthplace,
+        });
+        when(
+          () => mockTaxCodeService.fetchTaxCode(
+            firstName: any(named: 'firstName'),
+            lastName: any(named: 'lastName'),
+            gender: any(named: 'gender'),
+            birthDate: any(named: 'birthDate'),
+            birthPlaceName: any(named: 'birthPlaceName'),
+            birthPlaceState: any(named: 'birthPlaceState'),
+          ),
+        ).thenThrow(const BirthplaceNotFoundFailure());
+
+        // Act
+        final result = await formPageController.submitForm();
+
+        // Assert
+        expect(result, isNull);
+        expect(formPageController.failure, isA<BirthplaceNotFoundFailure>());
+        expect(formPageController.errorKey, 'birthplaceNotFound');
       });
     });
 
-    test('clearError resets error key and notifies listeners', () async {
+    test('clearError resets error key and failure, and notifies listeners', () async {
       // Arrange
       await createController();
       var listenerCallCount = 0;
       formPageController.addListener(() => listenerCallCount++);
 
       // Manually set an error state to test clearing it
-      formPageController.errorKey = 'networkError';
+      formPageController.failure = const BirthplaceNotFoundFailure();
+      expect(formPageController.failure, isA<BirthplaceNotFoundFailure>());
+      expect(formPageController.errorKey, 'birthplaceNotFound');
 
       // Act
       formPageController.clearError();
 
       // Assert
+      expect(formPageController.failure, isNull);
       expect(formPageController.errorKey, isNull);
       expect(listenerCallCount, greaterThan(0));
     });

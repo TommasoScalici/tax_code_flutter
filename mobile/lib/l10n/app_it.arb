@@ -77,6 +77,10 @@
   "@birthplaceHelperText": {
     "description": "Testo di supporto sotto il campo luogo di nascita."
   },
+  "birthplaceNotFound": "Luogo di nascita non trovato. Controlla il nome e riprova.",
+  "@birthplaceNotFound": {
+    "description": "Error message displayed when the entered birthplace cannot be found in the database."
+  },
   "birthplacePlaceholder": "Comune o Stato estero",
   "@birthplacePlaceholder": {
     "description": "Segnaposto del campo luogo o stato estero di nascita."
@@ -88,6 +92,10 @@
   "buildNumber": "Numero Build",
   "@buildNumber": {
     "description": "Label for the build number field in an info screen."
+  },
+  "calculationFailed": "Impossibile calcolare il codice fiscale. Controlla i dati inseriti.",
+  "@calculationFailed": {
+    "description": "Error message displayed when tax code calculation fails unexpectedly."
   },
   "cameraCardGuideHint": "Inquadra la tessera sanitaria all'interno della cornice",
   "@cameraCardGuideHint": {
@@ -428,6 +436,10 @@
   "loadingStatus": "In Caricamento",
   "@loadingStatus": {
     "description": "Chip label indicating loading state."
+  },
+  "missingBirthplaceCode": "Il luogo di nascita selezionato non ha un codice catastale (Belfiore) valido.",
+  "@missingBirthplaceCode": {
+    "description": "Error message displayed when the birthplace lacks a valid 4-character Belfiore code."
   },
   "networkError": "Nessuna connessione internet. Controlla la tua rete e riprova.",
   "@networkError": {

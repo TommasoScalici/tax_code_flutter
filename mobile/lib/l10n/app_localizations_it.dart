@@ -63,6 +63,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Inizia a digitare il nome del comune o stato di nascita e selezionalo dal menu.';
 
   @override
+  String get birthplaceNotFound =>
+      'Luogo di nascita non trovato. Controlla il nome e riprova.';
+
+  @override
   String get birthplacePlaceholder => 'Comune o Stato estero';
 
   @override
@@ -71,6 +75,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get buildNumber => 'Numero Build';
+
+  @override
+  String get calculationFailed =>
+      'Impossibile calcolare il codice fiscale. Controlla i dati inseriti.';
 
   @override
   String get cameraCardGuideHint =>
@@ -335,6 +343,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get loadingStatus => 'In Caricamento';
+
+  @override
+  String get missingBirthplaceCode =>
+      'Il luogo di nascita selezionato non ha un codice catastale (Belfiore) valido.';
 
   @override
   String get networkError =>

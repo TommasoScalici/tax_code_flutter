@@ -68,7 +68,7 @@ void main() {
     );
 
     test(
-      'should throw a TaxCodeApiServerException when birthplace is not found',
+      'should throw a BirthplaceNotFoundFailure when birthplace is not found',
       () async {
         // Arrange
         when(() => mockBirthplaceService.loadBirthplaces()).thenAnswer(
@@ -78,7 +78,23 @@ void main() {
         );
 
         // Act & Assert
+        expect(callFetchTaxCode, throwsA(isA<BirthplaceNotFoundFailure>()));
         expect(callFetchTaxCode, throwsA(isA<TaxCodeApiServerException>()));
+      },
+    );
+
+    test(
+      'should throw a MissingBirthplaceCodeFailure when birthplace has empty code',
+      () async {
+        // Arrange
+        when(() => mockBirthplaceService.loadBirthplaces()).thenAnswer(
+          (_) async => [
+            const Birthplace(name: 'Roma', state: 'RM'),
+          ],
+        );
+
+        // Act & Assert
+        expect(callFetchTaxCode, throwsA(isA<MissingBirthplaceCodeFailure>()));
       },
     );
   });

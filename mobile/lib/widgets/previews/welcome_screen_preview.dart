@@ -32,6 +32,9 @@ class _PreviewAuthService extends ChangeNotifier implements AuthService {
   String? get errorKey => null;
 
   @override
+  AppFailure? get failure => null;
+
+  @override
   Future<void> deleteUserAccount() async {}
 
   @override

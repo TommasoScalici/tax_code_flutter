@@ -77,6 +77,10 @@
   "@birthplaceHelperText": {
     "description": "Helper text below the birthplace input field."
   },
+  "birthplaceNotFound": "Birthplace not found. Please check the name and try again.",
+  "@birthplaceNotFound": {
+    "description": "Error message displayed when the entered birthplace cannot be found in the database."
+  },
   "birthplacePlaceholder": "Municipality or foreign country",
   "@birthplacePlaceholder": {
     "description": "Placeholder for the place or foreign country of birth field."
@@ -88,6 +92,10 @@
   "buildNumber": "Build Number",
   "@buildNumber": {
     "description": "Label for the build number field in an info screen."
+  },
+  "calculationFailed": "Could not calculate the tax code. Please check the entered data.",
+  "@calculationFailed": {
+    "description": "Error message displayed when tax code calculation fails unexpectedly."
   },
   "cameraCardGuideHint": "Align your health card or tax code within the frame",
   "@cameraCardGuideHint": {
@@ -428,6 +436,10 @@
   "loadingStatus": "Loading",
   "@loadingStatus": {
     "description": "Chip label indicating loading state."
+  },
+  "missingBirthplaceCode": "The selected birthplace is missing its cadastral code (Belfiore).",
+  "@missingBirthplaceCode": {
+    "description": "Error message displayed when the birthplace lacks a valid 4-character Belfiore code."
   },
   "networkError": "No internet connection. Please check your network and try again.",
   "@networkError": {

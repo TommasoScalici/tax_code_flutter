@@ -76,8 +76,9 @@ class _FormViewState extends State<_FormView> {
     _initFuture = controller.initializationFuture;
 
     controller.addListener(() {
-      if (controller.errorKey != null && mounted) {
-        ErrorDialogHelper.showErrorDialog(context, controller.errorKey!);
+      final failure = controller.failure;
+      if (failure != null && mounted) {
+        ErrorDialogHelper.showErrorDialog(context, failure);
         controller.clearError();
       }
     });

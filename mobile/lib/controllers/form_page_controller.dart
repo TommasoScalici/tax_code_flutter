@@ -29,9 +29,23 @@ interface class FormPageController with ChangeNotifier {
   bool _isDisposed = false;
   bool isLoading = false;
   bool isLoadingBirthplaces = false;
-  String? errorKey;
+  AppFailure? _failure;
   double? downloadProgress;
   String? downloadStep;
+
+  /// The strongly typed failure resulting from form submission, or null if none.
+  AppFailure? get failure => _failure;
+  set failure(AppFailure? value) {
+    _failure = value;
+    notifyListeners();
+  }
+
+  /// Semantic error key for localized UI presentation (backwards compatibility).
+  String? get errorKey => _failure?.toKey();
+  set errorKey(String? key) {
+    _failure = key != null ? ErrorMapper.fromKey(key) : null;
+    notifyListeners();
+  }
 
   /// Whether the form is in editing mode for an existing contact.
   bool get isEditing => _initialContact != null;
@@ -175,14 +189,14 @@ interface class FormPageController with ChangeNotifier {
     }
   }
 
-  void _setErrorKey(String key) {
-    errorKey = key;
+  void _setFailure(AppFailure failure) {
+    _failure = failure;
     notifyListeners();
   }
 
   void clearError() {
-    if (errorKey != null) {
-      errorKey = null;
+    if (_failure != null) {
+      _failure = null;
       notifyListeners();
     }
   }
@@ -290,7 +304,7 @@ interface class FormPageController with ChangeNotifier {
       }
     } on Object catch (e) {
       _logger.e('Error during form submission', error: e);
-      _setErrorKey(ErrorMapper.mapErrorToKey(e));
+      _setFailure(ErrorMapper.fromException(e));
       _setLoading(false);
       return null;
     }

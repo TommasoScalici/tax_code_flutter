@@ -1,18 +1,12 @@
 import 'dart:async';
 
 import 'package:logger/logger.dart';
+import 'package:shared/models/app_failure.dart';
 import 'package:shared/models/tax_code_response.dart';
 import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/utils/tax_code_generator.dart';
 
-/// Exception for network errors during tax code fetching.
-class TaxCodeApiNetworkException implements Exception {}
-
-/// Exception for server errors during tax code fetching.
-class TaxCodeApiServerException implements Exception {
-  final String code;
-  TaxCodeApiServerException(this.code);
-}
+export 'package:shared/models/app_failure.dart';
 
 /// Abstract class for the TaxCodeService.
 abstract class TaxCodeServiceAbstract {
@@ -53,11 +47,11 @@ class TaxCodeService implements TaxCodeServiceAbstract {
         (b) =>
             b.name.toLowerCase() == birthPlaceName.toLowerCase() &&
             b.state.toLowerCase() == birthPlaceState.toLowerCase(),
-        orElse: () => throw TaxCodeApiServerException('birthplace-not-found'),
+        orElse: () => throw const BirthplaceNotFoundFailure(),
       );
 
       if (birthplace.code.isEmpty) {
-        throw TaxCodeApiServerException('missing-birthplace-code');
+        throw const MissingBirthplaceCodeFailure();
       }
 
       final fiscalCode = TaxCodeGenerator.generate(
@@ -79,7 +73,7 @@ class TaxCodeService implements TaxCodeServiceAbstract {
       rethrow;
     } on Object catch (e, s) {
       _logger.e('Unexpected error in TaxCodeService: $e', error: e, stackTrace: s);
-      throw TaxCodeApiServerException('calculation-failed');
+      throw const CalculationFailure();
     }
   }
 }
