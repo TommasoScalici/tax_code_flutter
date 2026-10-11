@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// An attention-grabbing hero card promoting optical OCR / AI scanning
@@ -44,7 +45,7 @@ class OcrAiHeroBanner extends StatelessWidget {
       margin: margin,
       decoration: BoxDecoration(
         color: cardBgColor,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppRadii.borderCard,
         border: Border.all(color: borderColor, width: 1.2),
         boxShadow: [
           BoxShadow(
@@ -55,7 +56,7 @@ class OcrAiHeroBanner extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppRadii.borderCard,
         child: Stack(
           children: [
             // Ambient neon glow accent in top-right corner

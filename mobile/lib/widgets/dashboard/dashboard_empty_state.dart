@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// Modern empty state widget for the tax codes dashboard.
@@ -58,7 +59,7 @@ class DashboardEmptyState extends StatelessWidget {
 
     return Center(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.xxl),
         child: Container(
           constraints: const BoxConstraints(maxWidth: 420),
           child: Column(
@@ -71,7 +72,7 @@ class DashboardEmptyState extends StatelessWidget {
                 height: 88,
                 decoration: BoxDecoration(
                   color: iconContainerBg,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: AppRadii.borderDialog,
                   border: Border.all(
                     color: isSearching
                         ? colorScheme.outlineVariant

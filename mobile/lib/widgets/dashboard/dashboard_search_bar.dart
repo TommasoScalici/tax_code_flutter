@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A modern search bar for the Dashboard following the Emerald Ledger design system.
@@ -150,7 +151,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
           height: 50,
           decoration: BoxDecoration(
             color: containerColor,
-            borderRadius: BorderRadius.circular(9999),
+            borderRadius: AppRadii.borderPill,
             border: Border.all(
               color: borderColor,
               width: _isFocused ? 1.5 : 1.0,
@@ -167,7 +168,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
           ),
           child: Row(
             children: [
-              const SizedBox(width: 16),
+              const SizedBox(width: AppSpacing.lg),
               // Search leading icon
               Icon(
                 Icons.search_rounded,
@@ -176,7 +177,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                     ? colorScheme.primary
                     : colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.md),
 
               // Search text input
               Expanded(
@@ -196,13 +197,13 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                     filled: false,
                     fillColor: Colors.transparent,
                     isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     hintText: widget.hintText ?? l10n.search,
                     hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                      color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.medium),
                       fontWeight: FontWeight.w400,
                     ),
                   ),

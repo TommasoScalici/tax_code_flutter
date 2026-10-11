@@ -4,6 +4,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
@@ -80,7 +81,7 @@ class ContactCard extends StatelessWidget {
     ).format(contact.birthDate);
 
     final cardBorderColor = colorScheme.outlineVariant.withValues(
-      alpha: isDark ? 0.7 : 0.9,
+      alpha: isDark ? AppOpacity.medium : 0.9,
     );
 
     final taxCodeBoxBg = isDark
@@ -89,10 +90,10 @@ class ContactCard extends StatelessWidget {
 
     return Container(
       constraints: const BoxConstraints(maxWidth: 520),
-      margin: margin ?? const EdgeInsets.symmetric(vertical: 4.0),
+      margin: margin ?? const EdgeInsets.symmetric(vertical: AppSpacing.xs),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppRadii.borderCard,
         border: Border.all(color: cardBorderColor),
         boxShadow: [
           AppColors.shadowCard(isDark),
@@ -100,10 +101,10 @@ class ContactCard extends StatelessWidget {
       ),
       child: Material(
         color: AppColors.transparent,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppRadii.borderCard,
         clipBehavior: Clip.antiAlias,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: AppSpacing.paddingLg,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -131,7 +132,7 @@ class ContactCard extends StatelessWidget {
                       size: 20,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSpacing.md),
                   Expanded(
                     child: Row(
                       children: [
@@ -161,19 +162,19 @@ class ContactCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.sm),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
+                      horizontal: AppSpacing.sm,
                       vertical: 3,
                     ),
                     decoration: BoxDecoration(
                       color: colorScheme.surfaceContainerHighest.withValues(
-                        alpha: isDark ? 0.6 : 0.5,
+                        alpha: isDark ? 0.6 : AppOpacity.subtle,
                       ),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: AppRadii.borderSm,
                       border: Border.all(
-                        color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                        color: colorScheme.outlineVariant.withValues(alpha: AppOpacity.subtle),
                       ),
                     ),
                     child: Text(
@@ -184,7 +185,7 @@ class ContactCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.sm),
                   Icon(
                     Icons.drag_indicator_rounded,
                     size: 18,
@@ -192,7 +193,7 @@ class ContactCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
 
               // Hero Tax Code Display Box with Tap-to-Copy
               Tooltip(
@@ -208,7 +209,7 @@ class ContactCard extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 14,
-                        vertical: 12,
+                        vertical: AppSpacing.md,
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
@@ -226,7 +227,7 @@ class ContactCard extends StatelessWidget {
                             size: 20,
                             color: colorScheme.primary,
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: AppSpacing.md),
                           Expanded(
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
@@ -239,7 +240,7 @@ class ContactCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSpacing.sm),
                           Icon(
                             Icons.copy_rounded,
                             size: 18,
@@ -251,12 +252,12 @@ class ContactCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
 
               // Anagraphic Details Row (Birthplace, Birthdate, Gender)
               Wrap(
-                spacing: 8,
-                runSpacing: 4,
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.xs,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Row(
@@ -267,7 +268,7 @@ class ContactCard extends StatelessWidget {
                         size: 14,
                         color: colorScheme.onSurfaceVariant,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: AppSpacing.xs),
                       Text(
                         contact.birthPlace.toString(),
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -292,7 +293,7 @@ class ContactCard extends StatelessWidget {
                         size: 13,
                         color: colorScheme.onSurfaceVariant,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: AppSpacing.xs),
                       Text(
                         formattedBirthDate,
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -304,7 +305,7 @@ class ContactCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
 
               // Divider
               Divider(

@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A sticky bottom action bar containing the primary full-width "Salva Codice" button,
@@ -74,8 +75,8 @@ class FormStickyBottomBar extends StatelessWidget {
                     foregroundColor: colorScheme.onPrimary,
                     disabledBackgroundColor: colorScheme.surfaceContainerHighest,
                     disabledForegroundColor: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: AppRadii.borderMd,
                     ),
                     elevation: 0,
                   ),

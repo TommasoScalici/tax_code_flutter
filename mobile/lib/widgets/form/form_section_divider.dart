@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// An elegant horizontal divider with a centered uppercase label,
@@ -18,7 +19,7 @@ class FormSectionDivider extends StatelessWidget {
   const FormSectionDivider({
     super.key,
     this.label,
-    this.margin = const EdgeInsets.symmetric(vertical: 12.0),
+    this.margin = const EdgeInsets.symmetric(vertical: AppSpacing.md),
   });
 
   @override
@@ -32,11 +33,11 @@ class FormSectionDivider extends StatelessWidget {
         (label ?? l10n.formOrManualEntry).toUpperCase();
 
     final lineColor = colorScheme.outlineVariant.withValues(
-      alpha: isDark ? 0.40 : 0.55,
+      alpha: isDark ? 0.40 : AppOpacity.subtle,
     );
 
     final textColor = colorScheme.onSurfaceVariant.withValues(
-      alpha: isDark ? 0.75 : 0.85,
+      alpha: isDark ? 0.75 : AppOpacity.high,
     );
 
     return Container(
@@ -51,7 +52,7 @@ class FormSectionDivider extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
             child: Text(
               displayText,
               style: theme.textTheme.labelSmall?.copyWith(
