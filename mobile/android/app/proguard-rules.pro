@@ -6,6 +6,22 @@
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
 
+# Flutter Engine & Embedding
+-keep class io.flutter.** { *; }
+-keep class io.flutter.embedding.** { *; }
+
+# Google Play Services & Auth
+-keep class com.google.android.gms.** { *; }
+-keep class com.google.android.gms.auth.** { *; }
+
+# Firebase
+-keep class com.google.firebase.** { *; }
+-keep class com.google.firebase.crashlytics.** { *; }
+-keep class com.google.firebase.appcheck.** { *; }
+
+# Camera & Support
+-keep class androidx.camera.** { *; }
+
 # Serialization & Reflection: Preserve annotations and generic signatures
 -keepattributes *Annotation*
 -keepattributes Signature

@@ -79,6 +79,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/birthplaces.json
+    - assets/fonts/
     - assets/images/google_logo.svg
     - assets/images/tax_code_icon.svg
 
