@@ -4,7 +4,7 @@ A modern, fast, and user-friendly cross-platform application to calculate and ma
 
 ![Version](https://img.shields.io/badge/version-2.0.1-blue)
 ![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Wear%20OS-brightgreen)
-![Flutter](https://img.shields.io/badge/flutter-3.22%2B-02569B?logo=flutter)
+![Flutter](https://img.shields.io/badge/flutter-3.47%2B-02569B?logo=flutter)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
@@ -62,7 +62,7 @@ tax_code_flutter/
 
 ### Technologies
 
-- **Frontend & Companion:** Flutter & Dart (Strict Typing, `very_good_analysis`)
+- **Frontend & Companion:** Flutter & Dart (Strict Typing, `very_good_analysis`, Pub Workspaces)
 - **Design System:** Material 3 "Emerald Ledger" tokens centralized in `shared`
 - **Backend & Cloud:** Firebase Cloud Functions (Node.js 24, ESM, Vitest 5.x)
 - **AI & Multimodal OCR:** Google Vertex AI Gemini Flash (`gemini-3.8-flash` / `gemini-3.7-flash` with zero-redeploy dynamic config)
@@ -76,8 +76,8 @@ tax_code_flutter/
 
 ### Prerequisites
 
-- Flutter SDK `3.22.0` or higher
-- Dart SDK `3.8.0` or higher
+- Flutter SDK `3.47.0` or higher
+- Dart SDK `3.13.0` or higher (Pub Workspaces support)
 - Node.js `24.x` (for Cloud Functions development)
 
 ### Setup
@@ -97,17 +97,12 @@ tax_code_flutter/
 
 3. **Install dependencies:**
    ```bash
-   # In shared
-   cd shared && flutter pub get
-
-   # In mobile
-   cd ../mobile && flutter pub get
-
-   # In wearable
-   cd ../wearable && flutter pub get
+   # From the repository root (Pub Workspace resolves all packages):
+   flutter pub get
 
    # In functions
-   cd ../functions && npm install
+   cd functions && npm install
+   cd ..
    ```
 
 4. **Run tests:**

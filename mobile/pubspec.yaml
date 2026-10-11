@@ -18,7 +18,6 @@ dependencies:
 
   # Local module
   shared:
-    path: ../shared
 
   # Core & Utilities
   cloud_firestore: ^6.10.0
@@ -57,7 +56,6 @@ dependencies:
   cloud_functions: ^6.5.0
   firebase_app_check: ^0.4.8
   firebase_crashlytics: ^5.4.0
-  firebase_storage: ^13.6.0
   in_app_review: ^2.0.11
   path_provider: ^2.1.5
 
