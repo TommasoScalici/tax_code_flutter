@@ -109,8 +109,10 @@ Future<void> pumpApp(
     ),
   ).thenAnswer((_) {});
 
-  when(permissionService.requestCameraPermission).thenAnswer((_) async => true);
-  when(permissionService.openAppSettingsHandler).thenAnswer((_) async => true);
+  if (mockPermissionService == null) {
+    when(permissionService.requestCameraPermission).thenAnswer((_) async => true);
+    when(permissionService.openAppSettingsHandler).thenAnswer((_) async => true);
+  }
 
   when(infoService.getPackageInfo).thenAnswer(
     (_) async => PackageInfo(

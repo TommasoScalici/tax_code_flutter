@@ -12,23 +12,32 @@ import 'package:tax_code_flutter/services/permission_service.dart';
 import 'package:tax_code_flutter/widgets/camera/camera_controls_widget.dart';
 import 'package:tax_code_flutter/widgets/camera/camera_preview_overlay.dart';
 
-/// This widget is responsible for creating and providing the CameraPageController
-/// to the widget tree. It is clean of constructor dependencies.
+/// This widget is responsible for creating and providing the [CameraPageController]
+/// to the widget tree. Allows optional dependency injection for testing.
 class CameraPage extends StatelessWidget {
-  const CameraPage({super.key});
+  const CameraPage({super.key, this.controller});
+
+  final CameraPageController? controller;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    if (controller != null) {
+      return ChangeNotifierProvider<CameraPageController>.value(
+        value: controller!,
+        child: const _CameraView(),
+      );
+    }
+
+    return ChangeNotifierProvider<CameraPageController>(
       create: (ctx) {
-        final controller = CameraPageController(
+        final instance = CameraPageController(
           cameraService: ctx.read<CameraServiceAbstract>(),
           geminiService: ctx.read<GeminiServiceAbstract>(),
           permissionService: ctx.read<PermissionServiceAbstract>(),
           logger: ctx.read<Logger>(),
         );
-        unawaited(controller.initialize());
-        return controller;
+        unawaited(instance.initialize());
+        return instance;
       },
       child: const _CameraView(),
     );

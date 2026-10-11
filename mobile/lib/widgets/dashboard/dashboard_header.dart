@@ -60,12 +60,8 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final authService = context.watch<AuthService?>();
-    var isGuest = false;
-    var isSignedIn = false;
-    try {
-      isGuest = authService?.isGuest ?? false;
-      isSignedIn = authService?.isSignedIn ?? false;
-    } on Object catch (_) {}
+    final isGuest = authService?.isGuest ?? false;
+    final isSignedIn = authService?.isSignedIn ?? false;
 
     // Determine whether sync is active (defaults to authenticated Google user)
     final syncActive = isSyncActive ??

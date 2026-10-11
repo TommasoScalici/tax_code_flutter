@@ -21,12 +21,7 @@ class AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = context.watch<AuthService>();
-    DemoModeServiceAbstract? demoModeService;
-    try {
-      demoModeService = context.watch<DemoModeServiceAbstract>();
-    } on Object {
-      // Safe fallback if DemoModeServiceAbstract is not in the widget tree in testing
-    }
+    final demoModeService = context.watch<DemoModeServiceAbstract?>();
 
     if (demoModeService?.isDemoMode ?? false) {
       return homePage;
