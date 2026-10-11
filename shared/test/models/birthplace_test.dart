@@ -46,5 +46,44 @@ void main() {
         expect(birthplace1, isNot(equals(birthplace3)));
       },
     );
+
+    test('fromJson should populate precomputed normalized fields', () {
+      final model = Birthplace.fromJson({
+        'name': "Sant'Angelo a Cupolo",
+        'state': 'BN',
+        'code': 'I277',
+      });
+
+      expect(model.normalizedName, 'sant angelo a cupolo');
+      expect(model.normalizedState, 'bn');
+      expect(model.normalizedFull, 'sant angelo a cupolo bn');
+      expect(model.nameWords, ['sant', 'angelo', 'a', 'cupolo']);
+    });
+
+    test('should lazily compute normalized fields when created with const constructor', () {
+      const model = Birthplace(
+        name: "Sant'Angelo a Cupolo",
+        state: 'BN',
+        code: 'I277',
+      );
+
+      expect(model.normalizedName, 'sant angelo a cupolo');
+      expect(model.normalizedState, 'bn');
+      expect(model.normalizedFull, 'sant angelo a cupolo bn');
+      expect(model.nameWords, ['sant', 'angelo', 'a', 'cupolo']);
+    });
+
+    test('withPrecomputedNormalizedData should return instance with precomputed fields', () {
+      const original = Birthplace(name: 'Forlì', state: 'FC', code: 'D704');
+      final precomputed = original.withPrecomputedNormalizedData();
+
+      expect(precomputed.name, original.name);
+      expect(precomputed.state, original.state);
+      expect(precomputed.code, original.code);
+      expect(precomputed.normalizedName, 'forli');
+      expect(precomputed.normalizedState, 'fc');
+      expect(precomputed.normalizedFull, 'forli fc');
+      expect(precomputed.nameWords, ['forli']);
+    });
   });
 }

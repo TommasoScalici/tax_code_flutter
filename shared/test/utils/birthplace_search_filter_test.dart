@@ -63,6 +63,39 @@ void main() {
       test('identifies single substitution', () {
         expect(BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'toma'), 1);
       });
+
+      test('applies fast-fail when length difference exceeds maxDistance', () {
+        // |4 - 7| = 3 > 2 -> returns maxDistance + 1 = 3
+        expect(
+          BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'palermo', 2),
+          3,
+        );
+      });
+
+      test('applies early exit when minimum row distance exceeds maxDistance', () {
+        // Strings with equal length but completely distinct letters
+        expect(
+          BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'xyzw', 1),
+          2,
+        );
+      });
+
+      test('returns exact distance when within maxDistance threshold', () {
+        expect(
+          BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'toma', 1),
+          1,
+        );
+        expect(
+          BirthplaceSearchFilter.damerauLevenshteinDistance('milano', 'milnao', 2),
+          1,
+        );
+      });
+
+      test('handles empty strings correctly with maxDistance', () {
+        expect(BirthplaceSearchFilter.damerauLevenshteinDistance('', '', 2), 0);
+        expect(BirthplaceSearchFilter.damerauLevenshteinDistance('a', '', 2), 1);
+        expect(BirthplaceSearchFilter.damerauLevenshteinDistance('', 'abc', 2), 3);
+      });
     });
 
     group('search & ranking', () {
