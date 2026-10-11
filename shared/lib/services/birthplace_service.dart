@@ -15,6 +15,7 @@ abstract class BirthplaceServiceAbstract {
   ValueNotifier<double?> get downloadProgress;
   ValueNotifier<String?> get downloadStep;
   Future<List<Birthplace>> loadBirthplaces();
+  void dispose();
 }
 
 /// Parses raw JSON string into a list of [Birthplace] objects.
@@ -47,6 +48,15 @@ class BirthplaceService implements BirthplaceServiceAbstract {
 
   List<Birthplace>? _cachedBirthplaces;
   Future<List<Birthplace>>? _initializationFuture;
+  Future<void>? _backgroundUpdateFuture;
+  StreamSubscription<TaskSnapshot>? _downloadSubscription;
+  bool _isDisposed = false;
+
+  @visibleForTesting
+  Future<void>? get backgroundUpdateFuture => _backgroundUpdateFuture;
+
+  @visibleForTesting
+  bool get isDisposed => _isDisposed;
 
   BirthplaceService({
     required Logger logger,
@@ -56,6 +66,28 @@ class BirthplaceService implements BirthplaceServiceAbstract {
         _storage = storage ?? FirebaseStorage.instance,
         _storagePath = storagePath;
 
+  void _setDownloadProgress(double? value) {
+    if (!_isDisposed) {
+      downloadProgress.value = value;
+    }
+  }
+
+  void _setDownloadStep(String? value) {
+    if (!_isDisposed) {
+      downloadStep.value = value;
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_isDisposed) return;
+    _isDisposed = true;
+    unawaited(_downloadSubscription?.cancel());
+    _downloadSubscription = null;
+    downloadProgress.dispose();
+    downloadStep.dispose();
+  }
+
   @override
   Future<List<Birthplace>> loadBirthplaces() async {
     if (_cachedBirthplaces != null) return _cachedBirthplaces!;
@@ -64,7 +96,7 @@ class BirthplaceService implements BirthplaceServiceAbstract {
   }
 
   Future<List<Birthplace>> _performLoad() async {
-    downloadStep.value = 'checking';
+    _setDownloadStep('checking');
     try {
       final cacheDir = await getApplicationDocumentsDirectory();
       final localFile = File('${cacheDir.path}/birthplaces.json');
@@ -87,7 +119,7 @@ class BirthplaceService implements BirthplaceServiceAbstract {
 
       // Read cache immediately for instant startup
       if (await localFile.exists() && await localFile.length() > 0) {
-        downloadStep.value = 'parsing';
+        _setDownloadStep('parsing');
         final jsonString = await localFile.readAsString();
         var parsedList = await _parseBirthplacesInIsolate(jsonString);
 
@@ -121,8 +153,8 @@ class BirthplaceService implements BirthplaceServiceAbstract {
       // Trigger background update from Firebase Storage without awaiting it
       _triggerBackgroundUpdate(localFile);
 
-      downloadStep.value = null;
-      downloadProgress.value = null;
+      _setDownloadStep(null);
+      _setDownloadProgress(null);
       return _cachedBirthplaces ?? [];
     } on Object catch (e, s) {
       _logger.e(
@@ -130,82 +162,105 @@ class BirthplaceService implements BirthplaceServiceAbstract {
         error: e,
         stackTrace: s,
       );
-      downloadStep.value = null;
-      downloadProgress.value = null;
+      _setDownloadStep(null);
+      _setDownloadProgress(null);
       _initializationFuture = null; // Allow retry on failure
       return [];
     }
   }
 
   void _triggerBackgroundUpdate(File localFile) {
-    scheduleMicrotask(() async {
+    _backgroundUpdateFuture = _performBackgroundUpdate(localFile);
+  }
+
+  Future<void> _performBackgroundUpdate(File localFile) async {
+    try {
+      final ref = _storage.ref(_storagePath);
+      var shouldDownload = true;
+
       try {
-        final ref = _storage.ref(_storagePath);
-        var shouldDownload = true;
+        final metadata = await ref.getMetadata();
+        final serverLastModified = metadata.updated;
+        final localLastModified = await localFile.lastModified();
 
-        try {
-          final metadata = await ref.getMetadata();
-          final serverLastModified = metadata.updated;
-          final localLastModified = await localFile.lastModified();
-
-          if (serverLastModified != null &&
-              !serverLastModified.isAfter(localLastModified)) {
-            shouldDownload = false;
-          }
-        } on Object {
-          // Offline or storage metadata read error, keep local cache
+        if (serverLastModified != null &&
+            !serverLastModified.isAfter(localLastModified)) {
           shouldDownload = false;
         }
+      } on Object {
+        // Offline or storage metadata read error, keep local cache
+        shouldDownload = false;
+      }
 
-        if (shouldDownload) {
-          _logger.i(
-            'Background: Downloading updated birthplaces.json from Firebase Storage...',
-          );
-          final tempFile = File('${localFile.path}.tmp');
+      if (_isDisposed) return;
 
-          try {
-            final downloadTask = ref.writeToFile(tempFile);
-            downloadTask.snapshotEvents.listen((taskSnapshot) {
-              if (taskSnapshot.state == TaskState.running &&
+      if (shouldDownload) {
+        _logger.i(
+          'Background: Downloading updated birthplaces.json from Firebase Storage...',
+        );
+        final tempFile = File('${localFile.path}.tmp');
+
+        try {
+          final downloadTask = ref.writeToFile(tempFile);
+          _setDownloadStep('downloading');
+
+          await _downloadSubscription?.cancel();
+          _downloadSubscription = downloadTask.snapshotEvents.listen(
+            (taskSnapshot) {
+              if (!_isDisposed &&
+                  taskSnapshot.state == TaskState.running &&
                   taskSnapshot.totalBytes > 0) {
-                downloadProgress.value =
-                    taskSnapshot.bytesTransferred / taskSnapshot.totalBytes;
-              }
-            });
-            await downloadTask;
-            if (await tempFile.exists()) {
-              // Safe cross-platform copy & delete to prevent Windows OS Error 183
-              await tempFile.copy(localFile.path);
-              await tempFile.delete();
-              _logger.i(
-                'Background: Local birthplaces.json cache updated successfully.',
-              );
-
-              // Keep in-memory cache synchronized with background update
-              try {
-                final updatedJson = await localFile.readAsString();
-                final updatedList = await _parseBirthplacesInIsolate(
-                  updatedJson,
+                _setDownloadProgress(
+                  taskSnapshot.bytesTransferred / taskSnapshot.totalBytes,
                 );
+              }
+            },
+            onError: (Object error) {
+              _logger.w('Download progress stream error: $error');
+            },
+          );
+
+          await downloadTask;
+          if (_isDisposed) return;
+
+          if (await tempFile.exists()) {
+            // Safe cross-platform copy & delete to prevent Windows OS Error 183
+            await tempFile.copy(localFile.path);
+            await tempFile.delete();
+            _logger.i(
+              'Background: Local birthplaces.json cache updated successfully.',
+            );
+
+            // Keep in-memory cache synchronized with background update
+            try {
+              final updatedJson = await localFile.readAsString();
+              final updatedList = await _parseBirthplacesInIsolate(
+                updatedJson,
+              );
+              if (!_isDisposed) {
                 _cachedBirthplaces = updatedList;
                 _logger.i(
                   'Background: Refreshed ${_cachedBirthplaces!.length} birthplaces in memory cache.',
                 );
-              } on Object catch (cacheErr) {
-                _logger.w(
-                  'Background: Failed to refresh in-memory cache: $cacheErr',
-                );
               }
-            }
-          } finally {
-            if (await tempFile.exists()) {
-              await tempFile.delete();
+            } on Object catch (cacheErr) {
+              _logger.w(
+                'Background: Failed to refresh in-memory cache: $cacheErr',
+              );
             }
           }
+        } finally {
+          await _downloadSubscription?.cancel();
+          _downloadSubscription = null;
+          _setDownloadProgress(null);
+          _setDownloadStep(null);
+          if (await tempFile.exists()) {
+            await tempFile.delete();
+          }
         }
-      } on Object catch (e) {
-        _logger.w('Background update of birthplaces.json failed: $e');
       }
-    });
+    } on Object catch (e) {
+      _logger.w('Background update of birthplaces.json failed: $e');
+    }
   }
 }

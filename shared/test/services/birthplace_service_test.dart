@@ -28,6 +28,22 @@ class FakeDownloadTask extends Fake implements DownloadTask {
   }
 }
 
+class FakeProgressDownloadTask extends Fake implements DownloadTask {
+  final Stream<TaskSnapshot> _stream;
+  FakeProgressDownloadTask(this._stream);
+
+  @override
+  Stream<TaskSnapshot> get snapshotEvents => _stream;
+
+  @override
+  Future<S> then<S>(
+    FutureOr<S> Function(TaskSnapshot value) onValue, {
+    Function? onError,
+  }) {
+    return Future.value(MockTaskSnapshot()).then(onValue, onError: onError);
+  }
+}
+
 class MockTaskSnapshot extends Mock implements TaskSnapshot {}
 
 void main() {
@@ -183,6 +199,87 @@ void main() {
       final updatedResult = await service.loadBirthplaces();
       expect(updatedResult.length, 2);
       expect(updatedResult.any((b) => b.name == 'Napoli'), isTrue);
+    });
+
+    test('dispose cancels active subscription and disposes notifiers', () {
+      final service = BirthplaceService(
+        logger: mockLogger,
+        storage: mockStorage,
+      );
+
+      expect(service.isDisposed, isFalse);
+      service.dispose();
+      expect(service.isDisposed, isTrue);
+
+      expect(service.dispose, returnsNormally);
+    });
+
+    test('download progress events update downloadProgress and reset in finally', () async {
+      final localFile = File('${tempDir.path}/birthplaces.json');
+      await localFile.writeAsString('[{"name":"Roma","state":"RM","code":"H501"}]');
+
+      final metadata = MockFullMetadata();
+      when(() => metadata.updated).thenReturn(
+        DateTime.now().add(const Duration(days: 1)),
+      );
+      when(() => mockRef.getMetadata()).thenAnswer((_) async => metadata);
+
+      final streamController = StreamController<TaskSnapshot>();
+      final mockSnapshot = MockTaskSnapshot();
+      when(() => mockSnapshot.state).thenReturn(TaskState.running);
+      when(() => mockSnapshot.bytesTransferred).thenReturn(50);
+      when(() => mockSnapshot.totalBytes).thenReturn(100);
+
+      final fakeTask = FakeProgressDownloadTask(streamController.stream);
+      when(() => mockRef.writeToFile(any())).thenAnswer((invocation) {
+        final targetFile = invocation.positionalArguments[0] as File;
+        targetFile.writeAsStringSync('[{"name":"Roma","state":"RM","code":"H501"}]');
+        return fakeTask;
+      });
+
+      final service = BirthplaceService(
+        logger: mockLogger,
+        storage: mockStorage,
+      );
+
+      await service.loadBirthplaces();
+
+      streamController.add(mockSnapshot);
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+
+      await streamController.close();
+      await service.backgroundUpdateFuture;
+
+      expect(service.downloadProgress.value, isNull);
+      expect(service.downloadStep.value, isNull);
+
+      service.dispose();
+    });
+
+    test('download error cleans up subscription and resets notifiers', () async {
+      final localFile = File('${tempDir.path}/birthplaces.json');
+      await localFile.writeAsString('[{"name":"Roma","state":"RM","code":"H501"}]');
+
+      final metadata = MockFullMetadata();
+      when(() => metadata.updated).thenReturn(
+        DateTime.now().add(const Duration(days: 1)),
+      );
+      when(() => mockRef.getMetadata()).thenAnswer((_) async => metadata);
+
+      when(() => mockRef.writeToFile(any())).thenThrow(Exception('Storage write error'));
+
+      final service = BirthplaceService(
+        logger: mockLogger,
+        storage: mockStorage,
+      );
+
+      await service.loadBirthplaces();
+      await service.backgroundUpdateFuture;
+
+      expect(service.downloadProgress.value, isNull);
+      expect(service.downloadStep.value, isNull);
+
+      service.dispose();
     });
   });
 }

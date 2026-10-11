@@ -37,9 +37,21 @@ void main() {
       'should be equal when properties are the same and not equal when they are different',
       () {
         // Arrange
-        const birthplace1 = Birthplace(name: 'Torino', state: 'TO', code: 'L219');
-        const birthplace2 = Birthplace(name: 'Torino', state: 'TO', code: 'L219');
-        const birthplace3 = Birthplace(name: 'Milano', state: 'MI', code: 'F205');
+        const birthplace1 = Birthplace(
+          name: 'Torino',
+          state: 'TO',
+          code: 'L219',
+        );
+        const birthplace2 = Birthplace(
+          name: 'Torino',
+          state: 'TO',
+          code: 'L219',
+        );
+        const birthplace3 = Birthplace(
+          name: 'Milano',
+          state: 'MI',
+          code: 'F205',
+        );
 
         // Assert
         expect(birthplace1, equals(birthplace2));
@@ -48,7 +60,7 @@ void main() {
     );
 
     test('fromJson should populate precomputed normalized fields', () {
-      final model = Birthplace.fromJson({
+      final model = Birthplace.fromJson(const {
         'name': "Sant'Angelo a Cupolo",
         'state': 'BN',
         'code': 'I277',
@@ -60,30 +72,36 @@ void main() {
       expect(model.nameWords, ['sant', 'angelo', 'a', 'cupolo']);
     });
 
-    test('should lazily compute normalized fields when created with const constructor', () {
-      const model = Birthplace(
-        name: "Sant'Angelo a Cupolo",
-        state: 'BN',
-        code: 'I277',
-      );
+    test(
+      'should lazily compute normalized fields when created with const constructor',
+      () {
+        const model = Birthplace(
+          name: "Sant'Angelo a Cupolo",
+          state: 'BN',
+          code: 'I277',
+        );
 
-      expect(model.normalizedName, 'sant angelo a cupolo');
-      expect(model.normalizedState, 'bn');
-      expect(model.normalizedFull, 'sant angelo a cupolo bn');
-      expect(model.nameWords, ['sant', 'angelo', 'a', 'cupolo']);
-    });
+        expect(model.normalizedName, 'sant angelo a cupolo');
+        expect(model.normalizedState, 'bn');
+        expect(model.normalizedFull, 'sant angelo a cupolo bn');
+        expect(model.nameWords, ['sant', 'angelo', 'a', 'cupolo']);
+      },
+    );
 
-    test('withPrecomputedNormalizedData should return instance with precomputed fields', () {
-      const original = Birthplace(name: 'Forlì', state: 'FC', code: 'D704');
-      final precomputed = original.withPrecomputedNormalizedData();
+    test(
+      'withPrecomputedNormalizedData should return instance with precomputed fields',
+      () {
+        const original = Birthplace(name: 'Forlì', state: 'FC', code: 'D704');
+        final precomputed = original.withPrecomputedNormalizedData();
 
-      expect(precomputed.name, original.name);
-      expect(precomputed.state, original.state);
-      expect(precomputed.code, original.code);
-      expect(precomputed.normalizedName, 'forli');
-      expect(precomputed.normalizedState, 'fc');
-      expect(precomputed.normalizedFull, 'forli fc');
-      expect(precomputed.nameWords, ['forli']);
-    });
+        expect(precomputed.name, original.name);
+        expect(precomputed.state, original.state);
+        expect(precomputed.code, original.code);
+        expect(precomputed.normalizedName, 'forli');
+        expect(precomputed.normalizedState, 'fc');
+        expect(precomputed.normalizedFull, 'forli fc');
+        expect(precomputed.nameWords, ['forli']);
+      },
+    );
   });
 }

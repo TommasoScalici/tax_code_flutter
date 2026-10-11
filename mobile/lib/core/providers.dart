@@ -66,6 +66,7 @@ List<SingleChildWidget> getAppProviders({
       create: (context) => BirthplaceService(
         logger: context.read<Logger>(),
       ),
+      dispose: (_, service) => service.dispose(),
     ),
     Provider<InfoServiceAbstract>(
       create: (context) => InfoService(logger: context.read<Logger>()),
