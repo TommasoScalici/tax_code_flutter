@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/controllers/profile_screen_controller.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_action_tile.dart';
 
@@ -21,11 +22,11 @@ class ProfileAccountSection extends StatelessWidget {
         ProfileSectionHeader(
           title: l10n.sectionAccountManagement.toUpperCase(),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.sm),
         Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: AppRadii.borderCard,
             border: Border.all(color: theme.colorScheme.outlineVariant),
           ),
           child: Column(

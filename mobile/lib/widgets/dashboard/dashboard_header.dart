@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/theme_service.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/user_avatar.dart';
 
@@ -82,23 +83,23 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: AppRadii.borderSm,
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.shadow.withValues(alpha: 0.12),
+                  color: colorScheme.shadow.withValues(alpha: AppOpacity.faint),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: AppRadii.borderSm,
               child: SvgPicture.asset(
                 'assets/images/tax_code_icon.svg',
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.md),
 
           // Title & Subtitle
           Flexible(
@@ -171,7 +172,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
             message: syncActive ? l10n.cloudSyncActive : l10n.profilePageTitle,
             child: InkWell(
               onTap: onProfileTap,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: AppRadii.borderCard,
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
@@ -193,7 +194,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.syncPulse.withValues(alpha: 0.5),
+                              color: AppColors.syncPulse.withValues(alpha: AppOpacity.divider),
                               blurRadius: 4,
                               spreadRadius: 1,
                             ),
@@ -224,7 +225,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
         tooltip: l10n.cloudSyncGuestTooltip,
         icon: Icon(
           Icons.cloud_off_rounded,
-          color: colorScheme.onSurface.withValues(alpha: 0.38),
+          color: colorScheme.onSurface.withValues(alpha: AppOpacity.disabled),
           size: 22,
         ),
         onPressed: () {

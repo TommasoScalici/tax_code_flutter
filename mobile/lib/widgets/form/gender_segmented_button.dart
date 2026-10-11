@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A modern, accessible Material 3 segmented button for selecting gender
@@ -142,12 +143,12 @@ class _GenderSegmentedLayout extends StatelessWidget {
 
         // Segmented Box
         Container(
-          padding: const EdgeInsets.all(4.0),
+          padding: AppSpacing.paddingXs,
           decoration: BoxDecoration(
             color: isDark
                 ? colorScheme.surfaceContainer
                 : colorScheme.surfaceContainerLow,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: AppRadii.borderInput,
             border: Border.all(color: containerBorderColor),
           ),
           child: Row(
@@ -221,21 +222,21 @@ class _GenderSegmentOption extends StatelessWidget {
     );
 
     final selectedBorder = Border.all(
-      color: colorScheme.primary.withValues(alpha: isDark ? 0.85 : 0.75),
+      color: colorScheme.primary.withValues(alpha: isDark ? AppOpacity.high : AppOpacity.prominent),
       width: 1.2,
     );
 
     return Material(
       color: isSelected ? selectedBg : AppColors.transparent,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: AppRadii.borderCompact,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: AppRadii.borderCompact,
         child: Container(
           height: 42,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: AppRadii.compact),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: AppRadii.borderCompact,
             border: isSelected ? selectedBorder : null,
           ),
           alignment: Alignment.center,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 
 /// A modern text input field designed for the Stitch design system.
 ///
@@ -105,33 +106,30 @@ class CustomTextField extends StatelessWidget {
               hintText: placeholder,
               filled: true,
               fillColor: bgColor,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 14.0,
-              ),
+              contentPadding: AppSpacing.paddingField,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(color: borderColor),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(color: borderColor),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(
                   color: colorScheme.primary,
                   width: 1.6,
                 ),
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(
                   color: colorScheme.error,
                 ),
               ),
               focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(
                   color: colorScheme.error,
                   width: 1.6,
@@ -140,8 +138,8 @@ class CustomTextField extends StatelessWidget {
               suffixIcon: suffixIcon ??
                   Icon(
                     Icons.person_outline_rounded,
-                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-                    size: 20,
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.muted),
+                    size: AppDimensions.iconMd,
                   ),
             ),
           ),

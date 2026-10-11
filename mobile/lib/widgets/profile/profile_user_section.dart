@@ -5,6 +5,7 @@ import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/sync_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// The user identity, cloud sync status, and guest upgrade section.
@@ -31,10 +32,10 @@ class ProfileUserSection extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.all(20.0),
+      padding: AppSpacing.paddingCard,
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: AppRadii.borderCard,
         border: Border.all(color: theme.colorScheme.outlineVariant),
       ),
       child: Column(
@@ -48,8 +49,8 @@ class ProfileUserSection extends StatelessWidget {
                 clipBehavior: Clip.none,
                 children: [
                   Container(
-                    width: 58,
-                    height: 58,
+                    width: AppDimensions.avatarLg,
+                    height: AppDimensions.avatarLg,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
@@ -115,14 +116,14 @@ class ProfileUserSection extends StatelessWidget {
                         // Badge Chip
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0,
+                            horizontal: AppSpacing.sm,
                             vertical: 3.0,
                           ),
                           decoration: BoxDecoration(
                             color: isGuest
                                 ? theme.colorScheme.surfaceContainerHighest
                                 : theme.colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: AppRadii.borderInner,
                           ),
                           child: Text(
                             isGuest ? l10n.guestBadge : l10n.googleBadge,
@@ -153,7 +154,7 @@ class ProfileUserSection extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
 
           // Cloud Sync Pill OR Guest Promo Upgrade
           if (!isGuest)
@@ -168,7 +169,7 @@ class ProfileUserSection extends StatelessWidget {
                         alpha: isDark ? 0.3 : 0.5,
                       )
                     : theme.colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(14.0),
+                borderRadius: AppRadii.borderInput,
                 border: Border.all(
                   color: isSyncActive
                       ? theme.colorScheme.primary.withValues(
@@ -222,12 +223,12 @@ class ProfileUserSection extends StatelessWidget {
           else
             // Guest Mode Upgrade Card
             Container(
-              padding: const EdgeInsets.all(16.0),
+              padding: AppSpacing.paddingLg,
               decoration: BoxDecoration(
                 color: theme.colorScheme.primaryContainer.withValues(
                   alpha: isDark ? 0.16 : 0.5,
                 ),
-                borderRadius: BorderRadius.circular(16.0),
+                borderRadius: AppRadii.borderMd,
                 border: Border.all(
                   color: theme.colorScheme.primary.withValues(
                     alpha: isDark ? 0.25 : 0.3,
@@ -242,9 +243,9 @@ class ProfileUserSection extends StatelessWidget {
                       Icon(
                         Icons.cloud_upload_outlined,
                         color: theme.colorScheme.primary,
-                        size: 20,
+                        size: AppDimensions.iconMd,
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Text(
                           l10n.cloudBackupBannerTitle,
@@ -263,7 +264,7 @@ class ProfileUserSection extends StatelessWidget {
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.md),
                   SizedBox(
                     width: double.infinity,
                     height: 44,
@@ -272,8 +273,8 @@ class ProfileUserSection extends StatelessWidget {
                       style: FilledButton.styleFrom(
                         backgroundColor: theme.colorScheme.primary,
                         foregroundColor: theme.colorScheme.onPrimary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: AppRadii.borderInner,
                         ),
                       ),
                       onPressed: () => authService?.signInWithGoogle(),

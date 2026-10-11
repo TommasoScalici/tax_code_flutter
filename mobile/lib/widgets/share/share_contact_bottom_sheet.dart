@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/contact_card_image_service.dart';
@@ -183,10 +184,10 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
             top: false,
             child: SingleChildScrollView(
               padding: EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
-                top: 12.0,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 24.0,
+                left: AppSpacing.card,
+                right: AppSpacing.card,
+                top: AppSpacing.md,
+                bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.xl,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -196,16 +197,16 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                   Center(
                     child: Container(
                       width: 40,
-                      height: 4,
+                      height: AppDimensions.dragHandleHeight,
                       decoration: BoxDecoration(
                         color: colorScheme.onSurfaceVariant.withValues(
-                          alpha: 0.40,
+                          alpha: AppOpacity.outline,
                         ),
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: AppRadii.borderHandle,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
 
                   // Header
                   Row(
@@ -259,7 +260,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                     ),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(14.0),
+                      borderRadius: AppRadii.borderInput,
                     ),
                     child: Row(
                       children: [
@@ -357,8 +358,8 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                             backgroundColor: colorScheme.primary,
                             foregroundColor: colorScheme.onPrimary,
                             padding: const EdgeInsets.symmetric(vertical: 14.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14.0),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: AppRadii.borderInput,
                             ),
                           ),
                           onPressed: _isSharing ? null : _handleShare,
@@ -425,13 +426,13 @@ class _ShareOptionCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16.0),
+      borderRadius: AppRadii.borderMd,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+        padding: AppSpacing.paddingField,
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(16.0),
+          borderRadius: AppRadii.borderMd,
           border: Border.all(
             color: borderColor,
             width: isSelected ? 2.0 : 1.0,
@@ -440,14 +441,14 @@ class _ShareOptionCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8.0),
+              padding: AppSpacing.paddingSm,
               decoration: BoxDecoration(
                 color: isSelected
                     ? theme.colorScheme.primary.withValues(
                         alpha: isDark ? 0.22 : 0.12,
                       )
                     : theme.colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: AppRadii.borderCompact,
               ),
               child: Icon(
                 icon,

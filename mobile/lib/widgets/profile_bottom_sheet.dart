@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_account_section.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_app_info_view.dart';
@@ -121,14 +122,14 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                 if (!widget.isEmbedded)
                   Center(
                     child: Container(
-                      margin: const EdgeInsets.only(top: 12.0, bottom: 4.0),
+                      margin: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.xs),
                       width: 44,
-                      height: 4.5,
+                      height: AppDimensions.dragHandleHeight,
                       decoration: BoxDecoration(
                         color: theme.colorScheme.onSurfaceVariant.withValues(
-                          alpha: 0.35,
+                          alpha: AppOpacity.disabled,
                         ),
-                        borderRadius: BorderRadius.circular(2.5),
+                        borderRadius: AppRadii.borderHandle,
                       ),
                     ),
                   ),
@@ -202,21 +203,21 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
     return SingleChildScrollView(
       key: const ValueKey('profile_main_view'),
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 24.0),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.xl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Section 1: User Profile & Sync
           const ProfileUserSection(),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSpacing.card),
 
           // Section 2: Data & Utilities
           const ProfileDataSection(),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSpacing.card),
 
           // Section 3: Legal & Info
           ProfileLegalSection(onOpenAppInfo: _navigateToAppInfo),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSpacing.card),
 
           // Section 4: Account Management & GDPR
           const ProfileAccountSection(),

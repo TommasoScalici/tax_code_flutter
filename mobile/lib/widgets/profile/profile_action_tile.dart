@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 
 /// An interactive list tile adhering to the Stitch grouped card container style.
 class ProfileActionTile extends StatelessWidget {
@@ -48,21 +49,21 @@ class ProfileActionTile extends StatelessWidget {
       color: AppColors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: AppRadii.borderMd,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+          padding: AppSpacing.paddingField,
           child: Row(
             children: [
               // Icon with rounded container badge
               Container(
-                width: 38,
-                height: 38,
+                width: AppDimensions.avatarSm,
+                height: AppDimensions.avatarSm,
                 decoration: BoxDecoration(
                   color: iconBgColor,
-                  borderRadius: BorderRadius.circular(12.0),
+                  borderRadius: AppRadii.borderInner,
                 ),
                 child: Center(
-                  child: Icon(icon, color: iconColor, size: 20),
+                  child: Icon(icon, color: iconColor, size: AppDimensions.iconMd),
                 ),
               ),
               const SizedBox(width: 14),
@@ -79,7 +80,7 @@ class ProfileActionTile extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: isEnabled
                             ? (titleColor ?? theme.colorScheme.onSurface)
-                            : theme.colorScheme.onSurface.withValues(alpha: 0.38),
+                            : theme.colorScheme.onSurface.withValues(alpha: AppOpacity.disabled),
                       ),
                     ),
                     if (subtitle != null) ...[
@@ -89,7 +90,7 @@ class ProfileActionTile extends StatelessWidget {
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: isEnabled
                               ? theme.colorScheme.onSurfaceVariant
-                              : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.38),
+                              : theme.colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.disabled),
                         ),
                       ),
                     ],
@@ -99,12 +100,12 @@ class ProfileActionTile extends StatelessWidget {
 
               // Trailing widget
               if (trailing != null) ...[
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.sm),
                 IconTheme(
                   data: IconThemeData(
                     color: isEnabled
                         ? theme.colorScheme.onSurfaceVariant
-                        : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.38),
+                        : theme.colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.disabled),
                     size: 18,
                   ),
                   child: trailing!,
@@ -131,7 +132,7 @@ class ProfileSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(left: 4.0, bottom: 2.0),
+      padding: const EdgeInsets.only(left: AppSpacing.xs, bottom: 2.0),
       child: Text(
         title,
         style: theme.textTheme.labelMedium?.copyWith(
@@ -155,8 +156,8 @@ class ProfileCardDivider extends StatelessWidget {
       height: 1,
       thickness: 1,
       indent: 68,
-      endIndent: 16,
-      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+      endIndent: AppSpacing.lg,
+      color: theme.colorScheme.outlineVariant.withValues(alpha: AppOpacity.divider),
     );
   }
 }

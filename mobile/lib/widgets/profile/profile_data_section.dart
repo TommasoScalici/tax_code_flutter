@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/widgets/export/export_data_bottom_sheet.dart';
@@ -23,11 +24,11 @@ class ProfileDataSection extends StatelessWidget {
         ProfileSectionHeader(
           title: l10n.sectionDataAndUtilities.toUpperCase(),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.sm),
         Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: AppRadii.borderCard,
             border: Border.all(color: theme.colorScheme.outlineVariant),
           ),
           child: Column(

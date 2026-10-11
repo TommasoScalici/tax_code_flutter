@@ -201,18 +201,18 @@ class ContactCard extends StatelessWidget {
                 message: l10n.copyTaxCode,
                 child: Material(
                   color: taxCodeBoxBg,
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: AppRadii.borderInput,
                   child: InkWell(
                     key: const Key('contact_card_tax_code_box'),
                     onTap: () => _copyTaxCode(context, l10n),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: AppRadii.borderInput,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 14,
                         vertical: AppSpacing.md,
                       ),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: AppRadii.borderInput,
                         border: Border.all(
                           color: colorScheme.primary.withValues(
                             alpha: isDark ? 0.25 : 0.35,
@@ -224,7 +224,7 @@ class ContactCard extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.credit_card_rounded,
-                            size: 20,
+                            size: AppDimensions.iconMd,
                             color: colorScheme.primary,
                           ),
                           const SizedBox(width: AppSpacing.md),
@@ -244,7 +244,7 @@ class ContactCard extends StatelessWidget {
                           Icon(
                             Icons.copy_rounded,
                             size: 18,
-                            color: colorScheme.primary.withValues(alpha: 0.75),
+                            color: colorScheme.primary.withValues(alpha: AppOpacity.prominent),
                           ),
                         ],
                       ),
@@ -412,12 +412,15 @@ class _CardActionButton extends StatelessWidget {
           onTap: onPressed,
           customBorder: const StadiumBorder(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+            padding: const EdgeInsets.symmetric(
+              vertical: AppSpacing.sm,
+              horizontal: AppSpacing.xs,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, size: 16, color: fgColor),
-                const SizedBox(width: 4),
+                Icon(icon, size: AppDimensions.iconSm, color: fgColor),
+                const SizedBox(width: AppSpacing.xs),
                 Flexible(
                   child: Text(
                     label,

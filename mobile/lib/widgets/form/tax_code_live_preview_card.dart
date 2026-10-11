@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
@@ -75,13 +76,13 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
       margin: margin,
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadii.borderMd,
         border: Border.all(color: borderColor),
         boxShadow: _isComplete
             ? [
                 BoxShadow(
                   color: colorScheme.primary.withValues(alpha: isDark ? 0.08 : 0.04),
-                  blurRadius: 16,
+                  blurRadius: AppSpacing.lg,
                   offset: const Offset(0, 3),
                 ),
               ]
@@ -89,13 +90,13 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
       ),
       child: Material(
         color: AppColors.transparent,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadii.borderMd,
         child: InkWell(
           key: const Key('tax_code_live_preview_inkwell'),
           onTap: _isComplete ? () => _copyCode(context, effectiveCode!, l10n) : null,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: AppRadii.borderMd,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+            padding: AppSpacing.paddingField,
             child: Row(
               children: [
                 // Leading verified / calculation icon
@@ -105,16 +106,16 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: _isComplete
                         ? colorScheme.primary.withValues(alpha: isDark ? 0.16 : 0.12)
-                        : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                        : colorScheme.surfaceContainerHighest.withValues(alpha: AppOpacity.divider),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     _isComplete ? Icons.verified_rounded : Icons.pending_rounded,
                     color: _isComplete ? colorScheme.primary : colorScheme.onSurfaceVariant,
-                    size: 20,
+                    size: AppDimensions.iconMd,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.md),
 
                 // Title & Code
                 Expanded(
