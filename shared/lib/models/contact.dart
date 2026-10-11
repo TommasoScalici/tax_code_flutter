@@ -4,8 +4,11 @@ import 'package:hive_ce/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shared/models/birthplace.dart';
+import 'package:shared/models/gender.dart';
 import 'package:shared/utils/timestamp_converter.dart';
 import 'package:uuid/uuid.dart';
+
+export 'gender.dart';
 
 part 'contact.g.dart';
 
@@ -51,6 +54,12 @@ class Contact extends Equatable {
     required this.listIndex,
     this.updatedAt,
   });
+
+  /// Convenience getter for typed [Gender], defaulting to [Gender.male] if invalid or blank.
+  Gender get genderEnum => Gender.fromCode(gender) ?? Gender.male;
+
+  /// Checks whether two contact instances represent the same persistent entity by [id].
+  bool isSameEntity(Contact other) => id == other.id;
 
   /// Creates a new [Contact] with a generated UUID, current timestamp,
   /// and blank fields, ready to be filled in by the user.
@@ -102,10 +111,16 @@ class Contact extends Equatable {
       ' - ${DateFormat.yMd().format(birthDate)}'
       ' - $birthPlace';
 
-  /// Equality is based on [id] only. This is intentional — two contacts
-  /// with the same ID are considered the same entity regardless of field
-  /// differences. This supports list identity checks (e.g. reorderable lists)
-  /// and Firestore document identity.
+  /// Structural value equality based on all entity and content fields.
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [
+        id,
+        firstName,
+        lastName,
+        gender,
+        taxCode,
+        birthPlace,
+        birthDate,
+        listIndex,
+      ];
 }

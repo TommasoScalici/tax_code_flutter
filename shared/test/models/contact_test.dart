@@ -84,12 +84,36 @@ void main() {
       });
 
       /// Tests for the equality operator
-      test('equality should be based on id only', () {
-        final contactWithSameId = contact.copyWith(firstName: 'Giuseppe');
+      test('equality should be based on value fields', () {
+        final sameContact = contact.copyWith();
+        final contactWithDifferentName = contact.copyWith(firstName: 'Giuseppe');
+        final contactWithDifferentTaxCode = contact.copyWith(taxCode: 'RSSGPP90A15H501A');
         final contactWithDifferentId = contact.copyWith(id: '67890');
 
-        expect(contact, equals(contactWithSameId));
+        expect(contact, equals(sameContact));
+        expect(contact, isNot(equals(contactWithDifferentName)));
+        expect(contact, isNot(equals(contactWithDifferentTaxCode)));
         expect(contact, isNot(equals(contactWithDifferentId)));
+      });
+
+      /// Tests for entity identity comparison
+      test('isSameEntity should be based on id only', () {
+        final contactWithSameIdDifferentFields = contact.copyWith(
+          firstName: 'Giuseppe',
+          taxCode: 'DIFFCODE',
+        );
+        final contactWithDifferentId = contact.copyWith(id: '67890');
+
+        expect(contact.isSameEntity(contactWithSameIdDifferentFields), isTrue);
+        expect(contact.isSameEntity(contactWithDifferentId), isFalse);
+      });
+
+      /// Tests for typed gender getter
+      test('genderEnum should correctly parse and expose typed Gender', () {
+        expect(contact.genderEnum, Gender.male);
+        expect(contact.copyWith(gender: 'F').genderEnum, Gender.female);
+        expect(contact.copyWith(gender: 'female').genderEnum, Gender.female);
+        expect(contact.copyWith(gender: 'invalid').genderEnum, Gender.male);
       });
     });
   });

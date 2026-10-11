@@ -24,7 +24,7 @@ class ContactRepository with ChangeNotifier {
   bool _isDisposed = false;
   bool _isLoading = true;
 
-  List<Contact> get contacts => _contacts;
+  List<Contact> get contacts => List.unmodifiable(_contacts);
   bool get isLoading => _isLoading;
   String? get _userId => _authService.currentUser?.uid;
 

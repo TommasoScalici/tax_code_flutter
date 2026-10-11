@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared/models/gender.dart';
 import 'package:shared/utils/tax_code_generator.dart';
 
 void main() {
@@ -67,6 +68,26 @@ void main() {
         birthplaceCode: 'H501',
       );
       expect(code, 'SRRNCL85P15H501X');
+    });
+
+    test('should generate correct tax code using typed Gender enum', () {
+      final codeMale = TaxCodeGenerator.generateWithGender(
+        firstName: 'Mario',
+        lastName: 'Rossi',
+        dateOfBirth: DateTime(1980),
+        gender: Gender.male,
+        birthplaceCode: 'H501',
+      );
+      expect(codeMale, 'RSSMRA80A01H501U');
+
+      final codeFemale = TaxCodeGenerator.generateWithGender(
+        firstName: 'Maria',
+        lastName: 'Rossi',
+        dateOfBirth: DateTime(1980),
+        gender: Gender.female,
+        birthplaceCode: 'H501',
+      );
+      expect(codeFemale, 'RSSMRA80A41H501Y');
     });
   });
 }

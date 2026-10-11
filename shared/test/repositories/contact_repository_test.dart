@@ -157,6 +157,13 @@ void main() {
       },
     );
 
+    test('contacts should return an unmodifiable list view', () {
+      expect(
+        () => contactRepository.contacts.add(contact1),
+        throwsA(isA<UnsupportedError>()),
+      );
+    });
+
     test(
       'should initialize correctly when created with an existing user',
       () async {

@@ -1,4 +1,22 @@
+import 'package:shared/models/gender.dart';
+
 class TaxCodeGenerator {
+  /// Generates the 16-character Italian tax code (Codice Fiscale) using a typed [Gender].
+  static String generateWithGender({
+    required String firstName,
+    required String lastName,
+    required DateTime dateOfBirth,
+    required Gender gender,
+    required String birthplaceCode,
+  }) =>
+      generate(
+        firstName: firstName,
+        lastName: lastName,
+        dateOfBirth: dateOfBirth,
+        gender: gender.code,
+        birthplaceCode: birthplaceCode,
+      );
+
   /// Generates the 16-character Italian tax code (Codice Fiscale).
   static String generate({
     required String firstName,
@@ -7,8 +25,8 @@ class TaxCodeGenerator {
     required String gender,
     required String birthplaceCode,
   }) {
-    final cleanGender = gender.trim().toUpperCase();
-    if (cleanGender != 'M' && cleanGender != 'F') {
+    final parsedGender = Gender.fromCode(gender);
+    if (parsedGender == null) {
       throw ArgumentError('Gender must be M or F');
     }
 
@@ -19,7 +37,7 @@ class TaxCodeGenerator {
 
     final lastNameCode = _getSurnameCode(lastName);
     final firstNameCode = _getFirstNameCode(firstName);
-    final dobCode = _getDateAndGenderCode(dateOfBirth, cleanGender);
+    final dobCode = _getDateAndGenderCode(dateOfBirth, parsedGender.code);
 
     final partial = '$lastNameCode$firstNameCode$dobCode$cleanBp';
     final checkChar = _getCheckCharacter(partial);
