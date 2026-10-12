@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:shared/theme/app_dimensions.dart';
 
 /// Layout tokens, insets, and dimension constants calibrated for Wear OS smartwatch displays.
 ///
@@ -24,6 +25,27 @@ abstract final class WearDimensions {
     screenPaddingHorizontal,
     screenPaddingBottom,
   );
+
+  /// Clock header padding at the top of Wear OS screens.
+  static const EdgeInsets headerClockPadding = EdgeInsets.only(
+    top: AppSpacing.xxs,
+    bottom: AppSpacing.xs,
+  );
+
+  // ---------------------------------------------------------------------------
+  // Scrollbar Tokens
+  // ---------------------------------------------------------------------------
+  /// Standard curved scrollbar stroke thickness: 4.0 pt.
+  static const double scrollbarThickness = 4.0;
+
+  /// Distance between scrollbar and display edge: 3.0 pt.
+  static const double scrollbarMargin = 3.0;
+
+  /// Total angular span of the track arc in degrees: 72.0 deg.
+  static const double scrollbarArcDegrees = 72.0;
+
+  /// Default opacity for the curved scrollbar track: 22%.
+  static const double scrollbarTrackAlpha = 0.22;
 
   // ---------------------------------------------------------------------------
   // Corner Radii

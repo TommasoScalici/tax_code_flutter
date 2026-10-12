@@ -56,16 +56,16 @@ class ProfileAppInfoView extends StatelessWidget {
 
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 24.0),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.xxl),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // 1. App Header Card (Brand, Version, Package Name)
               Container(
-                padding: const EdgeInsets.all(20.0),
+                padding: AppSpacing.paddingCard,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainer,
-                  borderRadius: BorderRadius.circular(20.0),
+                  borderRadius: AppRadii.borderCard,
                   border: Border.all(color: theme.colorScheme.outlineVariant),
                 ),
                 child: Column(
@@ -73,10 +73,10 @@ class ProfileAppInfoView extends StatelessWidget {
                     Container(
                       width: 54,
                       height: 54,
-                      padding: const EdgeInsets.all(6.0),
+                      padding: const EdgeInsets.all(AppSpacing.badgeGap),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.surface,
-                        borderRadius: BorderRadius.circular(14.0),
+                        borderRadius: AppRadii.borderInput,
                         boxShadow: [
                           AppColors.shadowElevated(isDark),
                         ],
@@ -85,7 +85,7 @@ class ProfileAppInfoView extends StatelessWidget {
                         'assets/images/tax_code_icon.svg',
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.sm),
                     Text(
                       appDisplayName,
                       style: theme.textTheme.titleLarge?.copyWith(
@@ -94,18 +94,18 @@ class ProfileAppInfoView extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: AppSpacing.badgeGap),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
+                        horizontal: AppSpacing.compact,
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: AppRadii.borderPill,
                         border: Border.all(
                           color: theme.colorScheme.primary.withValues(
-                            alpha: isDark ? 0.25 : 0.35,
+                            alpha: isDark ? AppOpacity.subtleBorder : 0.35,
                           ),
                         ),
                       ),
@@ -117,7 +117,7 @@ class ProfileAppInfoView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: AppSpacing.badgeGap),
                     Text(
                       appPackageId,
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -131,14 +131,14 @@ class ProfileAppInfoView extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
 
               // 2. Official Institutional Disclaimer Card
               Container(
-                padding: const EdgeInsets.all(16.0),
+                padding: AppSpacing.paddingCard,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainer,
-                  borderRadius: BorderRadius.circular(20.0),
+                  borderRadius: AppRadii.borderCard,
                   border: Border.all(
                     color: AppColors.warningBorder,
                   ),
@@ -147,18 +147,18 @@ class ProfileAppInfoView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
+                      padding: AppSpacing.paddingSm,
+                      decoration: const BoxDecoration(
                         color: AppColors.warningContainer,
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: AppRadii.borderCompact,
                       ),
                       child: const Icon(
                         Icons.gavel_rounded,
-                        size: 20,
+                        size: AppDimensions.iconMd,
                         color: AppColors.warning,
                       ),
                     ),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: AppSpacing.fieldVertical),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +170,7 @@ class ProfileAppInfoView extends StatelessWidget {
                               color: theme.colorScheme.onSurface,
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: AppSpacing.badgeGap),
                           Text(
                             l10n.disclaimerBody,
                             style: theme.textTheme.bodySmall?.copyWith(
@@ -185,14 +185,14 @@ class ProfileAppInfoView extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
 
               // 3. Native Privacy & Data Protection Highlights Card
               Container(
-                padding: const EdgeInsets.all(16.0),
+                padding: AppSpacing.paddingCard,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainer,
-                  borderRadius: BorderRadius.circular(20.0),
+                  borderRadius: AppRadii.borderCard,
                   border: Border.all(color: theme.colorScheme.outlineVariant),
                 ),
                 child: Column(
@@ -202,10 +202,10 @@ class ProfileAppInfoView extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.security_rounded,
-                          size: 20,
+                          size: AppDimensions.iconMd,
                           color: theme.colorScheme.primary,
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSpacing.xs),
                         Text(
                           l10n.privacyHighlightsTitle,
                           style: theme.textTheme.titleSmall?.copyWith(
@@ -215,7 +215,7 @@ class ProfileAppInfoView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 14),
+                    const SizedBox(height: AppSpacing.fieldVertical),
                     _buildHighlightItem(
                       theme: theme,
                       icon: Icons.lock_outline_rounded,
@@ -247,7 +247,7 @@ class ProfileAppInfoView extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
 
               // 4. CTA Button: Open Full Online Privacy Policy
               OutlinedButton.icon(
@@ -255,7 +255,7 @@ class ProfileAppInfoView extends StatelessWidget {
                 onPressed: () => _openUrl(policyUrl),
                 icon: Icon(
                   Icons.open_in_new_rounded,
-                  size: 18,
+                  size: AppDimensions.iconAction,
                   color: theme.colorScheme.primary,
                 ),
                 label: Text(
@@ -274,17 +274,14 @@ class ProfileAppInfoView extends StatelessWidget {
                       alpha: isDark ? 0.3 : 0.4,
                     ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: AppRadii.borderMd,
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 14.0,
-                  ),
+                  padding: AppSpacing.paddingField,
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
 
               // 5. Developer Attribution with Link
               Center(
@@ -294,7 +291,7 @@ class ProfileAppInfoView extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.md,
-                      vertical: 6.0,
+                      vertical: AppSpacing.badgeGap,
                     ),
                     child: Text(
                       l10n.developedBy,
@@ -325,7 +322,7 @@ class ProfileAppInfoView extends StatelessWidget {
       children: [
         Icon(
           icon,
-          size: 18,
+          size: AppDimensions.iconAction,
           color: theme.colorScheme.primary,
         ),
         const SizedBox(width: AppSpacing.md),
@@ -357,7 +354,7 @@ class ProfileAppInfoView extends StatelessWidget {
 
   Widget _buildHighlightDivider(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.compact),
       child: Divider(
         height: 1,
         color: theme.colorScheme.outlineVariant.withValues(alpha: AppOpacity.outline),

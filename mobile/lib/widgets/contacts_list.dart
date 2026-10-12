@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/services/review_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
@@ -56,7 +57,7 @@ class _ContactsListState extends State<ContactsList> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 12.0),
+            padding: const EdgeInsets.only(top: AppSpacing.sm),
             child: DashboardSearchBar(
               controller: _searchController,
               cardCount: controller.contactsToShow.length,
@@ -68,7 +69,7 @@ class _ContactsListState extends State<ContactsList> {
           ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 90.0),
+            padding: const EdgeInsets.only(top: AppSpacing.xs, bottom: 90.0),
             child: controller.contactsToShow.isEmpty
                 ? DashboardEmptyState(
                     searchQuery: controller.searchText.isNotEmpty
@@ -118,16 +119,16 @@ class _ContactsListState extends State<ContactsList> {
     HomePageController controller,
   ) {
     const fixedGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 10,
+      crossAxisSpacing: AppSpacing.md,
+      mainAxisSpacing: AppSpacing.compact,
       mainAxisExtent: 228,
       maxCrossAxisExtent: 800,
     );
 
     final gridDelegate = widget.cardHeight != null
         ? SliverGridDelegateWithMaxCrossAxisExtent(
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 10,
+            crossAxisSpacing: AppSpacing.md,
+            mainAxisSpacing: AppSpacing.compact,
             mainAxisExtent: widget.cardHeight,
             maxCrossAxisExtent: 800,
           )

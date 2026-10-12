@@ -63,7 +63,7 @@ class CustomTextField extends StatelessWidget {
       children: [
         // Top label with optional required asterisk
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, bottom: 6.0),
+          padding: AppSpacing.labelPadding,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -75,7 +75,7 @@ class CustomTextField extends StatelessWidget {
                 ),
               ),
               if (isRequired) ...[
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.xs),
                 Text(
                   '*',
                   style: theme.textTheme.labelMedium?.copyWith(
@@ -119,7 +119,7 @@ class CustomTextField extends StatelessWidget {
                 borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(
                   color: colorScheme.primary,
-                  width: 1.6,
+                  width: AppDimensions.borderThick,
                 ),
               ),
               errorBorder: OutlineInputBorder(
@@ -132,7 +132,7 @@ class CustomTextField extends StatelessWidget {
                 borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(
                   color: colorScheme.error,
-                  width: 1.6,
+                  width: AppDimensions.borderThick,
                 ),
               ),
               suffixIcon: suffixIcon ??

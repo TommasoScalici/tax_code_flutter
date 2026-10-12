@@ -7,8 +7,11 @@ void main() {
     test('AppSpacing contains expected values and valid EdgeInsets presets', () {
       expect(AppSpacing.xxs, 2.0);
       expect(AppSpacing.xs, 4.0);
+      expect(AppSpacing.badgeGap, 6.0);
       expect(AppSpacing.sm, 8.0);
+      expect(AppSpacing.compact, 10.0);
       expect(AppSpacing.md, 12.0);
+      expect(AppSpacing.fieldVertical, 14.0);
       expect(AppSpacing.lg, 16.0);
       expect(AppSpacing.card, 20.0);
       expect(AppSpacing.xl, 24.0);
@@ -24,10 +27,15 @@ void main() {
       expect(AppSpacing.paddingXxl, const EdgeInsets.all(32.0));
       expect(AppSpacing.screenMargin, const EdgeInsets.symmetric(horizontal: 16.0));
       expect(AppSpacing.paddingField, const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0));
+      expect(AppSpacing.paddingFieldVertical, const EdgeInsets.symmetric(vertical: 14.0));
+      expect(AppSpacing.labelPadding, const EdgeInsets.only(left: 4.0, bottom: 6.0));
+      expect(AppSpacing.errorPadding, const EdgeInsets.only(left: 8.0, top: 6.0));
+      expect(AppSpacing.paddingStickyBar, const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0));
     });
 
     test('AppRadii contains expected values and valid BorderRadius presets', () {
       expect(AppRadii.handle, 2.0);
+      expect(AppRadii.badge, 6.0);
       expect(AppRadii.sm, 8.0);
       expect(AppRadii.compact, 10.0);
       expect(AppRadii.inner, 12.0);
@@ -38,6 +46,7 @@ void main() {
       expect(AppRadii.pill, 999.0);
 
       expect(AppRadii.borderHandle, BorderRadius.circular(2.0));
+      expect(AppRadii.borderBadge, BorderRadius.circular(6.0));
       expect(AppRadii.borderSm, BorderRadius.circular(8.0));
       expect(AppRadii.borderCompact, BorderRadius.circular(10.0));
       expect(AppRadii.borderInner, BorderRadius.circular(12.0));
@@ -85,7 +94,9 @@ void main() {
       expect(AppDimensions.minTouchTarget, 48.0);
       expect(AppDimensions.iconXs, 14.0);
       expect(AppDimensions.iconSm, 16.0);
+      expect(AppDimensions.iconAction, 18.0);
       expect(AppDimensions.iconMd, 20.0);
+      expect(AppDimensions.iconButton, 22.0);
       expect(AppDimensions.iconLg, 24.0);
       expect(AppDimensions.iconXl, 32.0);
     });

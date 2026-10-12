@@ -66,7 +66,7 @@ class ProfileActionTile extends StatelessWidget {
                   child: Icon(icon, color: iconColor, size: AppDimensions.iconMd),
                 ),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: AppSpacing.fieldVertical),
 
               // Title & Subtitle
               Expanded(
@@ -84,7 +84,7 @@ class ProfileActionTile extends StatelessWidget {
                       ),
                     ),
                     if (subtitle != null) ...[
-                      const SizedBox(height: 2),
+                      const SizedBox(height: AppSpacing.xxs),
                       Text(
                         subtitle!,
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -106,7 +106,7 @@ class ProfileActionTile extends StatelessWidget {
                     color: isEnabled
                         ? theme.colorScheme.onSurfaceVariant
                         : theme.colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.disabled),
-                    size: 18,
+                    size: AppDimensions.iconAction,
                   ),
                   child: trailing!,
                 ),
@@ -132,7 +132,7 @@ class ProfileSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(left: AppSpacing.xs, bottom: 2.0),
+      padding: const EdgeInsets.only(left: AppSpacing.xs, bottom: AppSpacing.xxs),
       child: Text(
         title,
         style: theme.textTheme.labelMedium?.copyWith(
@@ -154,7 +154,7 @@ class ProfileCardDivider extends StatelessWidget {
     final theme = Theme.of(context);
     return Divider(
       height: 1,
-      thickness: 1,
+      thickness: AppDimensions.borderDefault,
       indent: 68,
       endIndent: AppSpacing.lg,
       color: theme.colorScheme.outlineVariant.withValues(alpha: AppOpacity.divider),

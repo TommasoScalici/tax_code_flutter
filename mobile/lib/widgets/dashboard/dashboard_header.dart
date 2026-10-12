@@ -70,7 +70,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       automaticallyImplyLeading: false,
-      titleSpacing: 16.0,
+      titleSpacing: AppSpacing.md,
       backgroundColor: colorScheme.surface,
       elevation: 0,
       scrolledUnderElevation: 0,
@@ -87,7 +87,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
               boxShadow: [
                 BoxShadow(
                   color: colorScheme.shadow.withValues(alpha: AppOpacity.faint),
-                  blurRadius: 8,
+                  blurRadius: AppSpacing.xs,
                   offset: const Offset(0, 2),
                 ),
               ],
@@ -119,7 +119,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
                     height: 1.1,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSpacing.xxs),
                 Text(
                   title ?? l10n.dashboardTitle,
                   overflow: TextOverflow.ellipsis,
@@ -154,7 +154,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(
             isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
             color: colorScheme.onSurfaceVariant,
-            size: 22,
+            size: AppDimensions.iconButton,
           ),
           onPressed: () {
             if (onThemeToggle != null) {
@@ -167,7 +167,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
 
         // Profile Avatar Action with Cloud Sync Badge
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, right: 12.0),
+          padding: const EdgeInsets.only(left: AppSpacing.xs, right: AppSpacing.sm),
           child: Tooltip(
             message: syncActive ? l10n.cloudSyncActive : l10n.profilePageTitle,
             child: InkWell(
@@ -183,19 +183,19 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
                       right: 0,
                       child: Container(
                         key: const Key('dashboard_header_sync_badge'),
-                        width: 10,
-                        height: 10,
+                        width: AppSpacing.compact,
+                        height: AppSpacing.compact,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: AppColors.syncPulse,
                           border: Border.all(
                             color: colorScheme.surface,
-                            width: 1.5,
+                            width: AppDimensions.borderThick,
                           ),
                           boxShadow: [
                             BoxShadow(
                               color: AppColors.syncPulse.withValues(alpha: AppOpacity.divider),
-                              blurRadius: 4,
+                              blurRadius: AppSpacing.xs,
                               spreadRadius: 1,
                             ),
                           ],
@@ -226,7 +226,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
         icon: Icon(
           Icons.cloud_off_rounded,
           color: colorScheme.onSurface.withValues(alpha: AppOpacity.disabled),
-          size: 22,
+          size: AppDimensions.iconButton,
         ),
         onPressed: () {
           // Provide clear feedback explaining why sync is disabled for guests
@@ -257,7 +257,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
       icon: Icon(
         syncIcon,
         color: syncColor,
-        size: 22,
+        size: AppDimensions.iconButton,
       ),
       onPressed: () {
         if (onSyncToggle != null) {

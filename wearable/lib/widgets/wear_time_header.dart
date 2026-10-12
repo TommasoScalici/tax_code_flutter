@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_typography.dart';
 
 /// A lightweight, live clock header adhering to Wear OS design standards.
@@ -66,7 +67,7 @@ class _WearTimeHeaderState extends State<WearTimeHeader> {
         : DateFormat('h:mm a').format(_currentTime);
 
     return Padding(
-      padding: const EdgeInsets.only(top: 2.0, bottom: 4.0),
+      padding: WearDimensions.headerClockPadding,
       child: Center(
         child: Text(
           formattedTime,

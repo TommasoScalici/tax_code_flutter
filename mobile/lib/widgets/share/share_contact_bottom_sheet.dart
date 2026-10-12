@@ -196,7 +196,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                   // M3 Drag Handle
                   Center(
                     child: Container(
-                      width: 40,
+                      width: AppDimensions.dragHandleWidth,
                       height: AppDimensions.dragHandleHeight,
                       decoration: BoxDecoration(
                         color: colorScheme.onSurfaceVariant.withValues(
@@ -212,20 +212,20 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(AppSpacing.compact),
                         decoration: BoxDecoration(
                           color: colorScheme.primary.withValues(
-                            alpha: isDark ? 0.16 : 0.10,
+                            alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.tint,
                           ),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.share_rounded,
                           color: colorScheme.primary,
-                          size: 24,
+                          size: AppDimensions.iconLg,
                         ),
                       ),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: AppSpacing.fieldVertical),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,7 +238,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                                 color: colorScheme.onSurface,
                               ),
                             ),
-                            const SizedBox(height: 2),
+                            const SizedBox(height: AppSpacing.xxs),
                             Text(
                               l10n.shareContactSubtitle,
                               style: theme.textTheme.bodySmall?.copyWith(
@@ -250,13 +250,13 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
 
                   // Contact Summary Card
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 14.0,
-                      vertical: 10.0,
+                      horizontal: AppSpacing.fieldVertical,
+                      vertical: AppSpacing.compact,
                     ),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHigh,
@@ -266,10 +266,10 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                       children: [
                         Icon(
                           Icons.badge_outlined,
-                          size: 18,
+                          size: AppDimensions.iconAction,
                           color: colorScheme.primary,
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: AppSpacing.compact),
                         Expanded(
                           child: Text(
                             contactDisplayName,
@@ -290,7 +290,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: AppDimensions.iconAction),
 
                   // Option 1: Quick Text
                   _ShareOptionCard(
@@ -305,7 +305,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                             () => _selectedFormat = ContactShareFormat.text,
                           ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppSpacing.compact),
 
                   // Option 2: HD Card Image (PNG)
                   _ShareOptionCard(
@@ -320,7 +320,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                             () => _selectedFormat = ContactShareFormat.image,
                           ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppSpacing.compact),
 
                   // Option 3: PDF Summary Sheet
                   _ShareOptionCard(
@@ -335,7 +335,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                             () => _selectedFormat = ContactShareFormat.pdf,
                           ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.xl),
 
                   // Actions
                   Row(
@@ -349,7 +349,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                           child: Text(l10n.cancel),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.md),
                       Expanded(
                         flex: 2,
                         child: FilledButton.icon(
@@ -357,7 +357,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                           style: FilledButton.styleFrom(
                             backgroundColor: colorScheme.primary,
                             foregroundColor: colorScheme.onPrimary,
-                            padding: const EdgeInsets.symmetric(vertical: 14.0),
+                            padding: AppSpacing.paddingFieldVertical,
                             shape: const RoundedRectangleBorder(
                               borderRadius: AppRadii.borderInput,
                             ),
@@ -365,14 +365,14 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                           onPressed: _isSharing ? null : _handleShare,
                           icon: _isSharing
                               ? SizedBox(
-                                  width: 18,
-                                  height: 18,
+                                  width: AppDimensions.iconAction,
+                                  height: AppDimensions.iconAction,
                                   child: CircularProgressIndicator(
-                                    strokeWidth: 2.2,
+                                    strokeWidth: AppDimensions.progressStrokeWidth,
                                     color: colorScheme.onPrimary,
                                   ),
                                 )
-                              : const Icon(Icons.share_rounded, size: 20),
+                              : const Icon(Icons.share_rounded, size: AppDimensions.iconMd),
                           label: Text(
                             l10n.shareContactAction,
                             style: theme.textTheme.labelLarge?.copyWith(
@@ -420,7 +420,7 @@ class _ShareOptionCard extends StatelessWidget {
         : theme.colorScheme.outlineVariant;
     final bgColor = isSelected
         ? theme.colorScheme.primary.withValues(
-            alpha: isDark ? 0.12 : 0.06,
+            alpha: isDark ? AppOpacity.faint : AppOpacity.tint,
           )
         : theme.colorScheme.surfaceContainer;
 
@@ -435,7 +435,7 @@ class _ShareOptionCard extends StatelessWidget {
           borderRadius: AppRadii.borderMd,
           border: Border.all(
             color: borderColor,
-            width: isSelected ? 2.0 : 1.0,
+            width: isSelected ? AppDimensions.borderSelected : AppDimensions.borderDefault,
           ),
         ),
         child: Row(
@@ -445,20 +445,20 @@ class _ShareOptionCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isSelected
                     ? theme.colorScheme.primary.withValues(
-                        alpha: isDark ? 0.22 : 0.12,
+                        alpha: isDark ? AppOpacity.subtleBorder : AppOpacity.faint,
                       )
                     : theme.colorScheme.surfaceContainerHigh,
                 borderRadius: AppRadii.borderCompact,
               ),
               child: Icon(
                 icon,
-                size: 22,
+                size: AppDimensions.iconButton,
                 color: isSelected
                     ? theme.colorScheme.primary
                     : theme.colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: AppSpacing.fieldVertical),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -472,7 +472,7 @@ class _ShareOptionCard extends StatelessWidget {
                           : theme.colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.xxs),
                   Text(
                     description,
                     style: theme.textTheme.bodySmall?.copyWith(
@@ -482,7 +482,7 @@ class _ShareOptionCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.sm),
             Icon(
               isSelected
                   ? Icons.radio_button_checked_rounded

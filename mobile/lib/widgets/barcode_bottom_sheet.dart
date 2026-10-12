@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
@@ -127,16 +128,16 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                   Center(
                     child: Container(
                       width: 40,
-                      height: 4,
+                      height: AppDimensions.dragHandleHeight,
                       decoration: BoxDecoration(
                         color: colorScheme.onSurfaceVariant.withValues(
-                          alpha: 0.40,
+                          alpha: AppOpacity.outline,
                         ),
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: AppRadii.borderHandle,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
 
                   // Header Area: User name, Tax Code Pill & Copy Button
                   Row(
@@ -147,20 +148,20 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                         height: 40,
                         decoration: BoxDecoration(
                           color: colorScheme.primary.withValues(
-                            alpha: isDark ? 0.16 : 0.12,
+                            alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.faint,
                           ),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: AppRadii.borderInner,
                           border: Border.all(
-                            color: colorScheme.primary.withValues(alpha: 0.30),
+                            color: colorScheme.primary.withValues(alpha: AppOpacity.translucent),
                           ),
                         ),
                         child: Icon(
                           Icons.badge_rounded,
                           color: colorScheme.primary,
-                          size: 22,
+                          size: AppDimensions.iconButton,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.md),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,22 +173,22 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                                 fontSize: 18,
                               ),
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: AppSpacing.badgeGap),
                             Row(
                               children: [
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
+                                    horizontal: AppSpacing.sm,
                                     vertical: 3,
                                   ),
                                   decoration: BoxDecoration(
                                     color: colorScheme.primary.withValues(
-                                      alpha: isDark ? 0.14 : 0.09,
+                                      alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.tint,
                                     ),
-                                    borderRadius: BorderRadius.circular(6),
+                                    borderRadius: AppRadii.borderBadge,
                                     border: Border.all(
                                       color: colorScheme.primary.withValues(
-                                        alpha: 0.35,
+                                        alpha: AppOpacity.disabled,
                                       ),
                                     ),
                                   ),
@@ -200,7 +201,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(width: AppSpacing.sm),
                                 InkWell(
                                   key: const Key(
                                     'barcode_bottom_sheet_copy_button',
@@ -212,22 +213,22 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                                       l10n.taxCodeCopied,
                                     ),
                                   ),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: AppRadii.borderCard,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 4,
+                                      horizontal: AppSpacing.compact,
+                                      vertical: AppSpacing.xs,
                                     ),
                                     decoration: BoxDecoration(
                                       color: isDark
                                           ? colorScheme.surfaceContainerHighest
                                           : colorScheme.surfaceContainerHighest
-                                                .withValues(alpha: 0.6),
-                                      borderRadius: BorderRadius.circular(20),
+                                                .withValues(alpha: AppOpacity.muted),
+                                      borderRadius: AppRadii.borderCard,
                                       border: Border.all(
                                         color: colorScheme.outlineVariant
                                             .withValues(
-                                              alpha: 0.5,
+                                              alpha: AppOpacity.divider,
                                             ),
                                       ),
                                     ),
@@ -236,10 +237,10 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                                       children: [
                                         Icon(
                                           Icons.copy_rounded,
-                                          size: 14,
+                                          size: AppDimensions.iconXs,
                                           color: colorScheme.primary,
                                         ),
-                                        const SizedBox(width: 4),
+                                        const SizedBox(width: AppSpacing.xs),
                                         Text(
                                           l10n.copyAction,
                                           style: theme.textTheme.labelSmall
@@ -259,21 +260,21 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
 
                   // High-Contrast Pure White Optical Container
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: AppColors.opticalWhite,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: AppRadii.borderCard,
                       boxShadow: [
                         AppColors.shadowCard(isDark),
                       ],
                     ),
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 18.0,
+                      horizontal: AppSpacing.lg,
+                      vertical: AppDimensions.iconAction,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -284,10 +285,10 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                           children: [
                             const Icon(
                               Symbols.barcode,
-                              size: 16,
+                              size: AppDimensions.iconSm,
                               color: AppColors.opticalTextPrimary,
                             ),
-                            const SizedBox(width: 6),
+                            const SizedBox(width: AppSpacing.badgeGap),
                             Text(
                               l10n.barcodeCode128.toUpperCase(),
                               style: theme.textTheme.labelSmall?.copyWith(
@@ -299,7 +300,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSpacing.md),
                         BarcodeWidget(
                           barcode: Barcode.code128(),
                           data: widget.contact.taxCode,
@@ -308,14 +309,14 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                           backgroundColor: AppColors.opticalWhite,
                           drawText: false,
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: AppSpacing.badgeGap),
                         Text(
                           widget.contact.taxCode,
                           style: AppTypography.barcodeReadableText(
                             color: AppColors.opticalTextPrimary,
                           ),
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: AppSpacing.fieldVertical),
 
                         // Thin Divider with "oppure"
                         Row(
@@ -328,7 +329,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0,
+                                horizontal: AppSpacing.compact,
                               ),
                               child: Text(
                                 l10n.barcodeOrDivider.toUpperCase(),
@@ -348,14 +349,14 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: AppSpacing.fieldVertical),
 
                         // Section 2: 2D Health QR Code
                         Container(
-                          padding: const EdgeInsets.all(8),
+                          padding: AppSpacing.paddingSm,
                           decoration: BoxDecoration(
                             color: AppColors.opticalWhite,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: AppRadii.borderInner,
                             border: Border.all(color: AppColors.opticalBorder),
                           ),
                           child: BarcodeWidget(
@@ -366,7 +367,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             backgroundColor: AppColors.opticalWhite,
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: AppSpacing.badgeGap),
                         Text(
                           l10n.barcodeQrCode,
                           style: theme.textTheme.labelSmall?.copyWith(
@@ -444,20 +445,20 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
 
                   // Action Buttons Row: Close & Share
                   Row(
                     children: [
                       Expanded(
                         child: SizedBox(
-                          height: 48,
+                          height: AppDimensions.minTouchTarget,
                           child: OutlinedButton.icon(
                             key: const Key('barcode_bottom_sheet_close_button'),
                             onPressed: () => Navigator.pop(context),
                             icon: const Icon(
                               Icons.expand_more_rounded,
-                              size: 20,
+                              size: AppDimensions.iconMd,
                             ),
                             label: Text(
                               l10n.close,
@@ -466,22 +467,22 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                               ),
                             ),
                             style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: AppRadii.borderDialog,
                               ),
                               side: BorderSide(
                                 color: colorScheme.outlineVariant.withValues(
-                                  alpha: 0.5,
+                                  alpha: AppOpacity.medium,
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: SizedBox(
-                          height: 48,
+                          height: AppDimensions.minTouchTarget,
                           child: FilledButton.icon(
                             key: const Key('barcode_bottom_sheet_share_button'),
                             onPressed: () {
@@ -492,7 +493,10 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                                 ),
                               );
                             },
-                            icon: const Icon(Icons.share_rounded, size: 18),
+                            icon: const Icon(
+                              Icons.share_rounded,
+                              size: AppDimensions.iconAction,
+                            ),
                             label: Text(
                               l10n.share,
                               style: theme.textTheme.labelLarge?.copyWith(
@@ -503,8 +507,8 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             style: FilledButton.styleFrom(
                               backgroundColor: colorScheme.primary,
                               foregroundColor: colorScheme.onPrimary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: AppRadii.borderDialog,
                               ),
                             ),
                           ),

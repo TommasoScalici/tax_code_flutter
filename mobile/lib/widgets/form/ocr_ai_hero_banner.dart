@@ -83,23 +83,23 @@ class OcrAiHeroBanner extends StatelessWidget {
               child: InkWell(
                 key: const Key('ocr_ai_hero_banner_ink_well'),
                 onTap: onScanPressed,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: AppRadii.borderCard,
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: AppSpacing.paddingCard,
                   child: Row(
                     children: [
                       // Leading Visual: Camera icon with AI sparkle badge
                       Container(
-                        width: 48,
-                        height: 48,
+                        width: AppDimensions.avatarMd,
+                        height: AppDimensions.avatarMd,
                         decoration: BoxDecoration(
                           color: colorScheme.primary.withValues(
-                            alpha: isDark ? 0.16 : 0.12,
+                            alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.faint,
                           ),
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: AppRadii.borderInput,
                           border: Border.all(
                             color: colorScheme.primary.withValues(
-                              alpha: isDark ? 0.40 : 0.30,
+                              alpha: isDark ? AppOpacity.outline : AppOpacity.translucent,
                             ),
                           ),
                         ),
@@ -110,7 +110,7 @@ class OcrAiHeroBanner extends StatelessWidget {
                             Icon(
                               Icons.photo_camera_rounded,
                               color: colorScheme.primary,
-                              size: 24,
+                              size: AppDimensions.iconLg,
                             ),
                             Positioned(
                               top: 4,
@@ -118,13 +118,13 @@ class OcrAiHeroBanner extends StatelessWidget {
                               child: Icon(
                                 Icons.auto_awesome_rounded,
                                 color: colorScheme.primary,
-                                size: 13,
+                                size: AppDimensions.iconXs,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: AppSpacing.fieldVertical),
 
                       // Text and Action Column
                       Expanded(
@@ -146,22 +146,22 @@ class OcrAiHeroBanner extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                const SizedBox(width: 6),
+                                const SizedBox(width: AppSpacing.badgeGap),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
+                                    horizontal: AppSpacing.badgeGap,
                                     vertical: 1.5,
                                   ),
                                   decoration: BoxDecoration(
                                     color: colorScheme.primary.withValues(
-                                      alpha: isDark ? 0.20 : 0.15,
+                                      alpha: isDark ? AppOpacity.glow : 0.15,
                                     ),
-                                    borderRadius: BorderRadius.circular(6),
+                                    borderRadius: AppRadii.borderBadge,
                                     border: Border.all(
                                       color: colorScheme.primary.withValues(
-                                        alpha: isDark ? 0.40 : 0.30,
+                                        alpha: isDark ? AppOpacity.outline : AppOpacity.translucent,
                                       ),
-                                      width: 0.8,
+                                      width: AppDimensions.borderThin,
                                     ),
                                   ),
                                   child: Text(
@@ -176,7 +176,7 @@ class OcrAiHeroBanner extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: AppSpacing.xs),
 
                             // Subtitle description
                             Text(
@@ -186,7 +186,7 @@ class OcrAiHeroBanner extends StatelessWidget {
                                 height: 1.35,
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: AppSpacing.compact),
 
                             // Pill Action Button
                             Align(
@@ -197,22 +197,22 @@ class OcrAiHeroBanner extends StatelessWidget {
                                   backgroundColor: colorScheme.primary,
                                   foregroundColor: colorScheme.onPrimary,
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                    vertical: 8,
+                                    horizontal: AppSpacing.fieldVertical,
+                                    vertical: AppSpacing.xs,
                                   ),
                                   minimumSize: const Size(0, 32),
                                   tapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                   visualDensity: VisualDensity.compact,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(100),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: AppRadii.borderPill,
                                   ),
                                   elevation: 0,
                                 ),
                                 iconAlignment: IconAlignment.end,
                                 icon: const Icon(
                                   Icons.arrow_forward_rounded,
-                                  size: 16,
+                                  size: AppDimensions.iconSm,
                                 ),
                                 label: Text(
                                   l10n.ocrHeroButton,

@@ -134,11 +134,11 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
 
     final containerColor = isDark
         ? colorScheme.surfaceContainerHigh
-        : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5);
+        : colorScheme.surfaceContainerHighest.withValues(alpha: AppOpacity.divider);
 
     final borderColor = _isFocused
         ? colorScheme.primary
-        : colorScheme.outlineVariant.withValues(alpha: isDark ? 0.4 : 0.6);
+        : colorScheme.outlineVariant.withValues(alpha: isDark ? AppOpacity.outline : AppOpacity.muted);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,19 +148,21 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
         AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOutCubic,
-          height: 50,
+          height: AppDimensions.searchBarHeight,
           decoration: BoxDecoration(
             color: containerColor,
             borderRadius: AppRadii.borderPill,
             border: Border.all(
               color: borderColor,
-              width: _isFocused ? 1.5 : 1.0,
+              width: _isFocused ? AppDimensions.borderThick : AppDimensions.borderDefault,
             ),
             boxShadow: _isFocused
                 ? [
                     BoxShadow(
-                      color: colorScheme.primary.withValues(alpha: isDark ? 0.20 : 0.12),
-                      blurRadius: 10,
+                      color: colorScheme.primary.withValues(
+                        alpha: isDark ? AppOpacity.glow : AppOpacity.faint,
+                      ),
+                      blurRadius: AppSpacing.compact,
                       spreadRadius: 1,
                     ),
                   ]
@@ -172,10 +174,10 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
               // Search leading icon
               Icon(
                 Icons.search_rounded,
-                size: 22,
+                size: AppDimensions.iconButton,
                 color: _isFocused
                     ? colorScheme.primary
-                    : colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                    : colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.high),
               ),
               const SizedBox(width: AppSpacing.md),
 
@@ -213,11 +215,11 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
               // Clear button (visible when query is non-empty)
               if (_hasText)
                 Padding(
-                  padding: const EdgeInsets.only(right: 6.0),
+                  padding: const EdgeInsets.only(right: AppSpacing.badgeGap),
                   child: IconButton(
                     key: const Key('dashboard_search_bar_clear_button'),
                     tooltip: l10n.searchClearTooltip,
-                    iconSize: 18,
+                    iconSize: AppDimensions.iconAction,
                     visualDensity: VisualDensity.compact,
                     icon: Icon(
                       Icons.clear,
@@ -227,33 +229,33 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                   ),
                 )
               else
-                const SizedBox(width: 14),
+                const SizedBox(width: AppSpacing.fieldVertical),
             ],
           ),
         ),
 
         // Optional card count badge row
         if (widget.cardCount != null) ...[
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.sm),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   key: const Key('dashboard_search_bar_count_badge'),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
+                    horizontal: AppSpacing.compact,
+                    vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
                     color: colorScheme.primary.withValues(
-                      alpha: isDark ? 0.12 : 0.08,
+                      alpha: isDark ? AppOpacity.faint : AppOpacity.tint,
                     ),
-                    borderRadius: BorderRadius.circular(9999),
+                    borderRadius: AppRadii.borderPill,
                     border: Border.all(
                       color: colorScheme.primary.withValues(
-                        alpha: isDark ? 0.28 : 0.20,
+                        alpha: isDark ? AppOpacity.translucent : AppOpacity.glow,
                       ),
                     ),
                   ),
@@ -262,10 +264,10 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                     children: [
                       Icon(
                         Icons.style_rounded,
-                        size: 14,
+                        size: AppDimensions.iconXs,
                         color: colorScheme.primary,
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: AppSpacing.badgeGap),
                       Text(
                         l10n.savedCardsCount(widget.cardCount!),
                         style: theme.textTheme.labelSmall?.copyWith(

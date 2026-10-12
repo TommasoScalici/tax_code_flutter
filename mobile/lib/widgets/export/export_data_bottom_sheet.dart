@@ -124,10 +124,10 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
             top: false,
             child: SingleChildScrollView(
               padding: EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
-                top: 12.0,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 24.0,
+                left: AppSpacing.card,
+                right: AppSpacing.card,
+                top: AppSpacing.md,
+                bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.xl,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -136,36 +136,36 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                   // Drag handle
                   Center(
                     child: Container(
-                      width: 40,
-                      height: 4,
+                      width: AppDimensions.dragHandleWidth,
+                      height: AppDimensions.dragHandleHeight,
                       decoration: BoxDecoration(
                         color: theme.colorScheme.onSurfaceVariant.withValues(
-                          alpha: 0.40,
+                          alpha: AppOpacity.outline,
                         ),
-                        borderRadius: BorderRadius.circular(2.0),
+                        borderRadius: AppRadii.borderHandle,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
 
                   // Header
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(AppSpacing.compact),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.primary.withValues(
-                            alpha: isDark ? 0.16 : 0.10,
+                            alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.tint,
                           ),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.file_download_outlined,
                           color: theme.colorScheme.primary,
-                          size: 24,
+                          size: AppDimensions.iconLg,
                         ),
                       ),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: AppSpacing.fieldVertical),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,7 +178,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                                 color: theme.colorScheme.onSurface,
                               ),
                             ),
-                            const SizedBox(height: 2),
+                            const SizedBox(height: AppSpacing.xxs),
                             Text(
                               l10n.exportDataSubtitle,
                               style: theme.textTheme.bodySmall?.copyWith(
@@ -195,12 +195,12 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: AppDimensions.iconAction),
 
                   // Contact count badge / empty state
                   if (!hasContacts)
                     Container(
-                      padding: const EdgeInsets.all(14.0),
+                      padding: const EdgeInsets.all(AppSpacing.fieldVertical),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.errorContainer.withValues(
                           alpha: AppOpacity.translucent,
@@ -232,8 +232,8 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                   else
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 14.0,
-                        vertical: 10.0,
+                        horizontal: AppSpacing.fieldVertical,
+                        vertical: AppSpacing.compact,
                       ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.surfaceContainerHigh,
@@ -243,10 +243,10 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                         children: [
                           Icon(
                             Icons.badge_outlined,
-                            size: 18,
+                            size: AppDimensions.iconAction,
                             color: theme.colorScheme.primary,
                           ),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: AppSpacing.compact),
                           Expanded(
                             child: Text(
                               l10n.exportCodesCount(contacts.length),
@@ -259,7 +259,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                         ],
                       ),
                     ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: AppDimensions.iconAction),
 
                   // Format selection section
                   Text(
@@ -269,7 +269,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppSpacing.compact),
 
                   // Format Cards
                   _FormatOptionCard(
@@ -284,7 +284,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                             () => _selectedFormat = ExportFormat.json,
                           ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppSpacing.compact),
                   _FormatOptionCard(
                     key: const Key('export_format_csv_card'),
                     title: l10n.exportFormatCsvTitle,
@@ -297,7 +297,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                             () => _selectedFormat = ExportFormat.csv,
                           ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.xl),
 
                   // Actions
                   Row(
@@ -311,7 +311,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                           child: Text(l10n.cancel),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.md),
                       Expanded(
                         flex: 2,
                         child: FilledButton.icon(
@@ -319,9 +319,9 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                           style: FilledButton.styleFrom(
                             backgroundColor: theme.colorScheme.primary,
                             foregroundColor: theme.colorScheme.onPrimary,
-                            padding: const EdgeInsets.symmetric(vertical: 14.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14.0),
+                            padding: AppSpacing.paddingFieldVertical,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: AppRadii.borderInput,
                             ),
                           ),
                           onPressed: (!hasContacts || _isExporting)
@@ -329,16 +329,16 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                               : () => _exportData(contacts),
                           icon: _isExporting
                               ? SizedBox(
-                                  width: 18,
-                                  height: 18,
+                                  width: AppDimensions.iconAction,
+                                  height: AppDimensions.iconAction,
                                   child: CircularProgressIndicator(
-                                    strokeWidth: 2.2,
+                                    strokeWidth: AppDimensions.progressStrokeWidth,
                                     color: theme.colorScheme.onPrimary,
                                   ),
                                 )
                               : const Icon(
                                   Icons.file_download_outlined,
-                                  size: 20,
+                                  size: AppDimensions.iconMd,
                                 ),
                           label: Text(
                             l10n.exportAction,
@@ -387,16 +387,16 @@ class _FormatOptionCard extends StatelessWidget {
         : theme.colorScheme.outlineVariant;
     final bgColor = isSelected
         ? theme.colorScheme.primary.withValues(
-            alpha: isDark ? 0.12 : 0.06,
+            alpha: isDark ? AppOpacity.faint : AppOpacity.tint,
           )
         : theme.colorScheme.surfaceContainer;
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16.0),
+      borderRadius: AppRadii.borderMd,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+        padding: AppSpacing.paddingField,
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: AppRadii.borderMd,
@@ -419,13 +419,13 @@ class _FormatOptionCard extends StatelessWidget {
               ),
               child: Icon(
                 icon,
-                size: 22,
+                size: AppDimensions.iconButton,
                 color: isSelected
                     ? theme.colorScheme.primary
                     : theme.colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: AppSpacing.fieldVertical),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

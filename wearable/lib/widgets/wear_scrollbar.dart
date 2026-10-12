@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_colors.dart';
+import 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
 
 /// A Material 3 curved position indicator (scrollbar) calibrated for Wear OS.
 ///
@@ -18,9 +19,9 @@ class WearScrollbar extends StatefulWidget {
     this.controller,
     this.thumbColor = AppColors.emeraldLight,
     this.trackColor,
-    this.thickness = 4.0,
-    this.margin = 3.0,
-    this.arcAngleDegrees = 72.0,
+    this.thickness = WearDimensions.scrollbarThickness,
+    this.margin = WearDimensions.scrollbarMargin,
+    this.arcAngleDegrees = WearDimensions.scrollbarArcDegrees,
     this.autoHideDuration = const Duration(milliseconds: 1500),
     this.isRound = true,
     super.key,
@@ -177,7 +178,7 @@ class _WearScrollbarState extends State<WearScrollbar>
   @override
   Widget build(BuildContext context) {
     final effectiveTrackColor = widget.trackColor ??
-        AppColors.darkOutline.withValues(alpha: 0.22);
+        AppColors.darkOutline.withValues(alpha: WearDimensions.scrollbarTrackAlpha);
 
     return NotificationListener<ScrollNotification>(
       onNotification: _handleScrollNotification,

@@ -55,7 +55,7 @@ class ProfileLegalSection extends StatelessWidget {
                 iconBgColor: theme.colorScheme.surfaceContainerHigh,
                 title: l10n.appInfoTitle,
                 subtitle: l10n.appInfoSubtitle(version),
-                trailing: const Icon(Icons.chevron_right_rounded, size: 20),
+                trailing: const Icon(Icons.chevron_right_rounded, size: AppDimensions.iconMd),
                 onTap: onOpenAppInfo,
               );
             },

@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 
 /// A responsive wrapper widget designed to adapt layout across mobile phones,
 /// foldable devices, and tablets.
@@ -18,7 +19,7 @@ class ResponsiveLayout extends StatelessWidget {
 
   /// Default padding matching the Emerald Ledger design system.
   static const EdgeInsets defaultPadding =
-      EdgeInsets.symmetric(horizontal: 20.0);
+      EdgeInsets.symmetric(horizontal: AppSpacing.card);
 
   /// Creates a [ResponsiveLayout] with a static [child].
   const ResponsiveLayout({

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared/services/gemini_service.dart';
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
@@ -122,16 +123,16 @@ class _CameraView extends StatelessWidget {
         return SafeArea(
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: AppSpacing.paddingXl,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(
                     Icons.no_photography,
-                    size: 50,
+                    size: AppDimensions.searchBarHeight,
                     color: AppColors.cameraReticleMuted,
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
                   Text(
                     l10n.cameraPermissionInfo,
                     textAlign: TextAlign.center,
@@ -139,7 +140,7 @@ class _CameraView extends StatelessWidget {
                           color: AppColors.cameraReticle,
                         ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.xxl),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.settings),
                     label: Text(l10n.openSettings),

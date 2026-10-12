@@ -5,6 +5,7 @@ import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/review_service.dart';
 import 'package:shared/services/sync_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
@@ -64,7 +65,7 @@ final class HomePage extends StatelessWidget {
         onTap: () => FocusScope.of(context).unfocus(),
         child: ResponsiveLayout(
           maxWidth: 600.0,
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: AppSpacing.screenMargin,
           child: ContactsList(
             onAddContact: () => _onAddContact(context),
           ),

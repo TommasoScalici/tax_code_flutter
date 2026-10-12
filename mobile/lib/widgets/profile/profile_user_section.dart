@@ -76,8 +76,8 @@ class ProfileUserSection extends StatelessWidget {
                     bottom: 0,
                     right: 0,
                     child: Container(
-                      width: 14,
-                      height: 14,
+                      width: AppDimensions.iconXs,
+                      height: AppDimensions.iconXs,
                       decoration: BoxDecoration(
                         color: isGuest
                             ? AppColors.warning
@@ -92,7 +92,7 @@ class ProfileUserSection extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppSpacing.md),
 
               // Name, Email, Badge
               Expanded(
@@ -112,7 +112,7 @@ class ProfileUserSection extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSpacing.xs),
                         // Badge Chip
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -138,7 +138,7 @@ class ProfileUserSection extends StatelessWidget {
                       ],
                     ),
                     if (email != null && email.isNotEmpty) ...[
-                      const SizedBox(height: 3),
+                      const SizedBox(height: AppSpacing.xxs),
                       Text(
                         email,
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -160,8 +160,8 @@ class ProfileUserSection extends StatelessWidget {
           if (!isGuest)
             Container(
               padding: const EdgeInsets.symmetric(
-                horizontal: 14.0,
-                vertical: 10.0,
+                horizontal: AppSpacing.fieldVertical,
+                vertical: AppSpacing.compact,
               ),
               decoration: BoxDecoration(
                 color: isSyncActive
@@ -184,12 +184,12 @@ class ProfileUserSection extends StatelessWidget {
                     isSyncActive
                         ? Icons.cloud_done_rounded
                         : Icons.cloud_queue_rounded,
-                    size: 18,
+                    size: AppDimensions.iconAction,
                     color: isSyncActive
                         ? theme.colorScheme.primary
                         : theme.colorScheme.onSurfaceVariant,
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: AppSpacing.compact),
                   Expanded(
                     child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -257,7 +257,7 @@ class ProfileUserSection extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: AppSpacing.badgeGap),
                   Text(
                     l10n.cloudBackupBannerSubtitle,
                     style: theme.textTheme.bodySmall?.copyWith(
@@ -280,8 +280,8 @@ class ProfileUserSection extends StatelessWidget {
                       onPressed: () => authService?.signInWithGoogle(),
                       icon: SvgPicture.asset(
                         'assets/images/google_logo.svg',
-                        width: 18,
-                        height: 18,
+                        width: AppDimensions.iconAction,
+                        height: AppDimensions.iconAction,
                       ),
                       label: Text(
                         l10n.continueWithGoogle,

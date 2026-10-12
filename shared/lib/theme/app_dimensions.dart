@@ -8,11 +8,20 @@ abstract final class AppSpacing {
   /// Extra small spacing: 4.0 pt.
   static const double xs = 4.0;
 
+  /// Badge and inline tag gap: 6.0 pt.
+  static const double badgeGap = 6.0;
+
   /// Small spacing: 8.0 pt.
   static const double sm = 8.0;
 
+  /// Compact intermediate spacing / tag horizontal padding: 10.0 pt.
+  static const double compact = 10.0;
+
   /// Medium spacing: 12.0 pt.
   static const double md = 12.0;
+
+  /// Standard input and action tile vertical padding: 14.0 pt.
+  static const double fieldVertical = 14.0;
 
   /// Large spacing: 16.0 pt.
   static const double lg = 16.0;
@@ -57,13 +66,28 @@ abstract final class AppSpacing {
   static const EdgeInsets screenMargin = EdgeInsets.symmetric(horizontal: lg);
 
   /// Standard input and action tile padding: horizontal 16.0 pt, vertical 14.0 pt.
-  static const EdgeInsets paddingField = EdgeInsets.symmetric(horizontal: lg, vertical: 14.0);
+  static const EdgeInsets paddingField = EdgeInsets.symmetric(horizontal: lg, vertical: fieldVertical);
+
+  /// Standard vertical field and action padding: vertical 14.0 pt.
+  static const EdgeInsets paddingFieldVertical = EdgeInsets.symmetric(vertical: fieldVertical);
+
+  /// Form field top label insets: left 4.0 pt, bottom 6.0 pt.
+  static const EdgeInsets labelPadding = EdgeInsets.only(left: xs, bottom: badgeGap);
+
+  /// Form field validation error insets: left 8.0 pt, top 6.0 pt.
+  static const EdgeInsets errorPadding = EdgeInsets.only(left: sm, top: badgeGap);
+
+  /// Standard sticky bottom bar padding: horizontal 20.0 pt, vertical 14.0 pt.
+  static const EdgeInsets paddingStickyBar = EdgeInsets.symmetric(horizontal: card, vertical: fieldVertical);
 }
 
 /// Centralized corner radius design tokens.
 abstract final class AppRadii {
   /// Bottom sheet drag handle radius: 2.0 pt.
   static const double handle = 2.0;
+
+  /// Small chip and badge corner radius: 6.0 pt.
+  static const double badge = 6.0;
 
   /// Small radius: 8.0 pt (chips, small badges, inline tags).
   static const double sm = 8.0;
@@ -94,6 +118,9 @@ abstract final class AppRadii {
   // ---------------------------------------------------------------------------
   /// Circular border radius of 2.0 pt.
   static const BorderRadius borderHandle = BorderRadius.all(Radius.circular(handle));
+
+  /// Circular border radius of 6.0 pt for small badges and tags.
+  static const BorderRadius borderBadge = BorderRadius.all(Radius.circular(badge));
 
   /// Circular border radius of 8.0 pt.
   static const BorderRadius borderSm = BorderRadius.all(Radius.circular(sm));
@@ -224,8 +251,14 @@ abstract final class AppDimensions {
   /// Small icon size: 16.0 pt.
   static const double iconSm = 16.0;
 
+  /// Action, trailing, and clear icon size: 18.0 pt.
+  static const double iconAction = 18.0;
+
   /// Medium icon size: 20.0 pt.
   static const double iconMd = 20.0;
+
+  /// Primary button icon or inline loader size: 22.0 pt.
+  static const double iconButton = 22.0;
 
   /// Large icon size: 24.0 pt.
   static const double iconLg = 24.0;

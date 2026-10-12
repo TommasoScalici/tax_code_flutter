@@ -6,14 +6,18 @@ void main() {
     test('exports AppSpacing, AppRadii, AppOpacity and AppDimensions correctly', () {
       expect(AppSpacing.xxs, 2.0);
       expect(AppSpacing.xs, 4.0);
+      expect(AppSpacing.badgeGap, 6.0);
       expect(AppSpacing.sm, 8.0);
+      expect(AppSpacing.compact, 10.0);
       expect(AppSpacing.md, 12.0);
+      expect(AppSpacing.fieldVertical, 14.0);
       expect(AppSpacing.lg, 16.0);
       expect(AppSpacing.card, 20.0);
       expect(AppSpacing.xl, 24.0);
       expect(AppSpacing.xxl, 32.0);
 
       expect(AppRadii.handle, 2.0);
+      expect(AppRadii.badge, 6.0);
       expect(AppRadii.sm, 8.0);
       expect(AppRadii.compact, 10.0);
       expect(AppRadii.inner, 12.0);
@@ -57,7 +61,9 @@ void main() {
       expect(AppDimensions.minTouchTarget, 48.0);
       expect(AppDimensions.iconXs, 14.0);
       expect(AppDimensions.iconSm, 16.0);
+      expect(AppDimensions.iconAction, 18.0);
       expect(AppDimensions.iconMd, 20.0);
+      expect(AppDimensions.iconButton, 22.0);
       expect(AppDimensions.iconLg, 24.0);
       expect(AppDimensions.iconXl, 32.0);
     });

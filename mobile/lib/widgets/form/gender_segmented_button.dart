@@ -116,7 +116,7 @@ class _GenderSegmentedLayout extends StatelessWidget {
       children: [
         // Label with optional required asterisk
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, bottom: 6.0),
+          padding: AppSpacing.labelPadding,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -128,7 +128,7 @@ class _GenderSegmentedLayout extends StatelessWidget {
                 ),
               ),
               if (isRequired) ...[
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.xs),
                 Text(
                   '*',
                   style: theme.textTheme.labelMedium?.copyWith(
@@ -165,7 +165,7 @@ class _GenderSegmentedLayout extends StatelessWidget {
                   },
                 ),
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppSpacing.xs),
               // Female Segment
               Expanded(
                 child: _GenderSegmentOption(
@@ -185,7 +185,7 @@ class _GenderSegmentedLayout extends StatelessWidget {
         // Error message if present
         if (hasError)
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, top: 6.0),
+            padding: AppSpacing.errorPadding,
             child: Text(
               errorText!,
               style: theme.textTheme.bodySmall?.copyWith(
@@ -218,7 +218,7 @@ class _GenderSegmentOption extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final selectedBg = colorScheme.primary.withValues(
-      alpha: isDark ? 0.16 : 0.12,
+      alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.faint,
     );
 
     final selectedBorder = Border.all(
@@ -234,7 +234,7 @@ class _GenderSegmentOption extends StatelessWidget {
         borderRadius: AppRadii.borderCompact,
         child: Container(
           height: 42,
-          padding: const EdgeInsets.symmetric(horizontal: AppRadii.compact),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.compact),
           decoration: BoxDecoration(
             borderRadius: AppRadii.borderCompact,
             border: isSelected ? selectedBorder : null,
@@ -247,10 +247,10 @@ class _GenderSegmentOption extends StatelessWidget {
               if (isSelected) ...[
                 Icon(
                   Icons.check_rounded,
-                  size: 18,
+                  size: AppDimensions.iconAction,
                   color: colorScheme.primary,
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: AppSpacing.badgeGap),
               ],
               Flexible(
                 child: Text(

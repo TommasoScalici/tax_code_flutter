@@ -106,7 +106,7 @@ class CameraControlsWidget extends StatelessWidget {
                         elevation: 2,
                         child: const Icon(Icons.replay, size: 28),
                       ),
-                      const SizedBox(width: 48),
+                      const SizedBox(width: AppDimensions.minTouchTarget),
                       // Confirm button (M3 primary emerald)
                       FloatingActionButton.large(
                         heroTag: 'camera_confirm_button',

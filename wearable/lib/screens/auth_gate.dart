@@ -122,7 +122,7 @@ class _LoginViewState extends State<_LoginView> {
                 textAlign: TextAlign.center,
                 style: WearTypography.cardTitle(),
               ),
-              const SizedBox(height: AppSpacing.sm + 2),
+              const SizedBox(height: AppSpacing.compact),
 
               ConstrainedBox(
                 constraints: const BoxConstraints(
@@ -134,7 +134,7 @@ class _LoginViewState extends State<_LoginView> {
                       : () => context
                             .read<AuthService>()
                             .signInWithGoogleForWearable(),
-                  icon: const Icon(Icons.login, size: WearDimensions.iconSmall + 2),
+                  icon: const Icon(Icons.login, size: AppDimensions.iconSm),
                   label: Text(
                     l10n.signInWithGoogle,
                     style: WearTypography.hint(color: AppColors.darkOnSurface),
@@ -190,10 +190,10 @@ class _LoginViewState extends State<_LoginView> {
                 ),
               ),
               if (authService.isLoading) ...[
-                const SizedBox(height: AppSpacing.sm + 2),
+                const SizedBox(height: AppSpacing.compact),
                 const SizedBox(
-                  height: AppDimensions.iconMd + 2,
-                  width: AppDimensions.iconMd + 2,
+                  height: AppDimensions.iconButton,
+                  width: AppDimensions.iconButton,
                   child: CircularProgressIndicator(
                     strokeWidth: WearDimensions.progressStrokeWidth,
                     color: AppColors.emeraldPrimary,

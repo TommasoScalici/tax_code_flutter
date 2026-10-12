@@ -237,7 +237,7 @@ class _ContactsListState extends State<ContactsList> {
                   color: AppColors.darkOnSurfaceVariant.withValues(alpha: AppOpacity.high),
                 ),
               ),
-              const SizedBox(height: AppSpacing.sm + 2),
+              const SizedBox(height: AppSpacing.compact),
               if (controller.isLaunchingPhoneApp)
                 const SizedBox(
                   height: AppDimensions.iconLg,
@@ -253,7 +253,7 @@ class _ContactsListState extends State<ContactsList> {
                     minHeight: WearDimensions.buttonCompactHeight,
                   ),
                   child: ElevatedButton.icon(
-                    icon: const Icon(Icons.phone_android, size: WearDimensions.iconSmall + 2),
+                    icon: const Icon(Icons.phone_android, size: AppDimensions.iconSm),
                     label: Text(
                       l10n.openOnPhone,
                       style: WearTypography.hint(color: AppColors.onEmeraldAccent),

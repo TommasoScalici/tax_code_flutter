@@ -95,18 +95,18 @@ class CameraPreviewOverlay extends StatelessWidget {
 
         // Guidance pill badge above the card framing
         Positioned(
-          top: math.max(16.0, cardRect.top - 54.0),
-          left: 20,
-          right: 20,
+          top: math.max(AppSpacing.md, cardRect.top - 54.0),
+          left: AppSpacing.card,
+          right: AppSpacing.card,
           child: Center(
             child: Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.lg,
-                vertical: 10,
+                vertical: AppSpacing.compact,
               ),
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerHighest.withValues(
-                  alpha: 0.82,
+                  alpha: AppOpacity.high,
                 ),
                 borderRadius: AppRadii.borderDialog,
                 border: Border.all(
@@ -118,7 +118,7 @@ class CameraPreviewOverlay extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.badge_outlined,
-                    size: 18,
+                    size: AppDimensions.iconAction,
                     color: colorScheme.primary,
                   ),
                   const SizedBox(width: AppSpacing.sm),
@@ -179,7 +179,7 @@ class CardCutoutOverlayPainter extends CustomPainter {
     final backgroundPath = Path()
       ..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
 
-    const radiusVal = 16.0;
+    const radiusVal = AppRadii.md;
     final cutoutRRect = RRect.fromRectAndRadius(
       cardRect,
       const Radius.circular(radiusVal),
@@ -203,7 +203,7 @@ class CardCutoutOverlayPainter extends CustomPainter {
     final outlinePaint = Paint()
       ..color = outlineColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
+      ..strokeWidth = AppDimensions.borderDefault;
     canvas.drawRRect(cutoutRRect, outlinePaint);
 
     // Precision corner guides

@@ -118,7 +118,7 @@ class _BarcodePageState extends State<BarcodePage> {
                   // Contact name if present (with safe horizontal margins and multi-line wrapping)
                   if (fullName.isNotEmpty) ...[
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.compact),
                       child: Text(
                         fullName,
                         style: WearTypography.cardTitle(),
@@ -183,7 +183,7 @@ class _BarcodePageState extends State<BarcodePage> {
                     borderRadius: WearDimensions.borderStadium,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0,
+                        horizontal: AppSpacing.compact,
                         vertical: AppSpacing.xs,
                       ),
                       child: Row(

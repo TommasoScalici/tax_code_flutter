@@ -129,7 +129,7 @@ class ContactCard extends StatelessWidget {
                     child: Icon(
                       Icons.person_outline_rounded,
                       color: colorScheme.primary,
-                      size: 20,
+                      size: AppDimensions.iconMd,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.md),
@@ -147,7 +147,7 @@ class ContactCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        const SizedBox(width: AppSpacing.badgeGap),
                         Flexible(
                           child: Text(
                             contact.lastName,
@@ -188,7 +188,7 @@ class ContactCard extends StatelessWidget {
                   const SizedBox(width: AppSpacing.sm),
                   Icon(
                     Icons.drag_indicator_rounded,
-                    size: 18,
+                    size: AppDimensions.iconAction,
                     color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.outline),
                   ),
                 ],
@@ -208,7 +208,7 @@ class ContactCard extends StatelessWidget {
                     borderRadius: AppRadii.borderInput,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
+                        horizontal: AppSpacing.fieldVertical,
                         vertical: AppSpacing.md,
                       ),
                       decoration: BoxDecoration(
@@ -243,7 +243,7 @@ class ContactCard extends StatelessWidget {
                           const SizedBox(width: AppSpacing.sm),
                           Icon(
                             Icons.copy_rounded,
-                            size: 18,
+                            size: AppDimensions.iconAction,
                             color: colorScheme.primary.withValues(alpha: AppOpacity.prominent),
                           ),
                         ],
@@ -265,7 +265,7 @@ class ContactCard extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.place_outlined,
-                        size: 14,
+                        size: AppDimensions.iconXs,
                         color: colorScheme.onSurfaceVariant,
                       ),
                       const SizedBox(width: AppSpacing.xs),
@@ -290,7 +290,7 @@ class ContactCard extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.calendar_today_outlined,
-                        size: 13,
+                        size: AppDimensions.iconXs,
                         color: colorScheme.onSurfaceVariant,
                       ),
                       const SizedBox(width: AppSpacing.xs),
@@ -313,7 +313,7 @@ class ContactCard extends StatelessWidget {
                 thickness: AppDimensions.borderDefault,
                 color: colorScheme.outlineVariant.withValues(alpha: AppOpacity.divider),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSpacing.compact),
 
               // 4 Action Buttons Pill Row
               Row(
@@ -326,7 +326,7 @@ class ContactCard extends StatelessWidget {
                       onPressed: onShare,
                     ),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppSpacing.badgeGap),
                   Expanded(
                     child: _CardActionButton(
                       icon: Symbols.barcode,
@@ -335,7 +335,7 @@ class ContactCard extends StatelessWidget {
                       onPressed: onShowBarcode,
                     ),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppSpacing.badgeGap),
                   Expanded(
                     child: _CardActionButton(
                       icon: Icons.edit,
@@ -344,7 +344,7 @@ class ContactCard extends StatelessWidget {
                       onPressed: onEdit,
                     ),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppSpacing.badgeGap),
                   Expanded(
                     child: _CardActionButton(
                       icon: Icons.delete,

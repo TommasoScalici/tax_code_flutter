@@ -40,7 +40,7 @@ class ProfileDataSection extends StatelessWidget {
                 iconBgColor: theme.colorScheme.surfaceContainerHigh,
                 title: l10n.exportDataTitle,
                 subtitle: l10n.exportDataSubtitle,
-                trailing: const Icon(Icons.chevron_right_rounded, size: 20),
+                trailing: const Icon(Icons.chevron_right_rounded, size: AppDimensions.iconMd),
                 onTap: () {
                   unawaited(ExportDataBottomSheet.show(context));
                 },
@@ -53,7 +53,7 @@ class ProfileDataSection extends StatelessWidget {
                 iconBgColor: theme.colorScheme.surfaceContainerHigh,
                 title: l10n.rateAppTitle,
                 subtitle: l10n.rateAppSubtitle,
-                trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                trailing: const Icon(Icons.open_in_new_rounded, size: AppDimensions.iconAction),
                 onTap: () {
                   unawaited(inAppReviewService?.openStoreListing());
                 },

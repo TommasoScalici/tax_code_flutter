@@ -85,7 +85,7 @@ class BirthplaceAutocompleteField extends StatelessWidget {
       children: [
         // Label with required asterisk
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, bottom: 6.0),
+          padding: AppSpacing.labelPadding,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -97,7 +97,7 @@ class BirthplaceAutocompleteField extends StatelessWidget {
                 ),
               ),
               if (isRequired) ...[
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.xs),
                 Text(
                   '*',
                   style: theme.textTheme.labelMedium?.copyWith(
@@ -163,29 +163,26 @@ class BirthplaceAutocompleteField extends StatelessWidget {
                         errorText: fieldError,
                         filled: true,
                         fillColor: bgColor,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 14.0,
-                        ),
+                        contentPadding: AppSpacing.paddingField,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: AppRadii.borderInput,
                           borderSide: BorderSide(color: borderColor),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: AppRadii.borderInput,
                           borderSide: BorderSide(color: borderColor),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: AppRadii.borderInput,
                           borderSide: BorderSide(
                             color: colorScheme.primary,
-                            width: 1.6,
+                            width: AppDimensions.borderThick,
                           ),
                         ),
                         suffixIcon: textValue.text.isNotEmpty
                             ? IconButton(
                                 key: const Key('birthplace_clear_button'),
-                                icon: const Icon(Icons.clear, size: 18),
+                                icon: const Icon(Icons.clear, size: AppDimensions.iconAction),
                                 color: colorScheme.onSurfaceVariant,
                                 onPressed: () {
                                   textEditingController.clear();
@@ -199,7 +196,7 @@ class BirthplaceAutocompleteField extends StatelessWidget {
                             : Icon(
                                 Icons.location_on_rounded,
                                 color: colorScheme.primary,
-                                size: 20,
+                                size: AppDimensions.iconMd,
                               ),
                       ),
                     );
@@ -218,7 +215,7 @@ class BirthplaceAutocompleteField extends StatelessWidget {
 
         // Helper text below field
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, top: 5.0),
+          padding: const EdgeInsets.only(left: AppSpacing.xs, top: 5.0),
           child: Text(
             helperText,
             style: theme.textTheme.bodySmall?.copyWith(
@@ -314,7 +311,7 @@ class _StandaloneBirthplaceAutocompleteState
       children: [
         // Label
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, bottom: 6.0),
+          padding: AppSpacing.labelPadding,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -326,7 +323,7 @@ class _StandaloneBirthplaceAutocompleteState
                 ),
               ),
               if (widget.isRequired) ...[
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.xs),
                 Text(
                   '*',
                   style: theme.textTheme.labelMedium?.copyWith(
@@ -377,29 +374,26 @@ class _StandaloneBirthplaceAutocompleteState
                     errorText: widget.errorText,
                     filled: true,
                     fillColor: bgColor,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 14.0,
-                    ),
+                    contentPadding: AppSpacing.paddingField,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: AppRadii.borderInput,
                       borderSide: BorderSide(color: borderColor),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: AppRadii.borderInput,
                       borderSide: BorderSide(color: borderColor),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: AppRadii.borderInput,
                       borderSide: BorderSide(
                         color: colorScheme.primary,
-                        width: 1.6,
+                        width: AppDimensions.borderThick,
                       ),
                     ),
                     suffixIcon: textValue.text.isNotEmpty
                         ? IconButton(
                             key: const Key('birthplace_clear_button'),
-                            icon: const Icon(Icons.clear, size: 18),
+                            icon: const Icon(Icons.clear, size: AppDimensions.iconAction),
                             color: colorScheme.onSurfaceVariant,
                             onPressed: () {
                               textEditingController.clear();
@@ -410,7 +404,7 @@ class _StandaloneBirthplaceAutocompleteState
                         : Icon(
                             Icons.location_on_rounded,
                             color: colorScheme.primary,
-                            size: 20,
+                            size: AppDimensions.iconMd,
                           ),
                   ),
                 );
@@ -427,7 +421,7 @@ class _StandaloneBirthplaceAutocompleteState
 
         // Helper text
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, top: 5.0),
+          padding: const EdgeInsets.only(left: AppSpacing.xs, top: 5.0),
           child: Text(
             widget.helperText,
             style: theme.textTheme.bodySmall?.copyWith(
@@ -477,7 +471,7 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
             ),
           ),
           child: ListView.separated(
-            padding: const EdgeInsets.symmetric(vertical: 6.0),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.badgeGap),
             shrinkWrap: true,
             itemCount: options.length,
             separatorBuilder: (context, index) => Divider(
@@ -494,7 +488,7 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.lg,
-                    vertical: 10.0,
+                    vertical: AppSpacing.compact,
                   ),
                   child: Row(
                     children: [
@@ -502,10 +496,10 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
                         isForeign
                             ? Icons.public_rounded
                             : Icons.location_city_rounded,
-                        size: 18,
+                        size: AppDimensions.iconAction,
                         color: colorScheme.primary,
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Text(
                           birthplace.name,
@@ -516,18 +510,18 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSpacing.sm),
                       // Province Pill
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
+                          horizontal: AppSpacing.badgeGap,
+                          vertical: AppSpacing.xxs,
                         ),
                         decoration: BoxDecoration(
                           color: colorScheme.surfaceContainerHighest.withValues(
                             alpha: isDark ? 0.6 : 0.4,
                           ),
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: AppRadii.borderBadge,
                         ),
                         child: Text(
                           birthplace.state,

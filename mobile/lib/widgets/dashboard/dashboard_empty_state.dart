@@ -85,9 +85,9 @@ class DashboardEmptyState extends StatelessWidget {
                     if (!isSearching)
                       BoxShadow(
                         color: colorScheme.primary.withValues(
-                          alpha: isDark ? 0.20 : 0.12,
+                          alpha: isDark ? AppOpacity.glow : AppOpacity.faint,
                         ),
-                        blurRadius: 20,
+                        blurRadius: AppSpacing.card,
                         offset: const Offset(0, 4),
                       ),
                   ],
@@ -98,7 +98,7 @@ class DashboardEmptyState extends StatelessWidget {
                   color: iconColor,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xxl),
 
               // Title
               Text(
@@ -110,7 +110,7 @@ class DashboardEmptyState extends StatelessWidget {
                   fontSize: 20,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSpacing.compact),
 
               // Description
               Text(
@@ -121,19 +121,19 @@ class DashboardEmptyState extends StatelessWidget {
                   height: 1.45,
                 ),
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: AppSpacing.xxl),
 
               // Action button
               if (isSearching && onClearSearch != null)
                 OutlinedButton.icon(
                   onPressed: onClearSearch,
-                  icon: const Icon(Icons.refresh_rounded, size: 18),
+                  icon: const Icon(Icons.refresh_rounded, size: AppDimensions.iconAction),
                   label: Text(l10n.emptySearchClearAction),
                 )
               else if (!isSearching && onAddContact != null)
                 FilledButton.icon(
                   onPressed: onAddContact,
-                  icon: const Icon(Icons.add_rounded, size: 20),
+                  icon: const Icon(Icons.add_rounded, size: AppDimensions.iconMd),
                   label: Text(l10n.addCode),
                 ),
             ],

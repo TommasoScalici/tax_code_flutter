@@ -65,8 +65,8 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
     final effectiveCode = (taxCode != null && taxCode!.isNotEmpty) ? taxCode!.toUpperCase() : null;
 
     final borderColor = _isComplete
-        ? colorScheme.primary.withValues(alpha: isDark ? 0.45 : 0.6)
-        : colorScheme.outlineVariant.withValues(alpha: isDark ? 0.5 : 0.7);
+        ? colorScheme.primary.withValues(alpha: isDark ? AppOpacity.divider : AppOpacity.muted)
+        : colorScheme.outlineVariant.withValues(alpha: isDark ? AppOpacity.divider : AppOpacity.medium);
 
     final bgColor = isDark
         ? colorScheme.surfaceContainerHigh
@@ -105,7 +105,9 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
                   height: 36,
                   decoration: BoxDecoration(
                     color: _isComplete
-                        ? colorScheme.primary.withValues(alpha: isDark ? 0.16 : 0.12)
+                        ? colorScheme.primary.withValues(
+                            alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.faint,
+                          )
                         : colorScheme.surfaceContainerHighest.withValues(alpha: AppOpacity.divider),
                     shape: BoxShape.circle,
                   ),
@@ -126,13 +128,13 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
                       Text(
                         resolvedTitle.toUpperCase(),
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                          color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.high),
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.8,
                         ),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: AppSpacing.xxs),
                       if (effectiveCode != null)
                         Text(
                           effectiveCode,
@@ -145,7 +147,7 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
                         Text(
                           resolvedHint,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                            color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.muted),
                             fontStyle: FontStyle.italic,
                             fontSize: 12,
                           ),
@@ -160,7 +162,7 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
                     key: const Key('tax_code_live_preview_copy_button'),
                     icon: Icon(
                       Icons.copy_rounded,
-                      size: 18,
+                      size: AppDimensions.iconAction,
                       color: colorScheme.primary,
                     ),
                     tooltip: l10n.copyTaxCode,

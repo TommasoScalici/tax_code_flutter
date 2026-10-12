@@ -9,6 +9,7 @@ import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/utils/error_dialog_helper.dart';
@@ -176,7 +177,12 @@ class _FormViewState extends State<_FormView> {
                         : 0,
                   ),
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.card,
+                      AppSpacing.md,
+                      AppSpacing.card,
+                      AppSpacing.xxl,
+                    ),
                     child: ReactiveForm(
                       formGroup: controller.form,
                       child: Column(
@@ -187,9 +193,9 @@ class _FormViewState extends State<_FormView> {
                             OcrAiHeroBanner(
                               onScanPressed: () => _openCameraPage(controller),
                             ),
-                            const SizedBox(height: 18),
+                            const SizedBox(height: AppSpacing.fieldVertical),
                             const FormSectionDivider(),
-                            const SizedBox(height: 18),
+                            const SizedBox(height: AppSpacing.fieldVertical),
                           ],
 
                           // First Name field
@@ -203,7 +209,7 @@ class _FormViewState extends State<_FormView> {
                                   l10n.invalidCharacters,
                             },
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.md),
 
                           // Last Name field
                           CustomTextField(
@@ -216,14 +222,14 @@ class _FormViewState extends State<_FormView> {
                                   l10n.invalidCharacters,
                             },
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.md),
 
                           // Gender selector
                           GenderSegmentedButton(
                             formControlName: 'gender',
                             labelText: l10n.gender,
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.md),
 
                           // Birth Date field
                           BirthdatePickerField(
@@ -232,7 +238,7 @@ class _FormViewState extends State<_FormView> {
                             firstDate: DateTime(1900),
                             lastDate: DateTime.now(),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.md),
 
                           // Birth Place field
                           BirthplaceAutocompleteField(
@@ -241,7 +247,7 @@ class _FormViewState extends State<_FormView> {
                             labelText: l10n.birthPlace,
                             birthplaces: controller.birthplaces,
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: AppSpacing.card),
 
                           // Real-time calculated Tax Code preview card
                           TaxCodeLivePreviewCard(
@@ -298,9 +304,9 @@ class _SyncProgressOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     if (controller.isLoadingBirthplaces) {
       return Card(
-        margin: const EdgeInsets.symmetric(horizontal: 32),
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: AppSpacing.paddingXl,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -309,7 +315,7 @@ class _SyncProgressOverlay extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 controller.downloadStep == 'checking'
                     ? l10n.stepBirthplacesChecking
@@ -322,7 +328,7 @@ class _SyncProgressOverlay extends StatelessWidget {
                     : l10n.stepBirthplacesChecking,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
               if (controller.downloadProgress != null)
                 LinearProgressIndicator(value: controller.downloadProgress)
               else

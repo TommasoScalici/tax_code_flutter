@@ -63,7 +63,7 @@ class FormStickyBottomBar extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 520),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
+              padding: AppSpacing.paddingStickyBar,
               child: SizedBox(
                 width: double.infinity,
                 height: AppDimensions.primaryButtonHeight,
@@ -82,8 +82,8 @@ class FormStickyBottomBar extends StatelessWidget {
                   ),
                   child: isLoading
                       ? SizedBox(
-                          width: 22,
-                          height: 22,
+                          width: AppDimensions.iconButton,
+                          height: AppDimensions.iconButton,
                           child: CircularProgressIndicator(
                             strokeWidth: AppDimensions.progressStrokeWidth,
                             color: colorScheme.onPrimary,
@@ -92,7 +92,7 @@ class FormStickyBottomBar extends StatelessWidget {
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(icon, size: 22),
+                            Icon(icon, size: AppDimensions.iconButton),
                             const SizedBox(width: AppSpacing.sm),
                             Text(
                               resolvedLabel,

@@ -159,7 +159,7 @@ class _BirthdatePickerContent extends StatelessWidget {
       children: [
         // Label with required asterisk
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, bottom: 6.0),
+          padding: AppSpacing.labelPadding,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -220,7 +220,7 @@ class _BirthdatePickerContent extends StatelessWidget {
                     if (value != null)
                       IconButton(
                         key: const Key('birthdate_picker_clear_button'),
-                        icon: const Icon(Icons.close_rounded, size: 18),
+                        icon: const Icon(Icons.close_rounded, size: AppDimensions.iconAction),
                         color: colorScheme.onSurfaceVariant,
                         visualDensity: VisualDensity.compact,
                         padding: EdgeInsets.zero,
@@ -232,7 +232,7 @@ class _BirthdatePickerContent extends StatelessWidget {
                       Icon(
                         Icons.calendar_month_rounded,
                         color: colorScheme.primary,
-                        size: 20,
+                        size: AppDimensions.iconMd,
                       ),
                   ],
                 ),
@@ -244,7 +244,7 @@ class _BirthdatePickerContent extends StatelessWidget {
         // Error text
         if (hasError)
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, top: 6.0),
+            padding: AppSpacing.errorPadding,
             child: Text(
               errorText!,
               style: theme.textTheme.bodySmall?.copyWith(
