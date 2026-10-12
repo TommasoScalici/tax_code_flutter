@@ -164,5 +164,101 @@ void main() {
       expect(copyCalled, isTrue);
       expect(find.text('Tax code copied to clipboard'), findsOneWidget);
     });
+
+    testWidgets('ContactCardHeader displays avatar, names, gender and drag indicator', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ContactCardHeader(contact: tContact),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.person_outline_rounded), findsOneWidget);
+      expect(find.text('Mario'), findsOneWidget);
+      expect(find.text('Rossi'), findsOneWidget);
+      expect(find.text('M'), findsOneWidget);
+      expect(find.byIcon(Icons.drag_indicator_rounded), findsOneWidget);
+    });
+
+    testWidgets('ContactCardTaxCodeBox renders tax code and triggers onTap', (tester) async {
+      var tapped = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+          home: Scaffold(
+            body: ContactCardTaxCodeBox(
+              taxCode: 'RSSMRA80A15H501U',
+              onTap: () => tapped = true,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('RSSMRA80A15H501U'), findsOneWidget);
+      expect(find.byIcon(Icons.credit_card_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.copy_rounded), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('contact_card_tax_code_box')));
+      expect(tapped, isTrue);
+    });
+
+    testWidgets('ContactCardAnagraphics displays birthplace and formatted birthdate', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+          home: Scaffold(
+            body: ContactCardAnagraphics(
+              birthPlace: tBirthplace,
+              birthDate: DateTime(1980, 1, 15),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text(tBirthplace.toString()), findsOneWidget);
+      expect(find.text('1/15/1980'), findsOneWidget);
+      expect(find.byIcon(Icons.place_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.calendar_today_outlined), findsOneWidget);
+    });
+
+    testWidgets('ContactCardActionButtons triggers callbacks for all 4 actions', (tester) async {
+      var shareTapped = false;
+      var barcodeTapped = false;
+      var editTapped = false;
+      var deleteTapped = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+          home: Scaffold(
+            body: ContactCardActionButtons(
+              onShare: () => shareTapped = true,
+              onShowBarcode: () => barcodeTapped = true,
+              onEdit: () => editTapped = true,
+              onDelete: () => deleteTapped = true,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.share));
+      expect(shareTapped, isTrue);
+
+      await tester.tap(find.byIcon(Symbols.barcode));
+      expect(barcodeTapped, isTrue);
+
+      await tester.tap(find.byIcon(Icons.edit));
+      expect(editTapped, isTrue);
+
+      await tester.tap(find.byIcon(Icons.delete));
+      expect(deleteTapped, isTrue);
+    });
   });
 }
+
