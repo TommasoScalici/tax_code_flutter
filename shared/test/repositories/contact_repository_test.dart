@@ -194,6 +194,25 @@ void main() {
       },
     );
 
+    test('supports explicit init() when autoInit is disabled', () async {
+      final preAuthService = FakeAuthService();
+      preAuthService.login(fakeUser);
+
+      final repo = ContactRepository(
+        authService: preAuthService,
+        dbService: mockDbService,
+        cacheService: HiveLocalCacheService(),
+        logger: mockLogger,
+        autoInit: false,
+      );
+      expect(repo.isLoading, isFalse);
+
+      await repo.init();
+
+      verify(() => mockDbService.getContactsStream(fakeUser.uid)).called(1);
+      expect(repo.isLoading, isFalse);
+    });
+
     test('should load contacts when a user signs in', () async {
       // Assert initial state
       expect(contactRepository.isLoading, isFalse);
