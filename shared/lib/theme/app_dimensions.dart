@@ -347,14 +347,26 @@ abstract final class AppDimensions {
 
 /// Centralized typographic font size constants.
 abstract final class AppFontSizes {
+  /// Wear OS micro caption font size: 9.5 pt.
+  static const double watchMicro = 9.5;
+
   /// Micro badge and pill label font size: 10.0 pt.
   static const double micro = 10.0;
+
+  /// Wear OS small body / caption font size: 10.5 pt.
+  static const double watchCaption = 10.5;
 
   /// Small metadata and caption font size: 11.0 pt.
   static const double caption = 11.0;
 
+  /// Wear OS small title font size: 11.5 pt.
+  static const double watchTitleSm = 11.5;
+
   /// Secondary body text font size: 12.0 pt.
   static const double bodySm = 12.0;
+
+  /// Wear OS medium title / clock header font size: 12.5 pt.
+  static const double watchTitleMd = 12.5;
 
   /// Compact title / secondary action font size: 13.0 pt.
   static const double titleSm = 13.0;
@@ -404,11 +416,17 @@ abstract final class AppLetterSpacing {
   /// Subtle negative tracking for titles and cards: -0.2 pt.
   static const double titleTight = -0.2;
 
+  /// Snug negative tracking for compact cards and headers: -0.1 pt.
+  static const double snug = -0.1;
+
   /// Minimal positive tracking: 0.1 pt.
   static const double micro = 0.1;
 
   /// Subtle positive tracking for actions and search: 0.2 pt.
   static const double subtle = 0.2;
+
+  /// Subtle positive tracking for small labels and badges: 0.3 pt.
+  static const double tracked = 0.3;
 
   /// Standard label tracking: 0.4 pt.
   static const double label = 0.4;

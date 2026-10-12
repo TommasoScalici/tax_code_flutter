@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared/theme/app_colors.dart';
-import 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
-import 'package:tax_code_flutter_wear_os/settings.dart';
+import 'package:tax_code_flutter_wear_os/core/theme/wear_theme.dart';
 
 void main() {
-  group('Settings', () {
+  group('WearTheme', () {
     test(
-      'getWearTheme should return an Emerald Ledger ThemeData calibrated for Wear OS',
+      'darkTheme should return an Emerald Ledger ThemeData calibrated for Wear OS',
       () {
         // Act
-        final theme = Settings.getWearTheme();
+        final theme = WearTheme.darkTheme;
 
         // Assert
         expect(theme, isA<ThemeData>());
@@ -27,7 +25,7 @@ void main() {
 
         // Verify CardTheme
         expect(theme.cardTheme.color, AppColors.darkSurfaceContainer);
-        expect(theme.cardTheme.elevation, 0);
+        expect(theme.cardTheme.elevation, AppElevation.none);
         final cardShape = theme.cardTheme.shape! as RoundedRectangleBorder;
         expect(cardShape.borderRadius, BorderRadius.circular(WearDimensions.cardRadius));
 

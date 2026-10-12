@@ -146,8 +146,8 @@ class _BarcodePageState extends State<BarcodePage> {
                               BarcodeWidget(
                                 barcode: Barcode.qrCode(),
                                 data: widget.taxCode,
-                                width: 76,
-                                height: 76,
+                                width: WearDimensions.opticalQrSize,
+                                height: WearDimensions.opticalQrSize,
                                 drawText: false,
                                 backgroundColor: AppColors.opticalWhite,
                               )
@@ -156,7 +156,7 @@ class _BarcodePageState extends State<BarcodePage> {
                                 barcode: Barcode.code128(),
                                 data: widget.taxCode,
                                 width: double.infinity,
-                                height: 42,
+                                height: WearDimensions.opticalBarcodeHeight,
                                 drawText: false,
                                 backgroundColor: AppColors.opticalWhite,
                               ),

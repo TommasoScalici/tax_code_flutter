@@ -208,7 +208,7 @@ class WelcomeScreen extends StatelessWidget {
                       label: Text(
                         l10n.continueAsGuest,
                         style: theme.textTheme.labelLarge?.copyWith(
-                          fontSize: 15,
+                          fontSize: AppFontSizes.input,
                           fontWeight: FontWeight.w500,
                           color: colorScheme.onSurface,
                         ),
@@ -231,7 +231,7 @@ class WelcomeScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.medium),
-                          fontSize: 12,
+                          fontSize: AppFontSizes.bodySm,
                         ),
                       ),
                       TextButton(
@@ -250,7 +250,7 @@ class WelcomeScreen extends StatelessWidget {
                         child: Text(
                           l10n.showTerms,
                           style: theme.textTheme.labelMedium?.copyWith(
-                            fontSize: 13,
+                            fontSize: AppFontSizes.titleSm,
                             fontWeight: FontWeight.w500,
                             color: colorScheme.primary,
                           ),

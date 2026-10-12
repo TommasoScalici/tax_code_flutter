@@ -11,11 +11,11 @@ import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter_wear_os/controllers/contacts_list_controller.dart';
+import 'package:tax_code_flutter_wear_os/core/theme/wear_theme.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
 import 'package:tax_code_flutter_wear_os/screens/barcode_page.dart';
 import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
-import 'package:tax_code_flutter_wear_os/settings.dart';
 import 'package:tax_code_flutter_wear_os/widgets/contacts_list.dart';
 
 //--- Mocks ---//
@@ -306,19 +306,19 @@ void main() {
           await tester.pumpWidget(
             MaterialApp(
               debugShowCheckedModeBanner: false,
-              theme: Settings.getWearTheme().copyWith(
-                textTheme: Settings.getWearTheme().textTheme.apply(
+              theme: WearTheme.darkTheme.copyWith(
+                textTheme: WearTheme.darkTheme.textTheme.apply(
                       fontFamily: 'Segoe UI',
                     ),
                 elevatedButtonTheme: ElevatedButtonThemeData(
-                  style: Settings.getWearTheme().elevatedButtonTheme.style?.copyWith(
+                  style: WearTheme.darkTheme.elevatedButtonTheme.style?.copyWith(
                     textStyle: const WidgetStatePropertyAll(
                       TextStyle(fontFamily: 'Segoe UI'),
                     ),
                   ),
                 ),
                 outlinedButtonTheme: OutlinedButtonThemeData(
-                  style: Settings.getWearTheme().outlinedButtonTheme.style?.copyWith(
+                  style: WearTheme.darkTheme.outlinedButtonTheme.style?.copyWith(
                     textStyle: const WidgetStatePropertyAll(
                       TextStyle(fontFamily: 'Segoe UI'),
                     ),

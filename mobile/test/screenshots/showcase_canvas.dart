@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared/theme/app_dimensions.dart';
 
 /// Supported device types for store showcases.
 enum ShowcaseDeviceType {
@@ -201,7 +202,7 @@ class StoreShowcaseCanvas extends StatelessWidget {
                           fontSize: spec.headlineFontSize,
                           fontWeight: FontWeight.w900,
                           color: Colors.white,
-                          letterSpacing: -0.8,
+                          letterSpacing: AppLetterSpacing.displayLg,
                           height: 1.15,
                           shadows: const [
                             Shadow(
@@ -212,7 +213,7 @@ class StoreShowcaseCanvas extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.md),
                       Text(
                         subtitle,
                         textAlign: TextAlign.center,
@@ -223,7 +224,7 @@ class StoreShowcaseCanvas extends StatelessWidget {
                           fontSize: spec.subtitleFontSize,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFFE2E8F0),
-                          letterSpacing: 0.1,
+                          letterSpacing: AppLetterSpacing.micro,
                           height: 1.35,
                           shadows: const [
                             Shadow(
@@ -363,7 +364,7 @@ class _DeviceStatusBar extends StatelessWidget {
     return SizedBox(
       height: spec.statusBarHeight,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.card),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -372,24 +373,24 @@ class _DeviceStatusBar extends StatelessWidget {
               '09:41',
               style: TextStyle(
                 fontFamily: 'Arial',
-                fontSize: 13,
+                fontSize: AppFontSizes.titleSm,
                 fontWeight: FontWeight.w700,
                 color: color,
-                letterSpacing: -0.2,
+                letterSpacing: AppLetterSpacing.titleTight,
               ),
             ),
 
             // Camera punch-hole in the status bar center (for phone)
             if (!spec.isTablet)
               Container(
-                width: 12,
-                height: 12,
+                width: AppSpacing.md,
+                height: AppSpacing.md,
                 decoration: BoxDecoration(
                   color: const Color(0xFF0F172A),
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: const Color(0xFF334155),
-                    width: 1.5,
+                    width: AppDimensions.borderThick,
                   ),
                 ),
               ),
@@ -400,19 +401,19 @@ class _DeviceStatusBar extends StatelessWidget {
               children: [
                 Icon(
                   Icons.wifi_rounded,
-                  size: 16,
+                  size: AppDimensions.iconSm,
                   color: color,
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: AppSpacing.badgeGap),
                 Icon(
                   Icons.signal_cellular_alt_rounded,
-                  size: 16,
+                  size: AppDimensions.iconSm,
                   color: color,
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: AppSpacing.badgeGap),
                 Icon(
                   Icons.battery_full_rounded,
-                  size: 17,
+                  size: AppDimensions.iconSm,
                   color: color,
                 ),
               ],

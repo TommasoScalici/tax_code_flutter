@@ -12,11 +12,11 @@ import 'package:shared/hive_registrar.g.dart';
 import 'package:shared/utils/app_bootstrap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tax_code_flutter_wear_os/core/providers.dart';
+import 'package:tax_code_flutter_wear_os/core/theme/wear_theme.dart';
 import 'package:tax_code_flutter_wear_os/firebase_options.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
 import 'package:tax_code_flutter_wear_os/screens/barcode_page.dart';
-import 'package:tax_code_flutter_wear_os/settings.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,7 +79,7 @@ class TaxCodeApp extends StatelessWidget {
         ...AppLocalizations.localizationsDelegates,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: Settings.getWearTheme(),
+      theme: WearTheme.darkTheme,
       onGenerateRoute: _onGenerateRoute,
     );
   }

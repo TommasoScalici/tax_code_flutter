@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:tax_code_flutter_wear_os/core/theme/wear_theme.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
 import 'package:tax_code_flutter_wear_os/services/demo_mode_service.dart';
-import 'package:tax_code_flutter_wear_os/settings.dart';
 
 //--- Mocks & Fakes ---//
 
@@ -27,7 +27,7 @@ void main() {
   Future<void> pumpWidget(WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        theme: Settings.getWearTheme(),
+        theme: WearTheme.darkTheme,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: MultiProvider(

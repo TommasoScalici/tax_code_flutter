@@ -68,7 +68,7 @@ abstract final class WearTypography {
   /// Style for the system clock header at the top of the watch face.
   static TextStyle clockHeader({Color? color}) {
     return TextStyle(
-      fontSize: 12.5,
+      fontSize: AppFontSizes.watchTitleMd,
       fontWeight: FontWeight.w600,
       letterSpacing: AppLetterSpacing.label,
       color: color ?? AppColors.darkOnSurface,
@@ -78,9 +78,9 @@ abstract final class WearTypography {
   /// Contact name in list cards.
   static TextStyle cardTitle({Color? color}) {
     return TextStyle(
-      fontSize: 12.5,
+      fontSize: AppFontSizes.watchTitleMd,
       fontWeight: FontWeight.w700,
-      letterSpacing: -0.1,
+      letterSpacing: AppLetterSpacing.snug,
       height: AppLineHeights.heading,
       color: color ?? AppColors.darkOnSurface,
     );
@@ -99,7 +99,7 @@ abstract final class WearTypography {
   /// Micro-status and helper hints (e.g. "Swipe to close").
   static TextStyle hint({Color? color}) {
     return TextStyle(
-      fontSize: 9.5,
+      fontSize: AppFontSizes.watchMicro,
       fontWeight: FontWeight.w500,
       letterSpacing: AppLetterSpacing.subtle,
       color: color ?? AppColors.darkOnSurfaceVariant,
@@ -134,7 +134,7 @@ abstract final class WearTypography {
         color: onSurface,
       ),
       titleSmall: TextStyle(
-        fontSize: 11.5,
+        fontSize: AppFontSizes.watchTitleSm,
         fontWeight: FontWeight.w600,
         color: onSurfaceVariant,
       ),
@@ -147,7 +147,7 @@ abstract final class WearTypography {
         color: onSurface,
       ),
       bodySmall: TextStyle(
-        fontSize: 10.5,
+        fontSize: AppFontSizes.watchCaption,
         fontWeight: FontWeight.w400,
         height: AppLineHeights.displayCode,
         color: onSurfaceVariant,
@@ -155,7 +155,7 @@ abstract final class WearTypography {
 
       // Buttons / Labels
       labelLarge: TextStyle(
-        fontSize: 12.5,
+        fontSize: AppFontSizes.watchTitleMd,
         fontWeight: FontWeight.w700,
         letterSpacing: AppLetterSpacing.subtle,
         color: onSurface,
@@ -167,9 +167,9 @@ abstract final class WearTypography {
         color: onSurface,
       ),
       labelSmall: TextStyle(
-        fontSize: 9.5,
+        fontSize: AppFontSizes.watchMicro,
         fontWeight: FontWeight.w600,
-        letterSpacing: 0.3,
+        letterSpacing: AppLetterSpacing.tracked,
         color: onSurfaceVariant,
       ),
     );

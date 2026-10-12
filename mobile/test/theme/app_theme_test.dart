@@ -13,7 +13,7 @@ void main() {
       expect(theme.colorScheme, AppColors.darkColorScheme().toModern());
       expect(theme.scaffoldBackgroundColor, AppColors.darkSurface);
       expect(theme.cardTheme.color, AppColors.darkSurfaceContainer);
-      expect(theme.cardTheme.elevation, 0);
+      expect(theme.cardTheme.elevation, AppElevation.none);
       expect(theme.cardTheme.shape, isA<RoundedRectangleBorder>());
       expect(
         (theme.cardTheme.shape! as RoundedRectangleBorder).borderRadius,
@@ -21,17 +21,17 @@ void main() {
       );
 
       // AppBar
-      expect(theme.appBarTheme.elevation, 0);
-      expect(theme.appBarTheme.scrolledUnderElevation, 0);
+      expect(theme.appBarTheme.elevation, AppElevation.none);
+      expect(theme.appBarTheme.scrolledUnderElevation, AppElevation.none);
       expect(theme.appBarTheme.surfaceTintColor, AppColors.transparent);
 
       // FAB OLED elevation
-      expect(theme.floatingActionButtonTheme.elevation, 0);
+      expect(theme.floatingActionButtonTheme.elevation, AppElevation.none);
 
       // BottomSheet & Dialog
       expect(theme.bottomSheetTheme.showDragHandle, isTrue);
-      expect(theme.bottomSheetTheme.elevation, 16);
-      expect(theme.dialogTheme.elevation, 8);
+      expect(theme.bottomSheetTheme.elevation, AppElevation.modal);
+      expect(theme.dialogTheme.elevation, AppElevation.dialog);
       expect(
         (theme.dialogTheme.shape! as RoundedRectangleBorder).borderRadius,
         AppRadii.borderDialog,
@@ -42,8 +42,8 @@ void main() {
       expect(theme.inputDecorationTheme.contentPadding, AppSpacing.paddingField);
 
       // Divider
-      expect(theme.dividerTheme.thickness, 1);
-      expect(theme.dividerTheme.space, 1);
+      expect(theme.dividerTheme.thickness, AppDimensions.borderDefault);
+      expect(theme.dividerTheme.space, AppDimensions.borderDefault);
     });
 
     test('lightTheme constructs Material 3 ThemeData with AppColors.lightColorScheme', () {
@@ -54,7 +54,7 @@ void main() {
       expect(theme.colorScheme, AppColors.lightColorScheme().toModern());
       expect(theme.scaffoldBackgroundColor, AppColors.lightSurface);
       expect(theme.cardTheme.color, AppColors.lightSurfaceContainer);
-      expect(theme.cardTheme.elevation, 0);
+      expect(theme.cardTheme.elevation, AppElevation.none);
       expect(theme.cardTheme.shape, isA<RoundedRectangleBorder>());
       expect(
         (theme.cardTheme.shape! as RoundedRectangleBorder).borderRadius,
@@ -62,17 +62,17 @@ void main() {
       );
 
       // AppBar
-      expect(theme.appBarTheme.elevation, 0);
-      expect(theme.appBarTheme.scrolledUnderElevation, 0);
+      expect(theme.appBarTheme.elevation, AppElevation.none);
+      expect(theme.appBarTheme.scrolledUnderElevation, AppElevation.none);
       expect(theme.appBarTheme.surfaceTintColor, AppColors.transparent);
 
       // FAB light elevation
-      expect(theme.floatingActionButtonTheme.elevation, 2);
+      expect(theme.floatingActionButtonTheme.elevation, AppElevation.level1);
 
       // BottomSheet & Dialog
       expect(theme.bottomSheetTheme.showDragHandle, isTrue);
-      expect(theme.bottomSheetTheme.elevation, 16);
-      expect(theme.dialogTheme.elevation, 8);
+      expect(theme.bottomSheetTheme.elevation, AppElevation.modal);
+      expect(theme.dialogTheme.elevation, AppElevation.dialog);
       expect(
         (theme.dialogTheme.shape! as RoundedRectangleBorder).borderRadius,
         AppRadii.borderDialog,
@@ -83,8 +83,8 @@ void main() {
       expect(theme.inputDecorationTheme.contentPadding, AppSpacing.paddingField);
 
       // Divider
-      expect(theme.dividerTheme.thickness, 1);
-      expect(theme.dividerTheme.space, 1);
+      expect(theme.dividerTheme.thickness, AppDimensions.borderDefault);
+      expect(theme.dividerTheme.space, AppDimensions.borderDefault);
     });
   });
 }

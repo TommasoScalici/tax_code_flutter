@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter_wear_os/controllers/contacts_list_controller.dart';
+import 'package:tax_code_flutter_wear_os/core/theme/wear_theme.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
-import 'package:tax_code_flutter_wear_os/settings.dart';
 import 'package:tax_code_flutter_wear_os/widgets/contacts_list.dart';
 import 'package:tax_code_flutter_wear_os/widgets/wear_contact_card.dart';
 import 'package:tax_code_flutter_wear_os/widgets/wear_time_header.dart';
@@ -35,7 +35,7 @@ void main() {
       MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        theme: Settings.getWearTheme(),
+        theme: WearTheme.darkTheme,
         home: Scaffold(
           body: ChangeNotifierProvider<ContactsListController>.value(
             value: mockController,

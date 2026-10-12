@@ -123,9 +123,13 @@ void main() {
     });
 
     test('AppFontSizes contains consistent typographic scale values', () {
+      expect(AppFontSizes.watchMicro, 9.5);
       expect(AppFontSizes.micro, 10.0);
+      expect(AppFontSizes.watchCaption, 10.5);
       expect(AppFontSizes.caption, 11.0);
+      expect(AppFontSizes.watchTitleSm, 11.5);
       expect(AppFontSizes.bodySm, 12.0);
+      expect(AppFontSizes.watchTitleMd, 12.5);
       expect(AppFontSizes.titleSm, 13.0);
       expect(AppFontSizes.bodyMd, 14.0);
       expect(AppFontSizes.input, 15.0);
@@ -144,8 +148,10 @@ void main() {
       expect(AppLetterSpacing.headlineTight, -0.5);
       expect(AppLetterSpacing.heading, -0.3);
       expect(AppLetterSpacing.titleTight, -0.2);
+      expect(AppLetterSpacing.snug, -0.1);
       expect(AppLetterSpacing.micro, 0.1);
       expect(AppLetterSpacing.subtle, 0.2);
+      expect(AppLetterSpacing.tracked, 0.3);
       expect(AppLetterSpacing.label, 0.4);
       expect(AppLetterSpacing.caption, 0.6);
       expect(AppLetterSpacing.badge, 0.8);

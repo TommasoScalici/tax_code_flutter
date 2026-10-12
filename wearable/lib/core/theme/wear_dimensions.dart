@@ -92,10 +92,13 @@ abstract final class WearDimensions {
   // ---------------------------------------------------------------------------
   // Card & Container Sizing
   // ---------------------------------------------------------------------------
+  /// Vertical padding for compact contact cards: 7.0 pt.
+  static const double cardPaddingVertical = 7.0;
+
   /// Internal padding for contact cards.
   static const EdgeInsets cardPadding = EdgeInsets.symmetric(
     horizontal: AppSpacing.sm,
-    vertical: 7.0,
+    vertical: cardPaddingVertical,
   );
 
   /// Vertical margin between cards in the list.
@@ -106,6 +109,12 @@ abstract final class WearDimensions {
     horizontal: AppSpacing.badgeGap,
     vertical: AppSpacing.xxs,
   );
+
+  /// Display width and height for optical QR code on watch: 76.0 pt.
+  static const double opticalQrSize = 76.0;
+
+  /// Display height for optical 1D barcode on watch: 42.0 pt.
+  static const double opticalBarcodeHeight = 42.0;
 
   /// Padding inside the high-contrast optical white container.
   static const EdgeInsets opticalPadding = EdgeInsets.all(AppSpacing.compact);
