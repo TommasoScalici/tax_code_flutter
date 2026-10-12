@@ -2,6 +2,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/core/theme/test_env.dart';
 
 /// Typography definitions for the "Emerald Ledger" design system.
@@ -71,15 +72,15 @@ abstract final class AppTypography {
   /// Style for displaying full-size Codice Fiscale (e.g. in details, barcode sheet).
   static TextStyle codeDisplay({
     Color? color,
-    double fontSize = 22.0,
+    double fontSize = AppFontSizes.codeDisplay,
     FontWeight fontWeight = FontWeight.w700,
-    double letterSpacing = 2.0,
+    double letterSpacing = AppLetterSpacing.codeDisplay,
   }) {
     return _fontJetBrainsMono(
       fontSize: fontSize,
       fontWeight: fontWeight,
       letterSpacing: letterSpacing,
-      height: 1.3,
+      height: AppLineHeights.code,
       color: color,
     );
   }
@@ -87,14 +88,14 @@ abstract final class AppTypography {
   /// Compact style for Codice Fiscale inside dashboard cards.
   static TextStyle codeDisplayCard({
     Color? color,
-    double fontSize = 17.0,
+    double fontSize = AppFontSizes.cardTitle,
     FontWeight fontWeight = FontWeight.w700,
   }) {
     return _fontJetBrainsMono(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      letterSpacing: 1.6,
-      height: 1.2,
+      letterSpacing: AppLetterSpacing.codeCard,
+      height: AppLineHeights.heading,
       color: color,
     );
   }
@@ -102,9 +103,9 @@ abstract final class AppTypography {
   /// Style for human-readable text beneath optical barcodes.
   static TextStyle barcodeReadableText({Color color = AppColors.opticalBlack}) {
     return _fontJetBrainsMono(
-      fontSize: 13.0,
+      fontSize: AppFontSizes.titleSm,
       fontWeight: FontWeight.w700,
-      letterSpacing: 2.2,
+      letterSpacing: AppLetterSpacing.barcode,
       color: color,
     );
   }
@@ -121,104 +122,104 @@ abstract final class AppTypography {
     return TextTheme(
       // Display
       displayLarge: _fontInter(
-        fontSize: 36.0,
+        fontSize: AppFontSizes.displayLg,
         fontWeight: FontWeight.w700,
-        height: 1.2,
-        letterSpacing: -0.8,
+        height: AppLineHeights.heading,
+        letterSpacing: AppLetterSpacing.displayLg,
         color: onSurface,
       ),
       displayMedium: _fontInter(
-        fontSize: 30.0,
+        fontSize: AppFontSizes.displayMd,
         fontWeight: FontWeight.w700,
-        height: 1.25,
-        letterSpacing: -0.5,
+        height: AppLineHeights.displayCode,
+        letterSpacing: AppLetterSpacing.headlineTight,
         color: onSurface,
       ),
       displaySmall: _fontInter(
-        fontSize: 24.0,
+        fontSize: AppFontSizes.headlineLg,
         fontWeight: FontWeight.w700,
-        height: 1.3,
+        height: AppLineHeights.code,
         color: onSurface,
       ),
 
       // Headline
       headlineLarge: _fontInter(
-        fontSize: 24.0,
+        fontSize: AppFontSizes.headlineLg,
         fontWeight: FontWeight.w700,
-        height: 1.3,
+        height: AppLineHeights.code,
         color: onSurface,
       ),
       headlineMedium: _fontInter(
-        fontSize: 20.0,
+        fontSize: AppFontSizes.headlineMd,
         fontWeight: FontWeight.w600,
-        height: 1.35,
-        letterSpacing: -0.2,
+        height: AppLineHeights.headingMd,
+        letterSpacing: AppLetterSpacing.titleTight,
         color: onSurface,
       ),
       headlineSmall: _fontInter(
-        fontSize: 18.0,
+        fontSize: AppFontSizes.headlineSm,
         fontWeight: FontWeight.w600,
-        height: 1.4,
+        height: AppLineHeights.body,
         color: onSurface,
       ),
 
       // Title
       titleLarge: _fontInter(
-        fontSize: 17.0,
+        fontSize: AppFontSizes.cardTitle,
         fontWeight: FontWeight.w600,
-        height: 1.4,
+        height: AppLineHeights.body,
         color: onSurface,
       ),
       titleMedium: _fontInter(
-        fontSize: 15.0,
+        fontSize: AppFontSizes.input,
         fontWeight: FontWeight.w600,
-        height: 1.4,
+        height: AppLineHeights.body,
         color: onSurface,
       ),
       titleSmall: _fontInter(
-        fontSize: 13.0,
+        fontSize: AppFontSizes.titleSm,
         fontWeight: FontWeight.w600,
-        height: 1.4,
+        height: AppLineHeights.body,
         color: onSurfaceVariant,
       ),
 
       // Body
       bodyLarge: _fontInter(
-        fontSize: 16.0,
+        fontSize: AppFontSizes.bodyLg,
         fontWeight: FontWeight.w400,
-        height: 1.5,
+        height: AppLineHeights.comfortable,
         color: onSurface,
       ),
       bodyMedium: _fontInter(
-        fontSize: 14.0,
+        fontSize: AppFontSizes.bodyMd,
         fontWeight: FontWeight.w400,
-        height: 1.45,
+        height: AppLineHeights.relaxed,
         color: onSurface,
       ),
       bodySmall: _fontInter(
-        fontSize: 12.0,
+        fontSize: AppFontSizes.bodySm,
         fontWeight: FontWeight.w400,
-        height: 1.4,
+        height: AppLineHeights.body,
         color: onSurfaceVariant,
       ),
 
       // Label
       labelLarge: _fontInter(
-        fontSize: 14.0,
+        fontSize: AppFontSizes.bodyMd,
         fontWeight: FontWeight.w600,
-        letterSpacing: 0.2,
+        letterSpacing: AppLetterSpacing.subtle,
         color: onSurface,
       ),
       labelMedium: _fontInter(
-        fontSize: 12.0,
+        fontSize: AppFontSizes.bodySm,
         fontWeight: FontWeight.w600,
-        letterSpacing: 0.4,
+        letterSpacing: AppLetterSpacing.label,
         color: onSurfaceVariant,
       ),
       labelSmall: _fontInter(
-        fontSize: 11.0,
+        fontSize: AppFontSizes.caption,
         fontWeight: FontWeight.w600,
-        letterSpacing: 0.6,
+        letterSpacing: AppLetterSpacing.caption,
         color: onSurfaceVariant,
       ),
     );

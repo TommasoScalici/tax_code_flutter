@@ -174,7 +174,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
         child: Container(
           decoration: BoxDecoration(
             color: sheetBgColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            borderRadius: AppRadii.borderSheet,
             border: Border(top: BorderSide(color: topBorderColor)),
             boxShadow: [
               AppColors.shadowSheet(isDark),
@@ -234,7 +234,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                               l10n.shareContactTitle,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w700,
-                                letterSpacing: -0.2,
+                                letterSpacing: AppLetterSpacing.titleTight,
                                 color: colorScheme.onSurface,
                               ),
                             ),
@@ -284,7 +284,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                           style: AppTypography.codeDisplay(
                             color: colorScheme.primary,
                             fontSize: AppFontSizes.bodyMd,
-                            letterSpacing: 1.0,
+                            letterSpacing: AppLetterSpacing.code,
                           ),
                         ),
                       ],

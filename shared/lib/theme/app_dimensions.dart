@@ -11,6 +11,9 @@ abstract final class AppSpacing {
   /// Badge and inline tag gap: 6.0 pt.
   static const double badgeGap = 6.0;
 
+  /// Badge and compact pill vertical padding: 3.0 pt.
+  static const double badgeVertical = 3.0;
+
   /// Small spacing: 8.0 pt.
   static const double sm = 8.0;
 
@@ -79,6 +82,9 @@ abstract final class AppSpacing {
 
   /// Standard sticky bottom bar padding: horizontal 20.0 pt, vertical 14.0 pt.
   static const EdgeInsets paddingStickyBar = EdgeInsets.symmetric(horizontal: card, vertical: fieldVertical);
+
+  /// Compact badge padding: horizontal 8.0 pt, vertical 3.0 pt.
+  static const EdgeInsets paddingBadge = EdgeInsets.symmetric(horizontal: sm, vertical: badgeVertical);
 }
 
 /// Centralized corner radius design tokens.
@@ -109,6 +115,9 @@ abstract final class AppRadii {
 
   /// Dialog and modal sheet radius: 24.0 pt.
   static const double dialog = 24.0;
+
+  /// Modal bottom sheet corner radius: 28.0 pt.
+  static const double sheet = 28.0;
 
   /// Stadium border / pill radius: 999.0 pt (buttons, search bars, chips).
   static const double pill = 999.0;
@@ -142,6 +151,9 @@ abstract final class AppRadii {
 
   /// Circular border radius of 24.0 pt.
   static const BorderRadius borderDialog = BorderRadius.all(Radius.circular(dialog));
+
+  /// Modal bottom sheet top rounded border radius: 28.0 pt.
+  static const BorderRadius borderSheet = BorderRadius.vertical(top: Radius.circular(sheet));
 
   /// Stadium border radius of 999.0 pt.
   static const BorderRadius borderPill = BorderRadius.all(Radius.circular(pill));
@@ -196,6 +208,9 @@ abstract final class AppOpacity {
 
   /// Translucent glassmorphism surface opacity: 95%.
   static const double surfaceBlur = 0.95;
+
+  /// Floating sticky bottom bar blur surface opacity: 98%.
+  static const double stickyBar = 0.98;
 }
 
 /// Centralized layout dimensions and touch target constants.
@@ -308,8 +323,26 @@ abstract final class AppDimensions {
   /// Maximum dropdown autocomplete overlay width: 360.0 pt.
   static const double maxDropdownWidth = 360.0;
 
+  /// Maximum dropdown autocomplete overlay height: 250.0 pt.
+  static const double maxDropdownHeight = 250.0;
+
   /// Maximum subtitle text block width: 320.0 pt.
   static const double maxSubtitleWidth = 320.0;
+
+  /// Large hero logo or brand badge dimension: 120.0 pt.
+  static const double heroLogo = 120.0;
+
+  /// Secondary camera retake button icon size: 28.0 pt.
+  static const double iconFabRetake = 28.0;
+
+  /// Primary camera action / shutter button icon size: 36.0 pt.
+  static const double iconFabCapture = 36.0;
+
+  /// Bottom sheet theme drag handle width: 36.0 pt.
+  static const double dragHandleThemeWidth = 36.0;
+
+  /// Bottom sheet theme drag handle size preset: 36.0 x 4.0 pt.
+  static const Size dragHandleThemeSize = Size(dragHandleThemeWidth, dragHandleHeight);
 }
 
 /// Centralized typographic font size constants.
@@ -335,9 +368,126 @@ abstract final class AppFontSizes {
   /// Standard card title / large body font size: 16.0 pt.
   static const double bodyLg = 16.0;
 
+  /// Large card title / preview code font size: 17.0 pt.
+  static const double cardTitle = 17.0;
+
   /// Section heading font size: 18.0 pt.
   static const double headlineSm = 18.0;
 
   /// Prominent card / modal heading font size: 20.0 pt.
   static const double headlineMd = 20.0;
+
+  /// Prominent fiscal code display font size: 22.0 pt.
+  static const double codeDisplay = 22.0;
+
+  /// Large headline and small display font size: 24.0 pt.
+  static const double headlineLg = 24.0;
+
+  /// Medium display font size: 30.0 pt.
+  static const double displayMd = 30.0;
+
+  /// Large hero display font size: 36.0 pt.
+  static const double displayLg = 36.0;
+}
+
+/// Centralized typographic letter spacing design tokens.
+abstract final class AppLetterSpacing {
+  /// Large display headline tracking: -0.8 pt.
+  static const double displayLg = -0.8;
+
+  /// Medium headline / welcome title tracking: -0.5 pt.
+  static const double headlineTight = -0.5;
+
+  /// Prominent section header tracking: -0.3 pt.
+  static const double heading = -0.3;
+
+  /// Subtle negative tracking for titles and cards: -0.2 pt.
+  static const double titleTight = -0.2;
+
+  /// Minimal positive tracking: 0.1 pt.
+  static const double micro = 0.1;
+
+  /// Subtle positive tracking for actions and search: 0.2 pt.
+  static const double subtle = 0.2;
+
+  /// Standard label tracking: 0.4 pt.
+  static const double label = 0.4;
+
+  /// Caption tracking: 0.6 pt.
+  static const double caption = 0.6;
+
+  /// Tag, pill, and badge tracking: 0.8 pt.
+  static const double badge = 0.8;
+
+  /// Standard monospaced code tracking: 1.0 pt.
+  static const double code = 1.0;
+
+  /// Compact optical code tracking: 1.1 pt.
+  static const double codeCompact = 1.1;
+
+  /// Uppercase section header tracking: 1.2 pt.
+  static const double uppercase = 1.2;
+
+  /// Wide tracking: 1.4 pt.
+  static const double wide = 1.4;
+
+  /// Card monospaced code tracking: 1.6 pt.
+  static const double codeCard = 1.6;
+
+  /// Display monospaced code tracking: 2.0 pt.
+  static const double codeDisplay = 2.0;
+
+  /// Optical barcode readable text tracking: 2.2 pt.
+  static const double barcode = 2.2;
+}
+
+/// Centralized typographic line height multipliers.
+abstract final class AppLineHeights {
+  /// Compact header line height: 1.1.
+  static const double headerCompact = 1.1;
+
+  /// Snug heading line height: 1.2.
+  static const double heading = 1.2;
+
+  /// Display code and title line height: 1.25.
+  static const double displayCode = 1.25;
+
+  /// Code and caption line height: 1.3.
+  static const double code = 1.3;
+
+  /// Balanced heading line height: 1.35.
+  static const double headingMd = 1.35;
+
+  /// Standard reading line height: 1.4.
+  static const double body = 1.4;
+
+  /// Relaxed body text line height: 1.45.
+  static const double relaxed = 1.45;
+
+  /// Generous body reading line height: 1.5.
+  static const double comfortable = 1.5;
+}
+
+/// Centralized elevation design tokens according to Material 3 specifications.
+abstract final class AppElevation {
+  /// Flat surface with zero elevation: 0.0 pt.
+  static const double none = 0.0;
+
+  /// Low elevation for resting cards and buttons: 2.0 pt.
+  static const double level1 = 2.0;
+
+  /// Hover elevation for buttons and interactive controls: 3.0 pt.
+  static const double levelHover = 3.0;
+
+  /// Medium elevation for floating controls: 4.0 pt.
+  static const double level2 = 4.0;
+
+  /// Prominent elevation for autocomplete dropdowns: 6.0 pt.
+  static const double level3 = 6.0;
+
+  /// High elevation for dialogs and pickers: 8.0 pt.
+  static const double dialog = 8.0;
+
+  /// Modal elevation for bottom sheets: 16.0 pt.
+  static const double modal = 16.0;
 }

@@ -58,7 +58,7 @@ class FormSectionDivider extends StatelessWidget {
               style: theme.textTheme.labelSmall?.copyWith(
                 fontSize: AppFontSizes.caption,
                 fontWeight: FontWeight.w700,
-                letterSpacing: 1.2,
+                letterSpacing: AppLetterSpacing.uppercase,
                 color: textColor,
               ),
             ),

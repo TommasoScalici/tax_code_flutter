@@ -124,8 +124,8 @@ class _FormViewState extends State<_FormView> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              elevation: 0,
-              scrolledUnderElevation: 0,
+              elevation: AppElevation.none,
+              scrolledUnderElevation: AppElevation.none,
             ),
             body: Center(
               child: _SyncProgressOverlay(
@@ -149,8 +149,8 @@ class _FormViewState extends State<_FormView> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            elevation: 0,
-            scrolledUnderElevation: 0,
+            elevation: AppElevation.none,
+            scrolledUnderElevation: AppElevation.none,
           ),
           bottomNavigationBar: FormStickyBottomBar(
             labelText: l10n.saveCode,

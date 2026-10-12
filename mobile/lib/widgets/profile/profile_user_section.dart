@@ -106,7 +106,7 @@ class ProfileUserSection extends StatelessWidget {
                             displayName,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w700,
-                              letterSpacing: -0.2,
+                              letterSpacing: AppLetterSpacing.titleTight,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -115,10 +115,7 @@ class ProfileUserSection extends StatelessWidget {
                         const SizedBox(width: AppSpacing.xs),
                         // Badge Chip
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.sm,
-                            vertical: 3.0,
-                          ),
+                          padding: AppSpacing.paddingBadge,
                           decoration: BoxDecoration(
                             color: isGuest
                                 ? theme.colorScheme.surfaceContainerHighest

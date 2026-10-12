@@ -97,7 +97,7 @@ class ProfileAccountSection extends StatelessWidget {
           l10n.deleteAccountMessage,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
-            height: 1.45,
+            height: AppLineHeights.relaxed,
           ),
         ),
         actions: [

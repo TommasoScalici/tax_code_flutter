@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 
@@ -91,8 +92,68 @@ void main() {
       expect(AppFontSizes.bodyMd, 14.0);
       expect(AppFontSizes.input, 15.0);
       expect(AppFontSizes.bodyLg, 16.0);
+      expect(AppFontSizes.cardTitle, 17.0);
       expect(AppFontSizes.headlineSm, 18.0);
       expect(AppFontSizes.headlineMd, 20.0);
+      expect(AppFontSizes.codeDisplay, 22.0);
+      expect(AppFontSizes.headlineLg, 24.0);
+      expect(AppFontSizes.displayMd, 30.0);
+      expect(AppFontSizes.displayLg, 36.0);
+    });
+
+    test('re-exports AppLetterSpacing correctly', () {
+      expect(AppLetterSpacing.displayLg, -0.8);
+      expect(AppLetterSpacing.headlineTight, -0.5);
+      expect(AppLetterSpacing.heading, -0.3);
+      expect(AppLetterSpacing.titleTight, -0.2);
+      expect(AppLetterSpacing.micro, 0.1);
+      expect(AppLetterSpacing.subtle, 0.2);
+      expect(AppLetterSpacing.label, 0.4);
+      expect(AppLetterSpacing.caption, 0.6);
+      expect(AppLetterSpacing.badge, 0.8);
+      expect(AppLetterSpacing.code, 1.0);
+      expect(AppLetterSpacing.codeCompact, 1.1);
+      expect(AppLetterSpacing.uppercase, 1.2);
+      expect(AppLetterSpacing.wide, 1.4);
+      expect(AppLetterSpacing.codeCard, 1.6);
+      expect(AppLetterSpacing.codeDisplay, 2.0);
+      expect(AppLetterSpacing.barcode, 2.2);
+    });
+
+    test('re-exports AppLineHeights correctly', () {
+      expect(AppLineHeights.headerCompact, 1.1);
+      expect(AppLineHeights.heading, 1.2);
+      expect(AppLineHeights.displayCode, 1.25);
+      expect(AppLineHeights.code, 1.3);
+      expect(AppLineHeights.headingMd, 1.35);
+      expect(AppLineHeights.body, 1.4);
+      expect(AppLineHeights.relaxed, 1.45);
+      expect(AppLineHeights.comfortable, 1.5);
+    });
+
+    test('re-exports AppRadii and AppSpacing new presets', () {
+      expect(AppSpacing.badgeVertical, 3.0);
+      expect(AppSpacing.paddingBadge, const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0));
+      expect(AppRadii.sheet, 28.0);
+      expect(AppRadii.borderSheet, const BorderRadius.vertical(top: Radius.circular(28.0)));
+      expect(AppOpacity.stickyBar, 0.98);
+      expect(AppDimensions.maxDropdownWidth, 360.0);
+      expect(AppDimensions.maxDropdownHeight, 250.0);
+      expect(AppDimensions.heroLogo, 120.0);
+      expect(AppDimensions.iconFabRetake, 28.0);
+      expect(AppDimensions.iconFabCapture, 36.0);
+      expect(AppDimensions.dragHandleThemeWidth, 36.0);
+      expect(AppDimensions.dragHandleThemeSize, const Size(36.0, 4.0));
+    });
+
+    test('re-exports AppElevation correctly', () {
+      expect(AppElevation.none, 0.0);
+      expect(AppElevation.level1, 2.0);
+      expect(AppElevation.levelHover, 3.0);
+      expect(AppElevation.level2, 4.0);
+      expect(AppElevation.level3, 6.0);
+      expect(AppElevation.dialog, 8.0);
+      expect(AppElevation.modal, 16.0);
     });
   });
 }

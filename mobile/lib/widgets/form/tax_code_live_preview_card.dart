@@ -131,7 +131,7 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
                           color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.high),
                           fontSize: AppFontSizes.micro,
                           fontWeight: FontWeight.w700,
-                          letterSpacing: 0.8,
+                          letterSpacing: AppLetterSpacing.badge,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.xxs),

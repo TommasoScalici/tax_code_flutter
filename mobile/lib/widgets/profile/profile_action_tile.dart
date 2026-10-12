@@ -138,7 +138,7 @@ class ProfileSectionHeader extends StatelessWidget {
         style: theme.textTheme.labelMedium?.copyWith(
           color: theme.colorScheme.onSurfaceVariant,
           fontWeight: FontWeight.w700,
-          letterSpacing: 0.8,
+          letterSpacing: AppLetterSpacing.badge,
         ),
       ),
     );
@@ -153,7 +153,7 @@ class ProfileCardDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Divider(
-      height: 1,
+      height: AppDimensions.borderDefault,
       thickness: AppDimensions.borderDefault,
       indent: 68,
       endIndent: AppSpacing.lg,

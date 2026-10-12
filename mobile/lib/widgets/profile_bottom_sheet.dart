@@ -45,7 +45,7 @@ class ProfileBottomSheet extends StatefulWidget {
       showDragHandle: false,
       useSafeArea: true,
       backgroundColor: AppColors.transparent,
-      elevation: 0,
+      elevation: AppElevation.none,
       barrierColor: AppColors.modalBarrier,
       builder: (context) => ProfileBottomSheet(
         startAtAppInfo: startAtAppInfo,
@@ -105,7 +105,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                   : theme.colorScheme.surface,
               borderRadius: widget.isEmbedded
                   ? BorderRadius.zero
-                  : const BorderRadius.vertical(top: Radius.circular(28.0)),
+                  : AppRadii.borderSheet,
               boxShadow: widget.isEmbedded
                   ? null
                   : [
@@ -160,7 +160,12 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
 
   Widget _buildHeader(ThemeData theme, AppLocalizations l10n) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 4.0, 12.0, 12.0),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.xs,
+        AppSpacing.md,
+        AppSpacing.md,
+      ),
       child: Row(
         children: [
           if (_currentView == _ProfileSheetView.appInfo)
@@ -183,7 +188,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                   : l10n.appInfoTitle,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
-                letterSpacing: -0.3,
+                letterSpacing: AppLetterSpacing.heading,
                 color: theme.colorScheme.onSurface,
               ),
             ),

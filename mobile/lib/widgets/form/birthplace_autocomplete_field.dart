@@ -454,7 +454,7 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
     return Align(
       alignment: Alignment.topLeft,
       child: Material(
-        elevation: 6.0,
+        elevation: AppElevation.level3,
         color: isDark
             ? colorScheme.surfaceContainerHigh
             : colorScheme.surfaceContainerLowest,
@@ -462,7 +462,7 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: Container(
           constraints: const BoxConstraints(
-            maxHeight: 250,
+            maxHeight: AppDimensions.maxDropdownHeight,
             maxWidth: AppDimensions.maxDropdownWidth,
           ),
           decoration: BoxDecoration(

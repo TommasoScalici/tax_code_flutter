@@ -10,13 +10,13 @@ abstract final class WearDimensions {
   // Screen & Scroll Padding (Circular Safe Insets)
   // ---------------------------------------------------------------------------
   /// Horizontal padding for watch screens.
-  static const double screenPaddingHorizontal = 14.0;
+  static const double screenPaddingHorizontal = AppSpacing.fieldVertical;
 
   /// Top padding for scrollable lists, leaving safe clearance for circular bezels and clock header.
-  static const double screenPaddingTop = 28.0;
+  static const double screenPaddingTop = AppRadii.sheet;
 
   /// Generous bottom padding allowing the last card or element to scroll comfortably into the safe center area.
-  static const double screenPaddingBottom = 52.0;
+  static const double screenPaddingBottom = AppDimensions.primaryButtonHeight;
 
   /// EdgeInsets for main watch scroll views on round screens.
   static const EdgeInsets listPadding = EdgeInsets.fromLTRB(
@@ -36,10 +36,10 @@ abstract final class WearDimensions {
   // Scrollbar Tokens
   // ---------------------------------------------------------------------------
   /// Standard curved scrollbar stroke thickness: 4.0 pt.
-  static const double scrollbarThickness = 4.0;
+  static const double scrollbarThickness = AppSpacing.xs;
 
   /// Distance between scrollbar and display edge: 3.0 pt.
-  static const double scrollbarMargin = 3.0;
+  static const double scrollbarMargin = AppSpacing.badgeVertical;
 
   /// Total angular span of the track arc in degrees: 72.0 deg.
   static const double scrollbarArcDegrees = 72.0;
@@ -54,16 +54,16 @@ abstract final class WearDimensions {
   static const double cardRadius = 18.0;
 
   /// Corner radius for Codice Fiscale monospace badge pills.
-  static const double pillRadius = 8.0;
+  static const double pillRadius = AppRadii.sm;
 
   /// Stadium border radius for buttons and toggle chips.
-  static const double stadiumRadius = 999.0;
+  static const double stadiumRadius = AppRadii.pill;
 
   /// Corner radius for the optical white barcode/QR presentation container.
-  static const double opticalRadius = 16.0;
+  static const double opticalRadius = AppRadii.md;
 
   /// Corner radius for dialogs and modal confirmation sheets.
-  static const double dialogRadius = 24.0;
+  static const double dialogRadius = AppRadii.dialog;
 
   /// Circular border radius for compact contact cards.
   static const BorderRadius borderCard = BorderRadius.all(Radius.circular(cardRadius));
@@ -81,78 +81,78 @@ abstract final class WearDimensions {
   static const BorderRadius borderDialog = BorderRadius.all(Radius.circular(dialogRadius));
 
   /// Thin border stroke width for compact watch cards and pills: 0.8 pt.
-  static const double borderThin = 0.8;
+  static const double borderThin = AppDimensions.borderThin;
 
   /// Standard progress indicator stroke width: 2.5 pt.
-  static const double progressStrokeWidth = 2.5;
+  static const double progressStrokeWidth = AppDimensions.progressStrokeWidth;
 
   /// Dialog confirmation button icon size: 20.0 pt.
-  static const double dialogActionIconSize = 20.0;
+  static const double dialogActionIconSize = AppDimensions.iconMd;
 
   // ---------------------------------------------------------------------------
   // Card & Container Sizing
   // ---------------------------------------------------------------------------
   /// Internal padding for contact cards.
   static const EdgeInsets cardPadding = EdgeInsets.symmetric(
-    horizontal: 8.0,
+    horizontal: AppSpacing.sm,
     vertical: 7.0,
   );
 
   /// Vertical margin between cards in the list.
-  static const double cardSpacing = 6.0;
+  static const double cardSpacing = AppSpacing.badgeGap;
 
   /// Internal padding for the Codice Fiscale pill inside the card.
   static const EdgeInsets pillPadding = EdgeInsets.symmetric(
-    horizontal: 6.0,
-    vertical: 2.0,
+    horizontal: AppSpacing.badgeGap,
+    vertical: AppSpacing.xxs,
   );
 
   /// Padding inside the high-contrast optical white container.
-  static const EdgeInsets opticalPadding = EdgeInsets.all(10.0);
+  static const EdgeInsets opticalPadding = EdgeInsets.all(AppSpacing.compact);
 
   // ---------------------------------------------------------------------------
   // Dialog Insets (Calibrated for Circular Wear OS Displays)
   // ---------------------------------------------------------------------------
   /// Outer dialog insets preventing vertical screen overflow.
   static const EdgeInsets dialogInsetPadding = EdgeInsets.symmetric(
-    horizontal: 14.0,
-    vertical: 8.0,
+    horizontal: AppSpacing.fieldVertical,
+    vertical: AppSpacing.sm,
   );
 
   /// Dialog title padding.
   static const EdgeInsets dialogTitlePadding = EdgeInsets.fromLTRB(
-    14.0,
-    14.0,
-    14.0,
-    6.0,
+    AppSpacing.fieldVertical,
+    AppSpacing.fieldVertical,
+    AppSpacing.fieldVertical,
+    AppSpacing.badgeGap,
   );
 
   /// Dialog action buttons row padding.
   static const EdgeInsets dialogActionsPadding = EdgeInsets.fromLTRB(
-    14.0,
+    AppSpacing.fieldVertical,
     0.0,
-    14.0,
-    8.0,
+    AppSpacing.fieldVertical,
+    AppSpacing.sm,
   );
 
   /// Size of circular touch buttons inside Wear OS dialogs.
-  static const double dialogButtonSize = 36.0;
+  static const double dialogButtonSize = AppDimensions.avatarBadge;
 
   // ---------------------------------------------------------------------------
   // Interactive Elements & Touch Targets
   // ---------------------------------------------------------------------------
   /// Minimum height for primary buttons on Wear OS.
-  static const double buttonHeight = 40.0;
+  static const double buttonHeight = AppDimensions.iconDisplay;
 
   /// Compact height for secondary/pill buttons.
-  static const double buttonCompactHeight = 34.0;
+  static const double buttonCompactHeight = AppDimensions.avatarHeader;
 
   /// Standard small icon size (e.g. status hints, clock icon).
-  static const double iconSmall = 14.0;
+  static const double iconSmall = AppDimensions.iconXs;
 
   /// Standard medium icon size (e.g. card icons, actions).
-  static const double iconMedium = 18.0;
+  static const double iconMedium = AppDimensions.iconAction;
 
   /// Large icon size for empty states and hero badges.
-  static const double iconLarge = 32.0;
+  static const double iconLarge = AppDimensions.iconXl;
 }

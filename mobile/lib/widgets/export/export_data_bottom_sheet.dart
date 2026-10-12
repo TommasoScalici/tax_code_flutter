@@ -26,7 +26,7 @@ class ExportDataBottomSheet extends StatefulWidget {
       isScrollControlled: true,
       showDragHandle: false,
       backgroundColor: AppColors.transparent,
-      elevation: 0,
+      elevation: AppElevation.none,
       barrierColor: AppColors.modalBarrier,
       builder: (context) => const ExportDataBottomSheet(),
     );
@@ -113,9 +113,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(28.0),
-            ),
+            borderRadius: AppRadii.borderSheet,
             boxShadow: [
               AppColors.shadowSheet(isDark),
             ],
@@ -174,7 +172,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                               l10n.exportDataTitle,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w700,
-                                letterSpacing: -0.2,
+                                letterSpacing: AppLetterSpacing.titleTight,
                                 color: theme.colorScheme.onSurface,
                               ),
                             ),

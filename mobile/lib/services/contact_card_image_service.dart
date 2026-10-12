@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
@@ -64,7 +65,7 @@ class ContactCardImageService implements ContactCardImageServiceAbstract {
     // 2. Card Container (Outer Margin: 24px)
     final cardRect = RRect.fromRectAndRadius(
       Rect.fromLTWH(24, 24, size.width - 48, size.height - 48),
-      const Radius.circular(28),
+      const Radius.circular(AppRadii.sheet),
     );
 
     // Card background gradient
@@ -83,7 +84,7 @@ class ContactCardImageService implements ContactCardImageServiceAbstract {
     final borderPaint = Paint()
       ..color = AppColors.emeraldBorder
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
+      ..strokeWidth = AppDimensions.borderSelected;
     canvas.drawRRect(cardRect, borderPaint);
 
     // 3. Top Header: Category Pill & Brand Name
@@ -121,22 +122,22 @@ class ContactCardImageService implements ContactCardImageServiceAbstract {
         color: AppColors.darkOnSurface,
         fontSize: 34,
         fontWeight: FontWeight.w800,
-        letterSpacing: -0.5,
+        letterSpacing: AppLetterSpacing.headlineTight,
       ),
     );
 
     // 5. Tax Code Highlight Container
     final taxCodeRect = RRect.fromRectAndRadius(
       const Rect.fromLTWH(56, 155, 1088, 80),
-      const Radius.circular(16),
+      const Radius.circular(AppRadii.md),
     );
     final taxCodeBgPaint = Paint()..color = AppColors.brandGradientStart;
     canvas.drawRRect(taxCodeRect, taxCodeBgPaint);
 
     final taxCodeBorderPaint = Paint()
-      ..color = AppColors.emeraldPrimary.withValues(alpha: 0.4)
+      ..color = AppColors.emeraldPrimary.withValues(alpha: AppOpacity.outline)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
+      ..strokeWidth = AppDimensions.borderThick;
     canvas.drawRRect(taxCodeRect, taxCodeBorderPaint);
 
     _drawText(
@@ -182,7 +183,7 @@ class ContactCardImageService implements ContactCardImageServiceAbstract {
           color: AppColors.darkOnSurfaceVariant,
           fontSize: 12,
           fontWeight: FontWeight.w700,
-          letterSpacing: 1.0,
+          letterSpacing: AppLetterSpacing.code,
         ),
       );
       _drawText(
@@ -201,7 +202,7 @@ class ContactCardImageService implements ContactCardImageServiceAbstract {
     // 7. Optical Read Area (1D Barcode + 2D QR Code Container)
     final barcodeContainerRect = RRect.fromRectAndRadius(
       const Rect.fromLTWH(56, 335, 1088, 305),
-      const Radius.circular(20),
+      const Radius.circular(AppRadii.card),
     );
 
     // White background for maximum optical contrast
@@ -211,7 +212,7 @@ class ContactCardImageService implements ContactCardImageServiceAbstract {
     final opticalBorderPaint = Paint()
       ..color = AppColors.opticalBorder
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
+      ..strokeWidth = AppDimensions.borderDefault;
     canvas.drawRRect(barcodeContainerRect, opticalBorderPaint);
 
     // 8. 1D Barcode (Code 128)
@@ -255,14 +256,14 @@ class ContactCardImageService implements ContactCardImageServiceAbstract {
         color: AppColors.lightOnSurfaceVariant,
         fontSize: 12,
         fontWeight: FontWeight.w700,
-        letterSpacing: 1.0,
+        letterSpacing: AppLetterSpacing.code,
       ),
     );
 
     // Vertical separator
     final dividerPaint = Paint()
       ..color = AppColors.opticalDivider
-      ..strokeWidth = 1.0;
+      ..strokeWidth = AppDimensions.borderDefault;
     canvas.drawLine(
       const Offset(880, 360),
       const Offset(880, 615),
@@ -299,7 +300,7 @@ class ContactCardImageService implements ContactCardImageServiceAbstract {
         color: AppColors.lightOnSurfaceVariant,
         fontSize: 12,
         fontWeight: FontWeight.w700,
-        letterSpacing: 1.0,
+        letterSpacing: AppLetterSpacing.code,
       ),
     );
 
@@ -311,7 +312,7 @@ class ContactCardImageService implements ContactCardImageServiceAbstract {
       offset: const Offset(56, 680),
       style: const TextStyle(
         color: AppColors.darkOnSurfaceVariant,
-        fontSize: 13,
+        fontSize: AppFontSizes.titleSm,
       ),
     );
   }

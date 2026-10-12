@@ -141,7 +141,7 @@ class OcrAiHeroBanner extends StatelessWidget {
                                     style: theme.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.w700,
                                       color: colorScheme.onSurface,
-                                      letterSpacing: -0.2,
+                                      letterSpacing: AppLetterSpacing.titleTight,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -154,7 +154,7 @@ class OcrAiHeroBanner extends StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color: colorScheme.primary.withValues(
-                                      alpha: isDark ? AppOpacity.glow : 0.15,
+                                      alpha: isDark ? AppOpacity.glow : AppOpacity.semiTranslucent,
                                     ),
                                     borderRadius: AppRadii.borderBadge,
                                     border: Border.all(
@@ -170,7 +170,7 @@ class OcrAiHeroBanner extends StatelessWidget {
                                       color: colorScheme.primary,
                                       fontWeight: FontWeight.w800,
                                       fontSize: AppFontSizes.micro,
-                                      letterSpacing: 0.8,
+                                      letterSpacing: AppLetterSpacing.badge,
                                     ),
                                   ),
                                 ),
@@ -200,14 +200,14 @@ class OcrAiHeroBanner extends StatelessWidget {
                                     horizontal: AppSpacing.fieldVertical,
                                     vertical: AppSpacing.xs,
                                   ),
-                                  minimumSize: const Size(0, 32),
+                                  minimumSize: const Size(0, AppDimensions.iconXl),
                                   tapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                   visualDensity: VisualDensity.compact,
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: AppRadii.borderPill,
                                   ),
-                                  elevation: 0,
+                                  elevation: AppElevation.none,
                                 ),
                                 iconAlignment: IconAlignment.end,
                                 icon: const Icon(

@@ -102,8 +102,8 @@ class WelcomeScreen extends StatelessWidget {
                   // App Icon (Clean brand card graphic)
                   SvgPicture.asset(
                     'assets/images/tax_code_icon.svg',
-                    width: 120,
-                    height: 120,
+                    width: AppDimensions.heroLogo,
+                    height: AppDimensions.heroLogo,
                   ),
                   const SizedBox(height: AppSpacing.xl),
 
@@ -112,7 +112,7 @@ class WelcomeScreen extends StatelessWidget {
                     l10n.welcomeTitle,
                     textAlign: TextAlign.center,
                     style: theme.textTheme.headlineLarge?.copyWith(
-                      letterSpacing: -0.5,
+                      letterSpacing: AppLetterSpacing.headlineTight,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
@@ -125,7 +125,7 @@ class WelcomeScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: theme.textTheme.bodyLarge?.copyWith(
                         color: colorScheme.onSurfaceVariant,
-                        height: 1.45,
+                        height: AppLineHeights.relaxed,
                       ),
                     ),
                   ),
@@ -145,7 +145,7 @@ class WelcomeScreen extends StatelessWidget {
                             ? colorScheme.surfaceContainerHigh
                             : colorScheme.surface,
                         foregroundColor: colorScheme.onSurface,
-                        elevation: isDark ? 0 : 2,
+                        elevation: isDark ? AppElevation.none : AppElevation.level1,
                         shadowColor: colorScheme.shadow.withValues(alpha: AppOpacity.glow),
                         shape: const StadiumBorder(),
                         side: BorderSide(
@@ -156,8 +156,8 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                       child: isLoading
                           ? SizedBox(
-                              width: 22,
-                              height: 22,
+                              width: AppDimensions.iconButton,
+                              height: AppDimensions.iconButton,
                               child: CircularProgressIndicator(
                                 strokeWidth: AppDimensions.progressStrokeWidth,
                                 valueColor: AlwaysStoppedAnimation<Color>(
@@ -171,8 +171,8 @@ class WelcomeScreen extends StatelessWidget {
                               children: [
                                 SvgPicture.asset(
                                   'assets/images/google_logo.svg',
-                                  width: 22,
-                                  height: 22,
+                                  width: AppDimensions.iconButton,
+                                  height: AppDimensions.iconButton,
                                 ),
                                 const SizedBox(width: AppSpacing.md),
                                 Flexible(
@@ -180,8 +180,8 @@ class WelcomeScreen extends StatelessWidget {
                                     l10n.continueWithGoogle,
                                     overflow: TextOverflow.ellipsis,
                                     style: theme.textTheme.labelLarge?.copyWith(
-                                      fontSize: 16,
-                                      letterSpacing: 0.1,
+                                      fontSize: AppFontSizes.bodyLg,
+                                      letterSpacing: AppLetterSpacing.micro,
                                       color: colorScheme.onSurface,
                                     ),
                                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared/theme/app_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_colors.dart';
 
 /// Typography definitions calibrated for compact Wear OS smartwatch displays (1.2"–1.4").
@@ -13,9 +14,9 @@ abstract final class WearTypography {
   /// Compact monospace style for Codice Fiscale inside list cards.
   static TextStyle codeDisplayCard({
     Color? color,
-    double fontSize = 11.0,
+    double fontSize = AppFontSizes.caption,
     FontWeight fontWeight = FontWeight.w700,
-    double letterSpacing = 0.6,
+    double letterSpacing = AppLetterSpacing.caption,
   }) {
     return TextStyle(
       fontFamily: 'monospace',
@@ -23,7 +24,7 @@ abstract final class WearTypography {
       fontSize: fontSize,
       fontWeight: fontWeight,
       letterSpacing: letterSpacing,
-      height: 1.15,
+      height: AppLineHeights.headerCompact,
       color: color ?? AppColors.emeraldLight,
     );
   }
@@ -31,9 +32,9 @@ abstract final class WearTypography {
   /// Enlarged monospace style for Codice Fiscale in presentation screen.
   static TextStyle codeDisplayPresentation({
     Color? color,
-    double fontSize = 15.0,
+    double fontSize = AppFontSizes.input,
     FontWeight fontWeight = FontWeight.w700,
-    double letterSpacing = 1.4,
+    double letterSpacing = AppLetterSpacing.wide,
   }) {
     return TextStyle(
       fontFamily: 'monospace',
@@ -41,7 +42,7 @@ abstract final class WearTypography {
       fontSize: fontSize,
       fontWeight: fontWeight,
       letterSpacing: letterSpacing,
-      height: 1.2,
+      height: AppLineHeights.heading,
       color: color ?? AppColors.opticalTextPrimary,
     );
   }
@@ -53,9 +54,9 @@ abstract final class WearTypography {
     return TextStyle(
       fontFamily: 'monospace',
       fontFamilyFallback: const ['Courier', 'monospace'],
-      fontSize: 10.0,
+      fontSize: AppFontSizes.micro,
       fontWeight: FontWeight.w700,
-      letterSpacing: 1.4,
+      letterSpacing: AppLetterSpacing.wide,
       color: color,
     );
   }
@@ -69,7 +70,7 @@ abstract final class WearTypography {
     return TextStyle(
       fontSize: 12.5,
       fontWeight: FontWeight.w600,
-      letterSpacing: 0.4,
+      letterSpacing: AppLetterSpacing.label,
       color: color ?? AppColors.darkOnSurface,
     );
   }
@@ -80,7 +81,7 @@ abstract final class WearTypography {
       fontSize: 12.5,
       fontWeight: FontWeight.w700,
       letterSpacing: -0.1,
-      height: 1.2,
+      height: AppLineHeights.heading,
       color: color ?? AppColors.darkOnSurface,
     );
   }
@@ -88,9 +89,9 @@ abstract final class WearTypography {
   /// Birthplace, birth date, and secondary metadata in cards.
   static TextStyle cardSubtitle({Color? color}) {
     return TextStyle(
-      fontSize: 10.0,
+      fontSize: AppFontSizes.micro,
       fontWeight: FontWeight.w500,
-      height: 1.2,
+      height: AppLineHeights.heading,
       color: color ?? AppColors.darkOnSurfaceVariant,
     );
   }
@@ -100,7 +101,7 @@ abstract final class WearTypography {
     return TextStyle(
       fontSize: 9.5,
       fontWeight: FontWeight.w500,
-      letterSpacing: 0.2,
+      letterSpacing: AppLetterSpacing.subtle,
       color: color ?? AppColors.darkOnSurfaceVariant,
     );
   }
@@ -117,18 +118,18 @@ abstract final class WearTypography {
     return TextTheme(
       // Headlines / Titles
       headlineMedium: TextStyle(
-        fontSize: 16.0,
+        fontSize: AppFontSizes.bodyLg,
         fontWeight: FontWeight.w700,
-        letterSpacing: -0.2,
+        letterSpacing: AppLetterSpacing.titleTight,
         color: onSurface,
       ),
       headlineSmall: TextStyle(
-        fontSize: 14.0,
+        fontSize: AppFontSizes.bodyMd,
         fontWeight: FontWeight.w700,
         color: onSurface,
       ),
       titleMedium: TextStyle(
-        fontSize: 13.0,
+        fontSize: AppFontSizes.titleSm,
         fontWeight: FontWeight.w600,
         color: onSurface,
       ),
@@ -140,15 +141,15 @@ abstract final class WearTypography {
 
       // Body text
       bodyMedium: TextStyle(
-        fontSize: 12.0,
+        fontSize: AppFontSizes.bodySm,
         fontWeight: FontWeight.w400,
-        height: 1.3,
+        height: AppLineHeights.code,
         color: onSurface,
       ),
       bodySmall: TextStyle(
         fontSize: 10.5,
         fontWeight: FontWeight.w400,
-        height: 1.25,
+        height: AppLineHeights.displayCode,
         color: onSurfaceVariant,
       ),
 
@@ -156,13 +157,13 @@ abstract final class WearTypography {
       labelLarge: TextStyle(
         fontSize: 12.5,
         fontWeight: FontWeight.w700,
-        letterSpacing: 0.2,
+        letterSpacing: AppLetterSpacing.subtle,
         color: onSurface,
       ),
       labelMedium: TextStyle(
-        fontSize: 11.0,
+        fontSize: AppFontSizes.caption,
         fontWeight: FontWeight.w600,
-        letterSpacing: 0.2,
+        letterSpacing: AppLetterSpacing.subtle,
         color: onSurface,
       ),
       labelSmall: TextStyle(

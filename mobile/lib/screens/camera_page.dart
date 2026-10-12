@@ -64,7 +64,7 @@ class _CameraView extends StatelessWidget {
           : AppBar(
               title: Text(l10n.takePicture),
               backgroundColor: AppColors.transparent,
-              elevation: 0,
+              elevation: AppElevation.none,
             ),
       backgroundColor: AppColors.opticalBlack,
       body: _buildBody(context, controller, l10n),

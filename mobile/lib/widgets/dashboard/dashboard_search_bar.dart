@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
@@ -163,7 +164,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                         alpha: isDark ? AppOpacity.glow : AppOpacity.faint,
                       ),
                       blurRadius: AppSpacing.compact,
-                      spreadRadius: 1,
+                      spreadRadius: AppDimensions.borderDefault,
                     ),
                   ]
                 : null,
@@ -197,7 +198,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                   ),
                   decoration: InputDecoration(
                     filled: false,
-                    fillColor: Colors.transparent,
+                    fillColor: AppColors.transparent,
                     isDense: true,
                     contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                     border: InputBorder.none,
@@ -273,7 +274,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: colorScheme.primary,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: 0.2,
+                          letterSpacing: AppLetterSpacing.subtle,
                         ),
                       ),
                     ],

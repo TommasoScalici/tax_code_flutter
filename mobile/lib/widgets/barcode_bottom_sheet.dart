@@ -111,7 +111,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
         child: Container(
           decoration: BoxDecoration(
             color: sheetBgColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            borderRadius: AppRadii.borderSheet,
             border: Border(top: BorderSide(color: topBorderColor)),
             boxShadow: [
               AppColors.shadowSheet(isDark),
@@ -182,10 +182,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: AppSpacing.sm,
-                                    vertical: 3,
-                                  ),
+                                  padding: AppSpacing.paddingBadge,
                                   decoration: BoxDecoration(
                                     color: colorScheme.primary.withValues(
                                       alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.tint,
@@ -202,7 +199,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                                     style: AppTypography.codeDisplay(
                                       color: colorScheme.primary,
                                       fontSize: AppFontSizes.titleSm,
-                                      letterSpacing: 1.1,
+                                      letterSpacing: AppLetterSpacing.codeCompact,
                                     ),
                                   ),
                                 ),
@@ -299,7 +296,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                               style: theme.textTheme.labelSmall?.copyWith(
                                 fontSize: AppFontSizes.micro,
                                 fontWeight: FontWeight.w800,
-                                letterSpacing: 1.4,
+                                letterSpacing: AppLetterSpacing.wide,
                                 color: AppColors.opticalTextSecondary,
                               ),
                             ),
@@ -341,7 +338,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                                 style: theme.textTheme.labelSmall?.copyWith(
                                   fontSize: AppFontSizes.micro,
                                   fontWeight: FontWeight.w700,
-                                  letterSpacing: 1.2,
+                                  letterSpacing: AppLetterSpacing.uppercase,
                                   color: AppColors.opticalTextMuted,
                                 ),
                               ),
@@ -379,13 +376,13 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             fontSize: AppFontSizes.caption,
                             fontWeight: FontWeight.w700,
                             color: AppColors.opticalTextSecondary,
-                            letterSpacing: 0.4,
+                            letterSpacing: AppLetterSpacing.label,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
 
                   // Notice Text
                   Row(
@@ -393,10 +390,10 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                     children: [
                       Icon(
                         Icons.info_outline_rounded,
-                        size: 15,
+                        size: AppDimensions.iconSm,
                         color: colorScheme.onSurfaceVariant,
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: AppSpacing.badgeGap),
                       Flexible(
                         child: Text(
                           l10n.barcodeNotice,
@@ -408,24 +405,24 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppSpacing.compact),
 
                   // Brightness Auto Indicator Pill
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                      horizontal: AppSpacing.md,
+                      vertical: AppSpacing.badgeGap,
                     ),
                     decoration: BoxDecoration(
                       color: isDark
                           ? colorScheme.surfaceContainerHigh
                           : colorScheme.surfaceContainerHighest.withValues(
-                              alpha: 0.5,
+                              alpha: AppOpacity.divider,
                             ),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: AppRadii.borderCard,
                       border: Border.all(
                         color: colorScheme.outlineVariant.withValues(
-                          alpha: 0.4,
+                          alpha: AppOpacity.outline,
                         ),
                       ),
                     ),
@@ -434,10 +431,10 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                       children: [
                         Icon(
                           Icons.wb_sunny_rounded,
-                          size: 15,
+                          size: AppDimensions.iconSm,
                           color: colorScheme.primary,
                         ),
-                        const SizedBox(width: 6),
+                        const SizedBox(width: AppSpacing.badgeGap),
                         Flexible(
                           child: Text(
                             l10n.barcodeMaxBrightnessActive,

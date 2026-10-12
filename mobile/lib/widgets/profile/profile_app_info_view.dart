@@ -175,7 +175,7 @@ class ProfileAppInfoView extends StatelessWidget {
                             l10n.disclaimerBody,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
-                              height: 1.45,
+                              height: AppLineHeights.relaxed,
                             ),
                           ),
                         ],
@@ -342,7 +342,7 @@ class ProfileAppInfoView extends StatelessWidget {
                 description,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
-                  height: 1.35,
+                  height: AppLineHeights.headingMd,
                 ),
               ),
             ],
@@ -356,7 +356,7 @@ class ProfileAppInfoView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.compact),
       child: Divider(
-        height: 1,
+        height: AppDimensions.borderDefault,
         color: theme.colorScheme.outlineVariant.withValues(alpha: AppOpacity.outline),
       ),
     );

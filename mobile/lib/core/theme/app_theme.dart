@@ -52,8 +52,8 @@ abstract final class AppTheme {
       appBarTheme: AppBarTheme(
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
-        elevation: 0,
-        scrolledUnderElevation: 0,
+        elevation: AppElevation.none,
+        scrolledUnderElevation: AppElevation.none,
         surfaceTintColor: AppColors.transparent,
         centerTitle: false,
         titleTextStyle: textTheme.headlineSmall?.copyWith(
@@ -66,7 +66,7 @@ abstract final class AppTheme {
       // Card
       cardTheme: CardThemeData(
         color: colorScheme.surfaceContainer,
-        elevation: 0,
+        elevation: AppElevation.none,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadii.borderCard,
           side: BorderSide(color: colorScheme.outlineVariant),
@@ -80,9 +80,9 @@ abstract final class AppTheme {
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
           shape: const StadiumBorder(),
-          minimumSize: const Size.fromHeight(48),
+          minimumSize: const Size.fromHeight(AppDimensions.minTouchTarget),
           textStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
-          elevation: 0,
+          elevation: AppElevation.none,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -90,17 +90,17 @@ abstract final class AppTheme {
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
           shape: const StadiumBorder(),
-          minimumSize: const Size.fromHeight(48),
+          minimumSize: const Size.fromHeight(AppDimensions.minTouchTarget),
           textStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
-          elevation: 0,
+          elevation: AppElevation.none,
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: colorScheme.primary,
-          side: BorderSide(color: colorScheme.outline, width: 1.5),
+          side: BorderSide(color: colorScheme.outline, width: AppDimensions.borderThick),
           shape: const StadiumBorder(),
-          minimumSize: const Size.fromHeight(48),
+          minimumSize: const Size.fromHeight(AppDimensions.minTouchTarget),
           textStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
         ),
       ),
@@ -116,10 +116,10 @@ abstract final class AppTheme {
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
-        elevation: isDark ? 0 : 2,
-        focusElevation: isDark ? 0 : 2,
-        hoverElevation: isDark ? 0 : 3,
-        highlightElevation: isDark ? 0 : 3,
+        elevation: isDark ? AppElevation.none : AppElevation.level1,
+        focusElevation: isDark ? AppElevation.none : AppElevation.level1,
+        hoverElevation: isDark ? AppElevation.none : AppElevation.levelHover,
+        highlightElevation: isDark ? AppElevation.none : AppElevation.levelHover,
         shape: const StadiumBorder(),
       ),
 
@@ -127,12 +127,12 @@ abstract final class AppTheme {
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: colorScheme.surfaceContainer,
         modalBackgroundColor: colorScheme.surfaceContainer,
-        elevation: 16,
+        elevation: AppElevation.modal,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          borderRadius: AppRadii.borderSheet,
         ),
         dragHandleColor: colorScheme.outline,
-        dragHandleSize: const Size(36, 4),
+        dragHandleSize: AppDimensions.dragHandleThemeSize,
         showDragHandle: true,
       ),
 
@@ -151,7 +151,10 @@ abstract final class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadii.borderMd,
-          borderSide: BorderSide(color: colorScheme.primary, width: 2),
+          borderSide: BorderSide(
+            color: colorScheme.primary,
+            width: AppDimensions.borderSelected,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadii.borderMd,
@@ -159,7 +162,10 @@ abstract final class AppTheme {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: AppRadii.borderMd,
-          borderSide: BorderSide(color: colorScheme.error, width: 2),
+          borderSide: BorderSide(
+            color: colorScheme.error,
+            width: AppDimensions.borderSelected,
+          ),
         ),
         labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
         hintStyle: TextStyle(
@@ -196,15 +202,15 @@ abstract final class AppTheme {
       // Dialog
       dialogTheme: DialogThemeData(
         backgroundColor: colorScheme.surfaceContainer,
-        elevation: 8,
+        elevation: AppElevation.dialog,
         shape: const RoundedRectangleBorder(borderRadius: AppRadii.borderDialog),
       ),
 
       // Divider
       dividerTheme: DividerThemeData(
         color: colorScheme.outlineVariant,
-        thickness: 1,
-        space: 1,
+        thickness: AppDimensions.borderDefault,
+        space: AppDimensions.borderDefault,
       ),
     );
   }

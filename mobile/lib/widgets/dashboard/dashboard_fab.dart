@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// Extended floating action button for the dashboard, adhering to the
@@ -48,7 +49,7 @@ class DashboardFab extends StatelessWidget {
     final effectiveIcon = icon ??
         Icon(
           Icons.add_rounded,
-          size: 24,
+          size: AppDimensions.iconLg,
           color: fgColor,
         );
 
@@ -64,7 +65,7 @@ class DashboardFab extends StatelessWidget {
         style: theme.textTheme.labelLarge?.copyWith(
           color: fgColor,
           fontWeight: FontWeight.w700,
-          letterSpacing: 0.2,
+          letterSpacing: AppLetterSpacing.subtle,
         ),
       ),
     );

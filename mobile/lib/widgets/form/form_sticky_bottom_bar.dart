@@ -48,7 +48,7 @@ class FormStickyBottomBar extends StatelessWidget {
 
     final bgColor = isDark
         ? colorScheme.surface.withValues(alpha: AppOpacity.almostOpaque)
-        : colorScheme.surface.withValues(alpha: 0.98);
+        : colorScheme.surface.withValues(alpha: AppOpacity.stickyBar);
 
     return Container(
       decoration: BoxDecoration(
@@ -78,7 +78,7 @@ class FormStickyBottomBar extends StatelessWidget {
                     shape: const RoundedRectangleBorder(
                       borderRadius: AppRadii.borderMd,
                     ),
-                    elevation: 0,
+                    elevation: AppElevation.none,
                   ),
                   child: isLoading
                       ? SizedBox(
