@@ -380,5 +380,77 @@ void main() {
         expect(find.byType(ShareContactBottomSheet), findsNothing);
       },
     );
+
+    testWidgets('ShareContactHeader renders contact name, tax code and drag handle', (tester) async {
+      await tester.pumpWidget(
+        buildTestApp(
+          child: ShareContactHeader(contact: testContact),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Mario Rossi'), findsOneWidget);
+      expect(find.text('RSSMRA85D15H501Z'), findsOneWidget);
+      expect(find.byIcon(Icons.share_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.badge_outlined), findsOneWidget);
+    });
+
+    testWidgets('ShareOptionCard responds to taps and shows selected state', (tester) async {
+      var tapped = false;
+      await tester.pumpWidget(
+        buildTestApp(
+          child: ShareOptionCard(
+            title: 'Test Option',
+            description: 'Test Description',
+            icon: Icons.star,
+            isSelected: true,
+            onTap: () => tapped = true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Test Option'), findsOneWidget);
+      expect(find.text('Test Description'), findsOneWidget);
+      expect(find.byIcon(Icons.radio_button_checked_rounded), findsOneWidget);
+
+      await tester.tap(find.byType(ShareOptionCard));
+      expect(tapped, isTrue);
+    });
+
+    testWidgets('ShareFormatSelector triggers callback on option selection', (tester) async {
+      ContactShareFormat? selected;
+      await tester.pumpWidget(
+        buildTestApp(
+          child: ShareFormatSelector(
+            selectedFormat: ContactShareFormat.text,
+            onFormatSelected: (fmt) => selected = fmt,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('share_format_image_card')));
+      expect(selected, ContactShareFormat.image);
+
+      await tester.tap(find.byKey(const Key('share_format_pdf_card')));
+      expect(selected, ContactShareFormat.pdf);
+    });
+
+    test('ContactShareFileHelper throws ArgumentError when format is text', () async {
+      final l10n = await AppLocalizations.delegate.load(const Locale('it'));
+      expect(
+        () => ContactShareFileHelper.prepareExportFile(
+          contact: testContact,
+          format: ContactShareFormat.text,
+          imageService: mockImageService,
+          pdfService: mockPdfService,
+          l10n: l10n,
+          getTempDir: () async => tempDir,
+        ),
+        throwsArgumentError,
+      );
+    });
   });
 }
+

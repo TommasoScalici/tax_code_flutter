@@ -1,29 +1,23 @@
-import 'dart:io';
-
 import 'package:logger/logger.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
-import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/contact_card_image_service.dart';
 import 'package:tax_code_flutter/services/contact_pdf_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
+import 'package:tax_code_flutter/widgets/share/contact_share_file_helper.dart';
+import 'package:tax_code_flutter/widgets/share/contact_share_format.dart';
+import 'package:tax_code_flutter/widgets/share/share_contact_header.dart';
+import 'package:tax_code_flutter/widgets/share/share_format_selector.dart';
 
-/// Available formats for sharing a single contact's tax code data.
-enum ContactShareFormat {
-  /// Plain text tax code string.
-  text,
-
-  /// High-resolution graphical card with 1D Barcode and 2D QR Code.
-  image,
-
-  /// Printable A4 summary document with complete personal details.
-  pdf,
-}
+export 'package:tax_code_flutter/widgets/share/contact_share_file_helper.dart';
+export 'package:tax_code_flutter/widgets/share/contact_share_format.dart';
+export 'package:tax_code_flutter/widgets/share/share_contact_header.dart';
+export 'package:tax_code_flutter/widgets/share/share_format_selector.dart';
+export 'package:tax_code_flutter/widgets/share/share_option_card.dart';
 
 /// Modal bottom sheet allowing users to share a contact via text,
 /// high-resolution PNG card, or printable A4 PDF.
@@ -83,41 +77,13 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
       final imageService = context.read<ContactCardImageServiceAbstract>();
       final pdfService = context.read<ContactPdfServiceAbstract>();
 
-      final tempDir = await getTemporaryDirectory();
-      final sanitizedCode = contact.taxCode.isNotEmpty
-          ? contact.taxCode
-          : 'codice_fiscale';
-
-      final contactName =
-          '${contact.firstName} ${contact.lastName}'.trim().isNotEmpty
-          ? '${contact.firstName} ${contact.lastName}'.trim()
-          : contact.taxCode;
-
-      late final File file;
-      late final String mimeType;
-      late final String subject;
-
-      if (_selectedFormat == ContactShareFormat.image) {
-        final bytes = await imageService.generateCardImage(
-          contact: contact,
-          l10n: l10n,
-        );
-        final fileName = 'tessera_$sanitizedCode.png';
-        file = File('${tempDir.path}/$fileName');
-        await file.writeAsBytes(bytes);
-        mimeType = 'image/png';
-        subject = l10n.shareCardSubject(contactName);
-      } else {
-        final bytes = await pdfService.generateContactPdf(
-          contact: contact,
-          l10n: l10n,
-        );
-        final fileName = 'scheda_$sanitizedCode.pdf';
-        file = File('${tempDir.path}/$fileName');
-        await file.writeAsBytes(bytes);
-        mimeType = 'application/pdf';
-        subject = l10n.sharePdfSubject(contactName);
-      }
+      final exportResult = await ContactShareFileHelper.prepareExportFile(
+        contact: contact,
+        format: _selectedFormat,
+        imageService: imageService,
+        pdfService: pdfService,
+        l10n: l10n,
+      );
 
       if (!mounted) return;
 
@@ -131,9 +97,9 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
       );
 
       await sharingService.shareFile(
-        filePath: file.path,
-        mimeType: mimeType,
-        subject: subject,
+        filePath: exportResult.file.path,
+        mimeType: exportResult.mimeType,
+        subject: exportResult.subject,
       );
     } on Object catch (e, s) {
       if (mounted) {
@@ -159,18 +125,14 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
         : colorScheme.surfaceContainerLow;
 
     final topBorderColor = colorScheme.outlineVariant.withValues(
-      alpha: isDark ? 0.40 : 0.60,
+      alpha: isDark ? AppOpacity.outline : AppOpacity.muted,
     );
-
-    final contact = widget.contact;
-    final contactDisplayName =
-        '${contact.firstName} ${contact.lastName}'.trim().isNotEmpty
-        ? '${contact.firstName} ${contact.lastName}'.trim()
-        : l10n.contactFallback;
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: AppDimensions.maxContentWidth),
+        constraints: const BoxConstraints(
+          maxWidth: AppDimensions.maxContentWidth,
+        ),
         child: Container(
           decoration: BoxDecoration(
             color: sheetBgColor,
@@ -187,157 +149,23 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                 left: AppSpacing.card,
                 right: AppSpacing.card,
                 top: AppSpacing.md,
-                bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.xl,
+                bottom:
+                    MediaQuery.of(context).viewInsets.bottom + AppSpacing.xl,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // M3 Drag Handle
-                  Center(
-                    child: Container(
-                      width: AppDimensions.dragHandleWidth,
-                      height: AppDimensions.dragHandleHeight,
-                      decoration: BoxDecoration(
-                        color: colorScheme.onSurfaceVariant.withValues(
-                          alpha: AppOpacity.outline,
-                        ),
-                        borderRadius: AppRadii.borderHandle,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-
-                  // Header
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(AppSpacing.compact),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary.withValues(
-                            alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.tint,
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.share_rounded,
-                          color: colorScheme.primary,
-                          size: AppDimensions.iconLg,
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.fieldVertical),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.shareContactTitle,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: AppLetterSpacing.titleTight,
-                                color: colorScheme.onSurface,
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.xxs),
-                            Text(
-                              l10n.shareContactSubtitle,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-
-                  // Contact Summary Card
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.fieldVertical,
-                      vertical: AppSpacing.compact,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHigh,
-                      borderRadius: AppRadii.borderInput,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.badge_outlined,
-                          size: AppDimensions.iconAction,
-                          color: colorScheme.primary,
-                        ),
-                        const SizedBox(width: AppSpacing.compact),
-                        Expanded(
-                          child: Text(
-                            contactDisplayName,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: theme.colorScheme.onSurface,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          contact.taxCode,
-                          style: AppTypography.codeDisplay(
-                            color: colorScheme.primary,
-                            fontSize: AppFontSizes.bodyMd,
-                            letterSpacing: AppLetterSpacing.code,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ShareContactHeader(contact: widget.contact),
                   const SizedBox(height: AppDimensions.iconAction),
-
-                  // Option 1: Quick Text
-                  _ShareOptionCard(
-                    key: const Key('share_format_text_card'),
-                    title: l10n.shareOptionTextTitle,
-                    description: l10n.shareOptionTextDesc,
-                    icon: Icons.text_fields_rounded,
-                    isSelected: _selectedFormat == ContactShareFormat.text,
-                    onTap: _isSharing
-                        ? null
-                        : () => setState(
-                            () => _selectedFormat = ContactShareFormat.text,
-                          ),
-                  ),
-                  const SizedBox(height: AppSpacing.compact),
-
-                  // Option 2: HD Card Image (PNG)
-                  _ShareOptionCard(
-                    key: const Key('share_format_image_card'),
-                    title: l10n.shareOptionImageTitle,
-                    description: l10n.shareOptionImageDesc,
-                    icon: Icons.image_outlined,
-                    isSelected: _selectedFormat == ContactShareFormat.image,
-                    onTap: _isSharing
-                        ? null
-                        : () => setState(
-                            () => _selectedFormat = ContactShareFormat.image,
-                          ),
-                  ),
-                  const SizedBox(height: AppSpacing.compact),
-
-                  // Option 3: PDF Summary Sheet
-                  _ShareOptionCard(
-                    key: const Key('share_format_pdf_card'),
-                    title: l10n.shareOptionPdfTitle,
-                    description: l10n.shareOptionPdfDesc,
-                    icon: Icons.picture_as_pdf_outlined,
-                    isSelected: _selectedFormat == ContactShareFormat.pdf,
-                    onTap: _isSharing
-                        ? null
-                        : () => setState(
-                            () => _selectedFormat = ContactShareFormat.pdf,
-                          ),
+                  ShareFormatSelector(
+                    selectedFormat: _selectedFormat,
+                    isEnabled: !_isSharing,
+                    onFormatSelected: (format) {
+                      setState(() => _selectedFormat = format);
+                    },
                   ),
                   const SizedBox(height: AppSpacing.xl),
-
-                  // Actions
                   Row(
                     children: [
                       Expanded(
@@ -368,11 +196,15 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                                   width: AppDimensions.iconAction,
                                   height: AppDimensions.iconAction,
                                   child: CircularProgressIndicator(
-                                    strokeWidth: AppDimensions.progressStrokeWidth,
+                                    strokeWidth:
+                                        AppDimensions.progressStrokeWidth,
                                     color: colorScheme.onPrimary,
                                   ),
                                 )
-                              : const Icon(Icons.share_rounded, size: AppDimensions.iconMd),
+                              : const Icon(
+                                  Icons.share_rounded,
+                                  size: AppDimensions.iconMd,
+                                ),
                           label: Text(
                             l10n.shareContactAction,
                             style: theme.textTheme.labelLarge?.copyWith(
@@ -388,110 +220,6 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ShareOptionCard extends StatelessWidget {
-  const _ShareOptionCard({
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.isSelected,
-    required this.onTap,
-    super.key,
-  });
-
-  final String title;
-  final String description;
-  final IconData icon;
-  final bool isSelected;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    final borderColor = isSelected
-        ? theme.colorScheme.primary
-        : theme.colorScheme.outlineVariant;
-    final bgColor = isSelected
-        ? theme.colorScheme.primary.withValues(
-            alpha: isDark ? AppOpacity.faint : AppOpacity.tint,
-          )
-        : theme.colorScheme.surfaceContainer;
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: AppRadii.borderMd,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: AppSpacing.paddingField,
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: AppRadii.borderMd,
-          border: Border.all(
-            color: borderColor,
-            width: isSelected ? AppDimensions.borderSelected : AppDimensions.borderDefault,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: AppSpacing.paddingSm,
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? theme.colorScheme.primary.withValues(
-                        alpha: isDark ? AppOpacity.subtleBorder : AppOpacity.faint,
-                      )
-                    : theme.colorScheme.surfaceContainerHigh,
-                borderRadius: AppRadii.borderCompact,
-              ),
-              child: Icon(
-                icon,
-                size: AppDimensions.iconButton,
-                color: isSelected
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(width: AppSpacing.fieldVertical),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: isSelected
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xxs),
-                  Text(
-                    description,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Icon(
-              isSelected
-                  ? Icons.radio_button_checked_rounded
-                  : Icons.radio_button_off_rounded,
-              color: isSelected
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.outline,
-            ),
-          ],
         ),
       ),
     );
