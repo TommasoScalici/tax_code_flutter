@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -288,18 +289,18 @@ class ProfileAppInfoView extends StatelessWidget {
               // 5. Developer Attribution with Link
               Center(
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: AppRadii.borderSm,
                   onTap: () => _openUrl(_developerWebsiteUrl),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0,
+                      horizontal: AppSpacing.md,
                       vertical: 6.0,
                     ),
                     child: Text(
                       l10n.developedBy,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant
-                            .withValues(alpha: 0.7),
+                            .withValues(alpha: AppOpacity.medium),
                         fontSize: 12,
                       ),
                     ),
@@ -327,7 +328,7 @@ class ProfileAppInfoView extends StatelessWidget {
           size: 18,
           color: theme.colorScheme.primary,
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.md),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -339,7 +340,7 @@ class ProfileAppInfoView extends StatelessWidget {
                   color: theme.colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: AppSpacing.xxs),
               Text(
                 description,
                 style: theme.textTheme.bodySmall?.copyWith(
@@ -359,7 +360,7 @@ class ProfileAppInfoView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Divider(
         height: 1,
-        color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+        color: theme.colorScheme.outlineVariant.withValues(alpha: AppOpacity.outline),
       ),
     );
   }

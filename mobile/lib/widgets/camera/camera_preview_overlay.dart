@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 class CameraPreviewOverlay extends StatelessWidget {
@@ -87,7 +88,7 @@ class CameraPreviewOverlay extends StatelessWidget {
           painter: CardCutoutOverlayPainter(
             scrimColor: AppColors.cameraScrim,
             guideColor: colorScheme.primary,
-            outlineColor: colorScheme.primary.withValues(alpha: 0.25),
+            outlineColor: colorScheme.primary.withValues(alpha: AppOpacity.subtleBorder),
             cardRect: cardRect,
           ),
         ),
@@ -100,16 +101,16 @@ class CameraPreviewOverlay extends StatelessWidget {
           child: Center(
             child: Container(
               padding: const EdgeInsets.symmetric(
-                horizontal: 16,
+                horizontal: AppSpacing.lg,
                 vertical: 10,
               ),
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerHighest.withValues(
                   alpha: 0.82,
                 ),
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: AppRadii.borderDialog,
                 border: Border.all(
-                  color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+                  color: colorScheme.outlineVariant.withValues(alpha: AppOpacity.outline),
                 ),
               ),
               child: Row(
@@ -120,7 +121,7 @@ class CameraPreviewOverlay extends StatelessWidget {
                     size: 18,
                     color: colorScheme.primary,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.sm),
                   Flexible(
                     child: Text(
                       l10n.cameraCardGuideHint,

@@ -3,6 +3,7 @@ import 'package:tax_code_flutter_wear_os/core/theme/wear_colors.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_typography.dart';
 
+export 'package:shared/theme/app_dimensions.dart';
 export 'package:tax_code_flutter_wear_os/core/theme/theme_context_extensions.dart';
 export 'package:tax_code_flutter_wear_os/core/theme/wear_colors.dart';
 export 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
@@ -38,7 +39,7 @@ abstract final class WearTheme {
         color: colorScheme.surfaceContainer,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(WearDimensions.cardRadius),
+          borderRadius: WearDimensions.borderCard,
           side: BorderSide(color: colorScheme.outlineVariant),
         ),
         margin: EdgeInsets.zero,

@@ -210,7 +210,7 @@ class ProfileUserSection extends StatelessWidget {
                             ' • ${l10n.syncSavedCodesCount(savedCount)}',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.7),
+                                  .withValues(alpha: AppOpacity.medium),
                               fontWeight: FontWeight.normal,
                             ),
                           ),
@@ -226,12 +226,12 @@ class ProfileUserSection extends StatelessWidget {
               padding: AppSpacing.paddingLg,
               decoration: BoxDecoration(
                 color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: isDark ? 0.16 : 0.5,
+                  alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.divider,
                 ),
                 borderRadius: AppRadii.borderMd,
                 border: Border.all(
                   color: theme.colorScheme.primary.withValues(
-                    alpha: isDark ? 0.25 : 0.3,
+                    alpha: isDark ? AppOpacity.subtleBorder : AppOpacity.translucent,
                   ),
                 ),
               ),

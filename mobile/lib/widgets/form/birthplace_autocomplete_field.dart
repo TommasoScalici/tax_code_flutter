@@ -3,6 +3,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/utils/birthplace_search_filter.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A modern autocomplete field for Italian municipalities and foreign countries,
@@ -221,7 +222,7 @@ class BirthplaceAutocompleteField extends StatelessWidget {
           child: Text(
             helperText,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+              color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.medium),
               fontSize: 11,
               height: 1.3,
             ),
@@ -301,7 +302,7 @@ class _StandaloneBirthplaceAutocompleteState
     final hasError = widget.errorText != null && widget.errorText!.isNotEmpty;
     final borderColor = hasError
         ? colorScheme.error
-        : colorScheme.outlineVariant.withValues(alpha: isDark ? 0.6 : 0.8);
+        : colorScheme.outlineVariant.withValues(alpha: isDark ? AppOpacity.muted : AppOpacity.high);
 
     final bgColor = isDark
         ? colorScheme.surfaceContainer
@@ -430,7 +431,7 @@ class _StandaloneBirthplaceAutocompleteState
           child: Text(
             widget.helperText,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+              color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.medium),
               fontSize: 11,
               height: 1.3,
             ),
@@ -463,15 +464,15 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
         color: isDark
             ? colorScheme.surfaceContainerHigh
             : colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadii.borderMd,
         clipBehavior: Clip.antiAlias,
         child: Container(
           constraints: const BoxConstraints(maxHeight: 250, maxWidth: 360),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: AppRadii.borderMd,
             border: Border.all(
               color: colorScheme.outlineVariant.withValues(
-                alpha: isDark ? 0.6 : 0.8,
+                alpha: isDark ? AppOpacity.muted : AppOpacity.high,
               ),
             ),
           ),
@@ -481,8 +482,8 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
             itemCount: options.length,
             separatorBuilder: (context, index) => Divider(
               height: 1,
-              thickness: 0.5,
-              color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+              thickness: AppDimensions.borderHairline,
+              color: colorScheme.outlineVariant.withValues(alpha: AppOpacity.translucent),
             ),
             itemBuilder: (context, index) {
               final birthplace = options.elementAt(index);
@@ -492,7 +493,7 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
                 onTap: () => onSelected(birthplace),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
+                    horizontal: AppSpacing.lg,
                     vertical: 10.0,
                   ),
                   child: Row(

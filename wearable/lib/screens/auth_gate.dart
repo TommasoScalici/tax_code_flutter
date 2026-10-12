@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:shared/theme/app_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_colors.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_typography.dart';
@@ -39,7 +40,7 @@ class AuthGate extends StatelessWidget {
           backgroundColor: AppColors.darkBackground,
           body: Center(
             child: CircularProgressIndicator(
-              strokeWidth: 2.5,
+              strokeWidth: WearDimensions.progressStrokeWidth,
               color: AppColors.emeraldPrimary,
             ),
           ),
@@ -94,34 +95,34 @@ class _LoginViewState extends State<_LoginView> {
             children: [
               // Clock header
               const WearTimeHeader(),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.xs),
 
               // Emerald Ledger Badge Icon
               Container(
-                width: 32,
-                height: 32,
+                width: AppDimensions.iconXl,
+                height: AppDimensions.iconXl,
                 decoration: BoxDecoration(
-                  color: AppColors.emeraldContainerDark.withValues(alpha: 0.35),
+                  color: AppColors.emeraldContainerDark.withValues(alpha: AppOpacity.disabled),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.emeraldPrimary.withValues(alpha: 0.4),
-                    width: 0.8,
+                    color: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.outline),
+                    width: WearDimensions.borderThin,
                   ),
                 ),
                 child: const Icon(
                   Icons.badge_rounded,
-                  size: 18,
+                  size: WearDimensions.iconMedium,
                   color: AppColors.emeraldLight,
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: WearDimensions.cardSpacing),
 
               Text(
                 l10n.welcomeMessage(l10n.appTitle),
                 textAlign: TextAlign.center,
                 style: WearTypography.cardTitle(),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSpacing.sm + 2),
 
               ConstrainedBox(
                 constraints: const BoxConstraints(
@@ -133,7 +134,7 @@ class _LoginViewState extends State<_LoginView> {
                       : () => context
                             .read<AuthService>()
                             .signInWithGoogleForWearable(),
-                  icon: const Icon(Icons.login, size: 16),
+                  icon: const Icon(Icons.login, size: WearDimensions.iconSmall + 2),
                   label: Text(
                     l10n.signInWithGoogle,
                     style: WearTypography.hint(color: AppColors.darkOnSurface),
@@ -142,15 +143,15 @@ class _LoginViewState extends State<_LoginView> {
                     backgroundColor: AppColors.darkSurfaceContainerHigh,
                     foregroundColor: AppColors.darkOnSurface,
                     shape: const StadiumBorder(),
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: WearDimensions.screenPaddingHorizontal),
                     side: BorderSide(
-                      color: AppColors.darkOutline.withValues(alpha: 0.3),
-                      width: 0.8,
+                      color: AppColors.darkOutline.withValues(alpha: AppOpacity.translucent),
+                      width: WearDimensions.borderThin,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: WearDimensions.cardSpacing),
 
               ConstrainedBox(
                 constraints: const BoxConstraints(
@@ -170,7 +171,7 @@ class _LoginViewState extends State<_LoginView> {
                         },
                   icon: const Icon(
                     Icons.visibility_outlined,
-                    size: 15,
+                    size: WearDimensions.iconSmall,
                     color: AppColors.emeraldLight,
                   ),
                   label: Text(
@@ -180,28 +181,28 @@ class _LoginViewState extends State<_LoginView> {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.darkOnSurface,
                     side: BorderSide(
-                      color: AppColors.emeraldPrimary.withValues(alpha: 0.4),
-                      width: 0.8,
+                      color: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.outline),
+                      width: WearDimensions.borderThin,
                     ),
                     shape: const StadiumBorder(),
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                   ),
                 ),
               ),
               if (authService.isLoading) ...[
-                const SizedBox(height: 10),
+                const SizedBox(height: AppSpacing.sm + 2),
                 const SizedBox(
-                  height: 22,
-                  width: 22,
+                  height: AppDimensions.iconMd + 2,
+                  width: AppDimensions.iconMd + 2,
                   child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
+                    strokeWidth: WearDimensions.progressStrokeWidth,
                     color: AppColors.emeraldPrimary,
                   ),
                 ),
               ],
 
               if (authService.errorMessage != null) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 Text(
                   l10n.loginError,
                   textAlign: TextAlign.center,

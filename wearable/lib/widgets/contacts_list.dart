@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:shared/theme/app_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/controllers/contacts_list_controller.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_colors.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
@@ -61,8 +62,8 @@ class _ContactsListState extends State<ContactsList> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.darkSurfaceContainerHigh,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(WearDimensions.dialogRadius),
+        shape: const RoundedRectangleBorder(
+          borderRadius: WearDimensions.borderDialog,
         ),
         insetPadding: WearDimensions.dialogInsetPadding,
         titlePadding: WearDimensions.dialogTitlePadding,
@@ -81,7 +82,7 @@ class _ContactsListState extends State<ContactsList> {
               padding: EdgeInsets.zero,
               icon: const Icon(
                 Icons.close_rounded,
-                size: 20,
+                size: WearDimensions.dialogActionIconSize,
                 color: AppColors.darkOnSurfaceVariant,
               ),
               onPressed: () => Navigator.of(ctx).pop(false),
@@ -94,7 +95,7 @@ class _ContactsListState extends State<ContactsList> {
               padding: EdgeInsets.zero,
               icon: const Icon(
                 Icons.check_rounded,
-                size: 20,
+                size: WearDimensions.dialogActionIconSize,
                 color: AppColors.emeraldLight,
               ),
               onPressed: () => Navigator.of(ctx).pop(true),
@@ -122,8 +123,8 @@ class _ContactsListState extends State<ContactsList> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.darkSurfaceContainerHigh,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(WearDimensions.dialogRadius),
+        shape: const RoundedRectangleBorder(
+          borderRadius: WearDimensions.borderDialog,
         ),
         insetPadding: WearDimensions.dialogInsetPadding,
         titlePadding: WearDimensions.dialogTitlePadding,
@@ -142,7 +143,7 @@ class _ContactsListState extends State<ContactsList> {
               padding: EdgeInsets.zero,
               icon: const Icon(
                 Icons.close_rounded,
-                size: 20,
+                size: WearDimensions.dialogActionIconSize,
                 color: AppColors.darkOnSurfaceVariant,
               ),
               onPressed: () => Navigator.of(ctx).pop(false),
@@ -155,7 +156,7 @@ class _ContactsListState extends State<ContactsList> {
               padding: EdgeInsets.zero,
               icon: const Icon(
                 Icons.check_rounded,
-                size: 20,
+                size: WearDimensions.dialogActionIconSize,
                 color: AppColors.emeraldLight,
               ),
               onPressed: () => Navigator.of(ctx).pop(true),
@@ -178,7 +179,7 @@ class _ContactsListState extends State<ContactsList> {
     if (controller.isLoading) {
       return const Center(
         child: CircularProgressIndicator(
-          strokeWidth: 2.5,
+          strokeWidth: WearDimensions.progressStrokeWidth,
           color: AppColors.emeraldPrimary,
         ),
       );
@@ -208,12 +209,12 @@ class _ContactsListState extends State<ContactsList> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const WearTimeHeader(),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               Container(
-                width: 40,
-                height: 40,
+                width: WearDimensions.buttonHeight,
+                height: WearDimensions.buttonHeight,
                 decoration: BoxDecoration(
-                  color: AppColors.emeraldContainerDark.withValues(alpha: 0.25),
+                  color: AppColors.emeraldContainerDark.withValues(alpha: AppOpacity.subtleBorder),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -222,27 +223,27 @@ class _ContactsListState extends State<ContactsList> {
                   color: AppColors.emeraldLight,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 l10n.noContactsFoundMessage,
                 textAlign: TextAlign.center,
                 style: WearTypography.cardSubtitle(color: AppColors.darkOnSurface),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 l10n.syncTakesFewMinutes,
                 textAlign: TextAlign.center,
                 style: WearTypography.hint(
-                  color: AppColors.darkOnSurfaceVariant.withValues(alpha: 0.8),
+                  color: AppColors.darkOnSurfaceVariant.withValues(alpha: AppOpacity.high),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSpacing.sm + 2),
               if (controller.isLaunchingPhoneApp)
                 const SizedBox(
-                  height: 24,
-                  width: 24,
+                  height: AppDimensions.iconLg,
+                  width: AppDimensions.iconLg,
                   child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
+                    strokeWidth: WearDimensions.progressStrokeWidth,
                     color: AppColors.emeraldPrimary,
                   ),
                 )
@@ -252,7 +253,7 @@ class _ContactsListState extends State<ContactsList> {
                     minHeight: WearDimensions.buttonCompactHeight,
                   ),
                   child: ElevatedButton.icon(
-                    icon: const Icon(Icons.phone_android, size: 16),
+                    icon: const Icon(Icons.phone_android, size: WearDimensions.iconSmall + 2),
                     label: Text(
                       l10n.openOnPhone,
                       style: WearTypography.hint(color: AppColors.onEmeraldAccent),
@@ -262,20 +263,20 @@ class _ContactsListState extends State<ContactsList> {
                       backgroundColor: AppColors.emeraldPrimary,
                       foregroundColor: AppColors.onEmeraldAccent,
                       shape: const StadiumBorder(),
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      padding: const EdgeInsets.symmetric(horizontal: WearDimensions.screenPaddingHorizontal),
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                if (controller.isDemoMode)
-                  _buildExitDemoButton(context, l10n, controller)
-                else
-                  _buildSignOutButton(context, l10n),
-              ],
-            ),
+              const SizedBox(height: AppSpacing.sm),
+              if (controller.isDemoMode)
+                _buildExitDemoButton(context, l10n, controller)
+              else
+                _buildSignOutButton(context, l10n),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
   Widget _buildContactsList(
@@ -300,22 +301,20 @@ class _ContactsListState extends State<ContactsList> {
               children: [
                 const WearTimeHeader(),
                 if (controller.isDemoMode) ...[
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSpacing.xs),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
+                      horizontal: AppSpacing.sm,
+                      vertical: AppSpacing.xxs,
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.emeraldContainerDark.withValues(
-                        alpha: 0.35,
+                        alpha: AppOpacity.disabled,
                       ),
-                      borderRadius: BorderRadius.circular(
-                        WearDimensions.pillRadius,
-                      ),
+                      borderRadius: WearDimensions.borderPill,
                       border: Border.all(
-                        color: AppColors.emeraldPrimary.withValues(alpha: 0.5),
-                        width: 0.8,
+                        color: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.divider),
+                        width: WearDimensions.borderThin,
                       ),
                     ),
                     child: Text(
@@ -326,7 +325,7 @@ class _ContactsListState extends State<ContactsList> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSpacing.xs),
                 ],
               ],
             );
@@ -342,7 +341,7 @@ class _ContactsListState extends State<ContactsList> {
 
           // Footer actions (open on phone + sign out / exit demo)
           return Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 12.0),
+            padding: const EdgeInsets.only(top: AppSpacing.sm, bottom: AppSpacing.md),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -351,7 +350,7 @@ class _ContactsListState extends State<ContactsList> {
                     minHeight: WearDimensions.buttonCompactHeight,
                   ),
                   child: OutlinedButton.icon(
-                    icon: const Icon(Icons.phone_android, size: 14),
+                    icon: const Icon(Icons.phone_android, size: WearDimensions.iconSmall),
                     label: Text(
                       l10n.openOnPhone,
                       style: WearTypography.hint(
@@ -362,15 +361,15 @@ class _ContactsListState extends State<ContactsList> {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.darkOnSurfaceVariant,
                       side: BorderSide(
-                        color: AppColors.darkOutline.withValues(alpha: 0.3),
-                        width: 0.8,
+                        color: AppColors.darkOutline.withValues(alpha: AppOpacity.translucent),
+                        width: WearDimensions.borderThin,
                       ),
                       shape: const StadiumBorder(),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                     ),
                   ),
                 ),
-                const SizedBox(height: 6.0),
+                const SizedBox(height: WearDimensions.cardSpacing),
                 if (controller.isDemoMode)
                   _buildExitDemoButton(context, l10n, controller)
                 else
@@ -394,7 +393,7 @@ class _ContactsListState extends State<ContactsList> {
       child: TextButton.icon(
         icon: const Icon(
           Icons.logout_rounded,
-          size: 14,
+          size: WearDimensions.iconSmall,
           color: AppColors.darkOnSurfaceVariant,
         ),
         label: Text(
@@ -412,7 +411,7 @@ class _ContactsListState extends State<ContactsList> {
       child: TextButton.icon(
         icon: const Icon(
           Icons.logout_rounded,
-          size: 14,
+          size: WearDimensions.iconSmall,
           color: AppColors.darkOnSurfaceVariant,
         ),
         label: Text(

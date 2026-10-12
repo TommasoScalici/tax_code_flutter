@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/utils/error_mapper.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/utils/app_failure_l10n.dart';
 import 'package:tax_code_flutter/widgets/profile_bottom_sheet.dart';
@@ -89,14 +90,14 @@ class WelcomeScreen extends StatelessWidget {
       body: SafeArea(
         child: ResponsiveLayout(
           maxWidth: 480.0,
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.lg),
           child: Center(
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
 
                   // App Icon (Clean brand card graphic)
                   SvgPicture.asset(
@@ -104,7 +105,7 @@ class WelcomeScreen extends StatelessWidget {
                     width: 120,
                     height: 120,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.xl),
 
                   // Headline
                   Text(
@@ -114,7 +115,7 @@ class WelcomeScreen extends StatelessWidget {
                       letterSpacing: -0.5,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
 
                   // Subtitle
                   ConstrainedBox(
@@ -129,12 +130,12 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 32),
+                  const SizedBox(height: AppSpacing.xxl),
 
                   // Primary Action: Google SSO Pill
                   SizedBox(
                     width: double.infinity,
-                    height: 56,
+                    height: AppDimensions.heroButtonHeight,
                     child: ElevatedButton(
                       onPressed: isLoading
                           ? null
@@ -145,12 +146,12 @@ class WelcomeScreen extends StatelessWidget {
                             : colorScheme.surface,
                         foregroundColor: colorScheme.onSurface,
                         elevation: isDark ? 0 : 2,
-                        shadowColor: colorScheme.shadow.withValues(alpha: 0.2),
+                        shadowColor: colorScheme.shadow.withValues(alpha: AppOpacity.glow),
                         shape: const StadiumBorder(),
                         side: BorderSide(
                           color: isDark
-                              ? colorScheme.outlineVariant.withValues(alpha: 0.7)
-                              : colorScheme.outline.withValues(alpha: 0.4),
+                              ? colorScheme.outlineVariant.withValues(alpha: AppOpacity.medium)
+                              : colorScheme.outline.withValues(alpha: AppOpacity.outline),
                         ),
                       ),
                       child: isLoading
@@ -158,7 +159,7 @@ class WelcomeScreen extends StatelessWidget {
                               width: 22,
                               height: 22,
                               child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
+                                strokeWidth: AppDimensions.progressStrokeWidth,
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                   colorScheme.primary,
                                 ),
@@ -173,7 +174,7 @@ class WelcomeScreen extends StatelessWidget {
                                   width: 22,
                                   height: 22,
                                 ),
-                                const SizedBox(width: 12),
+                                const SizedBox(width: AppSpacing.md),
                                 Flexible(
                                   child: Text(
                                     l10n.continueWithGoogle,
@@ -189,19 +190,19 @@ class WelcomeScreen extends StatelessWidget {
                             ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.md),
 
                   // Secondary Action: Guest Mode Pill
                   SizedBox(
                     width: double.infinity,
-                    height: 52,
+                    height: AppDimensions.primaryButtonHeight,
                     child: OutlinedButton.icon(
                       onPressed: isLoading
                           ? null
                           : () => _handleGuestSignIn(context, authService),
                       icon: Icon(
                         Icons.person_outline_rounded,
-                        size: 20,
+                        size: AppDimensions.iconMd,
                         color: colorScheme.onSurfaceVariant,
                       ),
                       label: Text(
@@ -215,21 +216,21 @@ class WelcomeScreen extends StatelessWidget {
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
                           color: colorScheme.outlineVariant.withValues(
-                            alpha: isDark ? 0.6 : 0.4,
+                            alpha: isDark ? AppOpacity.muted : AppOpacity.outline,
                           ),
                         ),
                       ),
                     ),
                   ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: AppSpacing.card),
 
                       // Footer: Terms & Disclaimer
                       Text(
                         l10n.termsAndCondition,
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                          color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.medium),
                           fontSize: 12,
                         ),
                       ),
@@ -244,7 +245,7 @@ class WelcomeScreen extends StatelessWidget {
                         },
                         style: TextButton.styleFrom(
                           visualDensity: VisualDensity.compact,
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
                         ),
                         child: Text(
                           l10n.showTerms,
@@ -255,7 +256,7 @@ class WelcomeScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                     ],
                   ),
                 ),

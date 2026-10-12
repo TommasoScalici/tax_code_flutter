@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// A modern date picker field with emerald calendar icon, 14px rounded corners,
@@ -146,7 +147,7 @@ class _BirthdatePickerContent extends StatelessWidget {
 
     final borderColor = hasError
         ? colorScheme.error
-        : colorScheme.outlineVariant.withValues(alpha: isDark ? 0.6 : 0.8);
+        : colorScheme.outlineVariant.withValues(alpha: isDark ? AppOpacity.muted : AppOpacity.high);
 
     final bgColor = isDark
         ? colorScheme.surfaceContainer
@@ -170,7 +171,7 @@ class _BirthdatePickerContent extends StatelessWidget {
                 ),
               ),
               if (isRequired) ...[
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.xs),
                 Text(
                   '*',
                   style: theme.textTheme.labelMedium?.copyWith(
@@ -185,21 +186,21 @@ class _BirthdatePickerContent extends StatelessWidget {
 
         // Input Field Container
         Container(
-          height: 52,
+          height: AppDimensions.primaryButtonHeight,
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: AppRadii.borderInput,
             border: Border.all(color: borderColor),
           ),
           child: Material(
             color: AppColors.transparent,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: AppRadii.borderInput,
             child: InkWell(
               key: const Key('birthdate_picker_inkwell'),
               onTap: () => _pickDate(context),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: AppRadii.borderInput,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                 child: Row(
                   children: [
                     Expanded(
@@ -208,7 +209,7 @@ class _BirthdatePickerContent extends StatelessWidget {
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: formattedDate.isNotEmpty
                               ? colorScheme.onSurface
-                              : colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                              : colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.muted),
                           fontWeight: formattedDate.isNotEmpty
                               ? FontWeight.w600
                               : FontWeight.normal,

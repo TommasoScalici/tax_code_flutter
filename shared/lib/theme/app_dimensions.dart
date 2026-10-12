@@ -2,6 +2,9 @@ import 'package:flutter/widgets.dart';
 
 /// Centralized spacing design tokens following a standard 4pt/8pt grid.
 abstract final class AppSpacing {
+  /// Micro spacing: 2.0 pt.
+  static const double xxs = 2.0;
+
   /// Extra small spacing: 4.0 pt.
   static const double xs = 4.0;
 
@@ -26,6 +29,9 @@ abstract final class AppSpacing {
   // ---------------------------------------------------------------------------
   // Standard Insets Presets
   // ---------------------------------------------------------------------------
+  /// Uniform insets of 2.0 pt.
+  static const EdgeInsets paddingXxs = EdgeInsets.all(xxs);
+
   /// Uniform insets of 4.0 pt.
   static const EdgeInsets paddingXs = EdgeInsets.all(xs);
 
@@ -116,11 +122,23 @@ abstract final class AppRadii {
 
 /// Centralized opacity tokens for consistent alpha channels across dark/light surfaces.
 abstract final class AppOpacity {
+  /// Extremely faint tint / highlight opacity: 8%.
+  static const double tint = 0.08;
+
   /// Subtle shadow and faint elevation tint: 12%.
   static const double faint = 0.12;
 
+  /// Semi-translucent container fill opacity: 16%.
+  static const double semiTranslucent = 0.16;
+
   /// Subtle glow and primary container tint: 20%.
   static const double glow = 0.20;
+
+  /// Subtle border outline / card stroke opacity: 25%.
+  static const double subtleBorder = 0.25;
+
+  /// Translucent badge fill / overlay opacity: 30%.
+  static const double translucent = 0.30;
 
   /// Disabled element opacity: 38%.
   static const double disabled = 0.38;
@@ -146,12 +164,33 @@ abstract final class AppOpacity {
   /// High prominence text / element opacity: 85%.
   static const double high = 0.85;
 
+  /// Almost opaque surface / glassmorphism opacity: 95%.
+  static const double almostOpaque = 0.95;
+
   /// Translucent glassmorphism surface opacity: 95%.
   static const double surfaceBlur = 0.95;
 }
 
 /// Centralized layout dimensions and touch target constants.
 abstract final class AppDimensions {
+  /// Hairline stroke width for subtle dividers: 0.5 pt.
+  static const double borderHairline = 0.5;
+
+  /// Thin border stroke width for compact cards and pills: 0.8 pt.
+  static const double borderThin = 0.8;
+
+  /// Default border stroke width: 1.0 pt.
+  static const double borderDefault = 1.0;
+
+  /// Thick border stroke width for emphasis: 1.5 pt.
+  static const double borderThick = 1.5;
+
+  /// Selected border stroke width for active chips/cards: 2.0 pt.
+  static const double borderSelected = 2.0;
+
+  /// Standard progress indicator stroke width: 2.5 pt.
+  static const double progressStrokeWidth = 2.5;
+
   /// Drag handle width for bottom sheets: 32.0 pt.
   static const double dragHandleWidth = 32.0;
 
@@ -172,6 +211,9 @@ abstract final class AppDimensions {
 
   /// Primary button height: 52.0 pt.
   static const double primaryButtonHeight = 52.0;
+
+  /// Hero action button height: 56.0 pt.
+  static const double heroButtonHeight = 56.0;
 
   /// Minimum touch target dimension according to accessibility standards: 48.0 pt.
   static const double minTouchTarget = 48.0;

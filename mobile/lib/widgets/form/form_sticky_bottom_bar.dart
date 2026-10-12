@@ -43,11 +43,11 @@ class FormStickyBottomBar extends StatelessWidget {
     final resolvedLabel = labelText ?? l10n.saveCode;
 
     final topBorderColor = colorScheme.outlineVariant.withValues(
-      alpha: isDark ? 0.40 : 0.60,
+      alpha: isDark ? AppOpacity.outline : AppOpacity.muted,
     );
 
     final bgColor = isDark
-        ? colorScheme.surface.withValues(alpha: 0.95)
+        ? colorScheme.surface.withValues(alpha: AppOpacity.almostOpaque)
         : colorScheme.surface.withValues(alpha: 0.98);
 
     return Container(
@@ -66,7 +66,7 @@ class FormStickyBottomBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
               child: SizedBox(
                 width: double.infinity,
-                height: 52,
+                height: AppDimensions.primaryButtonHeight,
                 child: FilledButton(
                   key: const Key('form_sticky_bottom_bar_button'),
                   onPressed: isEnabled && !isLoading ? (onSavePressed ?? onPressed) : null,
@@ -74,7 +74,7 @@ class FormStickyBottomBar extends StatelessWidget {
                     backgroundColor: colorScheme.primary,
                     foregroundColor: colorScheme.onPrimary,
                     disabledBackgroundColor: colorScheme.surfaceContainerHighest,
-                    disabledForegroundColor: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                    disabledForegroundColor: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.outline),
                     shape: const RoundedRectangleBorder(
                       borderRadius: AppRadii.borderMd,
                     ),
@@ -85,7 +85,7 @@ class FormStickyBottomBar extends StatelessWidget {
                           width: 22,
                           height: 22,
                           child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
+                            strokeWidth: AppDimensions.progressStrokeWidth,
                             color: colorScheme.onPrimary,
                           ),
                         )
@@ -93,13 +93,13 @@ class FormStickyBottomBar extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(icon, size: 22),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: AppSpacing.sm),
                             Text(
                               resolvedLabel,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 color: isEnabled
                                     ? colorScheme.onPrimary
-                                    : colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                                    : colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.outline),
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
                               ),

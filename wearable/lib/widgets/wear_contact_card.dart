@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared/models/contact.dart';
+import 'package:shared/theme/app_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_colors.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_typography.dart';
@@ -45,18 +46,18 @@ class WearContactCard extends StatelessWidget {
       elevation: 0,
       color: AppColors.darkSurfaceContainer,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(WearDimensions.cardRadius),
+        borderRadius: WearDimensions.borderCard,
         side: BorderSide(
-          color: AppColors.darkOutline.withValues(alpha: 0.25),
-          width: 0.8,
+          color: AppColors.darkOutline.withValues(alpha: AppOpacity.subtleBorder),
+          width: WearDimensions.borderThin,
         ),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(WearDimensions.cardRadius),
-        splashColor: AppColors.emeraldPrimary.withValues(alpha: 0.15),
-        highlightColor: AppColors.emeraldPrimary.withValues(alpha: 0.08),
+        borderRadius: WearDimensions.borderCard,
+        splashColor: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.semiTranslucent),
+        highlightColor: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.tint),
         child: Padding(
           padding: WearDimensions.cardPadding,
           child: Column(
@@ -70,17 +71,17 @@ class WearContactCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 4.0),
+              const SizedBox(height: AppSpacing.xs),
 
               // Tax Code Monospace Pill with QR hint
               Container(
                 padding: WearDimensions.pillPadding,
                 decoration: BoxDecoration(
-                  color: AppColors.emeraldContainerDark.withValues(alpha: 0.25),
-                  borderRadius: BorderRadius.circular(WearDimensions.pillRadius),
+                  color: AppColors.emeraldContainerDark.withValues(alpha: AppOpacity.subtleBorder),
+                  borderRadius: WearDimensions.borderPill,
                   border: Border.all(
-                    color: AppColors.emeraldPrimary.withValues(alpha: 0.35),
-                    width: 0.8,
+                    color: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.disabled),
+                    width: WearDimensions.borderThin,
                   ),
                 ),
                 child: FittedBox(
@@ -93,11 +94,11 @@ class WearContactCard extends StatelessWidget {
                         style: WearTypography.codeDisplayCard(),
                         maxLines: 1,
                       ),
-                      const SizedBox(width: 4.0),
+                      const SizedBox(width: AppSpacing.xs),
                       Icon(
                         Icons.qr_code_2_rounded,
                         size: WearDimensions.iconSmall,
-                        color: AppColors.emeraldLight.withValues(alpha: 0.85),
+                        color: AppColors.emeraldLight.withValues(alpha: AppOpacity.high),
                       ),
                     ],
                   ),
@@ -105,7 +106,7 @@ class WearContactCard extends StatelessWidget {
               ),
 
               if (metadataStr.isNotEmpty) ...[
-                const SizedBox(height: 3.0),
+                const SizedBox(height: WearDimensions.cardSpacing / 2),
                 Text(
                   metadataStr,
                   style: WearTypography.cardSubtitle(),

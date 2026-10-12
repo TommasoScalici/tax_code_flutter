@@ -81,12 +81,12 @@ class ContactCard extends StatelessWidget {
     ).format(contact.birthDate);
 
     final cardBorderColor = colorScheme.outlineVariant.withValues(
-      alpha: isDark ? AppOpacity.medium : 0.9,
+      alpha: isDark ? AppOpacity.medium : AppOpacity.almostOpaque,
     );
 
     final taxCodeBoxBg = isDark
         ? colorScheme.surfaceContainerHigh
-        : colorScheme.surfaceContainerHighest.withValues(alpha: 0.35);
+        : colorScheme.surfaceContainerHighest.withValues(alpha: AppOpacity.disabled);
 
     return Container(
       constraints: const BoxConstraints(maxWidth: 520),
@@ -113,16 +113,16 @@ class ContactCard extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: 38,
-                    height: 38,
+                    width: AppDimensions.avatarSm,
+                    height: AppDimensions.avatarSm,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: colorScheme.primary.withValues(
-                        alpha: isDark ? 0.14 : 0.10,
+                        alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.tint,
                       ),
                       border: Border.all(
                         color: colorScheme.primary.withValues(
-                          alpha: isDark ? 0.30 : 0.20,
+                          alpha: isDark ? AppOpacity.translucent : AppOpacity.glow,
                         ),
                       ),
                     ),
@@ -189,7 +189,7 @@ class ContactCard extends StatelessWidget {
                   Icon(
                     Icons.drag_indicator_rounded,
                     size: 18,
-                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.outline),
                   ),
                 ],
               ),
@@ -215,7 +215,7 @@ class ContactCard extends StatelessWidget {
                         borderRadius: AppRadii.borderInput,
                         border: Border.all(
                           color: colorScheme.primary.withValues(
-                            alpha: isDark ? 0.25 : 0.35,
+                            alpha: isDark ? AppOpacity.subtleBorder : AppOpacity.disabled,
                           ),
                           width: 1.2,
                         ),
@@ -310,8 +310,8 @@ class ContactCard extends StatelessWidget {
               // Divider
               Divider(
                 height: 1,
-                thickness: 1,
-                color: colorScheme.outlineVariant.withValues(alpha: 0.45),
+                thickness: AppDimensions.borderDefault,
+                color: colorScheme.outlineVariant.withValues(alpha: AppOpacity.divider),
               ),
               const SizedBox(height: 10),
 
@@ -387,9 +387,9 @@ class _CardActionButton extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final bgColor = isDestructive
-        ? colorScheme.error.withValues(alpha: isDark ? 0.12 : 0.08)
+        ? colorScheme.error.withValues(alpha: isDark ? AppOpacity.faint : AppOpacity.tint)
         : colorScheme.surfaceContainerHighest.withValues(
-            alpha: isDark ? 0.5 : 0.45,
+            alpha: isDark ? AppOpacity.divider : AppOpacity.outline,
           );
 
     final fgColor = isDestructive
@@ -397,8 +397,8 @@ class _CardActionButton extends StatelessWidget {
         : colorScheme.onSurfaceVariant;
 
     final borderColor = isDestructive
-        ? colorScheme.error.withValues(alpha: isDark ? 0.30 : 0.20)
-        : colorScheme.outlineVariant.withValues(alpha: 0.5);
+        ? colorScheme.error.withValues(alpha: isDark ? AppOpacity.translucent : AppOpacity.glow)
+        : colorScheme.outlineVariant.withValues(alpha: AppOpacity.divider);
 
     return Tooltip(
       triggerMode: TooltipTriggerMode.manual,

@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
+import 'package:shared/theme/app_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_colors.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_typography.dart';
@@ -110,12 +111,7 @@ class _BarcodePageState extends State<BarcodePage> {
             child: SingleChildScrollView(
               controller: _scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(
-                WearDimensions.screenPaddingHorizontal,
-                WearDimensions.screenPaddingTop,
-                WearDimensions.screenPaddingHorizontal,
-                WearDimensions.screenPaddingBottom,
-              ),
+              padding: WearDimensions.listPadding,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -131,13 +127,13 @@ class _BarcodePageState extends State<BarcodePage> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    const SizedBox(height: 6.0),
+                    const SizedBox(height: WearDimensions.cardSpacing),
                   ],
 
                   // Optical scanning surface
                   Material(
                     color: AppColors.opticalWhite,
-                    borderRadius: BorderRadius.circular(WearDimensions.opticalRadius),
+                    borderRadius: WearDimensions.borderOptical,
                     clipBehavior: Clip.antiAlias,
                     child: InkWell(
                       onTap: _toggleFormat,
@@ -164,7 +160,7 @@ class _BarcodePageState extends State<BarcodePage> {
                                 drawText: false,
                                 backgroundColor: AppColors.opticalWhite,
                               ),
-                            const SizedBox(height: 6.0),
+                            const SizedBox(height: WearDimensions.cardSpacing),
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
@@ -179,16 +175,16 @@ class _BarcodePageState extends State<BarcodePage> {
                     ),
                   ),
 
-                  const SizedBox(height: 8.0),
+                  const SizedBox(height: AppSpacing.sm),
 
                   // Format toggle button
                   InkWell(
                     onTap: _toggleFormat,
-                    borderRadius: BorderRadius.circular(WearDimensions.stadiumRadius),
+                    borderRadius: WearDimensions.borderStadium,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 10.0,
-                        vertical: 4.0,
+                        vertical: AppSpacing.xs,
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -198,7 +194,7 @@ class _BarcodePageState extends State<BarcodePage> {
                             size: WearDimensions.iconSmall,
                             color: AppColors.emeraldLight,
                           ),
-                          const SizedBox(width: 5.0),
+                          const SizedBox(width: AppSpacing.xs),
                           Flexible(
                             child: Text(
                               _isQrCode ? l10n.barcode1D : l10n.qrCode2D,
@@ -212,13 +208,13 @@ class _BarcodePageState extends State<BarcodePage> {
                     ),
                   ),
 
-                  const SizedBox(height: 4.0),
+                  const SizedBox(height: AppSpacing.xs),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                     child: Text(
                       l10n.swipeToClose,
                       style: WearTypography.hint(
-                        color: AppColors.darkOnSurfaceVariant.withValues(alpha: 0.7),
+                        color: AppColors.darkOnSurfaceVariant.withValues(alpha: AppOpacity.medium),
                       ),
                       textAlign: TextAlign.center,
                     ),

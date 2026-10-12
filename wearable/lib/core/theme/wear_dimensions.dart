@@ -43,6 +43,30 @@ abstract final class WearDimensions {
   /// Corner radius for dialogs and modal confirmation sheets.
   static const double dialogRadius = 24.0;
 
+  /// Circular border radius for compact contact cards.
+  static const BorderRadius borderCard = BorderRadius.all(Radius.circular(cardRadius));
+
+  /// Circular border radius for Codice Fiscale monospace badge pills.
+  static const BorderRadius borderPill = BorderRadius.all(Radius.circular(pillRadius));
+
+  /// Stadium border radius for buttons and toggle chips.
+  static const BorderRadius borderStadium = BorderRadius.all(Radius.circular(stadiumRadius));
+
+  /// Circular border radius for optical barcode/QR presentation surfaces.
+  static const BorderRadius borderOptical = BorderRadius.all(Radius.circular(opticalRadius));
+
+  /// Circular border radius for dialogs and modal confirmation sheets.
+  static const BorderRadius borderDialog = BorderRadius.all(Radius.circular(dialogRadius));
+
+  /// Thin border stroke width for compact watch cards and pills: 0.8 pt.
+  static const double borderThin = 0.8;
+
+  /// Standard progress indicator stroke width: 2.5 pt.
+  static const double progressStrokeWidth = 2.5;
+
+  /// Dialog confirmation button icon size: 20.0 pt.
+  static const double dialogActionIconSize = 20.0;
+
   // ---------------------------------------------------------------------------
   // Card & Container Sizing
   // ---------------------------------------------------------------------------

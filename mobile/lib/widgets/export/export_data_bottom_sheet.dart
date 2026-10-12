@@ -9,6 +9,7 @@ import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/data_export_service.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
 
@@ -202,11 +203,11 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                       padding: const EdgeInsets.all(14.0),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.errorContainer.withValues(
-                          alpha: 0.3,
+                          alpha: AppOpacity.translucent,
                         ),
-                        borderRadius: BorderRadius.circular(14.0),
+                        borderRadius: AppRadii.borderInput,
                         border: Border.all(
-                          color: theme.colorScheme.error.withValues(alpha: 0.5),
+                          color: theme.colorScheme.error.withValues(alpha: AppOpacity.divider),
                         ),
                       ),
                       child: Row(
@@ -214,9 +215,9 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                           Icon(
                             Icons.info_outline_rounded,
                             color: theme.colorScheme.error,
-                            size: 20,
+                            size: AppDimensions.iconMd,
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: AppSpacing.md),
                           Expanded(
                             child: Text(
                               l10n.exportNoCodes,
@@ -236,7 +237,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
                       ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.surfaceContainerHigh,
-                        borderRadius: BorderRadius.circular(14.0),
+                        borderRadius: AppRadii.borderInput,
                       ),
                       child: Row(
                         children: [
@@ -398,23 +399,23 @@ class _FormatOptionCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(16.0),
+          borderRadius: AppRadii.borderMd,
           border: Border.all(
             color: borderColor,
-            width: isSelected ? 2.0 : 1.0,
+            width: isSelected ? AppDimensions.borderSelected : AppDimensions.borderDefault,
           ),
         ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8.0),
+              padding: AppSpacing.paddingSm,
               decoration: BoxDecoration(
                 color: isSelected
                     ? theme.colorScheme.primary.withValues(
-                        alpha: isDark ? 0.22 : 0.12,
+                        alpha: isDark ? AppOpacity.glow : AppOpacity.faint,
                       )
                     : theme.colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: AppRadii.borderCompact,
               ),
               child: Icon(
                 icon,
@@ -438,7 +439,7 @@ class _FormatOptionCard extends StatelessWidget {
                           : theme.colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.xxs),
                   Text(
                     description,
                     style: theme.textTheme.bodySmall?.copyWith(
@@ -448,7 +449,7 @@ class _FormatOptionCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.sm),
             Icon(
               isSelected
                   ? Icons.radio_button_checked_rounded

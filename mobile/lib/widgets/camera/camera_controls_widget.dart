@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 class CameraControlsWidget extends StatelessWidget {
@@ -34,16 +35,16 @@ class CameraControlsWidget extends StatelessWidget {
       children: [
         // Top action bar: Close button (left) and Flash toggle (right)
         Positioned(
-          top: safeAreaPadding.top + 16,
-          left: 16,
+          top: safeAreaPadding.top + AppSpacing.lg,
+          left: AppSpacing.lg,
           child: Container(
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest.withValues(
-                alpha: 0.75,
+                alpha: AppOpacity.prominent,
               ),
               shape: BoxShape.circle,
               border: Border.all(
-                color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+                color: colorScheme.outlineVariant.withValues(alpha: AppOpacity.outline),
               ),
             ),
             child: IconButton(
@@ -51,23 +52,23 @@ class CameraControlsWidget extends StatelessWidget {
               icon: Icon(
                 Icons.arrow_back,
                 color: colorScheme.onSurface,
-                size: 24,
+                size: AppDimensions.iconLg,
               ),
               onPressed: () => Navigator.maybePop(context),
             ),
           ),
         ),
         Positioned(
-          top: safeAreaPadding.top + 16,
-          right: 16,
+          top: safeAreaPadding.top + AppSpacing.lg,
+          right: AppSpacing.lg,
           child: Container(
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest.withValues(
-                alpha: 0.75,
+                alpha: AppOpacity.prominent,
               ),
               shape: BoxShape.circle,
               border: Border.all(
-                color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+                color: colorScheme.outlineVariant.withValues(alpha: AppOpacity.outline),
               ),
             ),
             child: IconButton(
@@ -79,7 +80,7 @@ class CameraControlsWidget extends StatelessWidget {
                 color: controller.flashMode == FlashMode.off
                     ? colorScheme.onSurface
                     : colorScheme.primary,
-                size: 24,
+                size: AppDimensions.iconLg,
               ),
               onPressed: controller.toggleFlash,
             ),
