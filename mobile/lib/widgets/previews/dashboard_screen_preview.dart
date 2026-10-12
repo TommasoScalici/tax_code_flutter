@@ -8,8 +8,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
-import 'package:tax_code_flutter/core/theme/app_theme.dart';
-import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/contact_card_image_service.dart';
 import 'package:tax_code_flutter/services/contact_pdf_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
@@ -19,6 +18,7 @@ import 'package:tax_code_flutter/widgets/dashboard/dashboard_empty_state.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_fab.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_header.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_search_bar.dart';
+import 'package:tax_code_flutter/widgets/previews/preview_shell.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 import 'package:tax_code_flutter/widgets/share/share_contact_bottom_sheet.dart';
 
@@ -103,7 +103,6 @@ class DashboardScreenPreview extends StatefulWidget {
 }
 
 class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
-  late bool _isDarkMode;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
@@ -145,7 +144,6 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
   @override
   void initState() {
     super.initState();
-    _isDarkMode = widget.isDarkMode;
     _contacts = widget.initialContacts != null
         ? List.from(widget.initialContacts!)
         : List.from(_allContacts);
@@ -165,17 +163,6 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
           c.lastName.toLowerCase().contains(q) ||
           c.taxCode.toLowerCase().contains(q);
     }).toList();
-  }
-
-  void _showFeedback(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 1),
-      ),
-    );
   }
 
   Future<void> _handleDelete(BuildContext context, Contact contact) async {
@@ -207,13 +194,18 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
       setState(() {
         _contacts.removeWhere((c) => c.id == contact.id);
       });
-      _showFeedback(this.context, l10n.actionLabel(l10n.delete));
+      PreviewShell.showFeedback(this.context, l10n.actionLabel(l10n.delete));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return PreviewShell(
+      maxWidth: 600,
+      padding: EdgeInsets.zero,
+      expandChild: true,
+      initialDarkMode: widget.isDarkMode,
+      initialLocale: widget.locale,
       providers: [
         ChangeNotifierProvider<AuthService>.value(
           value: _ScreenPreviewAuthService(),
@@ -228,131 +220,116 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
           value: const ContactPdfService(),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-        locale: widget.locale,
-        localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Builder(
-          builder: (context) {
-            final l10n = context.l10n;
-            final displayedContacts = _filteredContacts;
+      builder: (context, _) {
+        final l10n = context.l10n;
+        final displayedContacts = _filteredContacts;
 
-            return Scaffold(
-              appBar: DashboardHeader(
-                onThemeToggle: () {
-                  setState(() {
-                    _isDarkMode = !_isDarkMode;
-                  });
-                },
-                onProfileTap: () =>
-                    _showFeedback(context, l10n.profilePageTitle),
-                onSyncToggle: () =>
-                    _showFeedback(context, l10n.cloudSyncOn),
-              ),
-              body: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () => FocusScope.of(context).unfocus(),
-                child: ResponsiveLayout(
-                  maxWidth: 600.0,
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  children: [
-                    // Search Bar with real-time query filtering & card counter
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12.0),
-                      child: DashboardSearchBar(
-                        controller: _searchController,
-                        cardCount: _contacts.length,
-                        onChanged: (val) {
-                          setState(() {
-                            _searchQuery = val;
-                          });
-                        },
-                        onClear: () {
-                          setState(() {
-                            _searchQuery = '';
-                            _searchController.clear();
-                          });
-                        },
-                      ),
+        return Scaffold(
+          appBar: DashboardHeader(
+            onThemeToggle: () {},
+            onProfileTap: () =>
+                PreviewShell.showFeedback(context, l10n.profilePageTitle),
+            onSyncToggle: () =>
+                PreviewShell.showFeedback(context, l10n.cloudSyncOn),
+          ),
+          body: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: ResponsiveLayout(
+              maxWidth: 600.0,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  // Search Bar with real-time query filtering & card counter
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: DashboardSearchBar(
+                      controller: _searchController,
+                      cardCount: _contacts.length,
+                      onChanged: (val) {
+                        setState(() {
+                          _searchQuery = val;
+                        });
+                      },
+                      onClear: () {
+                        setState(() {
+                          _searchQuery = '';
+                          _searchController.clear();
+                        });
+                      },
                     ),
+                  ),
 
-                    // Content Area
-                    Expanded(
-                      child: displayedContacts.isEmpty
-                          ? DashboardEmptyState(
-                              searchQuery: _searchQuery.isNotEmpty
-                                  ? _searchQuery
-                                  : null,
-                              onClearSearch: () {
-                                setState(() {
-                                  _searchQuery = '';
-                                  _searchController.clear();
-                                });
-                              },
-                              onAddContact: () {
-                                setState(() {
-                                  _contacts = List.from(_allContacts);
-                                });
-                                _showFeedback(context, l10n.appName);
-                              },
-                            )
-                          : ListView.builder(
-                              keyboardDismissBehavior:
-                                  ScrollViewKeyboardDismissBehavior.onDrag,
-                              padding: const EdgeInsets.only(
-                                top: 4.0,
-                                bottom: 90.0,
-                                left: 16.0,
-                                right: 16.0,
-                              ),
-                              itemCount: displayedContacts.length,
-                              itemBuilder: (context, index) {
-                                final contact = displayedContacts[index];
-                                return ContactCard(
-                                  key: ValueKey(contact.id),
-                                  contact: contact,
-                                  onShare: () => unawaited(
-                                    ShareContactBottomSheet.show(
-                                      context,
-                                      contact: contact,
-                                    ),
-                                  ),
-                                  onShowBarcode: () => unawaited(
-                                    BarcodeBottomSheet.show(
-                                      context,
-                                      contact: contact,
-                                    ),
-                                  ),
-                                  onEdit: () => _showFeedback(
-                                    context,
-                                    l10n.cardActionEdit,
-                                  ),
-                                  onDelete: () =>
-                                      _handleDelete(context, contact),
-                                );
-                              },
+                  // Content Area
+                  Expanded(
+                    child: displayedContacts.isEmpty
+                        ? DashboardEmptyState(
+                            searchQuery: _searchQuery.isNotEmpty
+                                ? _searchQuery
+                                : null,
+                            onClearSearch: () {
+                              setState(() {
+                                _searchQuery = '';
+                                _searchController.clear();
+                              });
+                            },
+                            onAddContact: () {
+                              setState(() {
+                                _contacts = List.from(_allContacts);
+                              });
+                              PreviewShell.showFeedback(context, l10n.appName);
+                            },
+                          )
+                        : ListView.builder(
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
+                            padding: const EdgeInsets.only(
+                              top: 4.0,
+                              bottom: 90.0,
+                              left: 16.0,
+                              right: 16.0,
                             ),
-                    ),
-                  ],
-                ),
+                            itemCount: displayedContacts.length,
+                            itemBuilder: (context, index) {
+                              final contact = displayedContacts[index];
+                              return ContactCard(
+                                key: ValueKey(contact.id),
+                                contact: contact,
+                                onShare: () => unawaited(
+                                  ShareContactBottomSheet.show(
+                                    context,
+                                    contact: contact,
+                                  ),
+                                ),
+                                onShowBarcode: () => unawaited(
+                                  BarcodeBottomSheet.show(
+                                    context,
+                                    contact: contact,
+                                  ),
+                                ),
+                                onEdit: () => PreviewShell.showFeedback(
+                                  context,
+                                  l10n.cardActionEdit,
+                                ),
+                                onDelete: () =>
+                                    _handleDelete(context, contact),
+                              );
+                            },
+                          ),
+                  ),
+                ],
               ),
             ),
-              floatingActionButton: _contacts.isNotEmpty
-                  ? DashboardFab(
-                      onPressed: () {
-                        _showFeedback(context, l10n.addCode);
-                      },
-                    )
-                  : null,
-            );
-          },
-        ),
-      ),
+          ),
+          floatingActionButton: _contacts.isNotEmpty
+              ? DashboardFab(
+                  onPressed: () {
+                    PreviewShell.showFeedback(context, l10n.addCode);
+                  },
+                )
+              : null,
+        );
+      },
     );
   }
 }

@@ -12,11 +12,10 @@ import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/sync_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/controllers/profile_screen_controller.dart';
-import 'package:tax_code_flutter/core/theme/app_colors.dart';
-import 'package:tax_code_flutter/core/theme/app_theme.dart';
-import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
+import 'package:tax_code_flutter/widgets/previews/preview_shell.dart';
 import 'package:tax_code_flutter/widgets/profile_bottom_sheet.dart';
 
 class _PreviewAuthService extends ChangeNotifier implements AuthService {
@@ -211,7 +210,6 @@ class ProfileBottomSheetPreview extends StatefulWidget {
 }
 
 class _ProfileBottomSheetPreviewState extends State<ProfileBottomSheetPreview> {
-  bool _isDarkMode = true;
   bool _isGuestMode = false;
 
   late final _PreviewAuthService _authService;
@@ -234,7 +232,9 @@ class _ProfileBottomSheetPreviewState extends State<ProfileBottomSheetPreview> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return PreviewShell(
+      expandChild: true,
+      padding: EdgeInsets.zero,
       providers: [
         ChangeNotifierProvider<AuthService>.value(value: _authService),
         ChangeNotifierProvider<SyncService>.value(value: _syncService),
@@ -249,94 +249,34 @@ class _ProfileBottomSheetPreviewState extends State<ProfileBottomSheetPreview> {
           ),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-        localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Builder(
-          builder: (context) {
-            final l10n = context.l10n;
-
-            return Scaffold(
-              body: SafeArea(
-                child: Column(
-                  children: [
-                    // Preview Toolbar Controls
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 8.0),
-                      color: _isDarkMode
-                          ? AppColors.darkSurfaceContainerLowest
-                          : AppColors.lightSurfaceContainerLow,
-                      child: Wrap(
-                        spacing: 8.0,
-                        runSpacing: 4.0,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          // Theme Switch
-                          ActionChip(
-                            avatar: Icon(
-                              _isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                              size: 16,
-                            ),
-                            label: Text(_isDarkMode ? l10n.themeDark : l10n.themeLight),
-                            onPressed: () {
-                              setState(() {
-                                _isDarkMode = !_isDarkMode;
-                              });
-                            },
-                          ),
-
-                          // User Mode Switch
-                          FilterChip(
-                            label: Text(_isGuestMode
-                                ? l10n.guestBadge
-                                : 'Google (Mario Rossi)'),
-                            selected: _isGuestMode,
-                            onSelected: (val) {
-                              setState(() {
-                                _isGuestMode = val;
-                                _authService.setGuest(val);
-                              });
-                            },
-                          ),
-
-                          // Open Modal Bottom Sheet button
-                          FilledButton.icon(
-                            icon: const Icon(Icons.open_in_browser, size: 16),
-                            label: Text(l10n.openAsBottomSheet),
-                            style: FilledButton.styleFrom(
-                              visualDensity: VisualDensity.compact,
-                            ),
-                            onPressed: () {
-                              unawaited(ProfileBottomSheet.show(context));
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Embedded Sheet Viewport
-                    Expanded(
-                      child: Center(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: 412.0,
-                          ),
-                          child: const ProfileBottomSheet(isEmbedded: true),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+      toolbarActions: (context, _) {
+        final l10n = context.l10n;
+        return [
+          FilterChip(
+            label: Text(_isGuestMode
+                ? l10n.guestBadge
+                : 'Google (Mario Rossi)'),
+            selected: _isGuestMode,
+            onSelected: (val) {
+              setState(() {
+                _isGuestMode = val;
+                _authService.setGuest(val);
+              });
+            },
+          ),
+          FilledButton.icon(
+            icon: const Icon(Icons.open_in_browser, size: 16),
+            label: Text(l10n.openAsBottomSheet),
+            style: FilledButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+            ),
+            onPressed: () {
+              unawaited(ProfileBottomSheet.show(context));
+            },
+          ),
+        ];
+      },
+      child: const ProfileBottomSheet(isEmbedded: true),
     );
   }
 }

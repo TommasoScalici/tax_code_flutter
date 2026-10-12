@@ -1,8 +1,8 @@
 import 'package:flutter/widget_previews.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:tax_code_flutter/core/theme/app_theme.dart';
-import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_fab.dart';
+import 'package:tax_code_flutter/widgets/previews/preview_shell.dart';
 
 /// Standalone preview for [DashboardFab] within a centered mobile viewport.
 class DashboardFabPreview extends StatefulWidget {
@@ -14,99 +14,41 @@ class DashboardFabPreview extends StatefulWidget {
 }
 
 class _DashboardFabPreviewState extends State<DashboardFabPreview> {
-  bool _isDarkMode = false;
   bool _isExtended = true;
-
-  void _showFeedback(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 1),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      locale: const Locale('it'),
-      localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Builder(
-        builder: (context) {
-          final theme = Theme.of(context);
-          final l10n = context.l10n;
-
-          return Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor,
-            body: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 440),
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Toolbar
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 24.0),
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          ActionChip(
-                            avatar: Icon(
-                              _isDarkMode
-                                  ? Icons.dark_mode_rounded
-                                  : Icons.light_mode_rounded,
-                              size: 16,
-                            ),
-                            label: Text(_isDarkMode ? l10n.themeDark : l10n.themeLight),
-                            onPressed: () {
-                              setState(() {
-                                _isDarkMode = !_isDarkMode;
-                              });
-                            },
-                          ),
-                          FilterChip(
-                            label: Text(l10n.extended),
-                            selected: _isExtended,
-                            onSelected: (val) {
-                              setState(() {
-                                _isExtended = val;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Centered preview display
-                    Card(
-                      child: Container(
-                        height: 200,
-                        alignment: Alignment.center,
-                        child: DashboardFab(
-                          isExtended: _isExtended,
-                          onPressed: () {
-                            _showFeedback(context, l10n.addCode);
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+    return PreviewShell(
+      toolbarActions: (context, _) {
+        final l10n = context.l10n;
+        return [
+          FilterChip(
+            label: Text(l10n.extended),
+            selected: _isExtended,
+            onSelected: (val) {
+              setState(() {
+                _isExtended = val;
+              });
+            },
+          ),
+        ];
+      },
+      builder: (context, _) {
+        final l10n = context.l10n;
+        return Card(
+          child: Container(
+            height: 200,
+            alignment: Alignment.center,
+            child: DashboardFab(
+              isExtended: _isExtended,
+              onPressed: () => PreviewShell.showFeedback(
+                context,
+                l10n.addCode,
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

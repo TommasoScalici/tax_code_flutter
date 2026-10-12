@@ -4,8 +4,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/utils/tax_code_generator.dart';
-import 'package:tax_code_flutter/core/theme/app_theme.dart';
-import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/validators/only_letters_validator.dart';
 import 'package:tax_code_flutter/widgets/form/birthdate_picker_field.dart';
 import 'package:tax_code_flutter/widgets/form/birthplace_autocomplete_field.dart';
@@ -15,6 +14,7 @@ import 'package:tax_code_flutter/widgets/form/form_sticky_bottom_bar.dart';
 import 'package:tax_code_flutter/widgets/form/gender_segmented_button.dart';
 import 'package:tax_code_flutter/widgets/form/ocr_ai_hero_banner.dart';
 import 'package:tax_code_flutter/widgets/form/tax_code_live_preview_card.dart';
+import 'package:tax_code_flutter/widgets/previews/preview_shell.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
 /// Full screen interactive preview for the modernized Form Screen (Task 6.9).
@@ -45,7 +45,6 @@ class FormScreenPreview extends StatefulWidget {
 }
 
 class _FormScreenPreviewState extends State<FormScreenPreview> {
-  late bool _isDarkMode;
   late bool _isEditing;
   bool _isSubmitting = false;
 
@@ -64,7 +63,6 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
   @override
   void initState() {
     super.initState();
-    _isDarkMode = widget.isDarkMode;
     _isEditing = widget.initialContact != null;
     _initForm(contact: widget.initialContact);
   }
@@ -193,166 +191,140 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      locale: widget.locale,
-      localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Builder(
-        builder: (context) {
-          final l10n = context.l10n;
-          final theme = Theme.of(context);
+    return PreviewShell(
+      maxWidth: 520,
+      expandChild: true,
+      padding: EdgeInsets.zero,
+      initialDarkMode: widget.isDarkMode,
+      initialLocale: widget.locale,
+      builder: (context, _) {
+        final l10n = context.l10n;
+        final theme = Theme.of(context);
 
-          return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_rounded),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(l10n.returnToDashboard),
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
-                },
-              ),
-              title: Text(
-                _isEditing ? l10n.editTaxCodeTitle : l10n.newTaxCodeTitle,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              elevation: 0,
-              scrolledUnderElevation: 0,
-              actions: [
-                // Toggle mode (New vs Edit)
-                IconButton(
-                  tooltip: _isEditing ? l10n.createMode : l10n.editMode,
-                  icon: Icon(
-                    _isEditing
-                        ? Icons.add_circle_outline_rounded
-                        : Icons.edit_note_rounded,
-                  ),
-                  onPressed: _toggleEditMode,
-                ),
-                // Toggle Theme
-                IconButton(
-                  tooltip: _isDarkMode
-                      ? l10n.switchToLightMode
-                      : l10n.switchToDarkMode,
-                  icon: Icon(
-                    _isDarkMode
-                        ? Icons.light_mode_rounded
-                        : Icons.dark_mode_rounded,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isDarkMode = !_isDarkMode;
-                    });
-                  },
-                ),
-              ],
-            ),
-            bottomNavigationBar: ReactiveFormBuilder(
-              form: () => _form,
-              builder: (context, form, child) {
-                return FormStickyBottomBar(
-                  labelText: l10n.saveCode,
-                  isEnabled: form.valid && !_isSubmitting,
-                  isLoading: _isSubmitting,
-                  onPressed: (form.valid && !_isSubmitting)
-                      ? _handleSubmit
-                      : null,
-                );
+        return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              onPressed: () {
+                PreviewShell.showFeedback(context, l10n.returnToDashboard);
               },
             ),
-            body: ResponsiveLayout(
-              maxWidth: 520.0,
-              padding: EdgeInsets.zero,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-                child: ReactiveForm(
-                  formGroup: _form,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // OCR Banner (creation only)
-                      if (!_isEditing) ...[
-                        OcrAiHeroBanner(
-                          onScanPressed: _simulateScanData,
-                        ),
-                        const SizedBox(height: 18),
-                        const FormSectionDivider(),
-                        const SizedBox(height: 18),
-                      ],
-
-                      // First Name
-                      CustomTextField(
-                        formControlName: 'firstName',
-                        labelText: l10n.firstName,
-                        placeholder: l10n.firstNamePlaceholder,
-                        validationMessages: {
-                          ValidationMessage.required: (_) => l10n.required,
-                          'invalidCharacters': (_) => l10n.invalidCharacters,
-                        },
+            title: Text(
+              _isEditing ? l10n.editTaxCodeTitle : l10n.newTaxCodeTitle,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            actions: [
+              IconButton(
+                tooltip: _isEditing ? l10n.createMode : l10n.editMode,
+                icon: Icon(
+                  _isEditing
+                      ? Icons.add_circle_outline_rounded
+                      : Icons.edit_note_rounded,
+                ),
+                onPressed: _toggleEditMode,
+              ),
+            ],
+          ),
+          bottomNavigationBar: ReactiveFormBuilder(
+            form: () => _form,
+            builder: (context, form, child) {
+              return FormStickyBottomBar(
+                labelText: l10n.saveCode,
+                isEnabled: form.valid && !_isSubmitting,
+                isLoading: _isSubmitting,
+                onPressed: (form.valid && !_isSubmitting)
+                    ? _handleSubmit
+                    : null,
+              );
+            },
+          ),
+          body: ResponsiveLayout(
+            maxWidth: 520.0,
+            padding: EdgeInsets.zero,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+              child: ReactiveForm(
+                formGroup: _form,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // OCR Banner (creation only)
+                    if (!_isEditing) ...[
+                      OcrAiHeroBanner(
+                        onScanPressed: _simulateScanData,
                       ),
-                      const SizedBox(height: 16),
-
-                      // Last Name
-                      CustomTextField(
-                        formControlName: 'lastName',
-                        labelText: l10n.lastName,
-                        placeholder: l10n.lastNamePlaceholder,
-                        validationMessages: {
-                          ValidationMessage.required: (_) => l10n.required,
-                          'invalidCharacters': (_) => l10n.invalidCharacters,
-                        },
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Gender
-                      GenderSegmentedButton(
-                        formControlName: 'gender',
-                        labelText: l10n.gender,
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Birth Date
-                      BirthdatePickerField(
-                        formControlName: 'birthDate',
-                        labelText: l10n.birthDate,
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime.now(),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Birth Place
-                      BirthplaceAutocompleteField(
-                        formControlName: 'birthPlace',
-                        labelText: l10n.birthPlace,
-                        birthplaces: _birthplaces,
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Live preview card
-                      ReactiveFormConsumer(
-                        builder: (context, form, child) {
-                          return TaxCodeLivePreviewCard(
-                            taxCode: _calculateTaxCode(),
-                          );
-                        },
-                      ),
+                      const SizedBox(height: 18),
+                      const FormSectionDivider(),
+                      const SizedBox(height: 18),
                     ],
-                  ),
+
+                    // First Name
+                    CustomTextField(
+                      formControlName: 'firstName',
+                      labelText: l10n.firstName,
+                      placeholder: l10n.firstNamePlaceholder,
+                      validationMessages: {
+                        ValidationMessage.required: (_) => l10n.required,
+                        'invalidCharacters': (_) => l10n.invalidCharacters,
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Last Name
+                    CustomTextField(
+                      formControlName: 'lastName',
+                      labelText: l10n.lastName,
+                      placeholder: l10n.lastNamePlaceholder,
+                      validationMessages: {
+                        ValidationMessage.required: (_) => l10n.required,
+                        'invalidCharacters': (_) => l10n.invalidCharacters,
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Gender
+                    GenderSegmentedButton(
+                      formControlName: 'gender',
+                      labelText: l10n.gender,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Birth Date
+                    BirthdatePickerField(
+                      formControlName: 'birthDate',
+                      labelText: l10n.birthDate,
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Birth Place
+                    BirthplaceAutocompleteField(
+                      formControlName: 'birthPlace',
+                      labelText: l10n.birthPlace,
+                      birthplaces: _birthplaces,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Live preview card
+                    ReactiveFormConsumer(
+                      builder: (context, form, child) {
+                        return TaxCodeLivePreviewCard(
+                          taxCode: _calculateTaxCode(),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

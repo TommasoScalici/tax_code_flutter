@@ -1,9 +1,9 @@
 import 'package:flutter/widget_previews.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared/models/birthplace.dart';
-import 'package:tax_code_flutter/core/theme/app_theme.dart';
-import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/form/birthplace_autocomplete_field.dart';
+import 'package:tax_code_flutter/widgets/previews/preview_shell.dart';
 
 /// Standalone preview for [BirthplaceAutocompleteField] with sample mock birthplaces.
 class BirthplaceAutocompleteFieldPreview extends StatefulWidget {
@@ -17,17 +17,16 @@ class BirthplaceAutocompleteFieldPreview extends StatefulWidget {
 
 class _BirthplaceAutocompleteFieldPreviewState
     extends State<BirthplaceAutocompleteFieldPreview> {
-  bool _isDarkMode = true;
   final FocusNode _focusNode = FocusNode();
 
-  final List<Birthplace> _mockBirthplaces = const [
-    Birthplace(name: 'Roma', state: 'RM'),
-    Birthplace(name: 'Milano', state: 'MI'),
-    Birthplace(name: 'Napoli', state: 'NA'),
-    Birthplace(name: 'Torino', state: 'TO'),
-    Birthplace(name: 'Palermo', state: 'PA'),
-    Birthplace(name: 'Francia', state: 'EE'),
-    Birthplace(name: 'Germania', state: 'EE'),
+  static const List<Birthplace> _mockBirthplaces = [
+    Birthplace(name: 'Roma', state: 'RM', code: 'H501'),
+    Birthplace(name: 'Milano', state: 'MI', code: 'F205'),
+    Birthplace(name: 'Napoli', state: 'NA', code: 'F839'),
+    Birthplace(name: 'Torino', state: 'TO', code: 'L219'),
+    Birthplace(name: 'Palermo', state: 'PA', code: 'G273'),
+    Birthplace(name: 'Francia', state: 'EE', code: 'Z110'),
+    Birthplace(name: 'Germania', state: 'EE', code: 'Z112'),
   ];
 
   Birthplace? _selectedBirthplace;
@@ -40,65 +39,38 @@ class _BirthplaceAutocompleteFieldPreviewState
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      locale: const Locale('it'),
-      localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Builder(
-        builder: (context) {
-          final theme = Theme.of(context);
-          final l10n = context.l10n;
+    return PreviewShell(
+      builder: (context, isDarkMode) {
+        final theme = Theme.of(context);
+        final l10n = context.l10n;
 
-          return Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor,
-            body: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 440),
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Toolbar
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 24.0),
-                      child: ActionChip(
-                        avatar: Icon(
-                          _isDarkMode
-                              ? Icons.dark_mode_rounded
-                              : Icons.light_mode_rounded,
-                          size: 16,
-                        ),
-                        label: Text(_isDarkMode ? l10n.themeDark : l10n.themeLight),
-                        onPressed: () {
-                          setState(() {
-                            _isDarkMode = !_isDarkMode;
-                          });
-                        },
-                      ),
-                    ),
-
-                    // Target Widget
-                    BirthplaceAutocompleteField(
-                      focusNode: _focusNode,
-                      birthplaces: _mockBirthplaces,
-                      value: _selectedBirthplace,
-                      onChanged: (newPlace) {
-                        setState(() {
-                          _selectedBirthplace = newPlace;
-                        });
-                      },
-                    ),
-                  ],
-                ),
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            BirthplaceAutocompleteField(
+              birthplaces: _mockBirthplaces,
+              focusNode: _focusNode,
+              value: _selectedBirthplace,
+              onChanged: (place) {
+                setState(() {
+                  _selectedBirthplace = place;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            Text(
+              _selectedBirthplace != null
+                  ? '${l10n.birthPlace}: ${_selectedBirthplace!.name} (${_selectedBirthplace!.state})'
+                  : l10n.birthplacePlaceholder,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-          );
-        },
-      ),
+          ],
+        );
+      },
     );
   }
 }

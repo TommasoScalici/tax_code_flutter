@@ -4,9 +4,10 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
-import 'package:tax_code_flutter/core/theme/app_theme.dart';
-import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
+import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_header.dart';
+import 'package:tax_code_flutter/widgets/previews/preview_shell.dart';
 
 /// Lightweight mock of [AuthService] for [DashboardHeaderPreview].
 class _HeaderPreviewAuthService extends ChangeNotifier implements AuthService {
@@ -71,7 +72,6 @@ class DashboardHeaderPreview extends StatefulWidget {
 }
 
 class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
-  bool _isDarkMode = false;
   bool _isGuestMode = false;
   bool _cloudSyncEnabled = true;
 
@@ -81,138 +81,83 @@ class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
       guest: _isGuestMode,
     );
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      locale: const Locale('it'),
-      localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Builder(
-        builder: (context) {
-          final theme = Theme.of(context);
-          final colorScheme = theme.colorScheme;
-          final l10n = context.l10n;
+    return PreviewShell(
+      toolbarActions: (context, _) {
+        final l10n = context.l10n;
+        return [
+          ChoiceChip(
+            label: const Text('Google Account'),
+            selected: !_isGuestMode,
+            onSelected: (val) {
+              if (val) setState(() => _isGuestMode = false);
+            },
+          ),
+          ChoiceChip(
+            label: Text(l10n.guestBadge),
+            selected: _isGuestMode,
+            onSelected: (val) {
+              if (val) setState(() => _isGuestMode = true);
+            },
+          ),
+          FilterChip(
+            avatar: Icon(
+              _isGuestMode
+                  ? Icons.cloud_off_rounded
+                  : (_cloudSyncEnabled
+                      ? Icons.cloud_done_rounded
+                      : Icons.cloud_off_rounded),
+              size: AppDimensions.iconXs,
+            ),
+            label: Text(
+              _isGuestMode
+                  ? 'Sync Disabilitata'
+                  : (_cloudSyncEnabled ? 'Cloud Sync: ON' : 'Cloud Sync: OFF'),
+            ),
+            selected: !_isGuestMode && _cloudSyncEnabled,
+            onSelected: _isGuestMode
+                ? null
+                : (val) => setState(() => _cloudSyncEnabled = val),
+          ),
+        ];
+      },
+      builder: (context, isDarkMode) {
+        final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
+        final l10n = context.l10n;
 
-          return Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor,
-            body: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 440),
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Preview interactive toolbar
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          // Account type selector
-                          ChoiceChip(
-                            label: const Text('Google Account'),
-                            selected: !_isGuestMode,
-                            onSelected: (val) {
-                              if (val) {
-                                setState(() {
-                                  _isGuestMode = false;
-                                });
-                              }
-                            },
-                          ),
-                          ChoiceChip(
-                            label: Text(l10n.guestBadge),
-                            selected: _isGuestMode,
-                            onSelected: (val) {
-                              if (val) {
-                                setState(() {
-                                  _isGuestMode = true;
-                                });
-                              }
-                            },
-                          ),
-                          // Cloud Sync state switch (disabled in guest mode)
-                          FilterChip(
-                            avatar: Icon(
-                              _isGuestMode
-                                  ? Icons.cloud_off_rounded
-                                  : (_cloudSyncEnabled
-                                      ? Icons.cloud_done_rounded
-                                      : Icons.cloud_off_rounded),
-                              size: 16,
-                            ),
-                            label: Text(
-                              _isGuestMode
-                                  ? 'Sync Disabilitata'
-                                  : (_cloudSyncEnabled
-                                      ? 'Cloud Sync: ON'
-                                      : 'Cloud Sync: OFF'),
-                            ),
-                            selected: !_isGuestMode && _cloudSyncEnabled,
-                            onSelected: _isGuestMode
-                                ? null
-                                : (val) {
-                                    setState(() {
-                                      _cloudSyncEnabled = val;
-                                    });
-                                  },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Device card container holding the DashboardHeader
-                    Container(
-                      decoration: BoxDecoration(
-                        color: theme.scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: colorScheme.outlineVariant.withValues(alpha: 0.6),
-                        ),
-                        boxShadow: [
-                          AppColors.shadowElevated(_isDarkMode),
-                        ],
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: ChangeNotifierProvider<AuthService>.value(
-                        value: fakeAuthService,
-                        child: DashboardHeader(
-                          isSyncActive:
-                              !_isGuestMode && _cloudSyncEnabled,
-                          onSyncToggle: () {
-                            setState(() {
-                              if (!_isGuestMode) {
-                                _cloudSyncEnabled = !_cloudSyncEnabled;
-                              }
-                            });
-                          },
-                          onThemeToggle: () {
-                            setState(() {
-                              _isDarkMode = !_isDarkMode;
-                            });
-                          },
-                          onProfileTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(l10n.profilePageTitle),
-                                duration: const Duration(seconds: 1),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+        return Container(
+          decoration: BoxDecoration(
+            color: theme.scaffoldBackgroundColor,
+            borderRadius: BorderRadius.circular(AppRadii.card),
+            border: Border.all(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+            ),
+            boxShadow: [
+              AppColors.shadowElevated(isDarkMode),
+            ],
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: ChangeNotifierProvider<AuthService>.value(
+            value: fakeAuthService,
+            child: DashboardHeader(
+              isSyncActive: !_isGuestMode && _cloudSyncEnabled,
+              onSyncToggle: () {
+                if (!_isGuestMode) {
+                  setState(() => _cloudSyncEnabled = !_cloudSyncEnabled);
+                }
+              },
+              onThemeToggle: () => PreviewShell.showFeedback(
+                context,
+                l10n.themeLight,
+              ),
+              onProfileTap: () => PreviewShell.showFeedback(
+                context,
+                l10n.profilePageTitle,
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

@@ -2,12 +2,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tax_code_flutter/widgets/previews/barcode_bottom_sheet_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/birthdate_picker_field_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/birthplace_autocomplete_field_preview.dart';
+import 'package:tax_code_flutter/widgets/previews/camera_screen_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/contact_card_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_empty_state_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_fab_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_header_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_screen_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/dashboard_search_bar_preview.dart';
+import 'package:tax_code_flutter/widgets/previews/export_data_bottom_sheet_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/form_screen_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/form_section_divider_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/form_sticky_bottom_bar_preview.dart';
@@ -147,6 +149,20 @@ void main() {
     await tester.pumpWidget(const ShareContactBottomSheetPreview());
     await tester.pumpAndSettle();
     expect(find.byType(ShareContactBottomSheetPreview), findsOneWidget);
+  });
+
+  testWidgets('pumps ExportDataBottomSheetPreview without error', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const ExportDataBottomSheetPreview());
+    await tester.pumpAndSettle();
+    expect(find.byType(ExportDataBottomSheetPreview), findsOneWidget);
+  });
+
+  testWidgets('pumps CameraScreenPreview without error', (tester) async {
+    await tester.pumpWidget(const CameraScreenPreview());
+    await tester.pumpAndSettle();
+    expect(find.byType(CameraScreenPreview), findsOneWidget);
   });
 }
 

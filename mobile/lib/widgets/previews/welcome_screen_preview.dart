@@ -3,10 +3,8 @@ import 'package:flutter/widget_previews.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
-import 'package:tax_code_flutter/core/theme/app_colors.dart';
-import 'package:tax_code_flutter/core/theme/app_theme.dart';
-import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter/screens/welcome_screen.dart';
+import 'package:tax_code_flutter/widgets/previews/preview_shell.dart';
 
 /// Lightweight mock of [AuthService] for standalone preview rendering.
 class _PreviewAuthService extends ChangeNotifier implements AuthService {
@@ -64,7 +62,6 @@ class WelcomeScreenPreview extends StatefulWidget {
 
 class _WelcomeScreenPreviewState extends State<WelcomeScreenPreview> {
   final _fakeAuthService = _PreviewAuthService();
-  bool _isDarkMode = false;
 
   @override
   void dispose() {
@@ -74,73 +71,17 @@ class _WelcomeScreenPreviewState extends State<WelcomeScreenPreview> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      locale: const Locale('it'),
-      localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Builder(
-        builder: (context) {
-          final theme = Theme.of(context);
-          final l10n = context.l10n;
-          return Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor,
-            body: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 412, maxHeight: 892),
-                decoration: BoxDecoration(
-                  color: theme.scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-                  ),
-                  boxShadow: [
-                    AppColors.shadowPreviewCard(_isDarkMode),
-                  ],
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Stack(
-                  children: [
-                    ChangeNotifierProvider<AuthService>.value(
-                      value: _fakeAuthService,
-                      child: const WelcomeScreen(),
-                    ),
-                    // Convenient top-right theme switch button
-                    Positioned(
-                      top: 12,
-                      right: 12,
-                      child: SafeArea(
-                        child: Material(
-                          color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.85),
-                          shape: const CircleBorder(),
-                          elevation: 2,
-                          child: IconButton(
-                            tooltip: _isDarkMode
-                                ? l10n.switchToLightMode
-                                : l10n.switchToDarkMode,
-                            icon: Icon(
-                              _isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isDarkMode = !_isDarkMode;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+    return PreviewShell(
+      maxWidth: 412,
+      maxHeight: 892,
+      expandChild: true,
+      padding: EdgeInsets.zero,
+      providers: [
+        ChangeNotifierProvider<AuthService>.value(
+          value: _fakeAuthService,
+        ),
+      ],
+      child: const WelcomeScreen(),
     );
   }
 }
