@@ -176,5 +176,86 @@ void main() {
 
       expect(selected, const Birthplace(name: 'Roma', state: 'RM'));
     });
+
+    testWidgets('BirthplaceAutocompleteInput can be used directly as pure widget', (tester) async {
+      Birthplace? selected;
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.darkTheme,
+          home: Scaffold(
+            body: BirthplaceAutocompleteInput(
+              birthplaces: mockBirthplaces,
+              onChanged: (val) => selected = val,
+              errorText: 'Custom error',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Custom error'), findsOneWidget);
+      expect(find.byType(BirthplaceAutocompleteInput), findsOneWidget);
+
+      final textFieldFinder = find.byKey(const Key('birthplace_autocomplete_textfield'));
+      await tester.enterText(textFieldFinder, 'Mila');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Milano'), findsOneWidget);
+      await tester.tap(find.text('Milano'));
+      await tester.pumpAndSettle();
+
+      expect(selected, const Birthplace(name: 'Milano', state: 'MI'));
+    });
+
+    testWidgets('ReactiveBirthplaceAutocomplete binds directly via formControl property', (tester) async {
+      final control = FormControl<Birthplace>(value: const Birthplace(name: 'Napoli', state: 'NA'));
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.darkTheme,
+          home: Scaffold(
+            body: ReactiveBirthplaceAutocomplete(
+              formControl: control,
+              birthplaces: mockBirthplaces,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Napoli (NA)'), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('birthplace_clear_button')));
+      await tester.pumpAndSettle();
+
+      expect(control.value, isNull);
+      expect(control.touched, isTrue);
+    });
+
+    testWidgets('BirthplaceOptionsOverlay distinguishes foreign countries with public icon', (tester) async {
+      Birthplace? tapped;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.darkTheme,
+          home: Scaffold(
+            body: BirthplaceOptionsOverlay(
+              options: mockBirthplaces,
+              onSelected: (item) => tapped = item,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.location_city_rounded), findsNWidgets(3));
+      expect(find.byIcon(Icons.public_rounded), findsOneWidget);
+
+      await tester.tap(find.text('Francia'));
+      expect(tapped, const Birthplace(name: 'Francia', state: 'EE'));
+    });
   });
 }

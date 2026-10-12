@@ -6,7 +6,6 @@ import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
 import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/models/scanned_data.dart';
@@ -15,6 +14,7 @@ import 'package:shared/services/tax_code_service.dart';
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
 import 'package:tax_code_flutter/screens/form_page.dart';
 import 'package:tax_code_flutter/widgets/form/birthdate_picker_field.dart';
+import 'package:tax_code_flutter/widgets/form/birthplace_autocomplete_field.dart';
 import 'package:tax_code_flutter/widgets/form/gender_segmented_button.dart';
 import 'package:tax_code_flutter/widgets/form/ocr_ai_hero_banner.dart';
 
@@ -194,7 +194,7 @@ void main() {
       // Act
       final birthplaceField = find.byWidgetPredicate(
         (widget) =>
-            widget is ReactiveRawAutocomplete &&
+            widget is BirthplaceAutocompleteField &&
             widget.formControlName == 'birthPlace',
       );
       await tester.ensureVisible(birthplaceField);
@@ -249,7 +249,7 @@ void main() {
       // Assert
       final birthplaceFieldFinder = find.byWidgetPredicate(
         (widget) =>
-            widget is ReactiveRawAutocomplete &&
+            widget is BirthplaceAutocompleteField &&
             widget.formControlName == 'birthPlace',
       );
       var birthplaceTextField = tester.widget<TextField>(

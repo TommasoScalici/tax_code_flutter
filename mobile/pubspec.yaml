@@ -41,7 +41,6 @@ dependencies:
   material_ui: ^1.3.0
   reactive_date_time_picker: ^5.0.1
   reactive_forms: ^18.1.1
-  reactive_raw_autocomplete: ^2.1.1
 
   # Platform Plugins (Mobile specific)
   camera: ^0.12.0
