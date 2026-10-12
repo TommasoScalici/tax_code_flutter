@@ -6,6 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
+import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -121,7 +122,8 @@ class ProfileAppInfoView extends StatelessWidget {
                     Text(
                       appPackageId,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        fontFamily: 'JetBrains Mono',
+                        fontFamily: AppTypography.fontFamilyMono,
+                        fontFamilyFallback: AppTypography.fontFamilyMonoFallback,
                         color: theme.colorScheme.onSurfaceVariant,
                         fontSize: AppFontSizes.caption,
                       ),

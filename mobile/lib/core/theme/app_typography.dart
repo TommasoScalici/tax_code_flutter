@@ -1,17 +1,26 @@
-import 'package:google_fonts/google_fonts.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
-import 'package:tax_code_flutter/core/theme/test_env.dart';
 
 /// Typography definitions for the "Emerald Ledger" design system.
 ///
-/// Standard UI elements use [GoogleFonts.inter] for maximum clarity.
-/// Fiscal codes (Codice Fiscale) and machine-readable data use [GoogleFonts.jetBrainsMono]
+/// Standard UI elements use local [fontFamilyInter] for maximum clarity.
+/// Fiscal codes (Codice Fiscale) and machine-readable data use local [fontFamilyMono]
 /// to ensure unambiguous character differentiation (e.g., distinguishing '0' from 'O').
 abstract final class AppTypography {
-  static bool get _isTest => isFlutterTestEnvironment;
+  /// Primary UI font family (Inter).
+  static const String fontFamilyInter = 'Inter';
+
+  /// Monospace code font family (JetBrains Mono).
+  static const String fontFamilyMono = 'JetBrainsMono';
+
+  /// Fallback fonts for monospace code displays.
+  static const List<String> fontFamilyMonoFallback = [
+    'JetBrains Mono',
+    'Courier',
+    'monospace',
+  ];
 
   static TextStyle _fontInter({
     required double fontSize,
@@ -20,17 +29,8 @@ abstract final class AppTypography {
     double? letterSpacing,
     Color? color,
   }) {
-    if (_isTest) {
-      return TextStyle(
-        fontFamily: 'Inter',
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        height: height,
-        letterSpacing: letterSpacing,
-        color: color,
-      );
-    }
-    return GoogleFonts.inter(
+    return TextStyle(
+      fontFamily: fontFamilyInter,
       fontSize: fontSize,
       fontWeight: fontWeight,
       height: height,
@@ -46,17 +46,9 @@ abstract final class AppTypography {
     double? letterSpacing,
     Color? color,
   }) {
-    if (_isTest) {
-      return TextStyle(
-        fontFamily: 'JetBrains Mono',
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        height: height,
-        letterSpacing: letterSpacing,
-        color: color,
-      );
-    }
-    return GoogleFonts.jetBrainsMono(
+    return TextStyle(
+      fontFamily: fontFamilyMono,
+      fontFamilyFallback: fontFamilyMonoFallback,
       fontSize: fontSize,
       fontWeight: fontWeight,
       height: height,

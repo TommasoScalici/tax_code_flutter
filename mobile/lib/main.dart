@@ -6,7 +6,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as legacy;
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:logger/logger.dart';
 import 'package:material_ui/material_ui.dart';
@@ -24,7 +23,6 @@ import 'package:tax_code_flutter/settings.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  GoogleFonts.config.allowRuntimeFetching = false;
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
