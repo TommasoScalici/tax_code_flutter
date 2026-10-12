@@ -264,5 +264,81 @@ void main() {
       // The sheet is dismissed after export
       expect(find.byType(ExportDataBottomSheet), findsNothing);
     });
+
+    testWidgets('ExportDataHeader renders contact count badge when count > 0', (tester) async {
+      var closeTapped = false;
+      await tester.pumpWidget(
+        buildTestApp(
+          child: ExportDataHeader(
+            contactCount: 3,
+            onClose: () => closeTapped = true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.file_download_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.badge_outlined), findsOneWidget);
+      expect(find.byKey(const Key('export_sheet_close_button')), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('export_sheet_close_button')));
+      expect(closeTapped, isTrue);
+    });
+
+    testWidgets('ExportFormatOptionCard handles selection state and taps', (tester) async {
+      var tapped = false;
+      await tester.pumpWidget(
+        buildTestApp(
+          child: ExportFormatOptionCard(
+            title: 'Test Title',
+            description: 'Test Desc',
+            icon: Icons.star,
+            isSelected: true,
+            onTap: () => tapped = true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Test Title'), findsOneWidget);
+      expect(find.text('Test Desc'), findsOneWidget);
+      expect(find.byIcon(Icons.radio_button_checked_rounded), findsOneWidget);
+
+      await tester.tap(find.byType(ExportFormatOptionCard));
+      expect(tapped, isTrue);
+    });
+
+    testWidgets('ExportFormatSelector triggers onFormatSelected callback', (tester) async {
+      ExportFormat? selected;
+      await tester.pumpWidget(
+        buildTestApp(
+          child: ExportFormatSelector(
+            selectedFormat: ExportFormat.json,
+            onFormatSelected: (fmt) => selected = fmt,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('export_format_csv_card')));
+      expect(selected, ExportFormat.csv);
+    });
+
+    test('ExportDataFileHelper prepares export file with formatted data and timestamp', () async {
+      final now = DateTime(2026, 10, 12, 14, 30);
+      final result = await ExportDataFileHelper.prepareExportFile(
+        contacts: [testContact],
+        format: ExportFormat.json,
+        exportService: mockDataExportService,
+        getTempDir: () async => tempDir,
+        now: now,
+      );
+
+      expect(result.fileName, 'codici_fiscali_20261012_143000.json');
+      expect(result.mimeType, 'application/json');
+      expect(result.file.existsSync(), isTrue);
+      expect(await result.file.readAsString(), '[{"id":"1"}]');
+    });
   });
 }
+
