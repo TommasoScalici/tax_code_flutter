@@ -99,7 +99,7 @@ class CustomTextField extends StatelessWidget {
             validationMessages: validationMessages,
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w600,
-              fontSize: 15,
+              fontSize: AppFontSizes.input,
               color: colorScheme.onSurface,
             ),
             decoration: InputDecoration(

@@ -155,7 +155,7 @@ class BirthplaceAutocompleteField extends StatelessWidget {
                       focusNode: fieldFocusNode,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
-                        fontSize: 15,
+                        fontSize: AppFontSizes.input,
                         color: colorScheme.onSurface,
                       ),
                       decoration: InputDecoration(
@@ -220,7 +220,7 @@ class BirthplaceAutocompleteField extends StatelessWidget {
             helperText,
             style: theme.textTheme.bodySmall?.copyWith(
               color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.medium),
-              fontSize: 11,
+              fontSize: AppFontSizes.caption,
               height: 1.3,
             ),
           ),
@@ -366,7 +366,7 @@ class _StandaloneBirthplaceAutocompleteState
                   focusNode: fieldFocusNode,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    fontSize: 15,
+                    fontSize: AppFontSizes.input,
                     color: colorScheme.onSurface,
                   ),
                   decoration: InputDecoration(
@@ -426,7 +426,7 @@ class _StandaloneBirthplaceAutocompleteState
             widget.helperText,
             style: theme.textTheme.bodySmall?.copyWith(
               color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.medium),
-              fontSize: 11,
+              fontSize: AppFontSizes.caption,
               height: 1.3,
             ),
           ),
@@ -461,7 +461,10 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
         borderRadius: AppRadii.borderMd,
         clipBehavior: Clip.antiAlias,
         child: Container(
-          constraints: const BoxConstraints(maxHeight: 250, maxWidth: 360),
+          constraints: const BoxConstraints(
+            maxHeight: 250,
+            maxWidth: AppDimensions.maxDropdownWidth,
+          ),
           decoration: BoxDecoration(
             borderRadius: AppRadii.borderMd,
             border: Border.all(
@@ -528,7 +531,7 @@ class _BirthplaceOptionsOverlay extends StatelessWidget {
                           style: theme.textTheme.labelSmall?.copyWith(
                             fontWeight: FontWeight.w700,
                             color: colorScheme.onSurfaceVariant,
-                            fontSize: 11,
+                            fontSize: AppFontSizes.caption,
                           ),
                         ),
                       ),

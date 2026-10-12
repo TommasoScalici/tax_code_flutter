@@ -61,7 +61,7 @@ class FormStickyBottomBar extends StatelessWidget {
           alignment: Alignment.topCenter,
           heightFactor: 1.0,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 520),
+            constraints: const BoxConstraints(maxWidth: AppDimensions.maxContentWidth),
             child: Padding(
               padding: AppSpacing.paddingStickyBar,
               child: SizedBox(
@@ -101,7 +101,7 @@ class FormStickyBottomBar extends StatelessWidget {
                                     ? colorScheme.onPrimary
                                     : colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.outline),
                                 fontWeight: FontWeight.w700,
-                                fontSize: 16,
+                                fontSize: AppFontSizes.bodyLg,
                               ),
                             ),
                           ],

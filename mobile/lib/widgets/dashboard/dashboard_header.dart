@@ -80,8 +80,8 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
         children: [
           // App Brand Icon
           Container(
-            width: 34,
-            height: 34,
+            width: AppDimensions.avatarHeader,
+            height: AppDimensions.avatarHeader,
             decoration: BoxDecoration(
               borderRadius: AppRadii.borderSm,
               boxShadow: [
@@ -115,7 +115,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
                     color: colorScheme.primary,
                     letterSpacing: 1.2,
                     fontWeight: FontWeight.w700,
-                    fontSize: 10,
+                    fontSize: AppFontSizes.micro,
                     height: 1.1,
                   ),
                 ),
@@ -128,7 +128,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
                     fontWeight: FontWeight.w700,
                     letterSpacing: -0.3,
                     color: colorScheme.onSurface,
-                    fontSize: 18,
+                    fontSize: AppFontSizes.headlineSm,
                     height: 1.2,
                   ),
                 ),
@@ -176,7 +176,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  const UserAvatar(size: 34),
+                  const UserAvatar(size: AppDimensions.avatarHeader),
                   if (syncActive)
                     Positioned(
                       top: 0,

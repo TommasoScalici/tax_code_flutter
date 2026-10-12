@@ -101,8 +101,8 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
               children: [
                 // Leading verified / calculation icon
                 Container(
-                  width: 36,
-                  height: 36,
+                  width: AppDimensions.avatarBadge,
+                  height: AppDimensions.avatarBadge,
                   decoration: BoxDecoration(
                     color: _isComplete
                         ? colorScheme.primary.withValues(
@@ -129,7 +129,7 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
                         resolvedTitle.toUpperCase(),
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.high),
-                          fontSize: 10,
+                          fontSize: AppFontSizes.micro,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.8,
                         ),
@@ -140,7 +140,7 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
                           effectiveCode,
                           style: AppTypography.codeDisplayCard(
                             color: _isComplete ? colorScheme.primary : colorScheme.onSurface,
-                            fontSize: 16,
+                            fontSize: AppFontSizes.bodyLg,
                           ),
                         )
                       else
@@ -149,7 +149,7 @@ class TaxCodeLivePreviewCard extends StatelessWidget {
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.muted),
                             fontStyle: FontStyle.italic,
-                            fontSize: 12,
+                            fontSize: AppFontSizes.bodySm,
                           ),
                         ),
                     ],

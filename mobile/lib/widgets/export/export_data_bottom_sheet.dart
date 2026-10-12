@@ -109,7 +109,7 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 520),
+        constraints: const BoxConstraints(maxWidth: AppDimensions.maxContentWidth),
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,

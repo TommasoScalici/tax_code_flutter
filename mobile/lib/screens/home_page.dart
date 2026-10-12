@@ -64,7 +64,7 @@ final class HomePage extends StatelessWidget {
         behavior: HitTestBehavior.translucent,
         onTap: () => FocusScope.of(context).unfocus(),
         child: ResponsiveLayout(
-          maxWidth: 600.0,
+          maxWidth: AppDimensions.maxDashboardWidth,
           padding: AppSpacing.screenMargin,
           child: ContactsList(
             onAddContact: () => _onAddContact(context),

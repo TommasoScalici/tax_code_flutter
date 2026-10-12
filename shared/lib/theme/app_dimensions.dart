@@ -209,6 +209,9 @@ abstract final class AppDimensions {
   /// Default border stroke width: 1.0 pt.
   static const double borderDefault = 1.0;
 
+  /// Medium card and container border stroke width: 1.2 pt.
+  static const double borderMedium = 1.2;
+
   /// Thick border stroke width for emphasis: 1.5 pt.
   static const double borderThick = 1.5;
 
@@ -265,4 +268,76 @@ abstract final class AppDimensions {
 
   /// Extra large icon size: 32.0 pt.
   static const double iconXl = 32.0;
+
+  /// Display illustration / empty state icon size: 40.0 pt.
+  static const double iconDisplay = 40.0;
+
+  /// Hero illustration / permission icon size: 48.0 pt.
+  static const double iconHero = 48.0;
+
+  /// Compact header avatar size: 34.0 pt.
+  static const double avatarHeader = 34.0;
+
+  /// Circular status / indicator avatar size: 36.0 pt.
+  static const double avatarBadge = 36.0;
+
+  /// Square brand app logo container size: 54.0 pt.
+  static const double avatarBrand = 54.0;
+
+  /// Empty state icon container dimension: 88.0 pt.
+  static const double iconIllustrationContainer = 88.0;
+
+  /// Compact button height: 44.0 pt.
+  static const double buttonHeightCompact = 44.0;
+
+  /// Segmented button interactive row height: 42.0 pt.
+  static const double segmentedHeight = 42.0;
+
+  /// Standard maximum container width for forms, sheets, and cards: 520.0 pt.
+  static const double maxContentWidth = 520.0;
+
+  /// Maximum dashboard content width on wide displays: 600.0 pt.
+  static const double maxDashboardWidth = 600.0;
+
+  /// Maximum welcome and authentication card width: 480.0 pt.
+  static const double maxWelcomeWidth = 480.0;
+
+  /// Maximum empty state container width: 420.0 pt.
+  static const double maxEmptyStateWidth = 420.0;
+
+  /// Maximum dropdown autocomplete overlay width: 360.0 pt.
+  static const double maxDropdownWidth = 360.0;
+
+  /// Maximum subtitle text block width: 320.0 pt.
+  static const double maxSubtitleWidth = 320.0;
+}
+
+/// Centralized typographic font size constants.
+abstract final class AppFontSizes {
+  /// Micro badge and pill label font size: 10.0 pt.
+  static const double micro = 10.0;
+
+  /// Small metadata and caption font size: 11.0 pt.
+  static const double caption = 11.0;
+
+  /// Secondary body text font size: 12.0 pt.
+  static const double bodySm = 12.0;
+
+  /// Compact title / secondary action font size: 13.0 pt.
+  static const double titleSm = 13.0;
+
+  /// Standard body font size: 14.0 pt.
+  static const double bodyMd = 14.0;
+
+  /// Input field and emphasized body font size: 15.0 pt.
+  static const double input = 15.0;
+
+  /// Standard card title / large body font size: 16.0 pt.
+  static const double bodyLg = 16.0;
+
+  /// Section heading font size: 18.0 pt.
+  static const double headlineSm = 18.0;
+
+  /// Prominent card / modal heading font size: 20.0 pt.
+  static const double headlineMd = 20.0;
 }

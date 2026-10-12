@@ -107,7 +107,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 520),
+        constraints: const BoxConstraints(maxWidth: AppDimensions.maxContentWidth),
         child: Container(
           decoration: BoxDecoration(
             color: sheetBgColor,
@@ -120,14 +120,19 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
           child: SafeArea(
             top: false,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.card,
+                AppSpacing.md,
+                AppSpacing.card,
+                AppSpacing.xl,
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // M3 Drag Handle
                   Center(
                     child: Container(
-                      width: 40,
+                      width: AppDimensions.dragHandleWidth,
                       height: AppDimensions.dragHandleHeight,
                       decoration: BoxDecoration(
                         color: colorScheme.onSurfaceVariant.withValues(
@@ -144,8 +149,8 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: 40,
-                        height: 40,
+                        width: AppDimensions.iconDisplay,
+                        height: AppDimensions.iconDisplay,
                         decoration: BoxDecoration(
                           color: colorScheme.primary.withValues(
                             alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.faint,
@@ -170,7 +175,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                               '${widget.contact.firstName} ${widget.contact.lastName}',
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                                fontSize: AppFontSizes.headlineSm,
                               ),
                             ),
                             const SizedBox(height: AppSpacing.badgeGap),
@@ -196,7 +201,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                                     widget.contact.taxCode,
                                     style: AppTypography.codeDisplay(
                                       color: colorScheme.primary,
-                                      fontSize: 13,
+                                      fontSize: AppFontSizes.titleSm,
                                       letterSpacing: 1.1,
                                     ),
                                   ),
@@ -292,7 +297,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                             Text(
                               l10n.barcodeCode128.toUpperCase(),
                               style: theme.textTheme.labelSmall?.copyWith(
-                                fontSize: 10.5,
+                                fontSize: AppFontSizes.micro,
                                 fontWeight: FontWeight.w800,
                                 letterSpacing: 1.4,
                                 color: AppColors.opticalTextSecondary,
@@ -334,7 +339,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                               child: Text(
                                 l10n.barcodeOrDivider.toUpperCase(),
                                 style: theme.textTheme.labelSmall?.copyWith(
-                                  fontSize: 10,
+                                  fontSize: AppFontSizes.micro,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 1.2,
                                   color: AppColors.opticalTextMuted,
@@ -371,7 +376,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                         Text(
                           l10n.barcodeQrCode,
                           style: theme.textTheme.labelSmall?.copyWith(
-                            fontSize: 11,
+                            fontSize: AppFontSizes.caption,
                             fontWeight: FontWeight.w700,
                             color: AppColors.opticalTextSecondary,
                             letterSpacing: 0.4,

@@ -170,7 +170,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 520),
+        constraints: const BoxConstraints(maxWidth: AppDimensions.maxContentWidth),
         child: Container(
           decoration: BoxDecoration(
             color: sheetBgColor,
@@ -283,7 +283,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
                           contact.taxCode,
                           style: AppTypography.codeDisplay(
                             color: colorScheme.primary,
-                            fontSize: 14,
+                            fontSize: AppFontSizes.bodyMd,
                             letterSpacing: 1.0,
                           ),
                         ),

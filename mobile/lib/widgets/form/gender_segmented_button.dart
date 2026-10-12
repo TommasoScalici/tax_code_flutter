@@ -190,7 +190,7 @@ class _GenderSegmentedLayout extends StatelessWidget {
               errorText!,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.error,
-                fontSize: 12,
+                fontSize: AppFontSizes.bodySm,
               ),
             ),
           ),
@@ -223,7 +223,7 @@ class _GenderSegmentOption extends StatelessWidget {
 
     final selectedBorder = Border.all(
       color: colorScheme.primary.withValues(alpha: isDark ? AppOpacity.high : AppOpacity.prominent),
-      width: 1.2,
+      width: AppDimensions.borderMedium,
     );
 
     return Material(
@@ -233,7 +233,7 @@ class _GenderSegmentOption extends StatelessWidget {
         onTap: onTap,
         borderRadius: AppRadii.borderCompact,
         child: Container(
-          height: 42,
+          height: AppDimensions.segmentedHeight,
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.compact),
           decoration: BoxDecoration(
             borderRadius: AppRadii.borderCompact,
@@ -261,7 +261,7 @@ class _GenderSegmentOption extends StatelessWidget {
                     color: isSelected
                         ? colorScheme.primary
                         : colorScheme.onSurfaceVariant,
-                    fontSize: 13,
+                    fontSize: AppFontSizes.titleSm,
                   ),
                 ),
               ),

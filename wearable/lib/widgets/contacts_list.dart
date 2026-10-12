@@ -321,7 +321,6 @@ class _ContactsListState extends State<ContactsList> {
                       l10n.demoModeBadge,
                       style: WearTypography.codeDisplayCard(
                         color: AppColors.emeraldLight,
-                        fontSize: 9.5,
                       ),
                     ),
                   ),

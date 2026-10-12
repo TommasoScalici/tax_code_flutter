@@ -89,7 +89,7 @@ class ContactCard extends StatelessWidget {
         : colorScheme.surfaceContainerHighest.withValues(alpha: AppOpacity.disabled);
 
     return Container(
-      constraints: const BoxConstraints(maxWidth: 520),
+      constraints: const BoxConstraints(maxWidth: AppDimensions.maxContentWidth),
       margin: margin ?? const EdgeInsets.symmetric(vertical: AppSpacing.xs),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainer,
@@ -143,7 +143,7 @@ class ContactCard extends StatelessWidget {
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w700,
                               color: colorScheme.onSurface,
-                              fontSize: 16,
+                              fontSize: AppFontSizes.bodyLg,
                             ),
                           ),
                         ),
@@ -155,7 +155,7 @@ class ContactCard extends StatelessWidget {
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w700,
                               color: colorScheme.onSurface,
-                              fontSize: 16,
+                              fontSize: AppFontSizes.bodyLg,
                             ),
                           ),
                         ),
@@ -217,7 +217,7 @@ class ContactCard extends StatelessWidget {
                           color: colorScheme.primary.withValues(
                             alpha: isDark ? AppOpacity.subtleBorder : AppOpacity.disabled,
                           ),
-                          width: 1.2,
+                          width: AppDimensions.borderMedium,
                         ),
                       ),
                       child: Row(
@@ -429,7 +429,7 @@ class _CardActionButton extends StatelessWidget {
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: fgColor,
                       fontWeight: FontWeight.w600,
-                      fontSize: 11,
+                      fontSize: AppFontSizes.caption,
                     ),
                   ),
                 ),

@@ -89,7 +89,7 @@ class WelcomeScreen extends StatelessWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: ResponsiveLayout(
-          maxWidth: 480.0,
+          maxWidth: AppDimensions.maxWelcomeWidth,
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.lg),
           child: Center(
             child: SingleChildScrollView(
@@ -119,7 +119,7 @@ class WelcomeScreen extends StatelessWidget {
 
                   // Subtitle
                   ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 320),
+                    constraints: const BoxConstraints(maxWidth: AppDimensions.maxSubtitleWidth),
                     child: Text(
                       l10n.welcomeSubtitle,
                       textAlign: TextAlign.center,

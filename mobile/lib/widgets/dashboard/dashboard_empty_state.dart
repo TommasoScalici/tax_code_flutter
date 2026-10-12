@@ -61,15 +61,15 @@ class DashboardEmptyState extends StatelessWidget {
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.xxl),
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 420),
+          constraints: const BoxConstraints(maxWidth: AppDimensions.maxEmptyStateWidth),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Icon container with soft glow / container background
               Container(
-                width: 88,
-                height: 88,
+                width: AppDimensions.iconIllustrationContainer,
+                height: AppDimensions.iconIllustrationContainer,
                 decoration: BoxDecoration(
                   color: iconContainerBg,
                   borderRadius: AppRadii.borderDialog,
@@ -77,9 +77,9 @@ class DashboardEmptyState extends StatelessWidget {
                     color: isSearching
                         ? colorScheme.outlineVariant
                         : colorScheme.primary.withValues(
-                            alpha: isDark ? 0.25 : 0.35,
+                            alpha: isDark ? AppOpacity.subtleBorder : AppOpacity.disabled,
                           ),
-                    width: 1.2,
+                    width: AppDimensions.borderMedium,
                   ),
                   boxShadow: [
                     if (!isSearching)
@@ -94,7 +94,7 @@ class DashboardEmptyState extends StatelessWidget {
                 ),
                 child: Icon(
                   icon,
-                  size: 40,
+                  size: AppDimensions.iconDisplay,
                   color: iconColor,
                 ),
               ),
@@ -107,7 +107,7 @@ class DashboardEmptyState extends StatelessWidget {
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: colorScheme.onSurface,
-                  fontSize: 20,
+                  fontSize: AppFontSizes.headlineMd,
                 ),
               ),
               const SizedBox(height: AppSpacing.compact),

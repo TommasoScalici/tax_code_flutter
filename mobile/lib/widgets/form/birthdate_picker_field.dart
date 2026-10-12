@@ -213,7 +213,7 @@ class _BirthdatePickerContent extends StatelessWidget {
                           fontWeight: formattedDate.isNotEmpty
                               ? FontWeight.w600
                               : FontWeight.normal,
-                          fontSize: 15,
+                          fontSize: AppFontSizes.input,
                         ),
                       ),
                     ),
@@ -249,7 +249,7 @@ class _BirthdatePickerContent extends StatelessWidget {
               errorText!,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.error,
-                fontSize: 12,
+                fontSize: AppFontSizes.bodySm,
               ),
             ),
           ),

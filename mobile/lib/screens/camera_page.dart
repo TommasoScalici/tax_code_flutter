@@ -129,7 +129,7 @@ class _CameraView extends StatelessWidget {
                 children: [
                   const Icon(
                     Icons.no_photography,
-                    size: AppDimensions.searchBarHeight,
+                    size: AppDimensions.iconHero,
                     color: AppColors.cameraReticleMuted,
                   ),
                   const SizedBox(height: AppSpacing.md),

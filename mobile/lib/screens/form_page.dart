@@ -168,7 +168,7 @@ class _FormViewState extends State<_FormView> {
           body: Stack(
             children: [
               ResponsiveLayout(
-                maxWidth: 520.0,
+                maxWidth: AppDimensions.maxContentWidth,
                 padding: EdgeInsets.zero,
                 child: Padding(
                   padding: EdgeInsets.only(

@@ -47,8 +47,8 @@ class FormSectionDivider extends StatelessWidget {
           Expanded(
             child: Divider(
               color: lineColor,
-              thickness: 1.0,
-              height: 1.0,
+              thickness: AppDimensions.borderDefault,
+              height: AppDimensions.borderDefault,
             ),
           ),
           Padding(
@@ -56,7 +56,7 @@ class FormSectionDivider extends StatelessWidget {
             child: Text(
               displayText,
               style: theme.textTheme.labelSmall?.copyWith(
-                fontSize: 11,
+                fontSize: AppFontSizes.caption,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 1.2,
                 color: textColor,
@@ -66,8 +66,8 @@ class FormSectionDivider extends StatelessWidget {
           Expanded(
             child: Divider(
               color: lineColor,
-              thickness: 1.0,
-              height: 1.0,
+              thickness: AppDimensions.borderDefault,
+              height: AppDimensions.borderDefault,
             ),
           ),
         ],

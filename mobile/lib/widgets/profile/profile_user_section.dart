@@ -55,9 +55,9 @@ class ProfileUserSection extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: theme.colorScheme.primary.withValues(
-                          alpha: isDark ? 0.25 : 0.35,
+                          alpha: isDark ? AppOpacity.subtleBorder : 0.35,
                         ),
-                        width: 2.0,
+                        width: AppDimensions.borderSelected,
                       ),
                     ),
                     child: ClipOval(
@@ -85,7 +85,7 @@ class ProfileUserSection extends StatelessWidget {
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: theme.colorScheme.surfaceContainer,
-                          width: 2.5,
+                          width: AppDimensions.progressStrokeWidth,
                         ),
                       ),
                     ),
@@ -267,7 +267,7 @@ class ProfileUserSection extends StatelessWidget {
                   const SizedBox(height: AppSpacing.md),
                   SizedBox(
                     width: double.infinity,
-                    height: 44,
+                    height: AppDimensions.buttonHeightCompact,
                     child: FilledButton.icon(
                       key: const Key('profile_guest_google_signin_button'),
                       style: FilledButton.styleFrom(

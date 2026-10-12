@@ -97,7 +97,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
       },
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 520),
+          constraints: const BoxConstraints(maxWidth: AppDimensions.maxContentWidth),
           child: Container(
             decoration: BoxDecoration(
               color: isDark
@@ -123,7 +123,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                   Center(
                     child: Container(
                       margin: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.xs),
-                      width: 44,
+                      width: AppDimensions.dragHandleWidth,
                       height: AppDimensions.dragHandleHeight,
                       decoration: BoxDecoration(
                         color: theme.colorScheme.onSurfaceVariant.withValues(

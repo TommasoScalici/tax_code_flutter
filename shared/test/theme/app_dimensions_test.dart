@@ -80,6 +80,7 @@ void main() {
       expect(AppDimensions.borderHairline, 0.5);
       expect(AppDimensions.borderThin, 0.8);
       expect(AppDimensions.borderDefault, 1.0);
+      expect(AppDimensions.borderMedium, 1.2);
       expect(AppDimensions.borderThick, 1.5);
       expect(AppDimensions.borderSelected, 2.0);
       expect(AppDimensions.progressStrokeWidth, 2.5);
@@ -99,6 +100,32 @@ void main() {
       expect(AppDimensions.iconButton, 22.0);
       expect(AppDimensions.iconLg, 24.0);
       expect(AppDimensions.iconXl, 32.0);
+      expect(AppDimensions.iconDisplay, 40.0);
+      expect(AppDimensions.iconHero, 48.0);
+      expect(AppDimensions.avatarHeader, 34.0);
+      expect(AppDimensions.avatarBadge, 36.0);
+      expect(AppDimensions.avatarBrand, 54.0);
+      expect(AppDimensions.iconIllustrationContainer, 88.0);
+      expect(AppDimensions.buttonHeightCompact, 44.0);
+      expect(AppDimensions.segmentedHeight, 42.0);
+      expect(AppDimensions.maxContentWidth, 520.0);
+      expect(AppDimensions.maxDashboardWidth, 600.0);
+      expect(AppDimensions.maxWelcomeWidth, 480.0);
+      expect(AppDimensions.maxEmptyStateWidth, 420.0);
+      expect(AppDimensions.maxDropdownWidth, 360.0);
+      expect(AppDimensions.maxSubtitleWidth, 320.0);
+    });
+
+    test('AppFontSizes contains consistent typographic scale values', () {
+      expect(AppFontSizes.micro, 10.0);
+      expect(AppFontSizes.caption, 11.0);
+      expect(AppFontSizes.bodySm, 12.0);
+      expect(AppFontSizes.titleSm, 13.0);
+      expect(AppFontSizes.bodyMd, 14.0);
+      expect(AppFontSizes.input, 15.0);
+      expect(AppFontSizes.bodyLg, 16.0);
+      expect(AppFontSizes.headlineSm, 18.0);
+      expect(AppFontSizes.headlineMd, 20.0);
     });
   });
 }

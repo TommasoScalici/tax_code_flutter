@@ -46,7 +46,7 @@ class OcrAiHeroBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: cardBgColor,
         borderRadius: AppRadii.borderCard,
-        border: Border.all(color: borderColor, width: 1.2),
+        border: Border.all(color: borderColor, width: AppDimensions.borderMedium),
         boxShadow: [
           BoxShadow(
             color: glowColor,
@@ -169,7 +169,7 @@ class OcrAiHeroBanner extends StatelessWidget {
                                     style: theme.textTheme.labelSmall?.copyWith(
                                       color: colorScheme.primary,
                                       fontWeight: FontWeight.w800,
-                                      fontSize: 10,
+                                      fontSize: AppFontSizes.micro,
                                       letterSpacing: 0.8,
                                     ),
                                   ),

@@ -71,8 +71,8 @@ class ProfileAppInfoView extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      width: 54,
-                      height: 54,
+                      width: AppDimensions.avatarBrand,
+                      height: AppDimensions.avatarBrand,
                       padding: const EdgeInsets.all(AppSpacing.badgeGap),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.surface,
@@ -123,7 +123,7 @@ class ProfileAppInfoView extends StatelessWidget {
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontFamily: 'JetBrains Mono',
                         color: theme.colorScheme.onSurfaceVariant,
-                        fontSize: 11,
+                        fontSize: AppFontSizes.caption,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -298,7 +298,7 @@ class ProfileAppInfoView extends StatelessWidget {
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant
                             .withValues(alpha: AppOpacity.medium),
-                        fontSize: 12,
+                        fontSize: AppFontSizes.bodySm,
                       ),
                     ),
                   ),
