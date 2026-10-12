@@ -341,6 +341,12 @@ abstract final class AppDimensions {
   /// Bottom sheet theme drag handle width: 36.0 pt.
   static const double dragHandleThemeWidth = 36.0;
 
+  /// 1D linear barcode height on mobile displays: 72.0 pt.
+  static const double barcodeHeight = 72.0;
+
+  /// 2D QR code display box dimension on mobile displays: 110.0 pt.
+  static const double qrCodeSize = 110.0;
+
   /// Bottom sheet theme drag handle size preset: 36.0 x 4.0 pt.
   static const Size dragHandleThemeSize = Size(dragHandleThemeWidth, dragHandleHeight);
 }

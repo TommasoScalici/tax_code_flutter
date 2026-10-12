@@ -119,6 +119,8 @@ void main() {
       expect(AppDimensions.iconFabRetake, 28.0);
       expect(AppDimensions.iconFabCapture, 36.0);
       expect(AppDimensions.dragHandleThemeWidth, 36.0);
+      expect(AppDimensions.barcodeHeight, 72.0);
+      expect(AppDimensions.qrCodeSize, 110.0);
       expect(AppDimensions.dragHandleThemeSize, const Size(36.0, 4.0));
     });
 

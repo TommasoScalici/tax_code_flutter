@@ -289,5 +289,60 @@ void main() {
 
       expect(find.byType(ShareContactBottomSheet), findsOneWidget);
     });
+
+    testWidgets('BarcodeHeader renders contact name, tax code and invokes onCopy callback', (tester) async {
+      var copyCalled = false;
+      await tester.pumpWidget(
+        buildTestApp(
+          child: BarcodeHeader(
+            contact: testContact,
+            onCopy: () => copyCalled = true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Mario Rossi'), findsOneWidget);
+      expect(find.text('RSSMRA85D15H501Z'), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('barcode_bottom_sheet_copy_button')));
+      expect(copyCalled, isTrue);
+    });
+
+    testWidgets('OpticalCodeDisplay renders Code 128 and QR barcodes', (tester) async {
+      await tester.pumpWidget(
+        buildTestApp(
+          child: const OpticalCodeDisplay(taxCode: 'RSSMRA85D15H501Z'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final barcodeWidgets = tester.widgetList<BarcodeWidget>(find.byType(BarcodeWidget));
+      expect(barcodeWidgets.length, 2);
+      expect(find.text('RSSMRA85D15H501Z'), findsOneWidget);
+      expect(find.text('CODICE A BARRE (CODE 128)'), findsOneWidget);
+      expect(find.text('QR Code Sanitario'), findsOneWidget);
+    });
+
+    testWidgets('BarcodeActionButtons triggers onClose and onShare callbacks', (tester) async {
+      var closeTapped = false;
+      var shareTapped = false;
+
+      await tester.pumpWidget(
+        buildTestApp(
+          child: BarcodeActionButtons(
+            onClose: () => closeTapped = true,
+            onShare: () => shareTapped = true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('barcode_bottom_sheet_close_button')));
+      expect(closeTapped, isTrue);
+
+      await tester.tap(find.byKey(const Key('barcode_bottom_sheet_share_button')));
+      expect(shareTapped, isTrue);
+    });
   });
 }

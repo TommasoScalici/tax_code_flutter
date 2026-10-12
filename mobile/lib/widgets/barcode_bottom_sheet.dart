@@ -1,23 +1,26 @@
 import 'dart:async';
 
-import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/services.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
-import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
+import 'package:tax_code_flutter/widgets/barcode/barcode_action_buttons.dart';
+import 'package:tax_code_flutter/widgets/barcode/barcode_header.dart';
+import 'package:tax_code_flutter/widgets/barcode/optical_code_display.dart';
 import 'package:tax_code_flutter/widgets/share/share_contact_bottom_sheet.dart';
 
-/// Modal bottom sheet displaying high-contrast 1D Barcode (Code 128) and 2D QR Code
-/// for the Italian Tax Code, strictly styled according to the Stitch design specifications.
+export 'barcode/barcode_action_buttons.dart';
+export 'barcode/barcode_header.dart';
+export 'barcode/optical_code_display.dart';
+
+/// Modal bottom sheet orchestrating 1D Barcode (Code 128) and 2D QR Code presentation.
 ///
-/// Features automatic screen brightness optimization via [BrightnessServiceAbstract],
-/// instant tap-to-copy action, and clean typography.
+/// Features automatic screen brightness boost, haptic feedback on copy,
+/// and responsive layout constraints conforming to the Stitch design specifications.
 class BarcodeBottomSheet extends StatefulWidget {
   /// The contact whose tax code is being visualized.
   final Contact contact;
@@ -102,7 +105,7 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
         : colorScheme.surfaceContainerLow;
 
     final topBorderColor = colorScheme.outlineVariant.withValues(
-      alpha: isDark ? 0.40 : 0.60,
+      alpha: isDark ? AppOpacity.outline : AppOpacity.muted,
     );
 
     return Center(
@@ -145,243 +148,20 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                   const SizedBox(height: AppSpacing.lg),
 
                   // Header Area: User name, Tax Code Pill & Copy Button
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: AppDimensions.iconDisplay,
-                        height: AppDimensions.iconDisplay,
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary.withValues(
-                            alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.faint,
-                          ),
-                          borderRadius: AppRadii.borderInner,
-                          border: Border.all(
-                            color: colorScheme.primary.withValues(alpha: AppOpacity.translucent),
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.badge_rounded,
-                          color: colorScheme.primary,
-                          size: AppDimensions.iconButton,
-                        ),
+                  BarcodeHeader(
+                    contact: widget.contact,
+                    onCopy: () => unawaited(
+                      _copyTaxCode(
+                        context,
+                        widget.contact.taxCode,
+                        l10n.taxCodeCopied,
                       ),
-                      const SizedBox(width: AppSpacing.md),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${widget.contact.firstName} ${widget.contact.lastName}',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: AppFontSizes.headlineSm,
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.badgeGap),
-                            Row(
-                              children: [
-                                Container(
-                                  padding: AppSpacing.paddingBadge,
-                                  decoration: BoxDecoration(
-                                    color: colorScheme.primary.withValues(
-                                      alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.tint,
-                                    ),
-                                    borderRadius: AppRadii.borderBadge,
-                                    border: Border.all(
-                                      color: colorScheme.primary.withValues(
-                                        alpha: AppOpacity.disabled,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    widget.contact.taxCode,
-                                    style: AppTypography.codeDisplay(
-                                      color: colorScheme.primary,
-                                      fontSize: AppFontSizes.titleSm,
-                                      letterSpacing: AppLetterSpacing.codeCompact,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                InkWell(
-                                  key: const Key(
-                                    'barcode_bottom_sheet_copy_button',
-                                  ),
-                                  onTap: () => unawaited(
-                                    _copyTaxCode(
-                                      context,
-                                      widget.contact.taxCode,
-                                      l10n.taxCodeCopied,
-                                    ),
-                                  ),
-                                  borderRadius: AppRadii.borderCard,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: AppSpacing.compact,
-                                      vertical: AppSpacing.xs,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: isDark
-                                          ? colorScheme.surfaceContainerHighest
-                                          : colorScheme.surfaceContainerHighest
-                                                .withValues(alpha: AppOpacity.muted),
-                                      borderRadius: AppRadii.borderCard,
-                                      border: Border.all(
-                                        color: colorScheme.outlineVariant
-                                            .withValues(
-                                              alpha: AppOpacity.divider,
-                                            ),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Icons.copy_rounded,
-                                          size: AppDimensions.iconXs,
-                                          color: colorScheme.primary,
-                                        ),
-                                        const SizedBox(width: AppSpacing.xs),
-                                        Text(
-                                          l10n.copyAction,
-                                          style: theme.textTheme.labelSmall
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                color: colorScheme.onSurface,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
 
                   // High-Contrast Pure White Optical Container
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: AppColors.opticalWhite,
-                      borderRadius: AppRadii.borderCard,
-                      boxShadow: [
-                        AppColors.shadowCard(isDark),
-                      ],
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg,
-                      vertical: AppDimensions.iconAction,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Section 1: Code 128 Linear Barcode
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Symbols.barcode,
-                              size: AppDimensions.iconSm,
-                              color: AppColors.opticalTextPrimary,
-                            ),
-                            const SizedBox(width: AppSpacing.badgeGap),
-                            Text(
-                              l10n.barcodeCode128.toUpperCase(),
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                fontSize: AppFontSizes.micro,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: AppLetterSpacing.wide,
-                                color: AppColors.opticalTextSecondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        BarcodeWidget(
-                          barcode: Barcode.code128(),
-                          data: widget.contact.taxCode,
-                          width: double.infinity,
-                          height: 72,
-                          backgroundColor: AppColors.opticalWhite,
-                          drawText: false,
-                        ),
-                        const SizedBox(height: AppSpacing.badgeGap),
-                        Text(
-                          widget.contact.taxCode,
-                          style: AppTypography.barcodeReadableText(
-                            color: AppColors.opticalTextPrimary,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.fieldVertical),
-
-                        // Thin Divider with "oppure"
-                        Row(
-                          children: [
-                            const Expanded(
-                              child: Divider(
-                                color: AppColors.opticalDivider,
-                                height: 1,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.compact,
-                              ),
-                              child: Text(
-                                l10n.barcodeOrDivider.toUpperCase(),
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  fontSize: AppFontSizes.micro,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: AppLetterSpacing.uppercase,
-                                  color: AppColors.opticalTextMuted,
-                                ),
-                              ),
-                            ),
-                            const Expanded(
-                              child: Divider(
-                                color: AppColors.opticalDivider,
-                                height: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: AppSpacing.fieldVertical),
-
-                        // Section 2: 2D Health QR Code
-                        Container(
-                          padding: AppSpacing.paddingSm,
-                          decoration: BoxDecoration(
-                            color: AppColors.opticalWhite,
-                            borderRadius: AppRadii.borderInner,
-                            border: Border.all(color: AppColors.opticalBorder),
-                          ),
-                          child: BarcodeWidget(
-                            barcode: Barcode.qrCode(),
-                            data: widget.contact.taxCode,
-                            width: 110,
-                            height: 110,
-                            backgroundColor: AppColors.opticalWhite,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.badgeGap),
-                        Text(
-                          l10n.barcodeQrCode,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontSize: AppFontSizes.caption,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.opticalTextSecondary,
-                            letterSpacing: AppLetterSpacing.label,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  OpticalCodeDisplay(taxCode: widget.contact.taxCode),
                   const SizedBox(height: AppSpacing.lg),
 
                   // Notice Text
@@ -450,73 +230,16 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
                   const SizedBox(height: AppSpacing.md),
 
                   // Action Buttons Row: Close & Share
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: AppDimensions.minTouchTarget,
-                          child: OutlinedButton.icon(
-                            key: const Key('barcode_bottom_sheet_close_button'),
-                            onPressed: () => Navigator.pop(context),
-                            icon: const Icon(
-                              Icons.expand_more_rounded,
-                              size: AppDimensions.iconMd,
-                            ),
-                            label: Text(
-                              l10n.close,
-                              style: theme.textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: AppRadii.borderDialog,
-                              ),
-                              side: BorderSide(
-                                color: colorScheme.outlineVariant.withValues(
-                                  alpha: AppOpacity.medium,
-                                ),
-                              ),
-                            ),
-                          ),
+                  BarcodeActionButtons(
+                    onClose: () => Navigator.pop(context),
+                    onShare: () {
+                      unawaited(
+                        ShareContactBottomSheet.show(
+                          context,
+                          contact: widget.contact,
                         ),
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: SizedBox(
-                          height: AppDimensions.minTouchTarget,
-                          child: FilledButton.icon(
-                            key: const Key('barcode_bottom_sheet_share_button'),
-                            onPressed: () {
-                              unawaited(
-                                ShareContactBottomSheet.show(
-                                  context,
-                                  contact: widget.contact,
-                                ),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.share_rounded,
-                              size: AppDimensions.iconAction,
-                            ),
-                            label: Text(
-                              l10n.share,
-                              style: theme.textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: colorScheme.onPrimary,
-                              ),
-                            ),
-                            style: FilledButton.styleFrom(
-                              backgroundColor: colorScheme.primary,
-                              foregroundColor: colorScheme.onPrimary,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: AppRadii.borderDialog,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ],
               ),
