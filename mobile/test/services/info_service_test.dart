@@ -37,8 +37,8 @@ void main() {
       verifyZeroInteractions(mockLogger);
     });
 
-    test('implements InfoServiceAbstract interface', () {
-      expect(infoService, isA<InfoServiceAbstract>());
+    test('implements InfoService interface', () {
+      expect(infoService, isA<InfoService>());
     });
   });
 }

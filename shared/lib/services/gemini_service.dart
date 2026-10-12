@@ -3,18 +3,31 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:logger/logger.dart';
 import 'package:shared/models/scanned_data.dart';
 
-abstract class GeminiServiceAbstract {
+/// Contract for the GeminiService extracting scanned documents into structured form data.
+abstract interface class GeminiService {
   /// Calls the backend to extract data and returns it as form data.
   Future<ScannedData?> extractDataFromDocument(String base64Image);
+
+  /// Factory constructor returning the default implementation.
+  factory GeminiService({
+    required FirebaseFunctions functions,
+    required Logger logger,
+  }) = DefaultGeminiService;
 }
 
-class GeminiService implements GeminiServiceAbstract {
+/// Backwards-compatible alias for [GeminiService].
+typedef GeminiServiceAbstract = GeminiService;
+
+/// Default implementation of [GeminiService].
+class DefaultGeminiService implements GeminiService {
   final FirebaseFunctions _functions;
   final Logger _logger;
 
-  GeminiService({required FirebaseFunctions functions, required Logger logger})
-    : _functions = functions,
-      _logger = logger;
+  DefaultGeminiService({
+    required FirebaseFunctions functions,
+    required Logger logger,
+  })  : _functions = functions,
+        _logger = logger;
 
   @override
   Future<ScannedData?> extractDataFromDocument(String base64Image) async {

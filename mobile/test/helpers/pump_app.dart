@@ -136,15 +136,15 @@ Future<void> pumpApp(
         Provider<FirebaseFunctions>.value(value: firebaseFunctions),
 
         // --- Level 2: Specialized, Self-Contained Services ---
-        Provider<PermissionServiceAbstract>.value(value: permissionService),
-        Provider<CameraServiceAbstract>.value(value: cameraService),
+        Provider<PermissionService>.value(value: permissionService),
+        Provider<CameraService>.value(value: cameraService),
         Provider<DatabaseService>.value(value: databaseService),
-        Provider<BirthplaceServiceAbstract>.value(value: birthplaceService),
-        Provider<InfoServiceAbstract>.value(value: infoService),
-        Provider<BrightnessServiceAbstract>.value(value: brightnessService),
-        Provider<SharingServiceAbstract>.value(value: sharingService),
-        Provider<GeminiServiceAbstract>.value(value: geminiService),
-        Provider<TaxCodeServiceAbstract>.value(value: taxCodeService),
+        Provider<BirthplaceService>.value(value: birthplaceService),
+        Provider<InfoService>.value(value: infoService),
+        Provider<BrightnessService>.value(value: brightnessService),
+        Provider<SharingService>.value(value: sharingService),
+        Provider<GeminiService>.value(value: geminiService),
+        Provider<TaxCodeService>.value(value: taxCodeService),
 
         // --- Level 3: State Services ---
         ChangeNotifierProvider<ThemeService>.value(value: themeService),

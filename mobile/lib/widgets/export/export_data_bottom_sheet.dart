@@ -52,8 +52,8 @@ class _ExportDataBottomSheetState extends State<ExportDataBottomSheet> {
     setState(() => _isExporting = true);
 
     try {
-      final exportService = context.read<DataExportServiceAbstract>();
-      final sharingService = context.read<SharingServiceAbstract>();
+      final exportService = context.read<DataExportService>();
+      final sharingService = context.read<SharingService>();
 
       final exportResult = await ExportDataFileHelper.prepareExportFile(
         contacts: contacts,

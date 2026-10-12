@@ -12,9 +12,9 @@ import 'package:tax_code_flutter/services/sharing_service.dart';
 
 class MockContactRepository extends Mock implements ContactRepository {}
 
-class MockSharingService extends Mock implements SharingServiceAbstract {}
+class MockSharingService extends Mock implements SharingService {}
 
-class MockBirthplaceService extends Mock implements BirthplaceServiceAbstract {
+class MockBirthplaceService extends Mock implements BirthplaceService {
   @override
   final downloadProgress = ValueNotifier<double?>(null);
   @override

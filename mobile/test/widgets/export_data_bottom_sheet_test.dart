@@ -102,8 +102,8 @@ void main() {
         ChangeNotifierProvider<ContactRepository>.value(
           value: mockContactRepository,
         ),
-        Provider<DataExportServiceAbstract>.value(value: mockDataExportService),
-        Provider<SharingServiceAbstract>.value(value: mockSharingService),
+        Provider<DataExportService>.value(value: mockDataExportService),
+        Provider<SharingService>.value(value: mockSharingService),
       ],
       child: MaterialApp(
         locale: locale,

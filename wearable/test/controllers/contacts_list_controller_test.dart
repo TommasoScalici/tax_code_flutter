@@ -11,9 +11,9 @@ import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 
 class MockContactRepository extends Mock implements ContactRepository {}
 
-class MockDemoModeService extends Mock implements DemoModeServiceAbstract {}
+class MockDemoModeService extends Mock implements DemoModeService {}
 
-class MockNativeViewService extends Mock implements NativeViewServiceAbstract {}
+class MockNativeViewService extends Mock implements NativeViewService {}
 
 class MockLogger extends Mock implements Logger {}
 

@@ -32,9 +32,9 @@ class CameraPage extends StatelessWidget {
     return ChangeNotifierProvider<CameraPageController>(
       create: (ctx) {
         final instance = CameraPageController(
-          cameraService: ctx.read<CameraServiceAbstract>(),
-          geminiService: ctx.read<GeminiServiceAbstract>(),
-          permissionService: ctx.read<PermissionServiceAbstract>(),
+          cameraService: ctx.read<CameraService>(),
+          geminiService: ctx.read<GeminiService>(),
+          permissionService: ctx.read<PermissionService>(),
           logger: ctx.read<Logger>(),
         );
         unawaited(instance.initialize());

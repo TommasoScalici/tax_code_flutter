@@ -15,9 +15,9 @@ import 'package:tax_code_flutter/controllers/form_page_controller.dart';
 import 'package:tax_code_flutter/validators/only_letters_validator.dart';
 
 // Mocks for dependencies that have logic
-class MockTaxCodeService extends Mock implements TaxCodeServiceAbstract {}
+class MockTaxCodeService extends Mock implements TaxCodeService {}
 
-class MockBirthplaceService extends Mock implements BirthplaceServiceAbstract {
+class MockBirthplaceService extends Mock implements BirthplaceService {
   @override
   final downloadProgress = ValueNotifier<double?>(null);
   @override

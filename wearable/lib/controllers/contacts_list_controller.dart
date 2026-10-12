@@ -7,8 +7,8 @@ import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 
 class ContactsListController with ChangeNotifier {
   final ContactRepository _contactRepository;
-  final DemoModeServiceAbstract _demoModeService;
-  final NativeViewServiceAbstract _nativeViewService;
+  final DemoModeService _demoModeService;
+  final NativeViewService _nativeViewService;
   final Logger _logger;
 
   bool _isLaunchingPhoneApp = false;
@@ -25,8 +25,8 @@ class ContactsListController with ChangeNotifier {
 
   ContactsListController({
     required ContactRepository contactRepository,
-    required DemoModeServiceAbstract demoModeService,
-    required NativeViewServiceAbstract nativeViewService,
+    required DemoModeService demoModeService,
+    required NativeViewService nativeViewService,
     required Logger logger,
   }) : _contactRepository = contactRepository,
        _demoModeService = demoModeService,

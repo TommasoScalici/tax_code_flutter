@@ -33,8 +33,8 @@ abstract final class ContactShareFileHelper {
   static Future<ContactShareFileResult> prepareExportFile({
     required Contact contact,
     required ContactShareFormat format,
-    required ContactCardImageServiceAbstract imageService,
-    required ContactPdfServiceAbstract pdfService,
+    required ContactCardImageService imageService,
+    required ContactPdfService pdfService,
     required AppLocalizations l10n,
     Future<Directory> Function() getTempDir = getTemporaryDirectory,
   }) async {

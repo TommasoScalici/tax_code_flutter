@@ -1,15 +1,19 @@
 import 'package:logger/logger.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 
-abstract class BrightnessServiceAbstract {
+abstract interface class BrightnessService {
   Future<void> setMaxBrightness();
   Future<void> resetBrightness();
+
+  factory BrightnessService({required Logger logger}) = DefaultBrightnessService;
 }
 
-class BrightnessService implements BrightnessServiceAbstract {
+typedef BrightnessServiceAbstract = BrightnessService;
+
+class DefaultBrightnessService implements BrightnessService {
   final Logger _logger;
 
-  BrightnessService({required Logger logger}) : _logger = logger;
+  DefaultBrightnessService({required Logger logger}) : _logger = logger;
 
   @override
   Future<void> setMaxBrightness() async {

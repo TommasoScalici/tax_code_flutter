@@ -3,7 +3,7 @@ import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 
 /// Contract defining the demo mode operations and state for Wear OS.
-abstract interface class DemoModeServiceAbstract extends ChangeNotifier {
+abstract class DemoModeService extends ChangeNotifier {
   /// Whether demo mode is currently active.
   bool get isDemoMode;
 
@@ -15,13 +15,23 @@ abstract interface class DemoModeServiceAbstract extends ChangeNotifier {
 
   /// Deactivates demo mode and notifies listeners.
   void exitDemoMode();
+
+  /// Factory constructor returning the default implementation.
+  factory DemoModeService() = DefaultDemoModeService;
+
+  /// Internal generative constructor for subclasses.
+  DemoModeService._();
 }
+
+/// Backwards-compatible alias for [DemoModeService].
+typedef DemoModeServiceAbstract = DemoModeService;
 
 /// Service managing the ephemeral demo mode state on Wear OS.
 ///
 /// Designed to allow Google Play Store reviewers to evaluate the watch UI
 /// and barcode/QR display functionality without needing a Google test account.
-class DemoModeService extends ChangeNotifier implements DemoModeServiceAbstract {
+class DefaultDemoModeService extends DemoModeService {
+  DefaultDemoModeService() : super._();
   bool _isDemoMode = false;
 
   @override

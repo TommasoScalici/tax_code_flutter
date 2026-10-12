@@ -11,20 +11,26 @@ import 'package:tax_code_flutter/core/theme/app_typography.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// Contract for generating high-resolution PNG images of a [Contact]'s card.
-abstract class ContactCardImageServiceAbstract {
+abstract interface class ContactCardImageService {
   /// Generates the raw PNG image bytes for [contact].
   Future<Uint8List> generateCardImage({
     required Contact contact,
     AppLocalizations? l10n,
     String? footerText,
   });
+
+  /// Factory constructor returning the default implementation.
+  const factory ContactCardImageService() = DefaultContactCardImageService;
 }
 
-/// Concrete implementation of [ContactCardImageServiceAbstract] producing
+/// Backwards-compatible alias for [ContactCardImageService].
+typedef ContactCardImageServiceAbstract = ContactCardImageService;
+
+/// Concrete default implementation of [ContactCardImageService] producing
 /// high-resolution 1200x750 PNG cards with 1D Barcode and 2D QR Code.
-class ContactCardImageService implements ContactCardImageServiceAbstract {
-  /// Creates a [ContactCardImageService].
-  const ContactCardImageService();
+class DefaultContactCardImageService implements ContactCardImageService {
+  /// Creates a [DefaultContactCardImageService].
+  const DefaultContactCardImageService();
 
   static final DateFormat _dateFormat = DateFormat('dd/MM/yyyy');
 

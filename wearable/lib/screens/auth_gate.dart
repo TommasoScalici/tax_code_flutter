@@ -22,7 +22,7 @@ class AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = context.watch<AuthService>();
-    final demoModeService = context.watch<DemoModeServiceAbstract?>();
+    final demoModeService = context.watch<DemoModeService?>();
 
     if (demoModeService?.isDemoMode ?? false) {
       return homePage;
@@ -163,7 +163,7 @@ class _LoginViewState extends State<_LoginView> {
                       : () {
                           try {
                             context
-                                .read<DemoModeServiceAbstract>()
+                                .read<DemoModeService>()
                                 .enableDemoMode();
                           } on Object {
                             // Safe fallback

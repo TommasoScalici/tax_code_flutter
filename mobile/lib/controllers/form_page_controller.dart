@@ -15,8 +15,8 @@ import 'package:tax_code_flutter/validators/only_letters_validator.dart';
 import 'package:uuid/uuid.dart';
 
 interface class FormPageController with ChangeNotifier {
-  final TaxCodeServiceAbstract _taxCodeService;
-  final BirthplaceServiceAbstract _birthplaceService;
+  final TaxCodeService _taxCodeService;
+  final BirthplaceService _birthplaceService;
   final ContactRepository _contactRepository;
   StreamSubscription<ControlStatus>? _formStatusSubscription;
   StreamSubscription<dynamic>? _formValueSubscription;
@@ -88,8 +88,8 @@ interface class FormPageController with ChangeNotifier {
   }
 
   FormPageController({
-    required TaxCodeServiceAbstract taxCodeService,
-    required BirthplaceServiceAbstract birthplaceService,
+    required TaxCodeService taxCodeService,
+    required BirthplaceService birthplaceService,
     required ContactRepository contactRepository,
     required Logger logger,
     Contact? initialContact,

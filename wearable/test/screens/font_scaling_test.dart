@@ -15,8 +15,8 @@ import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 import 'package:tax_code_flutter_wear_os/widgets/contacts_list.dart';
 
 class MockAuthService extends Mock implements AuthService {}
-class MockNativeViewService extends Mock implements NativeViewServiceAbstract {}
-class MockDemoModeService extends Mock implements DemoModeServiceAbstract {}
+class MockNativeViewService extends Mock implements NativeViewService {}
+class MockDemoModeService extends Mock implements DemoModeService {}
 class MockContactsListController extends Mock implements ContactsListController {}
 
 void main() {
@@ -77,7 +77,7 @@ void main() {
                 size: const Size(390, 390),
                 textScaler: TextScaler.linear(scale),
               ),
-              child: Provider<NativeViewServiceAbstract>.value(
+              child: Provider<NativeViewService>.value(
                 value: mockNativeViewService,
                 child: BarcodePage(
                   taxCode: testContact.taxCode,
@@ -115,7 +115,7 @@ void main() {
               child: MultiProvider(
                 providers: [
                   ChangeNotifierProvider<AuthService>.value(value: mockAuthService),
-                  ChangeNotifierProvider<DemoModeServiceAbstract>.value(value: mockDemoModeService),
+                  ChangeNotifierProvider<DemoModeService>.value(value: mockDemoModeService),
                 ],
                 child: const AuthGate(),
               ),

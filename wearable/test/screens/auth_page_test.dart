@@ -12,7 +12,7 @@ import 'package:tax_code_flutter_wear_os/services/demo_mode_service.dart';
 
 class MockAuthService extends Mock implements AuthService {}
 
-class MockDemoModeService extends Mock implements DemoModeServiceAbstract {}
+class MockDemoModeService extends Mock implements DemoModeService {}
 
 class FakeHomePage extends StatelessWidget {
   const FakeHomePage({super.key});
@@ -33,7 +33,7 @@ void main() {
         home: MultiProvider(
           providers: [
             ChangeNotifierProvider<AuthService>.value(value: mockAuthService),
-            ChangeNotifierProvider<DemoModeServiceAbstract>.value(
+            ChangeNotifierProvider<DemoModeService>.value(
               value: mockDemoModeService,
             ),
           ],

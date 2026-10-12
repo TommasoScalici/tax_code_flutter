@@ -11,7 +11,7 @@ import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
 import 'package:tax_code_flutter_wear_os/screens/barcode_page.dart';
 import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 
-class MockNativeViewService extends Mock implements NativeViewServiceAbstract {}
+class MockNativeViewService extends Mock implements NativeViewService {}
 
 void main() {
   late MockNativeViewService mockNativeViewService;
@@ -36,7 +36,7 @@ void main() {
       MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: Provider<NativeViewServiceAbstract>.value(
+        home: Provider<NativeViewService>.value(
           value: mockNativeViewService,
           child: BarcodePage(
             taxCode: taxCode,
@@ -127,7 +127,7 @@ void main() {
               size: Size(390, 390),
               textScaler: TextScaler.linear(1.3),
             ),
-            child: Provider<NativeViewServiceAbstract>.value(
+            child: Provider<NativeViewService>.value(
               value: mockNativeViewService,
               child: BarcodePage(
                 taxCode: testTaxCode,
@@ -155,7 +155,7 @@ void main() {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (_) => Provider<NativeViewServiceAbstract>.value(
+                      builder: (_) => Provider<NativeViewService>.value(
                         value: mockNativeViewService,
                         child: BarcodePage(
                           taxCode: testTaxCode,

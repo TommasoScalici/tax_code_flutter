@@ -2,16 +2,20 @@ import 'package:camera/camera.dart';
 import 'package:logger/logger.dart';
 
 /// Defines the contract for a service that interacts with camera hardware.
-abstract class CameraServiceAbstract {
+abstract interface class CameraService {
   Future<List<CameraDescription>> getAvailableCameras();
+
+  factory CameraService({required Logger logger}) = DefaultCameraService;
 }
 
-/// The concrete implementation of [CameraServiceAbstract] using the
+typedef CameraServiceAbstract = CameraService;
+
+/// The concrete default implementation of [CameraService] using the
 /// camera package.
-class CameraService implements CameraServiceAbstract {
+class DefaultCameraService implements CameraService {
   final Logger _logger;
 
-  CameraService({required Logger logger}) : _logger = logger;
+  DefaultCameraService({required Logger logger}) : _logger = logger;
   
   @override
   Future<List<CameraDescription>> getAvailableCameras() async {

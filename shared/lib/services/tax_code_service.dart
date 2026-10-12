@@ -8,8 +8,9 @@ import 'package:shared/utils/tax_code_generator.dart';
 
 export 'package:shared/models/app_failure.dart';
 
-/// Abstract class for the TaxCodeService.
-abstract class TaxCodeServiceAbstract {
+/// Contract for the TaxCodeService.
+abstract interface class TaxCodeService {
+  /// Fetches or computes the tax code for the specified identity data.
   Future<TaxCodeResponse> fetchTaxCode({
     required String firstName,
     required String lastName,
@@ -18,16 +19,25 @@ abstract class TaxCodeServiceAbstract {
     required String birthPlaceState,
     required DateTime birthDate,
   });
+
+  /// Factory constructor returning the default implementation.
+  factory TaxCodeService({
+    required BirthplaceService birthplaceService,
+    required Logger logger,
+  }) = DefaultTaxCodeService;
 }
 
-/// Implementation of the TaxCodeService.
+/// Backwards-compatible alias for [TaxCodeService].
+typedef TaxCodeServiceAbstract = TaxCodeService;
+
+/// Default implementation of [TaxCodeService].
 /// This class is responsible for generating tax codes locally.
-class TaxCodeService implements TaxCodeServiceAbstract {
-  final BirthplaceServiceAbstract _birthplaceService;
+class DefaultTaxCodeService implements TaxCodeService {
+  final BirthplaceService _birthplaceService;
   final Logger _logger;
 
-  TaxCodeService({
-    required BirthplaceServiceAbstract birthplaceService,
+  DefaultTaxCodeService({
+    required BirthplaceService birthplaceService,
     required Logger logger,
   })  : _birthplaceService = birthplaceService,
         _logger = logger;

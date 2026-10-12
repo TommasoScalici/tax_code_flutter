@@ -31,7 +31,7 @@ abstract final class ExportDataFileHelper {
   static Future<ExportDataFileResult> prepareExportFile({
     required List<Contact> contacts,
     required ExportFormat format,
-    required DataExportServiceAbstract exportService,
+    required DataExportService exportService,
     Future<Directory> Function() getTempDir = getTemporaryDirectory,
     DateTime? now,
   }) async {

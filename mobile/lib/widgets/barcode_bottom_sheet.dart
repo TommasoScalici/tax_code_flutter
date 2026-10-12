@@ -26,7 +26,7 @@ class BarcodeBottomSheet extends StatefulWidget {
   final Contact contact;
 
   /// Optional injected brightness service. Defaults to reading from [BuildContext].
-  final BrightnessServiceAbstract? brightnessService;
+  final BrightnessService? brightnessService;
 
   const BarcodeBottomSheet({
     super.key,
@@ -38,7 +38,7 @@ class BarcodeBottomSheet extends StatefulWidget {
   static Future<void> show(
     BuildContext context, {
     required Contact contact,
-    BrightnessServiceAbstract? brightnessService,
+    BrightnessService? brightnessService,
   }) {
     return showModalBottomSheet<void>(
       context: context,
@@ -58,13 +58,13 @@ class BarcodeBottomSheet extends StatefulWidget {
 }
 
 class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
-  BrightnessServiceAbstract? _brightnessService;
+  BrightnessService? _brightnessService;
 
   @override
   void initState() {
     super.initState();
     _brightnessService =
-        widget.brightnessService ?? context.read<BrightnessServiceAbstract?>();
+        widget.brightnessService ?? context.read<BrightnessService?>();
     unawaited(_brightnessService?.setMaxBrightness());
   }
 

@@ -14,18 +14,25 @@ class AppPermissionHandlerAdapter implements PermissionHandlerAdapter {
   Future<bool> openSettings() => openAppSettings();
 }
 
-abstract class PermissionServiceAbstract {
+abstract interface class PermissionService {
   Future<bool> requestCameraPermission();
   Future<bool> openAppSettingsHandler();
+
+  factory PermissionService({
+    required Logger logger,
+    required PermissionHandlerAdapter permissionHandler,
+  }) = DefaultPermissionService;
 }
 
-class PermissionService implements PermissionServiceAbstract {
+typedef PermissionServiceAbstract = PermissionService;
+
+class DefaultPermissionService implements PermissionService {
   final Logger _logger;
   final PermissionHandlerAdapter _permissionHandler;
 
-  PermissionService({
+  DefaultPermissionService({
     required Logger logger,
-    required PermissionHandlerAdapter permissionHandler, // <-- INIETTATA QUI
+    required PermissionHandlerAdapter permissionHandler,
   }) : _logger = logger,
        _permissionHandler = permissionHandler;
 

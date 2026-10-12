@@ -49,55 +49,55 @@ List<SingleChildWidget> getAppProviders({
     ),
 
     // --- Level 2: Specialized, Self-Contained Services ---
-    Provider<PermissionServiceAbstract>(
+    Provider<PermissionService>(
       create: (context) => PermissionService(
         logger: context.read<Logger>(),
         permissionHandler: AppPermissionHandlerAdapter(),
       ),
     ),
-    Provider<CameraServiceAbstract>(
+    Provider<CameraService>(
       create: (context) => CameraService(logger: context.read<Logger>()),
     ),
     Provider<DatabaseService>(
       create: (context) =>
           DatabaseService(firestore: context.read<FirebaseFirestore>()),
     ),
-    Provider<BirthplaceServiceAbstract>(
+    Provider<BirthplaceService>(
       create: (context) => BirthplaceService(
         logger: context.read<Logger>(),
       ),
       dispose: (_, service) => service.dispose(),
     ),
-    Provider<InfoServiceAbstract>(
+    Provider<InfoService>(
       create: (context) => InfoService(logger: context.read<Logger>()),
     ),
-    Provider<BrightnessServiceAbstract>(
+    Provider<BrightnessService>(
       create: (context) => BrightnessService(logger: context.read<Logger>()),
     ),
-    Provider<SharingServiceAbstract>(
+    Provider<SharingService>(
       create: (context) => SharingService(
         logger: context.read<Logger>(),
         shareAdapter: AppShareAdapter(),
       ),
     ),
-    Provider<DataExportServiceAbstract>(
+    Provider<DataExportService>(
       create: (_) => const DataExportService(),
     ),
-    Provider<ContactPdfServiceAbstract>(
+    Provider<ContactPdfService>(
       create: (_) => const ContactPdfService(),
     ),
-    Provider<ContactCardImageServiceAbstract>(
+    Provider<ContactCardImageService>(
       create: (_) => const ContactCardImageService(),
     ),
-    Provider<GeminiServiceAbstract>(
+    Provider<GeminiService>(
       create: (context) => GeminiService(
         functions: context.read<FirebaseFunctions>(),
         logger: context.read<Logger>(),
       ),
     ),
-    Provider<TaxCodeServiceAbstract>(
+    Provider<TaxCodeService>(
       create: (context) => TaxCodeService(
-        birthplaceService: context.read<BirthplaceServiceAbstract>(),
+        birthplaceService: context.read<BirthplaceService>(),
         logger: context.read<Logger>(),
       ),
     ),
@@ -154,8 +154,8 @@ List<SingleChildWidget> getAppProviders({
     ChangeNotifierProvider<HomePageController>(
       create: (context) => HomePageController(
         contactRepository: context.read<ContactRepository>(),
-        sharingService: context.read<SharingServiceAbstract>(),
-        birthplaceService: context.read<BirthplaceServiceAbstract>(),
+        sharingService: context.read<SharingService>(),
+        birthplaceService: context.read<BirthplaceService>(),
       ),
     ),
   ];

@@ -108,7 +108,7 @@ void main() {
         ChangeNotifierProvider<SyncService>.value(value: mockSyncService),
         ChangeNotifierProvider<HomePageController>.value(
             value: mockHomeController),
-        Provider<InfoServiceAbstract>.value(value: mockInfoService),
+        Provider<InfoService>.value(value: mockInfoService),
         Provider<InAppReviewService>.value(value: mockInAppReviewService),
         Provider<Logger>.value(value: mockLogger),
         ChangeNotifierProvider<ContactRepository>.value(

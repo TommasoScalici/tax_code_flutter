@@ -48,28 +48,28 @@ class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
 
 class MockFirebaseFunctions extends Mock implements FirebaseFunctions {}
 
-class MockPermissionService extends Mock implements PermissionServiceAbstract {}
+class MockPermissionService extends Mock implements PermissionService {}
 
-class MockCameraService extends Mock implements CameraServiceAbstract {}
+class MockCameraService extends Mock implements CameraService {}
 
 class MockDatabaseService extends Mock implements DatabaseService {}
 
-class MockBirthplaceService extends Mock implements BirthplaceServiceAbstract {
+class MockBirthplaceService extends Mock implements BirthplaceService {
   @override
   final downloadProgress = ValueNotifier<double?>(null);
   @override
   final downloadStep = ValueNotifier<String?>(null);
 }
 
-class MockInfoService extends Mock implements InfoServiceAbstract {}
+class MockInfoService extends Mock implements InfoService {}
 
-class MockBrightnessService extends Mock implements BrightnessServiceAbstract {}
+class MockBrightnessService extends Mock implements BrightnessService {}
 
-class MockSharingService extends Mock implements SharingServiceAbstract {}
+class MockSharingService extends Mock implements SharingService {}
 
-class MockGeminiService extends Mock implements GeminiServiceAbstract {}
+class MockGeminiService extends Mock implements GeminiService {}
 
-class MockTaxCodeService extends Mock implements TaxCodeServiceAbstract {}
+class MockTaxCodeService extends Mock implements TaxCodeService {}
 
 class MockUser extends Mock implements User {}
 
@@ -77,9 +77,9 @@ class MockCameraController extends Mock implements CameraController {}
 
 class FakeCameraDescription extends Fake implements CameraDescription {}
 
-class MockDataExportService extends Mock implements DataExportServiceAbstract {}
+class MockDataExportService extends Mock implements DataExportService {}
 
-class MockContactPdfService extends Mock implements ContactPdfServiceAbstract {}
+class MockContactPdfService extends Mock implements ContactPdfService {}
 
 class MockContactCardImageService extends Mock
-    implements ContactCardImageServiceAbstract {}
+    implements ContactCardImageService {}

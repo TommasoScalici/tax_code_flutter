@@ -28,7 +28,7 @@ class ProfileAppInfoView extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context);
-    final infoService = context.watch<InfoServiceAbstract?>();
+    final infoService = context.watch<InfoService?>();
 
     final defaultPackageInfo = PackageInfo(
       appName: l10n.appName,

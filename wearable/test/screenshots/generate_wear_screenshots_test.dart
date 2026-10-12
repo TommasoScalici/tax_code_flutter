@@ -25,7 +25,7 @@ class MockAuthService extends Mock implements AuthService {}
 class MockContactsListController extends Mock
     implements ContactsListController {}
 
-class MockNativeViewService extends Mock implements NativeViewServiceAbstract {}
+class MockNativeViewService extends Mock implements NativeViewService {}
 
 //--- Scenario Definition ---//
 
@@ -246,7 +246,7 @@ void main() {
     // 4) Barcode Code 128 (1D)
     _WearScenario(
       filename: '04_barcode_code128',
-      widgetBuilder: (locale) => Provider<NativeViewServiceAbstract>.value(
+      widgetBuilder: (locale) => Provider<NativeViewService>.value(
         value: mockNativeViewService,
         child: BarcodePage(
           taxCode: sampleMarioRossi.taxCode,
@@ -258,7 +258,7 @@ void main() {
     // 5) Barcode QR Code (2D)
     _WearScenario(
       filename: '05_barcode_qr',
-      widgetBuilder: (locale) => Provider<NativeViewServiceAbstract>.value(
+      widgetBuilder: (locale) => Provider<NativeViewService>.value(
         value: mockNativeViewService,
         child: BarcodePage(
           taxCode: sampleMarioRossi.taxCode,

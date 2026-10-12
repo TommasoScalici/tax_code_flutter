@@ -65,9 +65,9 @@ Future<String> defaultImageProcessor(
 
 class CameraPageController with ChangeNotifier, WidgetsBindingObserver {
   final CameraControllerFactory _cameraControllerFactory;
-  final CameraServiceAbstract _cameraService;
-  final GeminiServiceAbstract _geminiService;
-  final PermissionServiceAbstract _permissionService;
+  final CameraService _cameraService;
+  final GeminiService _geminiService;
+  final PermissionService _permissionService;
   final ImageProcessor _imageProcessor;
   final Logger _logger;
 
@@ -86,9 +86,9 @@ class CameraPageController with ChangeNotifier, WidgetsBindingObserver {
   FlashMode get flashMode => _flashMode;
 
   CameraPageController({
-    required CameraServiceAbstract cameraService,
-    required GeminiServiceAbstract geminiService,
-    required PermissionServiceAbstract permissionService,
+    required CameraService cameraService,
+    required GeminiService geminiService,
+    required PermissionService permissionService,
     required Logger logger,
     CameraControllerFactory? cameraControllerFactory,
     ImageProcessor? imageProcessor,

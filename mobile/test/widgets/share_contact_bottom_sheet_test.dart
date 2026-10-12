@@ -112,9 +112,9 @@ void main() {
   }) {
     return MultiProvider(
       providers: [
-        Provider<SharingServiceAbstract>.value(value: mockSharingService),
-        Provider<ContactCardImageServiceAbstract>.value(value: mockImageService),
-        Provider<ContactPdfServiceAbstract>.value(value: mockPdfService),
+        Provider<SharingService>.value(value: mockSharingService),
+        Provider<ContactCardImageService>.value(value: mockImageService),
+        Provider<ContactPdfService>.value(value: mockPdfService),
       ],
       child: MaterialApp(
         locale: locale,

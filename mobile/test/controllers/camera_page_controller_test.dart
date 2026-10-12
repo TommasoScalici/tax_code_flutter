@@ -16,11 +16,11 @@ import 'package:tax_code_flutter/services/permission_service.dart';
 import '../helpers/mocks.dart';
 
 // region Mocks and Fake Classes
-class MockCameraService extends Mock implements CameraServiceAbstract {}
+class MockCameraService extends Mock implements CameraService {}
 
-class MockGeminiService extends Mock implements GeminiServiceAbstract {}
+class MockGeminiService extends Mock implements GeminiService {}
 
-class MockPermissionService extends Mock implements PermissionServiceAbstract {}
+class MockPermissionService extends Mock implements PermissionService {}
 
 class MockLogger extends Mock implements Logger {}
 

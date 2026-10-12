@@ -2,15 +2,19 @@ import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 /// Defines the contract for a service that provides app information.
-abstract class InfoServiceAbstract {
+abstract interface class InfoService {
   Future<PackageInfo> getPackageInfo();
+
+  factory InfoService({required Logger logger}) = DefaultInfoService;
 }
 
-/// The concrete implementation of [InfoServiceAbstract].
-class InfoService implements InfoServiceAbstract {
+typedef InfoServiceAbstract = InfoService;
+
+/// The concrete default implementation of [InfoService].
+class DefaultInfoService implements InfoService {
   final Logger _logger;
 
-  InfoService({required Logger logger}) : _logger = logger;
+  DefaultInfoService({required Logger logger}) : _logger = logger;
 
   @override
   Future<PackageInfo> getPackageInfo() async {

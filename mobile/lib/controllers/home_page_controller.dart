@@ -8,8 +8,8 @@ import 'package:tax_code_flutter/services/sharing_service.dart';
 /// Manages the state and business logic for the HomePage.
 interface class HomePageController with ChangeNotifier {
   final ContactRepository _contactRepository;
-  final SharingServiceAbstract _sharingService;
-  final BirthplaceServiceAbstract _birthplaceService;
+  final SharingService _sharingService;
+  final BirthplaceService _birthplaceService;
 
   List<Contact> _allContacts = [];
   List<Contact> _filteredContacts = [];
@@ -24,8 +24,8 @@ interface class HomePageController with ChangeNotifier {
 
   HomePageController({
     required ContactRepository contactRepository,
-    required SharingServiceAbstract sharingService,
-    required BirthplaceServiceAbstract birthplaceService,
+    required SharingService sharingService,
+    required BirthplaceService birthplaceService,
   })
       : _contactRepository = contactRepository,
         _sharingService = sharingService,

@@ -39,7 +39,7 @@ class BarcodePage extends StatefulWidget {
 
 class _BarcodePageState extends State<BarcodePage> {
   final ScrollController _scrollController = ScrollController();
-  late final NativeViewServiceAbstract _nativeViewService;
+  late final NativeViewService _nativeViewService;
   late bool _isQrCode;
   double _dragDistance = 0.0;
 
@@ -47,7 +47,7 @@ class _BarcodePageState extends State<BarcodePage> {
   void initState() {
     super.initState();
     _isQrCode = widget.initialIsQrCode;
-    _nativeViewService = context.read<NativeViewServiceAbstract>();
+    _nativeViewService = context.read<NativeViewService>();
     unawaited(_enableBrightness());
   }
 

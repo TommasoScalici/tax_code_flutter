@@ -7,19 +7,25 @@ import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// Contract for generating a printable PDF document of a [Contact]'s tax code data.
-abstract class ContactPdfServiceAbstract {
+abstract interface class ContactPdfService {
   /// Generates the raw PDF bytes for a single [contact].
   Future<Uint8List> generateContactPdf({
     required Contact contact,
     AppLocalizations? l10n,
   });
+
+  /// Factory constructor returning the default implementation.
+  const factory ContactPdfService() = DefaultContactPdfService;
 }
 
-/// Concrete implementation of [ContactPdfServiceAbstract] producing
+/// Backwards-compatible alias for [ContactPdfService].
+typedef ContactPdfServiceAbstract = ContactPdfService;
+
+/// Concrete default implementation of [ContactPdfService] producing
 /// clean, formatted A4 documents with 1D Barcode and 2D QR Code.
-class ContactPdfService implements ContactPdfServiceAbstract {
-  /// Creates a [ContactPdfService].
-  const ContactPdfService();
+class DefaultContactPdfService implements ContactPdfService {
+  /// Creates a [DefaultContactPdfService].
+  const DefaultContactPdfService();
 
   static final DateFormat _birthDateFormat = DateFormat('dd/MM/yyyy');
   static final DateFormat _generationDateFormat =

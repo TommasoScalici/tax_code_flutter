@@ -7,7 +7,7 @@ import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 
 // --- Mocks ---
-class MockBirthplaceService extends Mock implements BirthplaceServiceAbstract {}
+class MockBirthplaceService extends Mock implements BirthplaceService {}
 
 class MockLogger extends Mock implements Logger {}
 

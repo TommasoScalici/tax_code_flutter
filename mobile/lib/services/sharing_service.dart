@@ -31,22 +31,29 @@ class AppShareAdapter implements ShareAdapter {
   }
 }
 
-abstract class SharingServiceAbstract {
+abstract interface class SharingService {
   Future<ShareResult> share({required String text});
   Future<ShareResult> shareFile({
     required String filePath,
     required String mimeType,
     String? subject,
   });
+
+  factory SharingService({
+    required Logger logger,
+    required ShareAdapter shareAdapter,
+  }) = DefaultSharingService;
 }
 
-class SharingService implements SharingServiceAbstract {
+typedef SharingServiceAbstract = SharingService;
+
+class DefaultSharingService implements SharingService {
   final Logger _logger;
   final ShareAdapter _shareAdapter;
 
-  SharingService({
+  DefaultSharingService({
     required Logger logger,
-    required ShareAdapter shareAdapter, // <-- INIETTATA QUI
+    required ShareAdapter shareAdapter,
   }) : _logger = logger,
        _shareAdapter = shareAdapter;
 

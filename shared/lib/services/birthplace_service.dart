@@ -11,12 +11,30 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared/models/birthplace.dart';
 
 /// Defines the contract for a service that provides birthplace data.
-abstract class BirthplaceServiceAbstract {
+abstract interface class BirthplaceService {
   ValueNotifier<double?> get downloadProgress;
   ValueNotifier<String?> get downloadStep;
   Future<List<Birthplace>> loadBirthplaces();
   void dispose();
+
+  /// Background update task future for testing.
+  @visibleForTesting
+  Future<void>? get backgroundUpdateFuture;
+
+  /// Whether the service has been disposed.
+  @visibleForTesting
+  bool get isDisposed;
+
+  /// Factory constructor returning the default implementation.
+  factory BirthplaceService({
+    required Logger logger,
+    FirebaseStorage? storage,
+    String storagePath,
+  }) = DefaultBirthplaceService;
 }
+
+/// Backwards-compatible alias for [BirthplaceService].
+typedef BirthplaceServiceAbstract = BirthplaceService;
 
 /// Parses raw JSON string into a list of [Birthplace] objects.
 List<Birthplace> _parseBirthplacesJson(String jsonString) {
@@ -34,9 +52,9 @@ Future<List<Birthplace>> _parseBirthplacesInIsolate(String jsonString) {
   return Isolate.run(() => _parseBirthplacesJson(jsonString));
 }
 
-/// The concrete implementation of [BirthplaceService] that loads data
+/// The concrete default implementation of [BirthplaceService] that loads data
 /// from Firebase Storage in the background and uses local fallback assets on first launch.
-class BirthplaceService implements BirthplaceServiceAbstract {
+class DefaultBirthplaceService implements BirthplaceService {
   final Logger _logger;
   final FirebaseStorage _storage;
   final String _storagePath;
@@ -52,13 +70,15 @@ class BirthplaceService implements BirthplaceServiceAbstract {
   StreamSubscription<TaskSnapshot>? _downloadSubscription;
   bool _isDisposed = false;
 
+  @override
   @visibleForTesting
   Future<void>? get backgroundUpdateFuture => _backgroundUpdateFuture;
 
+  @override
   @visibleForTesting
   bool get isDisposed => _isDisposed;
 
-  BirthplaceService({
+  DefaultBirthplaceService({
     required Logger logger,
     FirebaseStorage? storage,
     String storagePath = 'public/birthplaces.json',

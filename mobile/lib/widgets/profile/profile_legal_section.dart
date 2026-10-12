@@ -21,7 +21,7 @@ class ProfileLegalSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
-    final infoService = context.watch<InfoServiceAbstract?>();
+    final infoService = context.watch<InfoService?>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

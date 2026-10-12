@@ -13,7 +13,7 @@ enum ExportFormat {
 }
 
 /// Defines the contract for serializing contact lists into exportable formats.
-abstract class DataExportServiceAbstract {
+abstract interface class DataExportService {
   /// Formats the list of [contacts] into a formatted string in the specified [format].
   String formatContacts({
     required List<Contact> contacts,
@@ -25,13 +25,19 @@ abstract class DataExportServiceAbstract {
 
   /// Returns the MIME type for the given [format].
   String mimeType(ExportFormat format);
+
+  /// Factory constructor returning the default implementation.
+  const factory DataExportService() = DefaultDataExportService;
 }
 
-/// Concrete implementation of [DataExportServiceAbstract] handling
+/// Backwards-compatible alias for [DataExportService].
+typedef DataExportServiceAbstract = DataExportService;
+
+/// Concrete default implementation of [DataExportService] handling
 /// formatted JSON and RFC 4180-compliant CSV generation.
-class DataExportService implements DataExportServiceAbstract {
-  /// Creates a [DataExportService].
-  const DataExportService();
+class DefaultDataExportService implements DataExportService {
+  /// Creates a [DefaultDataExportService].
+  const DefaultDataExportService();
 
   static final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
 

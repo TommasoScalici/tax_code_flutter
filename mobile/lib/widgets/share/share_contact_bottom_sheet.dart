@@ -61,7 +61,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
     setState(() => _isSharing = true);
 
     try {
-      final sharingService = context.read<SharingServiceAbstract>();
+      final sharingService = context.read<SharingService>();
       final contact = widget.contact;
 
       if (_selectedFormat == ContactShareFormat.text) {
@@ -74,8 +74,8 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
       final l10n = context.l10n;
       final scaffoldMessenger = ScaffoldMessenger.of(context);
       final navigator = Navigator.of(context);
-      final imageService = context.read<ContactCardImageServiceAbstract>();
-      final pdfService = context.read<ContactPdfServiceAbstract>();
+      final imageService = context.read<ContactCardImageService>();
+      final pdfService = context.read<ContactPdfService>();
 
       final exportResult = await ContactShareFileHelper.prepareExportFile(
         contact: contact,

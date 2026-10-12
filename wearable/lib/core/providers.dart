@@ -34,13 +34,13 @@ List<SingleChildWidget> getAppProviders({
     Provider<LocalCacheService>(
       create: (_) => HiveLocalCacheService(),
     ),
-    Provider<NativeViewServiceAbstract>(
+    Provider<NativeViewService>(
       create: (context) =>
           NativeViewService(logger: context.read<Logger>()),
     ),
 
     // --- Level 3: State Services ---
-    ChangeNotifierProvider<DemoModeServiceAbstract>(
+    ChangeNotifierProvider<DemoModeService>(
       create: (_) => DemoModeService(),
     ),
     ChangeNotifierProvider<AuthService>(
@@ -66,8 +66,8 @@ List<SingleChildWidget> getAppProviders({
     ChangeNotifierProvider<ContactsListController>(
       create: (context) => ContactsListController(
         contactRepository: context.read<ContactRepository>(),
-        demoModeService: context.read<DemoModeServiceAbstract>(),
-        nativeViewService: context.read<NativeViewServiceAbstract>(),
+        demoModeService: context.read<DemoModeService>(),
+        nativeViewService: context.read<NativeViewService>(),
         logger: context.read<Logger>(),
       ),
     ),
