@@ -48,13 +48,13 @@ jobs:
         run: flutter analyze --fatal-infos
 
       - name: 🧪 Run tests (shared)
-        run: flutter test shared
+        run: cd shared && flutter test
 
       - name: 🧪 Run tests (mobile)
-        run: flutter test mobile
+        run: cd mobile && flutter test
 
       - name: 🧪 Run tests (wearable)
-        run: flutter test wearable
+        run: cd wearable && flutter test
 
   functions-checks:
     name: Firebase Functions Quality & Tests
