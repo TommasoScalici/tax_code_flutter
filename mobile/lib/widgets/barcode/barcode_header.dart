@@ -63,7 +63,10 @@ class BarcodeHeader extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.badgeGap),
-              Row(
+              Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.xs,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Container(
                     padding: AppSpacing.paddingBadge,
@@ -89,7 +92,6 @@ class BarcodeHeader extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.sm),
                   InkWell(
                     key: const Key('barcode_bottom_sheet_copy_button'),
                     onTap: onCopy,
