@@ -52,6 +52,7 @@ Widget _buildBarcodeScenario(Locale locale, Contact contact) {
             child: DashboardScreenPreview(
               locale: locale,
               initialContacts: [contact],
+              showToolbar: false,
             ),
           ),
           // Scrim overlay
@@ -228,8 +229,11 @@ void main() {
           'Archivia, organizza e consulta in qualsiasi momento, anche offline.',
       enHeadline: 'Your tax codes, always with you',
       enSubtitle: 'Store, organize and access anytime, fully offline.',
-      widgetBuilder: (locale) =>
-          DashboardScreenPreview(locale: locale, initialContacts: const []),
+      widgetBuilder: (locale) => DashboardScreenPreview(
+        locale: locale,
+        initialContacts: const [],
+        showToolbar: false,
+      ),
     ),
     _Scenario(
       filename: '02_dashboard_contacts',
@@ -239,7 +243,8 @@ void main() {
       enHeadline: 'Multi-profile storage & verified codes',
       enSubtitle:
           'Intuitive list, instant search and verified fiscal code badge.',
-      widgetBuilder: (locale) => DashboardScreenPreview(locale: locale),
+      widgetBuilder: (locale) =>
+          DashboardScreenPreview(locale: locale, showToolbar: false),
     ),
     _Scenario(
       filename: '03_form_completed',
@@ -248,8 +253,11 @@ void main() {
           "Inserisci i dati anagrafici e visualizza il codice all'istante.",
       enHeadline: 'Real-time calculation with live preview',
       enSubtitle: 'Fill in personal details and see the tax code update live.',
-      widgetBuilder: (locale) =>
-          FormScreenPreview(locale: locale, initialContact: sampleContact),
+      widgetBuilder: (locale) => FormScreenPreview(
+        locale: locale,
+        initialContact: sampleContact,
+        showToolbar: false,
+      ),
     ),
     _Scenario(
       filename: '04_barcode_qr',
@@ -269,7 +277,8 @@ void main() {
       enHeadline: 'Smart document scanning with Gemini AI',
       enSubtitle:
           'Point at the health card: instant automatic data extraction.',
-      widgetBuilder: (locale) => FormScreenPreview(locale: locale),
+      widgetBuilder: (locale) =>
+          FormScreenPreview(locale: locale, showToolbar: false),
     ),
   ];
 

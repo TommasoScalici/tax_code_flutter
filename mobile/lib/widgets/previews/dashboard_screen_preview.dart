@@ -37,11 +37,13 @@ class DashboardScreenPreview extends StatefulWidget {
     this.locale = const Locale('it'),
     this.initialContacts,
     this.isDarkMode = false,
+    this.showToolbar = true,
   });
 
   final Locale locale;
   final List<Contact>? initialContacts;
   final bool isDarkMode;
+  final bool showToolbar;
 
   @override
   State<DashboardScreenPreview> createState() => _DashboardScreenPreviewState();
@@ -84,6 +86,7 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
       expandChild: true,
       initialDarkMode: widget.isDarkMode,
       initialLocale: widget.locale,
+      showToolbar: widget.showToolbar,
       routes: {Routes.form: (context) => const FormScreenPreview()},
       providers: [
         ChangeNotifierProvider<HomePageController>.value(value: _controller),

@@ -28,11 +28,13 @@ class FormScreenPreview extends StatefulWidget {
     this.locale = const Locale('it'),
     this.initialContact,
     this.isDarkMode = false,
+    this.showToolbar = true,
   });
 
   final Locale locale;
   final Contact? initialContact;
   final bool isDarkMode;
+  final bool showToolbar;
 
   @override
   State<FormScreenPreview> createState() => _FormScreenPreviewState();
@@ -69,6 +71,7 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
       padding: EdgeInsets.zero,
       initialDarkMode: widget.isDarkMode,
       initialLocale: widget.locale,
+      showToolbar: widget.showToolbar,
       routes: {Routes.camera: (context) => _CameraMockPage()},
       providers: [
         Provider<BirthplaceService>.value(value: _birthplaceService),
