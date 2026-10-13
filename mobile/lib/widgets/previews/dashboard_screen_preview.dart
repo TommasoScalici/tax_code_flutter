@@ -4,27 +4,32 @@ import 'package:flutter/widget_previews.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/contact.dart';
+import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
-import 'package:shared/testing/fake_auth_service.dart';
-import 'package:shared/testing/test_contact_fixtures.dart';
-import 'package:tax_code_flutter/l10n/l10n.dart';
+import 'package:shared/services/review_service.dart';
+import 'package:shared/services/sync_service.dart';
+import 'package:shared/testing/testing.dart';
+import 'package:tax_code_flutter/controllers/home_page_controller.dart';
+import 'package:tax_code_flutter/routes.dart';
+import 'package:tax_code_flutter/screens/home_page.dart';
+import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/contact_card_image_service.dart';
 import 'package:tax_code_flutter/services/contact_pdf_service.dart';
+import 'package:tax_code_flutter/services/in_app_review_service.dart';
+import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
-import 'package:tax_code_flutter/widgets/barcode_bottom_sheet.dart';
-import 'package:tax_code_flutter/widgets/contact_card.dart';
-import 'package:tax_code_flutter/widgets/dashboard/dashboard_empty_state.dart';
-import 'package:tax_code_flutter/widgets/dashboard/dashboard_fab.dart';
-import 'package:tax_code_flutter/widgets/dashboard/dashboard_header.dart';
-import 'package:tax_code_flutter/widgets/dashboard/dashboard_search_bar.dart';
+import 'package:tax_code_flutter/widgets/previews/form_screen_preview.dart';
 import 'package:tax_code_flutter/widgets/previews/preview_fakes.dart';
 import 'package:tax_code_flutter/widgets/previews/preview_shell.dart';
-import 'package:tax_code_flutter/widgets/responsive_layout.dart';
-import 'package:tax_code_flutter/widgets/share/share_contact_bottom_sheet.dart';
 
-/// Full screen preview for the Dashboard v2 ("I Miei Codici"),
-/// showcasing [DashboardHeader], [DashboardSearchBar], [ContactCard],
-/// [DashboardEmptyState], and [DashboardFab] in action.
+/// Full screen preview for [HomePage] ("I Miei Codici"),
+/// maintaining 1:1 Screen Parity with production.
+///
+/// Features interactive toggles for:
+/// - Light vs Dark theme
+/// - English vs Italian localization
+/// - With Contacts vs Empty State
+/// - Authenticated User vs Guest Mode
 class DashboardScreenPreview extends StatefulWidget {
   @Preview(name: 'Dashboard Screen')
   const DashboardScreenPreview({
@@ -43,68 +48,32 @@ class DashboardScreenPreview extends StatefulWidget {
 }
 
 class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
-  final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-
-  final List<Contact> _allContacts = TestContactFixtures.sampleContacts;
-
-  late List<Contact> _contacts;
+  late final FakeHomePageController _controller;
+  late final FakeSyncService _syncService;
+  late final FakeAuthService _authService;
+  late final FakeContactRepository _contactRepository;
+  late final FakeReviewService _reviewService;
+  late final FakeInAppReviewService _inAppReviewService;
 
   @override
   void initState() {
     super.initState();
-    _contacts = widget.initialContacts != null
-        ? List.from(widget.initialContacts!)
-        : List.from(_allContacts);
+    final contacts =
+        widget.initialContacts ?? TestContactFixtures.sampleContacts;
+    _controller = FakeHomePageController(contacts);
+    _syncService = FakeSyncService();
+    _authService = FakeAuthService.authenticated();
+    _contactRepository = FakeContactRepository(contacts);
+    _reviewService = FakeReviewService();
+    _inAppReviewService = FakeInAppReviewService();
   }
 
   @override
   void dispose() {
-    _searchController.dispose();
+    _controller.dispose();
+    _syncService.dispose();
+    _authService.dispose();
     super.dispose();
-  }
-
-  List<Contact> get _filteredContacts {
-    if (_searchQuery.isEmpty) return _contacts;
-    final q = _searchQuery.toLowerCase();
-    return _contacts.where((c) {
-      return c.firstName.toLowerCase().contains(q) ||
-          c.lastName.toLowerCase().contains(q) ||
-          c.taxCode.toLowerCase().contains(q);
-    }).toList();
-  }
-
-  Future<void> _handleDelete(BuildContext context, Contact contact) async {
-    final l10n = context.l10n;
-    final bool? isConfirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.deleteConfirmation),
-        content: Text(l10n.deleteMessage(contact.taxCode)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(
-              l10n.delete,
-              style: Theme.of(dialogContext).textTheme.labelLarge?.copyWith(
-                color: Theme.of(dialogContext).colorScheme.error,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    if (isConfirmed == true && mounted) {
-      setState(() {
-        _contacts.removeWhere((c) => c.id == contact.id);
-      });
-      PreviewShell.showFeedback(this.context, l10n.actionLabel(l10n.delete));
-    }
   }
 
   @override
@@ -115,130 +84,65 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
       expandChild: true,
       initialDarkMode: widget.isDarkMode,
       initialLocale: widget.locale,
+      routes: {Routes.form: (context) => const FormScreenPreview()},
       providers: [
-        ChangeNotifierProvider<AuthService>.value(
-          value: FakeAuthService.authenticated(),
+        ChangeNotifierProvider<HomePageController>.value(value: _controller),
+        ChangeNotifierProvider<SyncService>.value(value: _syncService),
+        ChangeNotifierProvider<AuthService>.value(value: _authService),
+        Provider<ReviewService>.value(value: _reviewService),
+        Provider<InAppReviewService>.value(value: _inAppReviewService),
+        ChangeNotifierProvider<ContactRepository>.value(
+          value: _contactRepository,
         ),
-        Provider<SharingService>.value(
-          value: const FakeSharingService(),
-        ),
+        Provider<SharingService>.value(value: const FakeSharingService()),
+        Provider<BrightnessService>.value(value: FakeBrightnessService()),
+        Provider<InfoService>.value(value: FakeInfoService()),
         Provider<ContactCardImageService>.value(
           value: const ContactCardImageService(),
         ),
-        Provider<ContactPdfService>.value(
-          value: const ContactPdfService(),
+        Provider<ContactPdfService>.value(value: const ContactPdfService()),
+      ],
+      toolbarActions: (context, _) => [
+        ListenableBuilder(
+          listenable: _controller,
+          builder: (context, _) => ChoiceChip(
+            label: const Text('Con contatti'),
+            selected: _controller.hasContacts,
+            onSelected: (val) {
+              if (val) {
+                _controller.setContacts(TestContactFixtures.sampleContacts);
+              }
+            },
+          ),
+        ),
+        ListenableBuilder(
+          listenable: _controller,
+          builder: (context, _) => ChoiceChip(
+            label: const Text('Lista vuota'),
+            selected: !_controller.hasContacts,
+            onSelected: (val) {
+              if (val) {
+                _controller.setContacts(const []);
+              }
+            },
+          ),
+        ),
+        ListenableBuilder(
+          listenable: _authService,
+          builder: (context, _) => ChoiceChip(
+            label: const Text('Ospite'),
+            selected: _authService.isGuest,
+            onSelected: (val) {
+              if (val) {
+                unawaited(_authService.signInAnonymously());
+              } else {
+                unawaited(_authService.signInWithGoogle());
+              }
+            },
+          ),
         ),
       ],
-      builder: (context, _) {
-        final l10n = context.l10n;
-        final displayedContacts = _filteredContacts;
-
-        return Scaffold(
-          appBar: DashboardHeader(
-            onThemeToggle: () {},
-            onProfileTap: () =>
-                PreviewShell.showFeedback(context, l10n.profilePageTitle),
-            onSyncToggle: () =>
-                PreviewShell.showFeedback(context, l10n.cloudSyncOn),
-          ),
-          body: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: () => FocusScope.of(context).unfocus(),
-            child: ResponsiveLayout(
-              maxWidth: 600.0,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  // Search Bar with real-time query filtering & card counter
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: DashboardSearchBar(
-                      controller: _searchController,
-                      cardCount: _contacts.length,
-                      onChanged: (val) {
-                        setState(() {
-                          _searchQuery = val;
-                        });
-                      },
-                      onClear: () {
-                        setState(() {
-                          _searchQuery = '';
-                          _searchController.clear();
-                        });
-                      },
-                    ),
-                  ),
-
-                  // Content Area
-                  Expanded(
-                    child: displayedContacts.isEmpty
-                        ? DashboardEmptyState(
-                            searchQuery: _searchQuery.isNotEmpty
-                                ? _searchQuery
-                                : null,
-                            onClearSearch: () {
-                              setState(() {
-                                _searchQuery = '';
-                                _searchController.clear();
-                              });
-                            },
-                            onAddContact: () {
-                              setState(() {
-                                _contacts = List.from(_allContacts);
-                              });
-                              PreviewShell.showFeedback(context, l10n.appName);
-                            },
-                          )
-                        : ListView.builder(
-                            keyboardDismissBehavior:
-                                ScrollViewKeyboardDismissBehavior.onDrag,
-                            padding: const EdgeInsets.only(
-                              top: 4.0,
-                              bottom: 90.0,
-                              left: 16.0,
-                              right: 16.0,
-                            ),
-                            itemCount: displayedContacts.length,
-                            itemBuilder: (context, index) {
-                              final contact = displayedContacts[index];
-                              return ContactCard(
-                                key: ValueKey(contact.id),
-                                contact: contact,
-                                onShare: () => unawaited(
-                                  ShareContactBottomSheet.show(
-                                    context,
-                                    contact: contact,
-                                  ),
-                                ),
-                                onShowBarcode: () => unawaited(
-                                  BarcodeBottomSheet.show(
-                                    context,
-                                    contact: contact,
-                                  ),
-                                ),
-                                onEdit: () => PreviewShell.showFeedback(
-                                  context,
-                                  l10n.cardActionEdit,
-                                ),
-                                onDelete: () =>
-                                    _handleDelete(context, contact),
-                              );
-                            },
-                          ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          floatingActionButton: _contacts.isNotEmpty
-              ? DashboardFab(
-                  onPressed: () {
-                    PreviewShell.showFeedback(context, l10n.addCode);
-                  },
-                )
-              : null,
-        );
-      },
+      child: const HomePage(),
     );
   }
 }

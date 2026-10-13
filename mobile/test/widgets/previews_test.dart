@@ -70,6 +70,7 @@ void main() {
   testWidgets('pumps DashboardScreenPreview without error', (tester) async {
     await tester.pumpWidget(const DashboardScreenPreview());
     await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 350));
     expect(find.byType(DashboardScreenPreview), findsOneWidget);
   });
 
@@ -117,9 +118,7 @@ void main() {
     expect(find.byType(TaxCodeLivePreviewCardPreview), findsOneWidget);
   });
 
-  testWidgets('pumps FormStickyBottomBarPreview without error', (
-    tester,
-  ) async {
+  testWidgets('pumps FormStickyBottomBarPreview without error', (tester) async {
     await tester.pumpWidget(const FormStickyBottomBarPreview());
     await tester.pumpAndSettle();
     expect(find.byType(FormStickyBottomBarPreview), findsOneWidget);
@@ -165,4 +164,3 @@ void main() {
     expect(find.byType(CameraScreenPreview), findsOneWidget);
   });
 }
-

@@ -23,8 +23,7 @@ class FakeSharingService implements SharingService {
     required String filePath,
     required String mimeType,
     String? subject,
-  }) async =>
-      const ShareResult('', ShareResultStatus.success);
+  }) async => const ShareResult('', ShareResultStatus.success);
 }
 
 /// Centralized fake implementation of [BrightnessService] for previews.
@@ -48,14 +47,15 @@ class FakeInfoService implements InfoService {
 
   /// Creates a [FakeInfoService] with optional custom [packageInfo].
   FakeInfoService([PackageInfo? packageInfo])
-      : _packageInfo = packageInfo ??
-            PackageInfo(
-              appName: 'Codice Fiscale',
-              packageName: 'tommasoscalici.taxcode',
-              version: '2.0.0',
-              buildNumber: '1',
-              installerStore: 'Google Play',
-            );
+    : _packageInfo =
+          packageInfo ??
+          PackageInfo(
+            appName: 'Codice Fiscale',
+            packageName: 'tommasoscalici.taxcode',
+            version: '2.0.0',
+            buildNumber: '1',
+            installerStore: 'Google Play',
+          );
 
   @override
   Future<PackageInfo> getPackageInfo() async => _packageInfo;
@@ -79,21 +79,21 @@ class FakeHomePageController extends ChangeNotifier
 
   /// Creates a [FakeHomePageController] initialized with contacts.
   FakeHomePageController([List<Contact>? initialContacts])
-      : _contacts = List<Contact>.from(
-          initialContacts ?? TestContactFixtures.sampleContacts,
-        );
+    : _contacts = List<Contact>.from(
+        initialContacts ?? TestContactFixtures.sampleContacts,
+      );
 
   @override
   List<Contact> get contactsToShow => _searchText.isEmpty
       ? _contacts
       : _contacts
-          .where(
-            (c) =>
-                c.firstName.toLowerCase().contains(_searchText) ||
-                c.lastName.toLowerCase().contains(_searchText) ||
-                c.taxCode.toLowerCase().contains(_searchText),
-          )
-          .toList();
+            .where(
+              (c) =>
+                  c.firstName.toLowerCase().contains(_searchText) ||
+                  c.lastName.toLowerCase().contains(_searchText) ||
+                  c.taxCode.toLowerCase().contains(_searchText),
+            )
+            .toList();
 
   /// Returns all stored contacts.
   List<Contact> get contacts => List.unmodifiable(_contacts);
@@ -146,6 +146,13 @@ class FakeHomePageController extends ChangeNotifier
   /// Sets loading state.
   void setLoading(bool loading) {
     _isLoading = loading;
+    notifyListeners();
+  }
+
+  /// Replaces the current contacts list.
+  void setContacts(List<Contact> contacts) {
+    _contacts.clear();
+    _contacts.addAll(contacts);
     notifyListeners();
   }
 }

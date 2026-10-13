@@ -26,6 +26,8 @@ class PreviewShell extends StatefulWidget {
     this.providers = const [],
     this.toolbarActions,
     this.showToolbar = true,
+    this.routes,
+    this.onGenerateRoute,
     super.key,
   }) : assert(
          child != null || builder != null,
@@ -70,6 +72,12 @@ class PreviewShell extends StatefulWidget {
   /// Whether to display the top preview toolbar (theme & locale toggles).
   final bool showToolbar;
 
+  /// Optional routes table for navigation inside previews.
+  final Map<String, WidgetBuilder>? routes;
+
+  /// Optional route generator for navigation inside previews.
+  final Route<dynamic>? Function(RouteSettings)? onGenerateRoute;
+
   /// Displays floating feedback snackbar for callback demonstration.
   static void showFeedback(BuildContext context, String message) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -100,6 +108,8 @@ class _PreviewShellState extends State<PreviewShell> {
       locale: _locale,
       localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      routes: widget.routes ?? const {},
+      onGenerateRoute: widget.onGenerateRoute,
       home: Builder(
         builder: (context) {
           final theme = Theme.of(context);
@@ -165,10 +175,7 @@ class _PreviewShellState extends State<PreviewShell> {
                     maxWidth: widget.maxWidth ?? double.infinity,
                     maxHeight: widget.maxHeight ?? double.infinity,
                   ),
-                  child: Padding(
-                    padding: widget.padding,
-                    child: targetWidget,
-                  ),
+                  child: Padding(padding: widget.padding, child: targetWidget),
                 ),
               );
             } else if (widget.padding != EdgeInsets.zero) {
@@ -233,10 +240,7 @@ class _PreviewShellState extends State<PreviewShell> {
     );
 
     if (widget.providers.isNotEmpty) {
-      return MultiProvider(
-        providers: widget.providers,
-        child: app,
-      );
+      return MultiProvider(providers: widget.providers, child: app);
     }
 
     return app;
