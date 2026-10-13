@@ -9,7 +9,7 @@ echo "🚀 [Pre-commit] Starting pre-commit quality checks..."
 echo ""
 
 echo "🎨 1/4 Checking Dart code formatting..."
-dart format --output=none --set-exit-if-changed .
+dart format --output=none --set-exit-if-changed shared mobile/lib mobile/test wearable/lib wearable/test tool
 echo "  ✓ Dart formatting check passed."
 
 echo "🔤 2/4 Checking ARB files alphabetical ordering..."

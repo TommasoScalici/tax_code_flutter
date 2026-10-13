@@ -33,8 +33,9 @@ class DefaultContactRepository extends ContactRepository {
 
   @override
   bool get isSyncActive =>
-      _syncService?.isSyncEnabled ??
-      (_authService.isSignedIn && !_authService.isGuest);
+      (_syncService?.isSyncEnabled ?? true) &&
+      _authService.isSignedIn &&
+      !_authService.isGuest;
 
   /// Creates a [DefaultContactRepository].
   ///

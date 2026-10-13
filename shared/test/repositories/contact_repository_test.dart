@@ -858,5 +858,24 @@ void main() {
         repo.dispose();
       },
     );
+
+    test('isSyncActive is false when user is not signed in', () {
+      fakeAuthService.logout();
+      expect(syncRepo.isSyncActive, isFalse);
+    });
+
+    test('isSyncActive is false when user is guest', () async {
+      await fakeAuthService.signInAnonymously();
+      expect(syncRepo.isSyncActive, isFalse);
+    });
+
+    test(
+      'isSyncActive is true when user is signed in, not guest, and sync is enabled',
+      () {
+        fakeAuthService.login(fakeUser);
+        when(() => mockSyncService.isSyncEnabled).thenReturn(true);
+        expect(syncRepo.isSyncActive, isTrue);
+      },
+    );
   });
 }

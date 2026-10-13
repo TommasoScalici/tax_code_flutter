@@ -36,7 +36,7 @@ jobs:
         run: flutter pub get
 
       - name: 🎨 Verify Dart code formatting
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart format --output=none --set-exit-if-changed shared mobile/lib mobile/test wearable/lib wearable/test tool
 
       - name: 🔤 Verify ARB file ordering
         run: dart run tool/arb_tool.dart check

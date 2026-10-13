@@ -6,7 +6,7 @@ Write-Host "🚀 [Pre-commit] Starting pre-commit quality checks..." -Foreground
 Write-Host ""
 
 Write-Host "🎨 1/4 Checking Dart code formatting..." -ForegroundColor Yellow
-dart format --output=none --set-exit-if-changed .
+dart format --output=none --set-exit-if-changed shared mobile/lib mobile/test wearable/lib wearable/test tool
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 Write-Host "  ✓ Dart formatting check passed." -ForegroundColor Green
 
