@@ -7,19 +7,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Renders a modern, high-conversion Google Play Store Feature Graphic (1024x500).
-/// Strictly adheres to the Google Play Safe Zone (leaving ~110px margins left/right)
-/// so that nothing gets clipped when displayed in search cards (16:9) or on tablets.
+/// Strictly adheres to the Google Play Safe Zone (leaving ~125px margins left/right)
+/// and utilizes the official app icon for consistent brand identity.
 class FeatureGraphicCanvas extends StatelessWidget {
-  const FeatureGraphicCanvas({required this.isItalian, super.key});
+  const FeatureGraphicCanvas({
+    required this.isItalian,
+    this.iconImage,
+    super.key,
+  });
 
   final bool isItalian;
+  final ui.Image? iconImage;
 
   @override
   Widget build(BuildContext context) {
     final titleText = isItalian ? 'Codice Fiscale' : 'Tax Code';
     final subtitleText = isItalian
-        ? 'Calcolo istantaneo, scanner IA e backup cloud'
-        : 'Instant calculation, AI scanner and cloud backup';
+        ? 'Calcolo istantaneo, scanner IA e gestione tessere'
+        : 'Instant calculation, AI scanner and cards management';
     final badgeText = isItalian
         ? 'SCANNER IA & BACKUP CLOUD'
         : 'AI SCANNER & CLOUD BACKUP';
@@ -34,15 +39,15 @@ class FeatureGraphicCanvas extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF0F172A), Color(0xFF060B14)],
+          colors: [Color(0xFF0F172A), Color(0xFF070D18)],
         ),
       ),
       child: Stack(
         children: [
           // Background ambient glows
           Positioned(
-            left: -80,
-            top: -80,
+            left: 20,
+            top: 50,
             child: Container(
               width: 380,
               height: 380,
@@ -50,7 +55,7 @@ class FeatureGraphicCanvas extends StatelessWidget {
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFF10B981).withValues(alpha: 0.18),
+                    const Color(0xFF10B981).withValues(alpha: 0.16),
                     Colors.transparent,
                   ],
                 ),
@@ -58,118 +63,60 @@ class FeatureGraphicCanvas extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: 40,
+            right: 80,
             bottom: -60,
             child: Container(
-              width: 420,
-              height: 420,
+              width: 400,
+              height: 400,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFF065F46).withValues(alpha: 0.22),
+                    const Color(0xFF065F46).withValues(alpha: 0.18),
                     Colors.transparent,
                   ],
                 ),
               ),
             ),
           ),
-          // Safe Zone Container (horizontal padding ~100px so content is never cropped in 16:9)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 100),
-            child: Center(
+          // Centered Safe Zone container (horizontal margin ~125px ensures no crop in 16:9)
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 125),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // App Card Icon (Left)
+                  // Official Brand App Icon
                   Container(
-                    width: 170,
-                    height: 230,
+                    width: 200,
+                    height: 200,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1E293B).withValues(alpha: 0.95),
-                      borderRadius: BorderRadius.circular(22),
-                      border: Border.all(
-                        color: const Color(0xFF34D399).withValues(alpha: 0.6),
-                        width: 2,
-                      ),
+                      borderRadius: BorderRadius.circular(44),
                       boxShadow: [
                         BoxShadow(
                           color: const Color(
                             0xFF10B981,
-                          ).withValues(alpha: 0.25),
-                          blurRadius: 36,
+                          ).withValues(alpha: 0.28),
+                          blurRadius: 40,
                           spreadRadius: 2,
                         ),
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.4),
-                          blurRadius: 20,
+                          color: Colors.black.withValues(alpha: 0.5),
+                          blurRadius: 24,
                           offset: const Offset(0, 10),
                         ),
                       ],
                     ),
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Chip icon & Brand badge
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: 38,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFEAB308),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                            ),
-                            const Text(
-                              'CF',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xFF34D399),
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Barcode mockup
-                        Container(
-                          height: 70,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.35),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 8,
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              _BarcodeBar(width: 4),
-                              _BarcodeGap(width: 3),
-                              _BarcodeBar(width: 6),
-                              _BarcodeGap(width: 2),
-                              _BarcodeBar(width: 3),
-                              _BarcodeGap(width: 4),
-                              _BarcodeBar(width: 7),
-                              _BarcodeGap(width: 2),
-                              _BarcodeBar(width: 4),
-                              _BarcodeGap(width: 3),
-                              _BarcodeBar(width: 8),
-                              _BarcodeGap(width: 2),
-                              _BarcodeBar(width: 3),
-                              _BarcodeGap(width: 4),
-                              _BarcodeBar(width: 5),
-                              _BarcodeGap(width: 2),
-                              _BarcodeBar(width: 4),
-                            ],
-                          ),
-                        ),
-                      ],
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(44),
+                      child: iconImage != null
+                          ? RawImage(
+                              image: iconImage,
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            )
+                          : const SizedBox.shrink(),
                     ),
                   ),
 
@@ -239,7 +186,7 @@ class FeatureGraphicCanvas extends StatelessWidget {
                           titleText,
                           style: const TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 52,
+                            fontSize: 50,
                             fontWeight: FontWeight.w900,
                             color: Colors.white,
                             letterSpacing: -0.6,
@@ -262,7 +209,7 @@ class FeatureGraphicCanvas extends StatelessWidget {
                           maxLines: 2,
                           style: const TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 18.5,
+                            fontSize: 18,
                             fontWeight: FontWeight.w500,
                             color: Color(0xFFCBD5E1),
                             height: 1.3,
@@ -325,36 +272,12 @@ class FeatureGraphicCanvas extends StatelessWidget {
   }
 }
 
-class _BarcodeBar extends StatelessWidget {
-  const _BarcodeBar({required this.width});
-  final double width;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      decoration: BoxDecoration(
-        color: const Color(0xFF34D399),
-        borderRadius: BorderRadius.circular(1.5),
-      ),
-    );
-  }
-}
-
-class _BarcodeGap extends StatelessWidget {
-  const _BarcodeGap({required this.width});
-  final double width;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(width: width);
-  }
-}
-
 void main() {
   testWidgets('Generate high-conversion Google Play Store Feature Graphics', (
     tester,
   ) async {
+    ui.Image? iconImage;
+
     await tester.runAsync(() async {
       final interFiles = [
         'assets/fonts/Inter-Regular.ttf',
@@ -373,6 +296,14 @@ void main() {
           }
         }
         await loader.load();
+      }
+
+      final iconFile = File('assets/images/play_store_icon.png');
+      if (iconFile.existsSync()) {
+        final bytes = await iconFile.readAsBytes();
+        final codec = await ui.instantiateImageCodec(bytes);
+        final frame = await codec.getNextFrame();
+        iconImage = frame.image;
       }
     });
 
@@ -395,7 +326,7 @@ void main() {
           textDirection: TextDirection.ltr,
           child: RepaintBoundary(
             key: repaintKey,
-            child: FeatureGraphicCanvas(isItalian: isIt),
+            child: FeatureGraphicCanvas(isItalian: isIt, iconImage: iconImage),
           ),
         ),
       );
