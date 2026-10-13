@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:shared/testing/fake_auth_service.dart';
+import 'package:shared/testing/test_contact_fixtures.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/services/contact_card_image_service.dart';
 import 'package:tax_code_flutter/services/contact_pdf_service.dart';
@@ -18,69 +17,10 @@ import 'package:tax_code_flutter/widgets/dashboard/dashboard_empty_state.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_fab.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_header.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_search_bar.dart';
+import 'package:tax_code_flutter/widgets/previews/preview_fakes.dart';
 import 'package:tax_code_flutter/widgets/previews/preview_shell.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 import 'package:tax_code_flutter/widgets/share/share_contact_bottom_sheet.dart';
-
-class _PreviewSharingService implements SharingServiceAbstract {
-  const _PreviewSharingService();
-
-  @override
-  Future<ShareResult> share({required String text}) async =>
-      const ShareResult('', ShareResultStatus.success);
-
-  @override
-  Future<ShareResult> shareFile({
-    required String filePath,
-    required String mimeType,
-    String? subject,
-  }) async =>
-      const ShareResult('', ShareResultStatus.success);
-}
-
-class _ScreenPreviewAuthService extends ChangeNotifier implements AuthService {
-  @override
-  AuthStatus get status => AuthStatus.authenticated;
-
-  @override
-  User? get currentUser => null;
-
-  @override
-  bool get isSignedIn => true;
-
-  @override
-  bool get isGuest => false;
-
-  @override
-  bool get isLoading => false;
-
-  @override
-  String? get errorMessage => null;
-
-  @override
-  String? get errorKey => null;
-
-  @override
-  AppFailure? get failure => null;
-
-  @override
-  Future<void> deleteUserAccount() async {}
-
-  @override
-  Future<bool> reauthenticateWithGoogle() async => true;
-
-  @override
-  Future<bool> signInWithGoogle() async => true;
-
-  @override
-  Future<void> signInWithGoogleForWearable() async {}
-
-  @override
-  Future<bool> signInAnonymously() async => true;
-
-  @override
-  Future<void> signOut() async {}
-}
 
 /// Full screen preview for the Dashboard v2 ("I Miei Codici"),
 /// showcasing [DashboardHeader], [DashboardSearchBar], [ContactCard],
@@ -106,38 +46,7 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
-  final List<Contact> _allContacts = [
-    Contact(
-      id: '1',
-      firstName: 'Mario',
-      lastName: 'Rossi',
-      gender: 'M',
-      birthDate: DateTime(1980, 1, 15),
-      birthPlace: const Birthplace(name: 'Roma', state: 'RM', code: 'H501'),
-      taxCode: 'RSSMRA80A15H501U',
-      listIndex: 0,
-    ),
-    Contact(
-      id: '2',
-      firstName: 'Giulia',
-      lastName: 'Bianchi',
-      gender: 'F',
-      birthDate: DateTime(1992, 5, 23),
-      birthPlace: const Birthplace(name: 'Milano', state: 'MI', code: 'F205'),
-      taxCode: 'BNCGLI92E63F205Z',
-      listIndex: 1,
-    ),
-    Contact(
-      id: '3',
-      firstName: 'Alessandro',
-      lastName: 'Verdi',
-      gender: 'M',
-      birthDate: DateTime(1975, 11, 8),
-      birthPlace: const Birthplace(name: 'Napoli', state: 'NA', code: 'F839'),
-      taxCode: 'VRDLSN75S08F839K',
-      listIndex: 2,
-    ),
-  ];
+  final List<Contact> _allContacts = TestContactFixtures.sampleContacts;
 
   late List<Contact> _contacts;
 
@@ -208,15 +117,15 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
       initialLocale: widget.locale,
       providers: [
         ChangeNotifierProvider<AuthService>.value(
-          value: _ScreenPreviewAuthService(),
+          value: FakeAuthService.authenticated(),
         ),
-        Provider<SharingServiceAbstract>.value(
-          value: const _PreviewSharingService(),
+        Provider<SharingService>.value(
+          value: const FakeSharingService(),
         ),
-        Provider<ContactCardImageServiceAbstract>.value(
+        Provider<ContactCardImageService>.value(
           value: const ContactCardImageService(),
         ),
-        Provider<ContactPdfServiceAbstract>.value(
+        Provider<ContactPdfService>.value(
           value: const ContactPdfService(),
         ),
       ],

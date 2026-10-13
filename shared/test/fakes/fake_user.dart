@@ -1,13 +1,1 @@
-// In cima al file, dopo i Mock
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_test/flutter_test.dart';
-
-class FakeUser extends Fake implements User {
-  @override
-  final String uid;
-
-  @override
-  final bool isAnonymous;
-
-  FakeUser({this.uid = 'test_uid', this.isAnonymous = false});
-}
+export 'package:shared/testing/fake_user.dart';

@@ -1,66 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/services/auth_service.dart';
+import 'package:shared/testing/fake_auth_service.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
 import 'package:tax_code_flutter/widgets/dashboard/dashboard_header.dart';
 import 'package:tax_code_flutter/widgets/previews/preview_shell.dart';
-
-/// Lightweight mock of [AuthService] for [DashboardHeaderPreview].
-class _HeaderPreviewAuthService extends ChangeNotifier implements AuthService {
-  final bool _signedIn;
-  final bool _guest;
-
-  _HeaderPreviewAuthService({bool signedIn = true, bool guest = false})
-      : _signedIn = signedIn,
-        _guest = guest;
-
-  @override
-  AuthStatus get status =>
-      _signedIn ? AuthStatus.authenticated : AuthStatus.unauthenticated;
-
-  @override
-  User? get currentUser => null;
-
-  @override
-  bool get isSignedIn => _signedIn;
-
-  @override
-  bool get isGuest => _guest;
-
-  @override
-  bool get isLoading => false;
-
-  @override
-  String? get errorMessage => null;
-
-  @override
-  String? get errorKey => null;
-
-  @override
-  AppFailure? get failure => null;
-
-  @override
-  Future<void> deleteUserAccount() async {}
-
-  @override
-  Future<bool> reauthenticateWithGoogle() async => true;
-
-  @override
-  Future<bool> signInWithGoogle() async => true;
-
-  @override
-  Future<void> signInWithGoogleForWearable() async {}
-
-  @override
-  Future<bool> signInAnonymously() async => true;
-
-  @override
-  Future<void> signOut() async {}
-}
 
 /// Standalone preview for [DashboardHeader] within a centered mobile viewport.
 class DashboardHeaderPreview extends StatefulWidget {
@@ -77,9 +24,9 @@ class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
 
   @override
   Widget build(BuildContext context) {
-    final fakeAuthService = _HeaderPreviewAuthService(
-      guest: _isGuestMode,
-    );
+    final fakeAuthService = _isGuestMode
+        ? FakeAuthService.guest()
+        : FakeAuthService.authenticated();
 
     return PreviewShell(
       toolbarActions: (context, _) {
