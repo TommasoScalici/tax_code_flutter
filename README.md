@@ -42,7 +42,7 @@ A modern, fast, and user-friendly cross-platform application to calculate and ma
 - 🎨 **Modern Design System & UX**
   - Unified Material 3 design system (**"Emerald Ledger"** palette) shared across mobile and wearable.
   - Deep OLED dark-mode optimization with emerald accents.
-  - Full English and Italian localization (`.arb`) with automated sorting scripts.
+  - Full English and Italian localization (`.arb`) with automated CLI tools.
   - Haptic feedback and subtle animations.
 
 ---
@@ -57,7 +57,7 @@ tax_code_flutter/
 ├── mobile/         # Main Flutter Android app with Material 3 UI & OCR camera scanner
 ├── wearable/       # Pure Flutter Wear OS companion app with rotary scroll & barcode display
 ├── functions/      # Firebase Cloud Functions (TypeScript, Node.js, Vertex AI Gemini Flash)
-└── scripts/        # Repository maintenance tools (e.g. batch ARB sorting)
+└── tool/           # Repository maintenance CLI tools (e.g. ARB sorting, validation, CI check)
 ```
 
 ### Technologies
