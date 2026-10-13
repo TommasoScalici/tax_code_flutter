@@ -8,8 +8,8 @@ class FakeSyncService extends ChangeNotifier implements SyncService {
 
   /// Creates a [FakeSyncService] with customizable sync availability.
   FakeSyncService({bool enabled = true, bool canSync = true})
-      : _enabled = enabled,
-        _canSync = canSync;
+    : _enabled = enabled,
+      _canSync = canSync;
 
   @override
   bool get isSyncEnabled => _canSync && _enabled;

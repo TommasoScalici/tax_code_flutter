@@ -19,11 +19,7 @@ class _TaxCodeLivePreviewCardPreviewState
     extends State<TaxCodeLivePreviewCardPreview> {
   int _stateIndex = 2; // 0 = empty, 1 = partial, 2 = complete
 
-  static const List<String?> _codes = [
-    null,
-    'RSSMRA85D15',
-    'RSSMRA85D15H501Z',
-  ];
+  static const List<String?> _codes = [null, 'RSSMRA85D15', 'RSSMRA85D15H501Z'];
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +51,7 @@ class _TaxCodeLivePreviewCardPreviewState
           ),
         ];
       },
-      child: TaxCodeLivePreviewCard(
-        taxCode: _codes[_stateIndex],
-      ),
+      child: TaxCodeLivePreviewCard(taxCode: _codes[_stateIndex]),
     );
   }
 }

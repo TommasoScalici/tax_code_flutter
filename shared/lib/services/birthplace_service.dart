@@ -41,8 +41,7 @@ List<Birthplace> _parseBirthplacesJson(String jsonString) {
   final jsonList = jsonDecode(jsonString) as List<dynamic>;
   return jsonList
       .map<Birthplace>(
-        (dynamic json) =>
-            Birthplace.fromJson(json as Map<String, dynamic>),
+        (dynamic json) => Birthplace.fromJson(json as Map<String, dynamic>),
       )
       .toList();
 }
@@ -82,9 +81,9 @@ class DefaultBirthplaceService implements BirthplaceService {
     required Logger logger,
     FirebaseStorage? storage,
     String storagePath = 'public/birthplaces.json',
-  })  : _logger = logger,
-        _storage = storage ?? FirebaseStorage.instance,
-        _storagePath = storagePath;
+  }) : _logger = logger,
+       _storage = storage ?? FirebaseStorage.instance,
+       _storagePath = storagePath;
 
   void _setDownloadProgress(double? value) {
     if (!_isDisposed) {
@@ -144,7 +143,8 @@ class DefaultBirthplaceService implements BirthplaceService {
         var parsedList = await _parseBirthplacesInIsolate(jsonString);
 
         // Check if the cache contains Belfiore codes (at least check the first few elements)
-        final missingCodes = parsedList.isNotEmpty &&
+        final missingCodes =
+            parsedList.isNotEmpty &&
             parsedList.take(50).every((b) => b.code.isEmpty);
 
         if (missingCodes) {
@@ -152,8 +152,9 @@ class DefaultBirthplaceService implements BirthplaceService {
             'Outdated birthplace cache detected (no Belfiore codes). Overwriting with asset fallback...',
           );
           try {
-            final assetContent =
-                await rootBundle.loadString('assets/birthplaces.json');
+            final assetContent = await rootBundle.loadString(
+              'assets/birthplaces.json',
+            );
             await localFile.writeAsString(assetContent);
 
             final newJsonString = await localFile.readAsString();
@@ -254,9 +255,7 @@ class DefaultBirthplaceService implements BirthplaceService {
             // Keep in-memory cache synchronized with background update
             try {
               final updatedJson = await localFile.readAsString();
-              final updatedList = await _parseBirthplacesInIsolate(
-                updatedJson,
-              );
+              final updatedList = await _parseBirthplacesInIsolate(updatedJson);
               if (!_isDisposed) {
                 _cachedBirthplaces = updatedList;
                 _logger.i(

@@ -129,9 +129,7 @@ class CardActionButton extends StatelessWidget {
       message: tooltip,
       child: Material(
         color: bgColor,
-        shape: StadiumBorder(
-          side: BorderSide(color: borderColor),
-        ),
+        shape: StadiumBorder(side: BorderSide(color: borderColor)),
         child: InkWell(
           onTap: onPressed,
           customBorder: const StadiumBorder(),

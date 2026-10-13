@@ -63,7 +63,11 @@ class ProfileActionTile extends StatelessWidget {
                   borderRadius: AppRadii.borderInner,
                 ),
                 child: Center(
-                  child: Icon(icon, color: iconColor, size: AppDimensions.iconMd),
+                  child: Icon(
+                    icon,
+                    color: iconColor,
+                    size: AppDimensions.iconMd,
+                  ),
                 ),
               ),
               const SizedBox(width: AppSpacing.fieldVertical),
@@ -80,7 +84,9 @@ class ProfileActionTile extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: isEnabled
                             ? (titleColor ?? theme.colorScheme.onSurface)
-                            : theme.colorScheme.onSurface.withValues(alpha: AppOpacity.disabled),
+                            : theme.colorScheme.onSurface.withValues(
+                                alpha: AppOpacity.disabled,
+                              ),
                       ),
                     ),
                     if (subtitle != null) ...[
@@ -90,7 +96,9 @@ class ProfileActionTile extends StatelessWidget {
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: isEnabled
                               ? theme.colorScheme.onSurfaceVariant
-                              : theme.colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.disabled),
+                              : theme.colorScheme.onSurfaceVariant.withValues(
+                                  alpha: AppOpacity.disabled,
+                                ),
                         ),
                       ),
                     ],
@@ -105,7 +113,9 @@ class ProfileActionTile extends StatelessWidget {
                   data: IconThemeData(
                     color: isEnabled
                         ? theme.colorScheme.onSurfaceVariant
-                        : theme.colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.disabled),
+                        : theme.colorScheme.onSurfaceVariant.withValues(
+                            alpha: AppOpacity.disabled,
+                          ),
                     size: AppDimensions.iconAction,
                   ),
                   child: trailing!,
@@ -123,16 +133,16 @@ class ProfileActionTile extends StatelessWidget {
 class ProfileSectionHeader extends StatelessWidget {
   final String title;
 
-  const ProfileSectionHeader({
-    required this.title,
-    super.key,
-  });
+  const ProfileSectionHeader({required this.title, super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(left: AppSpacing.xs, bottom: AppSpacing.xxs),
+      padding: const EdgeInsets.only(
+        left: AppSpacing.xs,
+        bottom: AppSpacing.xxs,
+      ),
       child: Text(
         title,
         style: theme.textTheme.labelMedium?.copyWith(
@@ -157,7 +167,9 @@ class ProfileCardDivider extends StatelessWidget {
       thickness: AppDimensions.borderDefault,
       indent: 68,
       endIndent: AppSpacing.lg,
-      color: theme.colorScheme.outlineVariant.withValues(alpha: AppOpacity.divider),
+      color: theme.colorScheme.outlineVariant.withValues(
+        alpha: AppOpacity.divider,
+      ),
     );
   }
 }

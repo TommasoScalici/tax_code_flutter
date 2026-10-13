@@ -47,7 +47,9 @@ void main() {
     });
 
     testWidgets('renders English labels properly', (tester) async {
-      await tester.pumpWidget(createStandaloneWidget(locale: const Locale('en')));
+      await tester.pumpWidget(
+        createStandaloneWidget(locale: const Locale('en')),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Gender'), findsOneWidget);
@@ -67,9 +69,7 @@ void main() {
     ) async {
       String? updatedValue;
       await tester.pumpWidget(
-        createStandaloneWidget(
-          onChanged: (val) => updatedValue = val,
-        ),
+        createStandaloneWidget(onChanged: (val) => updatedValue = val),
       );
       await tester.pumpAndSettle();
 
@@ -126,9 +126,7 @@ void main() {
       tester,
     ) async {
       final form = FormGroup({
-        'gender': FormControl<String>(
-          validators: [Validators.required],
-        ),
+        'gender': FormControl<String>(validators: [Validators.required]),
       });
 
       await tester.pumpWidget(

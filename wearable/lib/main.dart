@@ -39,11 +39,13 @@ Future<void> main() async {
       );
 
       if (kDebugMode) {
-        await FirebaseCrashlytics.instance
-            .setCrashlyticsCollectionEnabled(false);
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(
+          false,
+        );
       } else {
-        await FirebaseCrashlytics.instance
-            .setCrashlyticsCollectionEnabled(true);
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(
+          true,
+        );
         FlutterError.onError =
             FirebaseCrashlytics.instance.recordFlutterFatalError;
 

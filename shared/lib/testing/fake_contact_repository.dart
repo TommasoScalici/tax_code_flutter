@@ -14,9 +14,9 @@ class FakeContactRepository extends ChangeNotifier
 
   /// Creates a [FakeContactRepository] populated with optional initial contacts.
   FakeContactRepository([List<Contact>? initialContacts])
-      : _contacts = List<Contact>.from(
-          initialContacts ?? TestContactFixtures.sampleContacts,
-        );
+    : _contacts = List<Contact>.from(
+        initialContacts ?? TestContactFixtures.sampleContacts,
+      );
 
   @override
   List<Contact> get contacts => List.unmodifiable(_contacts);

@@ -31,18 +31,13 @@ List<SingleChildWidget> getAppProviders({
       create: (context) =>
           DatabaseService(firestore: context.read<FirebaseFirestore>()),
     ),
-    Provider<LocalCacheService>(
-      create: (_) => HiveLocalCacheService(),
-    ),
+    Provider<LocalCacheService>(create: (_) => HiveLocalCacheService()),
     Provider<NativeViewService>(
-      create: (context) =>
-          NativeViewService(logger: context.read<Logger>()),
+      create: (context) => NativeViewService(logger: context.read<Logger>()),
     ),
 
     // --- Level 3: State Services ---
-    ChangeNotifierProvider<DemoModeService>(
-      create: (_) => DemoModeService(),
-    ),
+    ChangeNotifierProvider<DemoModeService>(create: (_) => DemoModeService()),
     ChangeNotifierProvider<AuthService>(
       create: (context) => AuthService(
         auth: context.read<FirebaseAuth>(),

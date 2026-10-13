@@ -156,69 +156,70 @@ class _BirthplaceAutocompleteInputState
             _effectiveFocusNode.unfocus();
             widget.onChanged?.call(option);
           },
-          fieldViewBuilder: (
-            context,
-            textEditingController,
-            fieldFocusNode,
-            onFieldSubmitted,
-          ) {
-            return ValueListenableBuilder<TextEditingValue>(
-              valueListenable: textEditingController,
-              builder: (context, textValue, _) {
-                return TextField(
-                  key: const Key('birthplace_autocomplete_textfield'),
-                  controller: textEditingController,
-                  focusNode: fieldFocusNode,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    fontSize: AppFontSizes.input,
-                    color: colorScheme.onSurface,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: resolvedPlaceholder,
-                    errorText: widget.errorText,
-                    filled: true,
-                    fillColor: bgColor,
-                    contentPadding: AppSpacing.paddingField,
-                    border: OutlineInputBorder(
-                      borderRadius: AppRadii.borderInput,
-                      borderSide: BorderSide(color: borderColor),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: AppRadii.borderInput,
-                      borderSide: BorderSide(color: borderColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: AppRadii.borderInput,
-                      borderSide: BorderSide(
-                        color: colorScheme.primary,
-                        width: AppDimensions.borderThick,
+          fieldViewBuilder:
+              (
+                context,
+                textEditingController,
+                fieldFocusNode,
+                onFieldSubmitted,
+              ) {
+                return ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: textEditingController,
+                  builder: (context, textValue, _) {
+                    return TextField(
+                      key: const Key('birthplace_autocomplete_textfield'),
+                      controller: textEditingController,
+                      focusNode: fieldFocusNode,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontSize: AppFontSizes.input,
+                        color: colorScheme.onSurface,
                       ),
-                    ),
-                    suffixIcon: textValue.text.isNotEmpty
-                        ? IconButton(
-                            key: const Key('birthplace_clear_button'),
-                            icon: const Icon(
-                              Icons.clear,
-                              size: AppDimensions.iconAction,
-                            ),
-                            color: colorScheme.onSurfaceVariant,
-                            onPressed: () {
-                              textEditingController.clear();
-                              widget.onChanged?.call(null);
-                              fieldFocusNode.unfocus();
-                            },
-                          )
-                        : Icon(
-                            Icons.location_on_rounded,
+                      decoration: InputDecoration(
+                        hintText: resolvedPlaceholder,
+                        errorText: widget.errorText,
+                        filled: true,
+                        fillColor: bgColor,
+                        contentPadding: AppSpacing.paddingField,
+                        border: OutlineInputBorder(
+                          borderRadius: AppRadii.borderInput,
+                          borderSide: BorderSide(color: borderColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: AppRadii.borderInput,
+                          borderSide: BorderSide(color: borderColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: AppRadii.borderInput,
+                          borderSide: BorderSide(
                             color: colorScheme.primary,
-                            size: AppDimensions.iconMd,
+                            width: AppDimensions.borderThick,
                           ),
-                  ),
+                        ),
+                        suffixIcon: textValue.text.isNotEmpty
+                            ? IconButton(
+                                key: const Key('birthplace_clear_button'),
+                                icon: const Icon(
+                                  Icons.clear,
+                                  size: AppDimensions.iconAction,
+                                ),
+                                color: colorScheme.onSurfaceVariant,
+                                onPressed: () {
+                                  textEditingController.clear();
+                                  widget.onChanged?.call(null);
+                                  fieldFocusNode.unfocus();
+                                },
+                              )
+                            : Icon(
+                                Icons.location_on_rounded,
+                                color: colorScheme.primary,
+                                size: AppDimensions.iconMd,
+                              ),
+                      ),
+                    );
+                  },
                 );
               },
-            );
-          },
           optionsViewBuilder: (context, onSelected, options) {
             return BirthplaceOptionsOverlay(
               options: options,

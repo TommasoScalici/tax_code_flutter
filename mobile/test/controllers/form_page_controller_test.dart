@@ -71,11 +71,9 @@ void main() {
       final invalidInputs = ['Mario123', 'Mario@', 'Test#1', 'John_Doe'];
       for (final input in invalidInputs) {
         final control = FormControl<String>(value: input);
-        expect(
-          validator.validate(control),
-          {'invalidCharacters': true},
-          reason: 'Expected $input to be invalid',
-        );
+        expect(validator.validate(control), {
+          'invalidCharacters': true,
+        }, reason: 'Expected $input to be invalid');
       }
     });
 
@@ -227,9 +225,7 @@ void main() {
 
     group('submitForm', () {
       // Use real model instances for the successful response
-      const successfulData = TaxCodeData(
-        fiscalCode: 'NEWTAXCODE123',
-      );
+      const successfulData = TaxCodeData(fiscalCode: 'NEWTAXCODE123');
       const successfulResponse = TaxCodeResponse(
         status: true,
         message: 'OK',
@@ -356,56 +352,62 @@ void main() {
         expect(formPageController.errorKey, 'rateLimitExceeded');
       });
 
-      test('sets birthplaceNotFound failure when BirthplaceNotFoundFailure is thrown', () async {
+      test(
+        'sets birthplaceNotFound failure when BirthplaceNotFoundFailure is thrown',
+        () async {
+          // Arrange
+          await createController();
+          formPageController.form.patchValue({
+            'firstName': 'Guido',
+            'lastName': 'Bianchi',
+            'gender': 'M',
+            'birthDate': DateTime(1975, 3, 10),
+            'birthPlace': sampleBirthplace,
+          });
+          when(
+            () => mockTaxCodeService.fetchTaxCode(
+              firstName: any(named: 'firstName'),
+              lastName: any(named: 'lastName'),
+              gender: any(named: 'gender'),
+              birthDate: any(named: 'birthDate'),
+              birthPlaceName: any(named: 'birthPlaceName'),
+              birthPlaceState: any(named: 'birthPlaceState'),
+            ),
+          ).thenThrow(const BirthplaceNotFoundFailure());
+
+          // Act
+          final result = await formPageController.submitForm();
+
+          // Assert
+          expect(result, isNull);
+          expect(formPageController.failure, isA<BirthplaceNotFoundFailure>());
+          expect(formPageController.errorKey, 'birthplaceNotFound');
+        },
+      );
+    });
+
+    test(
+      'clearError resets error key and failure, and notifies listeners',
+      () async {
         // Arrange
         await createController();
-        formPageController.form.patchValue({
-          'firstName': 'Guido',
-          'lastName': 'Bianchi',
-          'gender': 'M',
-          'birthDate': DateTime(1975, 3, 10),
-          'birthPlace': sampleBirthplace,
-        });
-        when(
-          () => mockTaxCodeService.fetchTaxCode(
-            firstName: any(named: 'firstName'),
-            lastName: any(named: 'lastName'),
-            gender: any(named: 'gender'),
-            birthDate: any(named: 'birthDate'),
-            birthPlaceName: any(named: 'birthPlaceName'),
-            birthPlaceState: any(named: 'birthPlaceState'),
-          ),
-        ).thenThrow(const BirthplaceNotFoundFailure());
+        var listenerCallCount = 0;
+        formPageController.addListener(() => listenerCallCount++);
 
-        // Act
-        final result = await formPageController.submitForm();
-
-        // Assert
-        expect(result, isNull);
+        // Manually set an error state to test clearing it
+        formPageController.failure = const BirthplaceNotFoundFailure();
         expect(formPageController.failure, isA<BirthplaceNotFoundFailure>());
         expect(formPageController.errorKey, 'birthplaceNotFound');
-      });
-    });
 
-    test('clearError resets error key and failure, and notifies listeners', () async {
-      // Arrange
-      await createController();
-      var listenerCallCount = 0;
-      formPageController.addListener(() => listenerCallCount++);
+        // Act
+        formPageController.clearError();
 
-      // Manually set an error state to test clearing it
-      formPageController.failure = const BirthplaceNotFoundFailure();
-      expect(formPageController.failure, isA<BirthplaceNotFoundFailure>());
-      expect(formPageController.errorKey, 'birthplaceNotFound');
-
-      // Act
-      formPageController.clearError();
-
-      // Assert
-      expect(formPageController.failure, isNull);
-      expect(formPageController.errorKey, isNull);
-      expect(listenerCallCount, greaterThan(0));
-    });
+        // Assert
+        expect(formPageController.failure, isNull);
+        expect(formPageController.errorKey, isNull);
+        expect(listenerCallCount, greaterThan(0));
+      },
+    );
 
     test('dispose cancels stream subscription', () async {
       // Arrange

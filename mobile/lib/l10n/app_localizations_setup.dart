@@ -13,5 +13,6 @@ abstract final class AppLocalizationsSetup {
   ];
 
   /// Supported application locales.
-  static const List<Locale> supportedLocales = AppLocalizations.supportedLocales;
+  static const List<Locale> supportedLocales =
+      AppLocalizations.supportedLocales;
 }

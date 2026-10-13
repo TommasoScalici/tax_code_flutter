@@ -31,52 +31,58 @@ void main() {
   });
 
   group('HomePage Widget Tests', () {
-    testWidgets('renders correctly with default state without contacts (hides FAB)', (
-      tester,
-    ) async {
-      // Arrange & Act
-      await pumpApp(
-        tester,
-        const HomePage(),
-        authStatus: AuthStatus.authenticated,
-      );
+    testWidgets(
+      'renders correctly with default state without contacts (hides FAB)',
+      (tester) async {
+        // Arrange & Act
+        await pumpApp(
+          tester,
+          const HomePage(),
+          authStatus: AuthStatus.authenticated,
+        );
 
-      expect(find.byType(Scaffold), findsOneWidget);
-      expect(find.byType(AppBar), findsOneWidget);
-      expect(find.byType(ContactsList), findsOneWidget);
-      // FloatingActionButton must be hidden when there are no contacts to avoid clutter
-      expect(find.byType(FloatingActionButton), findsNothing);
-      expect(find.text('My Codes'), findsOneWidget);
-    });
+        expect(find.byType(Scaffold), findsOneWidget);
+        expect(find.byType(AppBar), findsOneWidget);
+        expect(find.byType(ContactsList), findsOneWidget);
+        // FloatingActionButton must be hidden when there are no contacts to avoid clutter
+        expect(find.byType(FloatingActionButton), findsNothing);
+        expect(find.text('My Codes'), findsOneWidget);
+      },
+    );
 
-    testWidgets('displays FloatingActionButton when at least one contact exists', (
-      tester,
-    ) async {
-      final mockContactRepository = MockContactRepository();
-      when(() => mockContactRepository.isLoading).thenReturn(false);
-      when(() => mockContactRepository.contacts).thenReturn([
-        Contact(
-          id: '1',
-          firstName: 'Mario',
-          lastName: 'Rossi',
-          gender: 'M',
-          birthDate: DateTime(1985, 4, 15),
-          birthPlace: const Birthplace(name: 'Roma', state: 'RM', code: 'H501'),
-          taxCode: 'RSSMRA85D15H501Z',
-          listIndex: 0,
-        ),
-      ]);
+    testWidgets(
+      'displays FloatingActionButton when at least one contact exists',
+      (tester) async {
+        final mockContactRepository = MockContactRepository();
+        when(() => mockContactRepository.isLoading).thenReturn(false);
+        when(() => mockContactRepository.contacts).thenReturn([
+          Contact(
+            id: '1',
+            firstName: 'Mario',
+            lastName: 'Rossi',
+            gender: 'M',
+            birthDate: DateTime(1985, 4, 15),
+            birthPlace: const Birthplace(
+              name: 'Roma',
+              state: 'RM',
+              code: 'H501',
+            ),
+            taxCode: 'RSSMRA85D15H501Z',
+            listIndex: 0,
+          ),
+        ]);
 
-      await pumpApp(
-        tester,
-        const HomePage(),
-        authStatus: AuthStatus.authenticated,
-        mockContactRepository: mockContactRepository,
-      );
-      await tester.pump(const Duration(milliseconds: 500));
+        await pumpApp(
+          tester,
+          const HomePage(),
+          authStatus: AuthStatus.authenticated,
+          mockContactRepository: mockContactRepository,
+        );
+        await tester.pump(const Duration(milliseconds: 500));
 
-      expect(find.byType(FloatingActionButton), findsOneWidget);
-    });
+        expect(find.byType(FloatingActionButton), findsOneWidget);
+      },
+    );
 
     testWidgets('displays user avatar when photoURL is available', (
       tester,
@@ -143,18 +149,14 @@ void main() {
         mockThemeService: mockThemeService,
       );
 
-      await tester.tap(
-        find.byKey(const Key('dashboard_header_theme_button')),
-      );
+      await tester.tap(find.byKey(const Key('dashboard_header_theme_button')));
       await tester.pump();
 
       // Assert
       verify(() => mockThemeService.toggleTheme()).called(1);
     });
 
-    testWidgets('tapping profile avatar navigates to profile', (
-      tester,
-    ) async {
+    testWidgets('tapping profile avatar navigates to profile', (tester) async {
       // Act
       await pumpApp(
         tester,

@@ -75,37 +75,40 @@ void main() {
       expect(result.first.listIndex, 0);
     });
 
-    test('prefers local contact if local.updatedAt is strictly after remote.updatedAt', () {
-      final t1 = DateTime(2026, 1, 1, 10);
-      final t2 = DateTime(2026, 1, 1, 12);
+    test(
+      'prefers local contact if local.updatedAt is strictly after remote.updatedAt',
+      () {
+        final t1 = DateTime(2026, 1, 1, 10);
+        final t2 = DateTime(2026, 1, 1, 12);
 
-      final remote = [
-        createTestContact(
-          id: '1',
-          firstName: 'Mario Remote',
-          taxCode: 'RSSMRA90A01H501Z',
-          listIndex: 0,
-          updatedAt: t1,
-        ),
-      ];
-      final local = [
-        createTestContact(
-          id: '1',
-          firstName: 'Mario Local',
-          taxCode: 'RSSMRA90A01H501Z',
-          listIndex: 0,
-          updatedAt: t2,
-        ),
-      ];
+        final remote = [
+          createTestContact(
+            id: '1',
+            firstName: 'Mario Remote',
+            taxCode: 'RSSMRA90A01H501Z',
+            listIndex: 0,
+            updatedAt: t1,
+          ),
+        ];
+        final local = [
+          createTestContact(
+            id: '1',
+            firstName: 'Mario Local',
+            taxCode: 'RSSMRA90A01H501Z',
+            listIndex: 0,
+            updatedAt: t2,
+          ),
+        ];
 
-      final result = ContactReconciler.reconcileByTimestamp(
-        remoteContacts: remote,
-        localContacts: local,
-      );
+        final result = ContactReconciler.reconcileByTimestamp(
+          remoteContacts: remote,
+          localContacts: local,
+        );
 
-      expect(result.length, 1);
-      expect(result.first.firstName, 'Mario Local');
-    });
+        expect(result.length, 1);
+        expect(result.first.firstName, 'Mario Local');
+      },
+    );
 
     test('prefers remote contact if remote.updatedAt is newer or equal', () {
       final t1 = DateTime(2026, 1, 1, 10);
@@ -229,32 +232,35 @@ void main() {
       expect(result[1].listIndex, 1);
     });
 
-    test('ignores guest contact if taxCode already exists in remote (case-insensitive)', () {
-      final remote = [
-        createTestContact(
-          id: 'rem1',
-          firstName: 'Remote User',
-          taxCode: 'DUP123',
-          listIndex: 0,
-        ),
-      ];
-      final guest = [
-        createTestContact(
-          id: 'guest1',
-          firstName: 'Guest Duplicate',
-          taxCode: 'dup123',
-          listIndex: 1,
-        ),
-      ];
+    test(
+      'ignores guest contact if taxCode already exists in remote (case-insensitive)',
+      () {
+        final remote = [
+          createTestContact(
+            id: 'rem1',
+            firstName: 'Remote User',
+            taxCode: 'DUP123',
+            listIndex: 0,
+          ),
+        ];
+        final guest = [
+          createTestContact(
+            id: 'guest1',
+            firstName: 'Guest Duplicate',
+            taxCode: 'dup123',
+            listIndex: 1,
+          ),
+        ];
 
-      final result = ContactReconciler.mergeGuestIntoRemote(
-        remoteContacts: remote,
-        guestContacts: guest,
-      );
+        final result = ContactReconciler.mergeGuestIntoRemote(
+          remoteContacts: remote,
+          guestContacts: guest,
+        );
 
-      expect(result.length, 1);
-      expect(result.first.id, 'rem1');
-    });
+        expect(result.length, 1);
+        expect(result.first.id, 'rem1');
+      },
+    );
 
     test('ignores guest contact if id already exists in remote', () {
       final remote = [

@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared/theme/app_dimensions.dart';
 
 /// Supported device types for store showcases.
-enum ShowcaseDeviceType {
-  phone,
-  tablet7,
-  tablet10,
-}
+enum ShowcaseDeviceType { phone, tablet7, tablet10 }
 
 /// Specifications for each device form-factor showcase.
 class ShowcaseDeviceSpec {
@@ -322,10 +318,11 @@ class StoreShowcaseCanvas extends StatelessWidget {
                                     height: 4,
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: (isDark
-                                                ? Colors.white
-                                                : Colors.black)
-                                            .withValues(alpha: 0.25),
+                                        color:
+                                            (isDark
+                                                    ? Colors.white
+                                                    : Colors.black)
+                                                .withValues(alpha: 0.25),
                                         borderRadius: BorderRadius.circular(2),
                                       ),
                                     ),
@@ -349,10 +346,7 @@ class StoreShowcaseCanvas extends StatelessWidget {
 }
 
 class _DeviceStatusBar extends StatelessWidget {
-  const _DeviceStatusBar({
-    required this.spec,
-    this.isDark = false,
-  });
+  const _DeviceStatusBar({required this.spec, this.isDark = false});
 
   final ShowcaseDeviceSpec spec;
   final bool isDark;

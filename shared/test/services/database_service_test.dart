@@ -87,44 +87,47 @@ void main() {
     });
 
     group('getContacts', () {
-      test('should return contacts sorted by listIndex regardless of insertion order', () async {
-        // Arrange
-        final contact0 = testContact.copyWith(id: 'z-contact', listIndex: 0);
-        final contact1 = testContact.copyWith(id: 'a-contact', listIndex: 1);
-        final contact2 = testContact.copyWith(id: 'm-contact', listIndex: 2);
+      test(
+        'should return contacts sorted by listIndex regardless of insertion order',
+        () async {
+          // Arrange
+          final contact0 = testContact.copyWith(id: 'z-contact', listIndex: 0);
+          final contact1 = testContact.copyWith(id: 'a-contact', listIndex: 1);
+          final contact2 = testContact.copyWith(id: 'm-contact', listIndex: 2);
 
-        // Insert in reverse/scrambled order to Firestore
-        await fakeFirestore
-            .collection('users')
-            .doc(testUserId)
-            .collection('contacts')
-            .doc(contact1.id)
-            .set(contact1.toJson());
-        await fakeFirestore
-            .collection('users')
-            .doc(testUserId)
-            .collection('contacts')
-            .doc(contact0.id)
-            .set(contact0.toJson());
-        await fakeFirestore
-            .collection('users')
-            .doc(testUserId)
-            .collection('contacts')
-            .doc(contact2.id)
-            .set(contact2.toJson());
+          // Insert in reverse/scrambled order to Firestore
+          await fakeFirestore
+              .collection('users')
+              .doc(testUserId)
+              .collection('contacts')
+              .doc(contact1.id)
+              .set(contact1.toJson());
+          await fakeFirestore
+              .collection('users')
+              .doc(testUserId)
+              .collection('contacts')
+              .doc(contact0.id)
+              .set(contact0.toJson());
+          await fakeFirestore
+              .collection('users')
+              .doc(testUserId)
+              .collection('contacts')
+              .doc(contact2.id)
+              .set(contact2.toJson());
 
-        // Act
-        final result = await databaseService.getContacts(testUserId);
+          // Act
+          final result = await databaseService.getContacts(testUserId);
 
-        // Assert
-        expect(result.length, 3);
-        expect(result[0].id, 'z-contact');
-        expect(result[0].listIndex, 0);
-        expect(result[1].id, 'a-contact');
-        expect(result[1].listIndex, 1);
-        expect(result[2].id, 'm-contact');
-        expect(result[2].listIndex, 2);
-      });
+          // Assert
+          expect(result.length, 3);
+          expect(result[0].id, 'z-contact');
+          expect(result[0].listIndex, 0);
+          expect(result[1].id, 'a-contact');
+          expect(result[1].listIndex, 1);
+          expect(result[2].id, 'm-contact');
+          expect(result[2].listIndex, 2);
+        },
+      );
     });
 
     group('getContactsStream', () {

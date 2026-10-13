@@ -27,7 +27,9 @@ void main() {
     mockCallable = MockHttpsCallable();
     geminiService = GeminiService(functions: mockFunctions, logger: mockLogger);
 
-    when(() => mockFunctions.httpsCallable(any<String>())).thenReturn(mockCallable);
+    when(
+      () => mockFunctions.httpsCallable(any<String>()),
+    ).thenReturn(mockCallable);
   });
 
   group('GeminiService', () {
@@ -63,10 +65,14 @@ void main() {
         final map = captured.first as Map<String, Object?>;
         expect(map['image'], testBase64Image);
 
-        verify(() => mockLogger.i(any<Object?>(that: contains('Calling')))).called(1);
         verify(
-            () => mockLogger.i(any<Object?>(that: contains('Successfully received'))))
-            .called(1);
+          () => mockLogger.i(any<Object?>(that: contains('Calling'))),
+        ).called(1);
+        verify(
+          () => mockLogger.i(
+            any<Object?>(that: contains('Successfully received')),
+          ),
+        ).called(1);
         verifyNever(() => mockLogger.e(any<Object?>()));
       },
     );

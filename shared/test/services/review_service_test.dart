@@ -30,9 +30,7 @@ void main() {
         await reviewService.recordFirstLaunchIfNeeded();
 
         // Assert
-        verify(
-          () => mockPrefs.setInt('review_first_launch', any()),
-        ).called(1);
+        verify(() => mockPrefs.setInt('review_first_launch', any())).called(1);
       });
 
       test('should not overwrite timestamp when already set', () async {
@@ -45,9 +43,7 @@ void main() {
         await reviewService.recordFirstLaunchIfNeeded();
 
         // Assert
-        verifyNever(
-          () => mockPrefs.setInt('review_first_launch', any()),
-        );
+        verifyNever(() => mockPrefs.setInt('review_first_launch', any()));
       });
     });
 
@@ -65,9 +61,7 @@ void main() {
         await reviewService.incrementAppOpenCount();
 
         // Assert
-        verify(
-          () => mockPrefs.setInt('review_app_open_count', 1),
-        ).called(1);
+        verify(() => mockPrefs.setInt('review_app_open_count', 1)).called(1);
       });
 
       test('should increment from existing value', () async {
@@ -83,9 +77,7 @@ void main() {
         await reviewService.incrementAppOpenCount();
 
         // Assert
-        verify(
-          () => mockPrefs.setInt('review_app_open_count', 6),
-        ).called(1);
+        verify(() => mockPrefs.setInt('review_app_open_count', 6)).called(1);
       });
     });
 
@@ -130,9 +122,7 @@ void main() {
         // Installed just now
         when(
           () => mockPrefs.getInt('review_first_launch'),
-        ).thenAnswer(
-          (_) async => DateTime.now().millisecondsSinceEpoch,
-        );
+        ).thenAnswer((_) async => DateTime.now().millisecondsSinceEpoch);
 
         // Act
         final result = await reviewService.shouldRequestReview();
@@ -141,8 +131,7 @@ void main() {
         expect(result, false);
       });
 
-      test('should return false when prompted less than 90 days ago',
-          () async {
+      test('should return false when prompted less than 90 days ago', () async {
         // Arrange
         when(
           () => mockPrefs.getInt('review_successful_calculations'),
@@ -151,17 +140,13 @@ void main() {
           () => mockPrefs.getInt('review_app_open_count'),
         ).thenAnswer((_) async => 10);
         // Installed 30 days ago
-        when(
-          () => mockPrefs.getInt('review_first_launch'),
-        ).thenAnswer(
+        when(() => mockPrefs.getInt('review_first_launch')).thenAnswer(
           (_) async => DateTime.now()
               .subtract(const Duration(days: 30))
               .millisecondsSinceEpoch,
         );
         // Last prompted 10 days ago
-        when(
-          () => mockPrefs.getInt('review_last_prompt'),
-        ).thenAnswer(
+        when(() => mockPrefs.getInt('review_last_prompt')).thenAnswer(
           (_) async => DateTime.now()
               .subtract(const Duration(days: 10))
               .millisecondsSinceEpoch,
@@ -174,37 +159,36 @@ void main() {
         expect(result, false);
       });
 
-      test('should return true when all conditions are met (never prompted)',
-          () async {
-        // Arrange
-        when(
-          () => mockPrefs.getInt('review_successful_calculations'),
-        ).thenAnswer((_) async => 2);
-        when(
-          () => mockPrefs.getInt('review_app_open_count'),
-        ).thenAnswer((_) async => 3);
-        // Installed 5 days ago
-        when(
-          () => mockPrefs.getInt('review_first_launch'),
-        ).thenAnswer(
-          (_) async => DateTime.now()
-              .subtract(const Duration(days: 5))
-              .millisecondsSinceEpoch,
-        );
-        // Never prompted
-        when(
-          () => mockPrefs.getInt('review_last_prompt'),
-        ).thenAnswer((_) async => null);
-
-        // Act
-        final result = await reviewService.shouldRequestReview();
-
-        // Assert
-        expect(result, true);
-      });
-
       test(
-          'should return true when all conditions met and '
+        'should return true when all conditions are met (never prompted)',
+        () async {
+          // Arrange
+          when(
+            () => mockPrefs.getInt('review_successful_calculations'),
+          ).thenAnswer((_) async => 2);
+          when(
+            () => mockPrefs.getInt('review_app_open_count'),
+          ).thenAnswer((_) async => 3);
+          // Installed 5 days ago
+          when(() => mockPrefs.getInt('review_first_launch')).thenAnswer(
+            (_) async => DateTime.now()
+                .subtract(const Duration(days: 5))
+                .millisecondsSinceEpoch,
+          );
+          // Never prompted
+          when(
+            () => mockPrefs.getInt('review_last_prompt'),
+          ).thenAnswer((_) async => null);
+
+          // Act
+          final result = await reviewService.shouldRequestReview();
+
+          // Assert
+          expect(result, true);
+        },
+      );
+
+      test('should return true when all conditions met and '
           'last prompt > 90 days ago', () async {
         // Arrange
         when(
@@ -214,17 +198,13 @@ void main() {
           () => mockPrefs.getInt('review_app_open_count'),
         ).thenAnswer((_) async => 50);
         // Installed 120 days ago
-        when(
-          () => mockPrefs.getInt('review_first_launch'),
-        ).thenAnswer(
+        when(() => mockPrefs.getInt('review_first_launch')).thenAnswer(
           (_) async => DateTime.now()
               .subtract(const Duration(days: 120))
               .millisecondsSinceEpoch,
         );
         // Last prompted 100 days ago
-        when(
-          () => mockPrefs.getInt('review_last_prompt'),
-        ).thenAnswer(
+        when(() => mockPrefs.getInt('review_last_prompt')).thenAnswer(
           (_) async => DateTime.now()
               .subtract(const Duration(days: 100))
               .millisecondsSinceEpoch,

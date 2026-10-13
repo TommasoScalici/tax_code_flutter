@@ -14,10 +14,7 @@ class DashboardEmptyStatePreview extends StatefulWidget {
       _DashboardEmptyStatePreviewState();
 }
 
-enum _EmptyStateScenario {
-  noSavedCards,
-  searchNoResults,
-}
+enum _EmptyStateScenario { noSavedCards, searchNoResults }
 
 class _DashboardEmptyStatePreviewState
     extends State<DashboardEmptyStatePreview> {

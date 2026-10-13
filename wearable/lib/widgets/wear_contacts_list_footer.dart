@@ -45,18 +45,21 @@ class WearContactsListFooter extends StatelessWidget {
               minHeight: WearDimensions.buttonCompactHeight,
             ),
             child: OutlinedButton.icon(
-              icon: const Icon(Icons.phone_android, size: WearDimensions.iconSmall),
+              icon: const Icon(
+                Icons.phone_android,
+                size: WearDimensions.iconSmall,
+              ),
               label: Text(
                 openOnPhoneLabel,
-                style: WearTypography.hint(
-                  color: AppColors.darkOnSurface,
-                ),
+                style: WearTypography.hint(color: AppColors.darkOnSurface),
               ),
               onPressed: onOpenOnPhone,
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.darkOnSurfaceVariant,
                 side: BorderSide(
-                  color: AppColors.darkOutline.withValues(alpha: AppOpacity.translucent),
+                  color: AppColors.darkOutline.withValues(
+                    alpha: AppOpacity.translucent,
+                  ),
                   width: WearDimensions.borderThin,
                 ),
                 shape: const StadiumBorder(),
@@ -77,7 +80,9 @@ class WearContactsListFooter extends StatelessWidget {
               ),
               label: Text(
                 authActionLabel,
-                style: WearTypography.hint(color: AppColors.darkOnSurfaceVariant),
+                style: WearTypography.hint(
+                  color: AppColors.darkOnSurfaceVariant,
+                ),
               ),
               onPressed: onAuthAction,
             ),

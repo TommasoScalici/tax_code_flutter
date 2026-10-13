@@ -77,14 +77,18 @@ class WearContactsEmptyState extends StatelessWidget {
               Text(
                 l10n.noContactsFoundMessage,
                 textAlign: TextAlign.center,
-                style: WearTypography.cardSubtitle(color: AppColors.darkOnSurface),
+                style: WearTypography.cardSubtitle(
+                  color: AppColors.darkOnSurface,
+                ),
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 l10n.syncTakesFewMinutes,
                 textAlign: TextAlign.center,
                 style: WearTypography.hint(
-                  color: AppColors.darkOnSurfaceVariant.withValues(alpha: AppOpacity.high),
+                  color: AppColors.darkOnSurfaceVariant.withValues(
+                    alpha: AppOpacity.high,
+                  ),
                 ),
               ),
               const SizedBox(height: AppSpacing.compact),
@@ -103,10 +107,15 @@ class WearContactsEmptyState extends StatelessWidget {
                     minHeight: WearDimensions.buttonCompactHeight,
                   ),
                   child: ElevatedButton.icon(
-                    icon: const Icon(Icons.phone_android, size: AppDimensions.iconSm),
+                    icon: const Icon(
+                      Icons.phone_android,
+                      size: AppDimensions.iconSm,
+                    ),
                     label: Text(
                       l10n.openOnPhone,
-                      style: WearTypography.hint(color: AppColors.onEmeraldAccent),
+                      style: WearTypography.hint(
+                        color: AppColors.onEmeraldAccent,
+                      ),
                     ),
                     onPressed: onOpenOnPhone,
                     style: ElevatedButton.styleFrom(
@@ -132,7 +141,9 @@ class WearContactsEmptyState extends StatelessWidget {
                   ),
                   label: Text(
                     isDemoMode ? l10n.exitDemo : l10n.logout,
-                    style: WearTypography.hint(color: AppColors.darkOnSurfaceVariant),
+                    style: WearTypography.hint(
+                      color: AppColors.darkOnSurfaceVariant,
+                    ),
                   ),
                   onPressed: onAuthAction,
                 ),

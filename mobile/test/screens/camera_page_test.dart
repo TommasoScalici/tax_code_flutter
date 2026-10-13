@@ -24,33 +24,32 @@ void main() {
 
     when(() => mockController.addListener(any())).thenAnswer((_) {});
     when(() => mockController.removeListener(any())).thenAnswer((_) {});
-    when(() => mockController.openAppSettingsHandler()).thenAnswer((_) async => true);
+    when(
+      () => mockController.openAppSettingsHandler(),
+    ).thenAnswer((_) async => true);
   });
 
   group('CameraPage Widget Tests', () {
-    testWidgets('displays loading indicator and AppBar when status is initializing', (
-      tester,
-    ) async {
-      when(() => mockController.status).thenReturn(CameraStatus.initializing);
+    testWidgets(
+      'displays loading indicator and AppBar when status is initializing',
+      (tester) async {
+        when(() => mockController.status).thenReturn(CameraStatus.initializing);
 
-      await pumpApp(
-        tester,
-        CameraPage(controller: mockController),
-      );
+        await pumpApp(tester, CameraPage(controller: mockController));
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.text('Scan Card'), findsOneWidget);
-    });
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.text('Scan Card'), findsOneWidget);
+      },
+    );
 
     testWidgets(
       'displays permission denied view with no_photography icon, text, and settings button',
       (tester) async {
-        when(() => mockController.status).thenReturn(CameraStatus.permissionDenied);
+        when(
+          () => mockController.status,
+        ).thenReturn(CameraStatus.permissionDenied);
 
-        await pumpApp(
-          tester,
-          CameraPage(controller: mockController),
-        );
+        await pumpApp(tester, CameraPage(controller: mockController));
 
         expect(find.byIcon(Icons.no_photography), findsOneWidget);
         expect(
@@ -69,13 +68,12 @@ void main() {
       },
     );
 
-    testWidgets('displays generic error text when status is error', (tester) async {
+    testWidgets('displays generic error text when status is error', (
+      tester,
+    ) async {
       when(() => mockController.status).thenReturn(CameraStatus.error);
 
-      await pumpApp(
-        tester,
-        CameraPage(controller: mockController),
-      );
+      await pumpApp(tester, CameraPage(controller: mockController));
 
       expect(
         find.text('Something went wrong. Please try again.'),

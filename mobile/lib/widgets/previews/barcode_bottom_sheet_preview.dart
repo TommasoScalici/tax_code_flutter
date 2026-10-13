@@ -42,24 +42,14 @@ class _BarcodeBottomSheetPreviewState extends State<BarcodeBottomSheetPreview> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       initialDarkMode: widget.isDarkMode,
       initialLocale: widget.locale,
-      providers: [
-        Provider<BrightnessService>.value(
-          value: _brightnessService,
-        ),
-      ],
+      providers: [Provider<BrightnessService>.value(value: _brightnessService)],
       toolbarActions: (context, _) {
         final l10n = context.l10n;
         return [
           SegmentedButton<int>(
             segments: [
-              ButtonSegment(
-                value: 0,
-                label: Text(_contacts[0].firstName),
-              ),
-              ButtonSegment(
-                value: 1,
-                label: Text(_contacts[1].firstName),
-              ),
+              ButtonSegment(value: 0, label: Text(_contacts[0].firstName)),
+              ButtonSegment(value: 1, label: Text(_contacts[1].firstName)),
             ],
             selected: {_selectedContactIndex},
             onSelectionChanged: (selection) {

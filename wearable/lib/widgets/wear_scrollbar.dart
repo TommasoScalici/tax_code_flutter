@@ -132,7 +132,8 @@ class _WearScrollbarState extends State<WearScrollbar>
   }) {
     if (!mounted) return;
 
-    final changed = _scrollOffset != offset ||
+    final changed =
+        _scrollOffset != offset ||
         _maxScrollExtent != maxExtent ||
         _viewportDimension != viewport;
 
@@ -177,8 +178,11 @@ class _WearScrollbarState extends State<WearScrollbar>
 
   @override
   Widget build(BuildContext context) {
-    final effectiveTrackColor = widget.trackColor ??
-        AppColors.darkOutline.withValues(alpha: WearDimensions.scrollbarTrackAlpha);
+    final effectiveTrackColor =
+        widget.trackColor ??
+        AppColors.darkOutline.withValues(
+          alpha: WearDimensions.scrollbarTrackAlpha,
+        );
 
     return NotificationListener<ScrollNotification>(
       onNotification: _handleScrollNotification,
@@ -243,8 +247,10 @@ class _WearScrollbarPainter extends CustomPainter {
 
     final scrollFraction = (offset / maxExtent).clamp(0.0, 1.0);
     final contentLength = maxExtent + viewport;
-    final thumbProportion = (viewport / math.max(contentLength, 1.0))
-        .clamp(0.12, 0.70);
+    final thumbProportion = (viewport / math.max(contentLength, 1.0)).clamp(
+      0.12,
+      0.70,
+    );
 
     if (isRound) {
       _paintCircular(canvas, size, scrollFraction, thumbProportion);

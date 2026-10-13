@@ -26,10 +26,9 @@ interface class HomePageController with ChangeNotifier {
     required ContactRepository contactRepository,
     required SharingService sharingService,
     required BirthplaceService birthplaceService,
-  })
-      : _contactRepository = contactRepository,
-        _sharingService = sharingService,
-        _birthplaceService = birthplaceService {
+  }) : _contactRepository = contactRepository,
+       _sharingService = sharingService,
+       _birthplaceService = birthplaceService {
     _initialize();
   }
 
@@ -75,11 +74,13 @@ interface class HomePageController with ChangeNotifier {
       _filteredContacts = _allContacts;
     } else {
       _filteredContacts = _allContacts
-          .where((c) =>
-              c.taxCode.toLowerCase().contains(_searchText) ||
-              c.firstName.toLowerCase().contains(_searchText) ||
-              c.lastName.toLowerCase().contains(_searchText) ||
-              c.birthPlace.name.toLowerCase().contains(_searchText))
+          .where(
+            (c) =>
+                c.taxCode.toLowerCase().contains(_searchText) ||
+                c.firstName.toLowerCase().contains(_searchText) ||
+                c.lastName.toLowerCase().contains(_searchText) ||
+                c.birthPlace.name.toLowerCase().contains(_searchText),
+          )
           .toList();
     }
     notifyListeners();

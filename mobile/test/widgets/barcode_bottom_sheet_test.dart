@@ -45,10 +45,12 @@ void main() {
     mockImageService = MockContactCardImageService();
     mockPdfService = MockContactPdfService();
 
-    when(() => mockBrightnessService.setMaxBrightness())
-        .thenAnswer((_) async {});
-    when(() => mockBrightnessService.resetBrightness())
-        .thenAnswer((_) async {});
+    when(
+      () => mockBrightnessService.setMaxBrightness(),
+    ).thenAnswer((_) async {});
+    when(
+      () => mockBrightnessService.resetBrightness(),
+    ).thenAnswer((_) async {});
   });
 
   Widget buildTestApp({
@@ -91,7 +93,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Mario Rossi'), findsOneWidget);
-      expect(find.text('RSSMRA85D15H501Z'), findsNWidgets(2)); // Chip and barcode text
+      expect(
+        find.text('RSSMRA85D15H501Z'),
+        findsNWidgets(2),
+      ); // Chip and barcode text
       expect(find.text('CODICE A BARRE (CODE 128)'), findsOneWidget);
       expect(find.text('OPPURE'), findsOneWidget);
       expect(find.text('QR Code Sanitario'), findsOneWidget);
@@ -107,7 +112,9 @@ void main() {
       expect(find.text('Copia'), findsOneWidget);
 
       // Verify barcode widgets
-      final barcodes = tester.widgetList<BarcodeWidget>(find.byType(BarcodeWidget));
+      final barcodes = tester.widgetList<BarcodeWidget>(
+        find.byType(BarcodeWidget),
+      );
       expect(barcodes.length, 2);
       expect(
         barcodes.first.data,
@@ -138,10 +145,7 @@ void main() {
         find.text('Maximum brightness active for optical scanning'),
         findsOneWidget,
       );
-      expect(
-        find.text('Show at pharmacy or healthcare desk'),
-        findsOneWidget,
-      );
+      expect(find.text('Show at pharmacy or healthcare desk'), findsOneWidget);
       expect(find.text('Close'), findsOneWidget);
       expect(find.text('Copy'), findsOneWidget);
     });
@@ -163,9 +167,7 @@ void main() {
       verifyNever(() => mockBrightnessService.resetBrightness());
 
       // Replace widget to trigger unmount
-      await tester.pumpWidget(
-        buildTestApp(child: const SizedBox.shrink()),
-      );
+      await tester.pumpWidget(buildTestApp(child: const SizedBox.shrink()));
       await tester.pumpAndSettle();
 
       verify(() => mockBrightnessService.resetBrightness()).called(1);
@@ -176,13 +178,12 @@ void main() {
     ) async {
       final log = <MethodCall>[];
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-        SystemChannels.platform,
-        (methodCall) async {
-          log.add(methodCall);
-          return null;
-        },
-      );
+          .setMockMethodCallHandler(SystemChannels.platform, (
+            methodCall,
+          ) async {
+            log.add(methodCall);
+            return null;
+          });
 
       await tester.pumpWidget(
         buildTestApp(
@@ -194,7 +195,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byKey(const Key('barcode_bottom_sheet_copy_button')));
+      await tester.tap(
+        find.byKey(const Key('barcode_bottom_sheet_copy_button')),
+      );
       await tester.pump();
 
       expect(
@@ -210,7 +213,9 @@ void main() {
       expect(find.text('Codice Fiscale copiato negli appunti'), findsOneWidget);
     });
 
-    testWidgets('closes modal sheet when close button is tapped', (tester) async {
+    testWidgets('closes modal sheet when close button is tapped', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestApp(
           child: Builder(
@@ -238,7 +243,9 @@ void main() {
 
       expect(find.byType(BarcodeBottomSheet), findsOneWidget);
 
-      final closeButtonFinder = find.byKey(const Key('barcode_bottom_sheet_close_button'));
+      final closeButtonFinder = find.byKey(
+        const Key('barcode_bottom_sheet_close_button'),
+      );
       await tester.ensureVisible(closeButtonFinder);
       await tester.tap(closeButtonFinder);
       await tester.pumpAndSettle();
@@ -280,8 +287,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final shareBtnFinder =
-          find.byKey(const Key('barcode_bottom_sheet_share_button'));
+      final shareBtnFinder = find.byKey(
+        const Key('barcode_bottom_sheet_share_button'),
+      );
       expect(shareBtnFinder, findsOneWidget);
       await tester.ensureVisible(shareBtnFinder);
       await tester.tap(shareBtnFinder);
@@ -290,26 +298,33 @@ void main() {
       expect(find.byType(ShareContactBottomSheet), findsOneWidget);
     });
 
-    testWidgets('BarcodeHeader renders contact name, tax code and invokes onCopy callback', (tester) async {
-      var copyCalled = false;
-      await tester.pumpWidget(
-        buildTestApp(
-          child: BarcodeHeader(
-            contact: testContact,
-            onCopy: () => copyCalled = true,
+    testWidgets(
+      'BarcodeHeader renders contact name, tax code and invokes onCopy callback',
+      (tester) async {
+        var copyCalled = false;
+        await tester.pumpWidget(
+          buildTestApp(
+            child: BarcodeHeader(
+              contact: testContact,
+              onCopy: () => copyCalled = true,
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Mario Rossi'), findsOneWidget);
-      expect(find.text('RSSMRA85D15H501Z'), findsOneWidget);
+        expect(find.text('Mario Rossi'), findsOneWidget);
+        expect(find.text('RSSMRA85D15H501Z'), findsOneWidget);
 
-      await tester.tap(find.byKey(const Key('barcode_bottom_sheet_copy_button')));
-      expect(copyCalled, isTrue);
-    });
+        await tester.tap(
+          find.byKey(const Key('barcode_bottom_sheet_copy_button')),
+        );
+        expect(copyCalled, isTrue);
+      },
+    );
 
-    testWidgets('OpticalCodeDisplay renders Code 128 and QR barcodes', (tester) async {
+    testWidgets('OpticalCodeDisplay renders Code 128 and QR barcodes', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestApp(
           child: const OpticalCodeDisplay(taxCode: 'RSSMRA85D15H501Z'),
@@ -317,14 +332,18 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final barcodeWidgets = tester.widgetList<BarcodeWidget>(find.byType(BarcodeWidget));
+      final barcodeWidgets = tester.widgetList<BarcodeWidget>(
+        find.byType(BarcodeWidget),
+      );
       expect(barcodeWidgets.length, 2);
       expect(find.text('RSSMRA85D15H501Z'), findsOneWidget);
       expect(find.text('CODICE A BARRE (CODE 128)'), findsOneWidget);
       expect(find.text('QR Code Sanitario'), findsOneWidget);
     });
 
-    testWidgets('BarcodeActionButtons triggers onClose and onShare callbacks', (tester) async {
+    testWidgets('BarcodeActionButtons triggers onClose and onShare callbacks', (
+      tester,
+    ) async {
       var closeTapped = false;
       var shareTapped = false;
 
@@ -338,10 +357,14 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byKey(const Key('barcode_bottom_sheet_close_button')));
+      await tester.tap(
+        find.byKey(const Key('barcode_bottom_sheet_close_button')),
+      );
       expect(closeTapped, isTrue);
 
-      await tester.tap(find.byKey(const Key('barcode_bottom_sheet_share_button')));
+      await tester.tap(
+        find.byKey(const Key('barcode_bottom_sheet_share_button')),
+      );
       expect(shareTapped, isTrue);
     });
   });

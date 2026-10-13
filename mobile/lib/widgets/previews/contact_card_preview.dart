@@ -26,15 +26,11 @@ class ContactCardPreview extends StatelessWidget {
 
     return PreviewShell(
       providers: [
-        Provider<SharingService>.value(
-          value: const FakeSharingService(),
-        ),
+        Provider<SharingService>.value(value: const FakeSharingService()),
         Provider<ContactCardImageService>.value(
           value: const ContactCardImageService(),
         ),
-        Provider<ContactPdfService>.value(
-          value: const ContactPdfService(),
-        ),
+        Provider<ContactPdfService>.value(value: const ContactPdfService()),
       ],
       builder: (context, _) {
         final l10n = context.l10n;
@@ -42,25 +38,13 @@ class ContactCardPreview extends StatelessWidget {
         return ContactCard(
           contact: contact,
           onShare: () => unawaited(
-            ShareContactBottomSheet.show(
-              context,
-              contact: contact,
-            ),
+            ShareContactBottomSheet.show(context, contact: contact),
           ),
-          onShowBarcode: () => unawaited(
-            BarcodeBottomSheet.show(
-              context,
-              contact: contact,
-            ),
-          ),
-          onEdit: () => PreviewShell.showFeedback(
-            context,
-            l10n.cardActionEdit,
-          ),
-          onDelete: () => PreviewShell.showFeedback(
-            context,
-            l10n.cardActionDelete,
-          ),
+          onShowBarcode: () =>
+              unawaited(BarcodeBottomSheet.show(context, contact: contact)),
+          onEdit: () => PreviewShell.showFeedback(context, l10n.cardActionEdit),
+          onDelete: () =>
+              PreviewShell.showFeedback(context, l10n.cardActionDelete),
         );
       },
     );

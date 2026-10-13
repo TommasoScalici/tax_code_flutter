@@ -66,17 +66,13 @@ final class HomePage extends StatelessWidget {
         child: ResponsiveLayout(
           maxWidth: AppDimensions.maxDashboardWidth,
           padding: AppSpacing.screenMargin,
-          child: ContactsList(
-            onAddContact: () => _onAddContact(context),
-          ),
+          child: ContactsList(onAddContact: () => _onAddContact(context)),
         ),
       ),
       floatingActionButton:
           context.watch<HomePageController?>()?.hasContacts == true
-              ? DashboardFab(
-                  onPressed: () => _onAddContact(context),
-                )
-              : null,
+          ? DashboardFab(onPressed: () => _onAddContact(context))
+          : null,
     );
   }
 }

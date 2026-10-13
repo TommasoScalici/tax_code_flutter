@@ -127,7 +127,7 @@ tax_code_flutter/
    flutter run -d <emulator-or-device-id>
    ```
 
-6. **Maintenance & Tools:**
+6. **Maintenance, Tools & Quality Assurance:**
    ```bash
    # Sort and format all ARB localization files alphabetically
    dart run tool/arb_tool.dart sort
@@ -138,12 +138,28 @@ tax_code_flutter/
    # Strictly validate ARB descriptions, placeholder types, and 1:1 language parity
    dart run tool/arb_tool.dart validate
 
+   # Configure local Git pre-commit hooks
+   git config core.hooksPath tool/hooks
+
+   # Run pre-commit checks manually
+   ./tool/hooks/pre-commit
+   # Or on Windows PowerShell:
+   ./tool/hooks/pre-commit.ps1
+
    # Generate Play Store showcase screenshots (Mobile)
    cd mobile && flutter test test/screenshots/generate_store_screenshots_test.dart
 
    # Generate Play Store showcase screenshots (Wear OS)
    cd wearable && flutter test test/screenshots/generate_wear_screenshots_test.dart
    ```
+
+---
+
+## 🚀 Continuous Integration (CI)
+
+A unified GitHub Actions pipeline (`.github/workflows/ci.yaml`) runs on every push and pull request to `main`:
+- **Flutter Checks:** Validates Dart code formatting, ARB alphabetical ordering, strict ARB schema validation, `flutter analyze --fatal-infos`, and runs the full test suite across `shared`, `mobile`, and `wearable`.
+- **Functions Checks:** Runs ESLint, Prettier check, TypeScript build, and Vitest test suite on Firebase Cloud Functions with Node.js 24.
 
 ---
 

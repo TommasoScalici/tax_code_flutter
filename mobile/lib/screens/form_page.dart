@@ -128,10 +128,7 @@ class _FormViewState extends State<_FormView> {
               scrolledUnderElevation: AppElevation.none,
             ),
             body: Center(
-              child: _SyncProgressOverlay(
-                controller: controller,
-                l10n: l10n,
-              ),
+              child: _SyncProgressOverlay(controller: controller, l10n: l10n),
             ),
           );
         }
@@ -267,9 +264,7 @@ class _FormViewState extends State<_FormView> {
                   color: AppColors.modalBarrier,
                 ),
               if (controller.isLoading)
-                const Center(
-                  child: CircularProgressIndicator(),
-                ),
+                const Center(child: CircularProgressIndicator()),
 
               // Database sync progress overlay
               if (controller.downloadStep != null &&
@@ -295,10 +290,7 @@ class _SyncProgressOverlay extends StatelessWidget {
   final FormPageController controller;
   final AppLocalizations l10n;
 
-  const _SyncProgressOverlay({
-    required this.controller,
-    required this.l10n,
-  });
+  const _SyncProgressOverlay({required this.controller, required this.l10n});
 
   @override
   Widget build(BuildContext context) {

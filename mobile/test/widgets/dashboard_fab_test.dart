@@ -27,9 +27,7 @@ void main() {
       await pumpApp(
         tester,
         Scaffold(
-          floatingActionButton: DashboardFab(
-            onPressed: () => pressed = true,
-          ),
+          floatingActionButton: DashboardFab(onPressed: () => pressed = true),
         ),
         locale: const Locale('it'),
       );
@@ -44,7 +42,9 @@ void main() {
       expect(pressed, isTrue);
     });
 
-    testWidgets('renders collapsed FAB when isExtended is false', (tester) async {
+    testWidgets('renders collapsed FAB when isExtended is false', (
+      tester,
+    ) async {
       setMobileSize(tester);
 
       await pumpApp(
@@ -83,16 +83,14 @@ void main() {
       expect(find.byIcon(Icons.credit_card_rounded), findsOneWidget);
     });
 
-    testWidgets('renders English localization when locale is en', (tester) async {
+    testWidgets('renders English localization when locale is en', (
+      tester,
+    ) async {
       setMobileSize(tester);
 
       await pumpApp(
         tester,
-        Scaffold(
-          floatingActionButton: DashboardFab(
-            onPressed: () {},
-          ),
-        ),
+        Scaffold(floatingActionButton: DashboardFab(onPressed: () {})),
         locale: const Locale('en'),
       );
 

@@ -48,20 +48,16 @@ void main() {
     tempDir = await Directory.systemTemp.createTemp('share_test_');
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('plugins.flutter.io/path_provider'),
-      (methodCall) async {
-        if (methodCall.method == 'getTemporaryDirectory') {
-          return tempDir.path;
-        }
-        return null;
-      },
-    );
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          (methodCall) async {
+            if (methodCall.method == 'getTemporaryDirectory') {
+              return tempDir.path;
+            }
+            return null;
+          },
+        );
 
-    when(
-      () => mockSharingService.share(
-        text: any(named: 'text'),
-      ),
-    ).thenAnswer(
+    when(() => mockSharingService.share(text: any(named: 'text'))).thenAnswer(
       (_) async => const ShareResult('com.example', ShareResultStatus.success),
     );
 
@@ -94,9 +90,9 @@ void main() {
   tearDown(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('plugins.flutter.io/path_provider'),
-      null,
-    );
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          null,
+        );
     try {
       if (tempDir.existsSync()) {
         await tempDir.delete(recursive: true);
@@ -138,10 +134,8 @@ void main() {
         buildTestApp(
           child: Builder(
             builder: (context) => ElevatedButton(
-              onPressed: () => ShareContactBottomSheet.show(
-                context,
-                contact: testContact,
-              ),
+              onPressed: () =>
+                  ShareContactBottomSheet.show(context, contact: testContact),
               child: const Text('Open'),
             ),
           ),
@@ -172,10 +166,8 @@ void main() {
           locale: const Locale('en'),
           child: Builder(
             builder: (context) => ElevatedButton(
-              onPressed: () => ShareContactBottomSheet.show(
-                context,
-                contact: testContact,
-              ),
+              onPressed: () =>
+                  ShareContactBottomSheet.show(context, contact: testContact),
               child: const Text('Open'),
             ),
           ),
@@ -202,10 +194,8 @@ void main() {
         buildTestApp(
           child: Builder(
             builder: (context) => ElevatedButton(
-              onPressed: () => ShareContactBottomSheet.show(
-                context,
-                contact: testContact,
-              ),
+              onPressed: () =>
+                  ShareContactBottomSheet.show(context, contact: testContact),
               child: const Text('Open'),
             ),
           ),
@@ -230,10 +220,8 @@ void main() {
         buildTestApp(
           child: Builder(
             builder: (context) => ElevatedButton(
-              onPressed: () => ShareContactBottomSheet.show(
-                context,
-                contact: testContact,
-              ),
+              onPressed: () =>
+                  ShareContactBottomSheet.show(context, contact: testContact),
               child: const Text('Open'),
             ),
           ),
@@ -268,10 +256,8 @@ void main() {
           buildTestApp(
             child: Builder(
               builder: (context) => ElevatedButton(
-                onPressed: () => ShareContactBottomSheet.show(
-                  context,
-                  contact: testContact,
-                ),
+                onPressed: () =>
+                    ShareContactBottomSheet.show(context, contact: testContact),
                 child: const Text('Open'),
               ),
             ),
@@ -310,10 +296,7 @@ void main() {
               that: contains('tessera_RSSMRA85D15H501Z.png'),
             ),
             mimeType: 'image/png',
-            subject: any(
-              named: 'subject',
-              that: contains('Mario Rossi'),
-            ),
+            subject: any(named: 'subject', that: contains('Mario Rossi')),
           ),
         ).called(1);
 
@@ -328,10 +311,8 @@ void main() {
           buildTestApp(
             child: Builder(
               builder: (context) => ElevatedButton(
-                onPressed: () => ShareContactBottomSheet.show(
-                  context,
-                  contact: testContact,
-                ),
+                onPressed: () =>
+                    ShareContactBottomSheet.show(context, contact: testContact),
                 child: const Text('Open'),
               ),
             ),
@@ -370,10 +351,7 @@ void main() {
               that: contains('scheda_RSSMRA85D15H501Z.pdf'),
             ),
             mimeType: 'application/pdf',
-            subject: any(
-              named: 'subject',
-              that: contains('Mario Rossi'),
-            ),
+            subject: any(named: 'subject', that: contains('Mario Rossi')),
           ),
         ).called(1);
 
@@ -381,21 +359,24 @@ void main() {
       },
     );
 
-    testWidgets('ShareContactHeader renders contact name, tax code and drag handle', (tester) async {
-      await tester.pumpWidget(
-        buildTestApp(
-          child: ShareContactHeader(contact: testContact),
-        ),
-      );
-      await tester.pumpAndSettle();
+    testWidgets(
+      'ShareContactHeader renders contact name, tax code and drag handle',
+      (tester) async {
+        await tester.pumpWidget(
+          buildTestApp(child: ShareContactHeader(contact: testContact)),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Mario Rossi'), findsOneWidget);
-      expect(find.text('RSSMRA85D15H501Z'), findsOneWidget);
-      expect(find.byIcon(Icons.share_rounded), findsOneWidget);
-      expect(find.byIcon(Icons.badge_outlined), findsOneWidget);
-    });
+        expect(find.text('Mario Rossi'), findsOneWidget);
+        expect(find.text('RSSMRA85D15H501Z'), findsOneWidget);
+        expect(find.byIcon(Icons.share_rounded), findsOneWidget);
+        expect(find.byIcon(Icons.badge_outlined), findsOneWidget);
+      },
+    );
 
-    testWidgets('ShareOptionCard responds to taps and shows selected state', (tester) async {
+    testWidgets('ShareOptionCard responds to taps and shows selected state', (
+      tester,
+    ) async {
       var tapped = false;
       await tester.pumpWidget(
         buildTestApp(
@@ -418,7 +399,9 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('ShareFormatSelector triggers callback on option selection', (tester) async {
+    testWidgets('ShareFormatSelector triggers callback on option selection', (
+      tester,
+    ) async {
       ContactShareFormat? selected;
       await tester.pumpWidget(
         buildTestApp(
@@ -437,20 +420,22 @@ void main() {
       expect(selected, ContactShareFormat.pdf);
     });
 
-    test('ContactShareFileHelper throws ArgumentError when format is text', () async {
-      final l10n = await AppLocalizations.delegate.load(const Locale('it'));
-      expect(
-        () => ContactShareFileHelper.prepareExportFile(
-          contact: testContact,
-          format: ContactShareFormat.text,
-          imageService: mockImageService,
-          pdfService: mockPdfService,
-          l10n: l10n,
-          getTempDir: () async => tempDir,
-        ),
-        throwsArgumentError,
-      );
-    });
+    test(
+      'ContactShareFileHelper throws ArgumentError when format is text',
+      () async {
+        final l10n = await AppLocalizations.delegate.load(const Locale('it'));
+        expect(
+          () => ContactShareFileHelper.prepareExportFile(
+            contact: testContact,
+            format: ContactShareFormat.text,
+            imageService: mockImageService,
+            pdfService: mockPdfService,
+            l10n: l10n,
+            getTempDir: () async => tempDir,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
   });
 }
-

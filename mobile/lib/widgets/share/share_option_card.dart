@@ -65,8 +65,9 @@ class ShareOptionCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isSelected
                     ? theme.colorScheme.primary.withValues(
-                        alpha:
-                            isDark ? AppOpacity.subtleBorder : AppOpacity.faint,
+                        alpha: isDark
+                            ? AppOpacity.subtleBorder
+                            : AppOpacity.faint,
                       )
                     : theme.colorScheme.surfaceContainerHigh,
                 borderRadius: AppRadii.borderCompact,

@@ -68,8 +68,10 @@ class _LoginViewState extends State<_LoginView> {
 
   void _onPointerSignal(PointerSignalEvent event) {
     if (event is PointerScrollEvent && _scrollController.hasClients) {
-      final target = (_scrollController.offset + event.scrollDelta.dy)
-          .clamp(0.0, _scrollController.position.maxScrollExtent);
+      final target = (_scrollController.offset + event.scrollDelta.dy).clamp(
+        0.0,
+        _scrollController.position.maxScrollExtent,
+      );
       _scrollController.jumpTo(target);
     }
   }
@@ -90,130 +92,144 @@ class _LoginViewState extends State<_LoginView> {
             controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             padding: WearDimensions.listPadding,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Clock header
-              const WearTimeHeader(),
-              const SizedBox(height: AppSpacing.xs),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Clock header
+                const WearTimeHeader(),
+                const SizedBox(height: AppSpacing.xs),
 
-              // Emerald Ledger Badge Icon
-              Container(
-                width: AppDimensions.iconXl,
-                height: AppDimensions.iconXl,
-                decoration: BoxDecoration(
-                  color: AppColors.emeraldContainerDark.withValues(alpha: AppOpacity.disabled),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.outline),
-                    width: WearDimensions.borderThin,
-                  ),
-                ),
-                child: const Icon(
-                  Icons.badge_rounded,
-                  size: WearDimensions.iconMedium,
-                  color: AppColors.emeraldLight,
-                ),
-              ),
-              const SizedBox(height: WearDimensions.cardSpacing),
-
-              Text(
-                l10n.welcomeMessage(l10n.appTitle),
-                textAlign: TextAlign.center,
-                style: WearTypography.cardTitle(),
-              ),
-              const SizedBox(height: AppSpacing.compact),
-
-              ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: WearDimensions.buttonCompactHeight,
-                ),
-                child: ElevatedButton.icon(
-                  onPressed: authService.isLoading
-                      ? null
-                      : () => context
-                            .read<AuthService>()
-                            .signInWithGoogleForWearable(),
-                  icon: const Icon(Icons.login, size: AppDimensions.iconSm),
-                  label: Text(
-                    l10n.signInWithGoogle,
-                    style: WearTypography.hint(color: AppColors.darkOnSurface),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.darkSurfaceContainerHigh,
-                    foregroundColor: AppColors.darkOnSurface,
-                    shape: const StadiumBorder(),
-                    padding: const EdgeInsets.symmetric(horizontal: WearDimensions.screenPaddingHorizontal),
-                    side: BorderSide(
-                      color: AppColors.darkOutline.withValues(alpha: AppOpacity.translucent),
+                // Emerald Ledger Badge Icon
+                Container(
+                  width: AppDimensions.iconXl,
+                  height: AppDimensions.iconXl,
+                  decoration: BoxDecoration(
+                    color: AppColors.emeraldContainerDark.withValues(
+                      alpha: AppOpacity.disabled,
+                    ),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppColors.emeraldPrimary.withValues(
+                        alpha: AppOpacity.outline,
+                      ),
                       width: WearDimensions.borderThin,
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(height: WearDimensions.cardSpacing),
-
-              ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: WearDimensions.buttonCompactHeight,
-                ),
-                child: OutlinedButton.icon(
-                  onPressed: authService.isLoading
-                      ? null
-                      : () {
-                          try {
-                            context
-                                .read<DemoModeService>()
-                                .enableDemoMode();
-                          } on Object {
-                            // Safe fallback
-                          }
-                        },
-                  icon: const Icon(
-                    Icons.visibility_outlined,
-                    size: WearDimensions.iconSmall,
+                  child: const Icon(
+                    Icons.badge_rounded,
+                    size: WearDimensions.iconMedium,
                     color: AppColors.emeraldLight,
                   ),
-                  label: Text(
-                    l10n.demoMode,
-                    style: WearTypography.hint(color: AppColors.darkOnSurface),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.darkOnSurface,
-                    side: BorderSide(
-                      color: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.outline),
-                      width: WearDimensions.borderThin,
-                    ),
-                    shape: const StadiumBorder(),
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                  ),
                 ),
-              ),
-              if (authService.isLoading) ...[
-                const SizedBox(height: AppSpacing.compact),
-                const SizedBox(
-                  height: AppDimensions.iconButton,
-                  width: AppDimensions.iconButton,
-                  child: CircularProgressIndicator(
-                    strokeWidth: WearDimensions.progressStrokeWidth,
-                    color: AppColors.emeraldPrimary,
-                  ),
-                ),
-              ],
+                const SizedBox(height: WearDimensions.cardSpacing),
 
-              if (authService.errorMessage != null) ...[
-                const SizedBox(height: AppSpacing.sm),
                 Text(
-                  l10n.loginError,
+                  l10n.welcomeMessage(l10n.appTitle),
                   textAlign: TextAlign.center,
-                  style: WearTypography.hint(color: errorColor),
+                  style: WearTypography.cardTitle(),
                 ),
+                const SizedBox(height: AppSpacing.compact),
+
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minHeight: WearDimensions.buttonCompactHeight,
+                  ),
+                  child: ElevatedButton.icon(
+                    onPressed: authService.isLoading
+                        ? null
+                        : () => context
+                              .read<AuthService>()
+                              .signInWithGoogleForWearable(),
+                    icon: const Icon(Icons.login, size: AppDimensions.iconSm),
+                    label: Text(
+                      l10n.signInWithGoogle,
+                      style: WearTypography.hint(
+                        color: AppColors.darkOnSurface,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.darkSurfaceContainerHigh,
+                      foregroundColor: AppColors.darkOnSurface,
+                      shape: const StadiumBorder(),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: WearDimensions.screenPaddingHorizontal,
+                      ),
+                      side: BorderSide(
+                        color: AppColors.darkOutline.withValues(
+                          alpha: AppOpacity.translucent,
+                        ),
+                        width: WearDimensions.borderThin,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: WearDimensions.cardSpacing),
+
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minHeight: WearDimensions.buttonCompactHeight,
+                  ),
+                  child: OutlinedButton.icon(
+                    onPressed: authService.isLoading
+                        ? null
+                        : () {
+                            try {
+                              context.read<DemoModeService>().enableDemoMode();
+                            } on Object {
+                              // Safe fallback
+                            }
+                          },
+                    icon: const Icon(
+                      Icons.visibility_outlined,
+                      size: WearDimensions.iconSmall,
+                      color: AppColors.emeraldLight,
+                    ),
+                    label: Text(
+                      l10n.demoMode,
+                      style: WearTypography.hint(
+                        color: AppColors.darkOnSurface,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.darkOnSurface,
+                      side: BorderSide(
+                        color: AppColors.emeraldPrimary.withValues(
+                          alpha: AppOpacity.outline,
+                        ),
+                        width: WearDimensions.borderThin,
+                      ),
+                      shape: const StadiumBorder(),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md,
+                      ),
+                    ),
+                  ),
+                ),
+                if (authService.isLoading) ...[
+                  const SizedBox(height: AppSpacing.compact),
+                  const SizedBox(
+                    height: AppDimensions.iconButton,
+                    width: AppDimensions.iconButton,
+                    child: CircularProgressIndicator(
+                      strokeWidth: WearDimensions.progressStrokeWidth,
+                      color: AppColors.emeraldPrimary,
+                    ),
+                  ),
+                ],
+
+                if (authService.errorMessage != null) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    l10n.loginError,
+                    textAlign: TextAlign.center,
+                    style: WearTypography.hint(color: errorColor),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
   }
 }

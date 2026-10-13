@@ -118,8 +118,8 @@ class _BirthdatePickerContent extends StatelessWidget {
       initialDate: initialDate.isAfter(effectiveLastDate)
           ? effectiveLastDate
           : initialDate.isBefore(effectiveFirstDate)
-              ? effectiveFirstDate
-              : initialDate,
+          ? effectiveFirstDate
+          : initialDate,
       firstDate: effectiveFirstDate,
       lastDate: effectiveLastDate,
       locale: Localizations.localeOf(context),
@@ -142,12 +142,16 @@ class _BirthdatePickerContent extends StatelessWidget {
     final placeholder = l10n.birthdateHint;
 
     final formattedDate = value != null
-        ? DateFormat.yMd(Localizations.localeOf(context).toString()).format(value!)
+        ? DateFormat.yMd(
+            Localizations.localeOf(context).toString(),
+          ).format(value!)
         : '';
 
     final borderColor = hasError
         ? colorScheme.error
-        : colorScheme.outlineVariant.withValues(alpha: isDark ? AppOpacity.muted : AppOpacity.high);
+        : colorScheme.outlineVariant.withValues(
+            alpha: isDark ? AppOpacity.muted : AppOpacity.high,
+          );
 
     final bgColor = isDark
         ? colorScheme.surfaceContainer
@@ -209,7 +213,9 @@ class _BirthdatePickerContent extends StatelessWidget {
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: formattedDate.isNotEmpty
                               ? colorScheme.onSurface
-                              : colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.muted),
+                              : colorScheme.onSurfaceVariant.withValues(
+                                  alpha: AppOpacity.muted,
+                                ),
                           fontWeight: formattedDate.isNotEmpty
                               ? FontWeight.w600
                               : FontWeight.normal,
@@ -220,7 +226,10 @@ class _BirthdatePickerContent extends StatelessWidget {
                     if (value != null)
                       IconButton(
                         key: const Key('birthdate_picker_clear_button'),
-                        icon: const Icon(Icons.close_rounded, size: AppDimensions.iconAction),
+                        icon: const Icon(
+                          Icons.close_rounded,
+                          size: AppDimensions.iconAction,
+                        ),
                         color: colorScheme.onSurfaceVariant,
                         visualDensity: VisualDensity.compact,
                         padding: EdgeInsets.zero,

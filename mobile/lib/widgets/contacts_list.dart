@@ -21,11 +21,7 @@ final class ContactsList extends StatefulWidget {
   final double? cardHeight;
   final VoidCallback? onAddContact;
 
-  const ContactsList({
-    super.key,
-    this.cardHeight,
-    this.onAddContact,
-  });
+  const ContactsList({super.key, this.cardHeight, this.onAddContact});
 
   @override
   State<ContactsList> createState() => _ContactsListState();
@@ -67,27 +63,27 @@ class _ContactsListState extends State<ContactsList> {
               },
             ),
           ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.xs, bottom: 90.0),
-            child: controller.contactsToShow.isEmpty
-                ? DashboardEmptyState(
-                    searchQuery: controller.searchText.isNotEmpty
-                        ? controller.searchText
-                        : null,
-                    onClearSearch: () {
-                      controller.filterContacts('');
-                      _searchController.clear();
-                      FocusScope.of(context).unfocus();
-                    },
-                    onAddContact: widget.onAddContact,
-                  )
-                : _buildContactsGrid(context, controller),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.xs, bottom: 90.0),
+              child: controller.contactsToShow.isEmpty
+                  ? DashboardEmptyState(
+                      searchQuery: controller.searchText.isNotEmpty
+                          ? controller.searchText
+                          : null,
+                      onClearSearch: () {
+                        controller.filterContacts('');
+                        _searchController.clear();
+                        FocusScope.of(context).unfocus();
+                      },
+                      onAddContact: widget.onAddContact,
+                    )
+                  : _buildContactsGrid(context, controller),
+            ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
   }
 
   @override

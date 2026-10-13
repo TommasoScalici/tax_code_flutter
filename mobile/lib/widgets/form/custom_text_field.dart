@@ -124,9 +124,7 @@ class CustomTextField extends StatelessWidget {
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: AppRadii.borderInput,
-                borderSide: BorderSide(
-                  color: colorScheme.error,
-                ),
+                borderSide: BorderSide(color: colorScheme.error),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: AppRadii.borderInput,
@@ -135,10 +133,13 @@ class CustomTextField extends StatelessWidget {
                   width: AppDimensions.borderThick,
                 ),
               ),
-              suffixIcon: suffixIcon ??
+              suffixIcon:
+                  suffixIcon ??
                   Icon(
                     Icons.person_outline_rounded,
-                    color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.muted),
+                    color: colorScheme.onSurfaceVariant.withValues(
+                      alpha: AppOpacity.muted,
+                    ),
                     size: AppDimensions.iconMd,
                   ),
             ),

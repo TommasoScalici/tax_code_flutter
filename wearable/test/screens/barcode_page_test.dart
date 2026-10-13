@@ -38,10 +38,7 @@ void main() {
         supportedLocales: AppLocalizations.supportedLocales,
         home: Provider<NativeViewService>.value(
           value: mockNativeViewService,
-          child: BarcodePage(
-            taxCode: taxCode,
-            contact: contact,
-          ),
+          child: BarcodePage(taxCode: taxCode, contact: contact),
         ),
       ),
     );
@@ -66,7 +63,9 @@ void main() {
       verify(() => mockNativeViewService.enableHighBrightnessMode()).called(1);
     });
 
-    testWidgets('renders BarcodeWidget with Code 128 data initially', (tester) async {
+    testWidgets('renders BarcodeWidget with Code 128 data initially', (
+      tester,
+    ) async {
       await pumpPage(tester, taxCode: testTaxCode, contact: testContact);
 
       final barcodeFinder = find.byType(BarcodeWidget);
@@ -83,7 +82,9 @@ void main() {
       await pumpPage(tester, taxCode: testTaxCode);
 
       // Initially Code 128
-      var barcodeWidget = tester.widget<BarcodeWidget>(find.byType(BarcodeWidget));
+      var barcodeWidget = tester.widget<BarcodeWidget>(
+        find.byType(BarcodeWidget),
+      );
       expect(barcodeWidget.barcode.name, 'CODE 128');
 
       // Tap to toggle
@@ -110,7 +111,9 @@ void main() {
       verify(() => mockNativeViewService.disableHighBrightnessMode()).called(1);
     });
 
-    testWidgets('renders without overflow with large font scale (1.3x)', (tester) async {
+    testWidgets('renders without overflow with large font scale (1.3x)', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(390, 390);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() {
@@ -129,10 +132,7 @@ void main() {
             ),
             child: Provider<NativeViewService>.value(
               value: mockNativeViewService,
-              child: BarcodePage(
-                taxCode: testTaxCode,
-                contact: testContact,
-              ),
+              child: BarcodePage(taxCode: testTaxCode, contact: testContact),
             ),
           ),
         ),
@@ -177,7 +177,10 @@ void main() {
 
       expect(find.byType(BarcodePage), findsOneWidget);
 
-      await tester.dragFrom(const Offset(20.0, 100.0), const Offset(200.0, 0.0));
+      await tester.dragFrom(
+        const Offset(20.0, 100.0),
+        const Offset(200.0, 0.0),
+      );
       await tester.pumpAndSettle();
 
       expect(find.byType(BarcodePage), findsNothing);

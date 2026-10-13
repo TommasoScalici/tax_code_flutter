@@ -130,7 +130,8 @@ class DefaultDataExportService implements DataExportService {
   }
 
   static String _escapeCsvField(String field) {
-    final containsSpecialChars = field.contains(',') ||
+    final containsSpecialChars =
+        field.contains(',') ||
         field.contains('"') ||
         field.contains('\n') ||
         field.contains('\r');

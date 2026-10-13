@@ -36,10 +36,10 @@ class Birthplace extends Equatable {
     String? normalizedState,
     String? normalizedFull,
     List<String>? nameWords,
-  })  : _normalizedName = normalizedName,
-        _normalizedState = normalizedState,
-        _normalizedFull = normalizedFull,
-        _nameWords = nameWords;
+  }) : _normalizedName = normalizedName,
+       _normalizedState = normalizedState,
+       _normalizedFull = normalizedFull,
+       _nameWords = nameWords;
 
   factory Birthplace.fromJson(Map<String, dynamic> json) =>
       _$BirthplaceFromJson(json).withPrecomputedNormalizedData();
@@ -74,8 +74,7 @@ class Birthplace extends Equatable {
       _normalizedFull ?? '$normalizedName $normalizedState';
 
   /// Pre-split words in municipality name.
-  List<String> get nameWords =>
-      _nameWords ?? normalizedName.split(' ');
+  List<String> get nameWords => _nameWords ?? normalizedName.split(' ');
 
   @override
   String toString() => '$name ($state)';

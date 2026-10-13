@@ -65,8 +65,8 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
     final isSignedIn = authService?.isSignedIn ?? false;
 
     // Determine whether sync is active (defaults to authenticated Google user)
-    final syncActive = isSyncActive ??
-        (showSyncBadge ?? (isSignedIn && !isGuest));
+    final syncActive =
+        isSyncActive ?? (showSyncBadge ?? (isSignedIn && !isGuest));
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -94,9 +94,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
             ),
             child: ClipRRect(
               borderRadius: AppRadii.borderSm,
-              child: SvgPicture.asset(
-                'assets/images/tax_code_icon.svg',
-              ),
+              child: SvgPicture.asset('assets/images/tax_code_icon.svg'),
             ),
           ),
           const SizedBox(width: AppSpacing.md),
@@ -167,7 +165,10 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
 
         // Profile Avatar Action with Cloud Sync Badge
         Padding(
-          padding: const EdgeInsets.only(left: AppSpacing.xs, right: AppSpacing.sm),
+          padding: const EdgeInsets.only(
+            left: AppSpacing.xs,
+            right: AppSpacing.sm,
+          ),
           child: Tooltip(
             message: syncActive ? l10n.cloudSyncActive : l10n.profilePageTitle,
             child: InkWell(
@@ -194,7 +195,9 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.syncPulse.withValues(alpha: AppOpacity.divider),
+                              color: AppColors.syncPulse.withValues(
+                                alpha: AppOpacity.divider,
+                              ),
                               blurRadius: AppSpacing.xs,
                               spreadRadius: 1,
                             ),
@@ -244,21 +247,18 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
     }
 
     // Authenticated user state
-    final syncIcon =
-        isSyncActive ? Icons.cloud_done_rounded : Icons.cloud_off_rounded;
-    final syncColor =
-        isSyncActive ? colorScheme.primary : colorScheme.onSurfaceVariant;
-    final tooltipMessage =
-        isSyncActive ? l10n.cloudSyncOn : l10n.cloudSyncOff;
+    final syncIcon = isSyncActive
+        ? Icons.cloud_done_rounded
+        : Icons.cloud_off_rounded;
+    final syncColor = isSyncActive
+        ? colorScheme.primary
+        : colorScheme.onSurfaceVariant;
+    final tooltipMessage = isSyncActive ? l10n.cloudSyncOn : l10n.cloudSyncOff;
 
     return IconButton(
       key: const Key('dashboard_header_sync_button'),
       tooltip: tooltipMessage,
-      icon: Icon(
-        syncIcon,
-        color: syncColor,
-        size: AppDimensions.iconButton,
-      ),
+      icon: Icon(syncIcon, color: syncColor, size: AppDimensions.iconButton),
       onPressed: () {
         if (onSyncToggle != null) {
           onSyncToggle!();

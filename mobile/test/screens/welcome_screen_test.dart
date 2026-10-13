@@ -37,7 +37,9 @@ void main() {
   });
 
   group('WelcomeScreen Widget Tests', () {
-    testWidgets('renders app icon, headline, subtitle, buttons, and terms', (tester) async {
+    testWidgets('renders app icon, headline, subtitle, buttons, and terms', (
+      tester,
+    ) async {
       setMobileSize(tester);
 
       await pumpApp(
@@ -49,7 +51,9 @@ void main() {
       // Verify headline & subtitle
       expect(find.text('Your Tax Codes, always with you'), findsOneWidget);
       expect(
-        find.text('Save, access, and show your codes at pharmacies or offices in an instant.'),
+        find.text(
+          'Save, access, and show your codes at pharmacies or offices in an instant.',
+        ),
         findsOneWidget,
       );
 
@@ -61,9 +65,13 @@ void main() {
       expect(find.text('View Terms & Conditions'), findsOneWidget);
     });
 
-    testWidgets('tapping Google button calls authService.signInWithGoogle', (tester) async {
+    testWidgets('tapping Google button calls authService.signInWithGoogle', (
+      tester,
+    ) async {
       setMobileSize(tester);
-      when(() => mockAuthService.signInWithGoogle()).thenAnswer((_) async => true);
+      when(
+        () => mockAuthService.signInWithGoogle(),
+      ).thenAnswer((_) async => true);
 
       await pumpApp(
         tester,
@@ -77,9 +85,13 @@ void main() {
       verify(() => mockAuthService.signInWithGoogle()).called(1);
     });
 
-    testWidgets('tapping Guest button calls authService.signInAnonymously', (tester) async {
+    testWidgets('tapping Guest button calls authService.signInAnonymously', (
+      tester,
+    ) async {
       setMobileSize(tester);
-      when(() => mockAuthService.signInAnonymously()).thenAnswer((_) async => true);
+      when(
+        () => mockAuthService.signInAnonymously(),
+      ).thenAnswer((_) async => true);
 
       await pumpApp(
         tester,
@@ -93,65 +105,80 @@ void main() {
       verify(() => mockAuthService.signInAnonymously()).called(1);
     });
 
-    testWidgets('displays loading indicator when authService.isLoading is true', (tester) async {
-      setMobileSize(tester);
-      when(() => mockAuthService.isLoading).thenReturn(true);
+    testWidgets(
+      'displays loading indicator when authService.isLoading is true',
+      (tester) async {
+        setMobileSize(tester);
+        when(() => mockAuthService.isLoading).thenReturn(true);
 
-      await pumpApp(
-        tester,
-        const WelcomeScreen(),
-        mockAuthService: mockAuthService,
-      );
+        await pumpApp(
+          tester,
+          const WelcomeScreen(),
+          mockAuthService: mockAuthService,
+        );
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    });
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      },
+    );
 
-    testWidgets('shows snackbar when signInWithGoogle fails with error message', (tester) async {
-      setMobileSize(tester);
-      when(() => mockAuthService.signInWithGoogle()).thenAnswer((_) async => false);
-      when(() => mockAuthService.errorKey).thenReturn('networkError');
-      when(() => mockAuthService.errorMessage).thenReturn('networkError');
+    testWidgets(
+      'shows snackbar when signInWithGoogle fails with error message',
+      (tester) async {
+        setMobileSize(tester);
+        when(
+          () => mockAuthService.signInWithGoogle(),
+        ).thenAnswer((_) async => false);
+        when(() => mockAuthService.errorKey).thenReturn('networkError');
+        when(() => mockAuthService.errorMessage).thenReturn('networkError');
 
-      await pumpApp(
-        tester,
-        const WelcomeScreen(),
-        mockAuthService: mockAuthService,
-      );
+        await pumpApp(
+          tester,
+          const WelcomeScreen(),
+          mockAuthService: mockAuthService,
+        );
 
-      await tester.tap(find.text('Continue with Google'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Continue with Google'));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(SnackBar), findsOneWidget);
-      expect(
-        find.text(
-          'No internet connection. Please check your network and try again.',
-        ),
-        findsOneWidget,
-      );
-    });
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(
+          find.text(
+            'No internet connection. Please check your network and try again.',
+          ),
+          findsOneWidget,
+        );
+      },
+    );
 
-    testWidgets('shows snackbar when signInAnonymously fails with error message', (tester) async {
-      setMobileSize(tester);
-      when(() => mockAuthService.signInAnonymously()).thenAnswer((_) async => false);
-      when(() => mockAuthService.errorKey).thenReturn('signInFailed');
-      when(() => mockAuthService.errorMessage).thenReturn('signInFailed');
+    testWidgets(
+      'shows snackbar when signInAnonymously fails with error message',
+      (tester) async {
+        setMobileSize(tester);
+        when(
+          () => mockAuthService.signInAnonymously(),
+        ).thenAnswer((_) async => false);
+        when(() => mockAuthService.errorKey).thenReturn('signInFailed');
+        when(() => mockAuthService.errorMessage).thenReturn('signInFailed');
 
-      await pumpApp(
-        tester,
-        const WelcomeScreen(),
-        mockAuthService: mockAuthService,
-      );
+        await pumpApp(
+          tester,
+          const WelcomeScreen(),
+          mockAuthService: mockAuthService,
+        );
 
-      final guestBtn = find.text('Continue as guest');
-      await tester.ensureVisible(guestBtn);
-      await tester.tap(guestBtn);
-      await tester.pumpAndSettle();
+        final guestBtn = find.text('Continue as guest');
+        await tester.ensureVisible(guestBtn);
+        await tester.tap(guestBtn);
+        await tester.pumpAndSettle();
 
-      expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('Sign in failed. Please try again.'), findsOneWidget);
-    });
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.text('Sign in failed. Please try again.'), findsOneWidget);
+      },
+    );
 
-    testWidgets('tapping terms link opens ProfileBottomSheet with legal info', (tester) async {
+    testWidgets('tapping terms link opens ProfileBottomSheet with legal info', (
+      tester,
+    ) async {
       setMobileSize(tester);
 
       await pumpApp(

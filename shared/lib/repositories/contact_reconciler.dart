@@ -73,8 +73,9 @@ abstract final class ContactReconciler {
       ..sort((a, b) => a.listIndex.compareTo(b.listIndex));
 
     final mergedContacts = List<Contact>.from(sortedRemoteContacts);
-    final existingTaxCodes =
-        mergedContacts.map((c) => c.taxCode.toUpperCase()).toSet();
+    final existingTaxCodes = mergedContacts
+        .map((c) => c.taxCode.toUpperCase())
+        .toSet();
     final existingIds = mergedContacts.map((c) => c.id).toSet();
 
     for (final guestContact in sortedGuestContacts) {

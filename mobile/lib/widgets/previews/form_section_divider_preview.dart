@@ -10,9 +10,6 @@ class FormSectionDividerPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PreviewShell(
-      maxWidth: 480,
-      child: FormSectionDivider(),
-    );
+    return const PreviewShell(maxWidth: 480, child: FormSectionDivider());
   }
 }

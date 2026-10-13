@@ -48,13 +48,14 @@ class ReactiveBirthplaceAutocomplete extends StatelessWidget {
     this.isRequired = true,
     this.validationMessages,
   }) : assert(
-          formControlName != null || formControl != null,
-          'Must provide either formControlName or formControl.',
-        );
+         formControlName != null || formControl != null,
+         'Must provide either formControlName or formControl.',
+       );
 
   @override
   Widget build(BuildContext context) {
-    final control = formControl ??
+    final control =
+        formControl ??
         (ReactiveForm.of(context) as FormGroup?)?.control(formControlName!);
 
     return ReactiveValueListenableBuilder<dynamic>(
@@ -66,7 +67,8 @@ class ReactiveBirthplaceAutocomplete extends StatelessWidget {
         String? fieldError;
         if (hasError) {
           final errorKey = currentControl.errors.keys.firstOrNull;
-          if (errorKey != null && validationMessages?.containsKey(errorKey) == true) {
+          if (errorKey != null &&
+              validationMessages?.containsKey(errorKey) == true) {
             final error = currentControl.errors[errorKey];
             fieldError = validationMessages![errorKey]!(error as Object);
           } else {

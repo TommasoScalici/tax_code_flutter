@@ -16,12 +16,9 @@ class ContactsListController with ChangeNotifier {
   bool get isLaunchingPhoneApp => _isLaunchingPhoneApp;
   bool get isDemoMode => _demoModeService.isDemoMode;
   bool get isLoading => !isDemoMode && _contactRepository.isLoading;
-  bool get hasContacts =>
-      isDemoMode || _contactRepository.contacts.isNotEmpty;
+  bool get hasContacts => isDemoMode || _contactRepository.contacts.isNotEmpty;
   List<Contact> get contacts =>
-      isDemoMode
-          ? _demoModeService.demoContacts
-          : _contactRepository.contacts;
+      isDemoMode ? _demoModeService.demoContacts : _contactRepository.contacts;
 
   ContactsListController({
     required ContactRepository contactRepository,

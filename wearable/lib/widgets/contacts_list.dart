@@ -40,8 +40,10 @@ class _ContactsListState extends State<ContactsList> {
 
   void _onPointerSignal(PointerSignalEvent event) {
     if (event is PointerScrollEvent && _scrollController.hasClients) {
-      final target = (_scrollController.offset + event.scrollDelta.dy)
-          .clamp(0.0, _scrollController.position.maxScrollExtent);
+      final target = (_scrollController.offset + event.scrollDelta.dy).clamp(
+        0.0,
+        _scrollController.position.maxScrollExtent,
+      );
       _scrollController.jumpTo(target);
     }
   }
@@ -49,10 +51,7 @@ class _ContactsListState extends State<ContactsList> {
   void _openBarcodePage(BuildContext context, Contact contact) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => BarcodePage(
-          taxCode: contact.taxCode,
-          contact: contact,
-        ),
+        builder: (_) => BarcodePage(taxCode: contact.taxCode, contact: contact),
       ),
     );
   }
@@ -144,7 +143,9 @@ class _ContactsListState extends State<ContactsList> {
             return WearContactsListFooter(
               isDemoMode: controller.isDemoMode,
               openOnPhoneLabel: l10n.openOnPhone,
-              authActionLabel: controller.isDemoMode ? l10n.exitDemo : l10n.logout,
+              authActionLabel: controller.isDemoMode
+                  ? l10n.exitDemo
+                  : l10n.logout,
               onOpenOnPhone: controller.launchPhoneApp,
               onAuthAction: controller.isDemoMode
                   ? () => _confirmExitDemo(context, controller)

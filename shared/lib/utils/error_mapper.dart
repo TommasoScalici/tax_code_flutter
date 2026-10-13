@@ -18,9 +18,11 @@ class ErrorMapper {
         'missing-birthplace-code' => const MissingBirthplaceCodeFailure(),
         'calculation-failed' => const CalculationFailure(),
         'resource-exhausted' => const RateLimitFailure(),
-        'unauthenticated' || 'permission-denied' => const SessionExpiredFailure(),
+        'unauthenticated' ||
+        'permission-denied' => const SessionExpiredFailure(),
         'deadline-exceeded' => const DeadlineExceededFailure(),
-        'unavailable' || 'failed-precondition' => const ServiceUnavailableFailure(),
+        'unavailable' ||
+        'failed-precondition' => const ServiceUnavailableFailure(),
         _ => const ServiceUnavailableFailure(),
       };
     }
@@ -53,4 +55,3 @@ class ErrorMapper {
     };
   }
 }
-

@@ -8,10 +8,7 @@ import 'package:tax_code_flutter/l10n/l10n.dart';
 class CameraControlsWidget extends StatelessWidget {
   final Future<void> Function() onMainButtonPressed;
 
-  const CameraControlsWidget({
-    super.key,
-    required this.onMainButtonPressed,
-  });
+  const CameraControlsWidget({super.key, required this.onMainButtonPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +41,9 @@ class CameraControlsWidget extends StatelessWidget {
               ),
               shape: BoxShape.circle,
               border: Border.all(
-                color: colorScheme.outlineVariant.withValues(alpha: AppOpacity.outline),
+                color: colorScheme.outlineVariant.withValues(
+                  alpha: AppOpacity.outline,
+                ),
               ),
             ),
             child: IconButton(
@@ -68,7 +67,9 @@ class CameraControlsWidget extends StatelessWidget {
               ),
               shape: BoxShape.circle,
               border: Border.all(
-                color: colorScheme.outlineVariant.withValues(alpha: AppOpacity.outline),
+                color: colorScheme.outlineVariant.withValues(
+                  alpha: AppOpacity.outline,
+                ),
               ),
             ),
             child: IconButton(
@@ -104,7 +105,10 @@ class CameraControlsWidget extends StatelessWidget {
                         backgroundColor: colorScheme.errorContainer,
                         foregroundColor: colorScheme.onErrorContainer,
                         elevation: AppElevation.level1,
-                        child: const Icon(Icons.replay, size: AppDimensions.iconFabRetake),
+                        child: const Icon(
+                          Icons.replay,
+                          size: AppDimensions.iconFabRetake,
+                        ),
                       ),
                       const SizedBox(width: AppDimensions.minTouchTarget),
                       // Confirm button (M3 primary emerald)
@@ -115,7 +119,10 @@ class CameraControlsWidget extends StatelessWidget {
                         backgroundColor: colorScheme.primary,
                         foregroundColor: colorScheme.onPrimary,
                         elevation: AppElevation.level2,
-                        child: const Icon(Icons.check, size: AppDimensions.iconFabCapture),
+                        child: const Icon(
+                          Icons.check,
+                          size: AppDimensions.iconFabCapture,
+                        ),
                       ),
                     ],
                   )
@@ -126,7 +133,10 @@ class CameraControlsWidget extends StatelessWidget {
                     backgroundColor: colorScheme.primary,
                     foregroundColor: colorScheme.onPrimary,
                     elevation: AppElevation.level2,
-                    child: const Icon(Icons.camera_alt, size: AppDimensions.iconFabCapture),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      size: AppDimensions.iconFabCapture,
+                    ),
                   ),
           ),
         ),

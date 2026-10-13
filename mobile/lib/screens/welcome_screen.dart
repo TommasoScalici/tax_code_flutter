@@ -20,11 +20,7 @@ class WelcomeScreen extends StatelessWidget {
   final VoidCallback? onGoogleSignIn;
   final VoidCallback? onGuestContinue;
 
-  const WelcomeScreen({
-    super.key,
-    this.onGoogleSignIn,
-    this.onGuestContinue,
-  });
+  const WelcomeScreen({super.key, this.onGoogleSignIn, this.onGuestContinue});
 
   Future<void> _handleGoogleSignIn(
     BuildContext context,
@@ -43,10 +39,7 @@ class WelcomeScreen extends StatelessWidget {
       final failure = ErrorMapper.fromKey(authService.errorKey);
       final message = failure.toLocalizedMessage(l10n);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-        ),
+        SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
       );
     }
   }
@@ -68,10 +61,7 @@ class WelcomeScreen extends StatelessWidget {
       final failure = ErrorMapper.fromKey(authService.errorKey);
       final message = failure.toLocalizedMessage(l10n);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-        ),
+        SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
       );
     }
   }
@@ -90,7 +80,10 @@ class WelcomeScreen extends StatelessWidget {
       body: SafeArea(
         child: ResponsiveLayout(
           maxWidth: AppDimensions.maxWelcomeWidth,
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.lg),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xl,
+            vertical: AppSpacing.lg,
+          ),
           child: Center(
             child: SingleChildScrollView(
               child: Column(
@@ -119,7 +112,9 @@ class WelcomeScreen extends StatelessWidget {
 
                   // Subtitle
                   ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: AppDimensions.maxSubtitleWidth),
+                    constraints: const BoxConstraints(
+                      maxWidth: AppDimensions.maxSubtitleWidth,
+                    ),
                     child: Text(
                       l10n.welcomeSubtitle,
                       textAlign: TextAlign.center,
@@ -145,13 +140,21 @@ class WelcomeScreen extends StatelessWidget {
                             ? colorScheme.surfaceContainerHigh
                             : colorScheme.surface,
                         foregroundColor: colorScheme.onSurface,
-                        elevation: isDark ? AppElevation.none : AppElevation.level1,
-                        shadowColor: colorScheme.shadow.withValues(alpha: AppOpacity.glow),
+                        elevation: isDark
+                            ? AppElevation.none
+                            : AppElevation.level1,
+                        shadowColor: colorScheme.shadow.withValues(
+                          alpha: AppOpacity.glow,
+                        ),
                         shape: const StadiumBorder(),
                         side: BorderSide(
                           color: isDark
-                              ? colorScheme.outlineVariant.withValues(alpha: AppOpacity.medium)
-                              : colorScheme.outline.withValues(alpha: AppOpacity.outline),
+                              ? colorScheme.outlineVariant.withValues(
+                                  alpha: AppOpacity.medium,
+                                )
+                              : colorScheme.outline.withValues(
+                                  alpha: AppOpacity.outline,
+                                ),
                         ),
                       ),
                       child: isLoading
@@ -216,53 +219,59 @@ class WelcomeScreen extends StatelessWidget {
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
                           color: colorScheme.outlineVariant.withValues(
-                            alpha: isDark ? AppOpacity.muted : AppOpacity.outline,
+                            alpha: isDark
+                                ? AppOpacity.muted
+                                : AppOpacity.outline,
                           ),
                         ),
                       ),
                     ),
                   ),
 
-                      const SizedBox(height: AppSpacing.card),
+                  const SizedBox(height: AppSpacing.card),
 
-                      // Footer: Terms & Disclaimer
-                      Text(
-                        l10n.termsAndCondition,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.medium),
-                          fontSize: AppFontSizes.bodySm,
-                        ),
+                  // Footer: Terms & Disclaimer
+                  Text(
+                    l10n.termsAndCondition,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant.withValues(
+                        alpha: AppOpacity.medium,
                       ),
-                      TextButton(
-                        onPressed: () {
-                          unawaited(
-                            ProfileBottomSheet.show<void>(
-                              context,
-                              startAtAppInfo: true,
-                            ),
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                          visualDensity: VisualDensity.compact,
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                        ),
-                        child: Text(
-                          l10n.showTerms,
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            fontSize: AppFontSizes.titleSm,
-                            fontWeight: FontWeight.w500,
-                            color: colorScheme.primary,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                    ],
+                      fontSize: AppFontSizes.bodySm,
+                    ),
                   ),
-                ),
+                  TextButton(
+                    onPressed: () {
+                      unawaited(
+                        ProfileBottomSheet.show<void>(
+                          context,
+                          startAtAppInfo: true,
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      visualDensity: VisualDensity.compact,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.sm,
+                      ),
+                    ),
+                    child: Text(
+                      l10n.showTerms,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontSize: AppFontSizes.titleSm,
+                        fontWeight: FontWeight.w500,
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                ],
               ),
             ),
           ),
-      );
-    }
+        ),
+      ),
+    );
   }
+}

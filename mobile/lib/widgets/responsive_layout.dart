@@ -18,8 +18,9 @@ class ResponsiveLayout extends StatelessWidget {
   static const double defaultMaxWidth = 560.0;
 
   /// Default padding matching the Emerald Ledger design system.
-  static const EdgeInsets defaultPadding =
-      EdgeInsets.symmetric(horizontal: AppSpacing.card);
+  static const EdgeInsets defaultPadding = EdgeInsets.symmetric(
+    horizontal: AppSpacing.card,
+  );
 
   /// Creates a [ResponsiveLayout] with a static [child].
   const ResponsiveLayout({
@@ -102,15 +103,11 @@ class ResponsiveLayout extends StatelessWidget {
         );
 
         if (center) {
-          content = Center(
-            child: content,
-          );
+          content = Center(child: content);
         }
 
         if (useSafeArea) {
-          content = SafeArea(
-            child: content,
-          );
+          content = SafeArea(child: content);
         }
 
         return content;

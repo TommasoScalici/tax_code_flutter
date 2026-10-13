@@ -88,9 +88,7 @@ void main() {
       () async {
         // Arrange
         when(() => mockBirthplaceService.loadBirthplaces()).thenAnswer(
-          (_) async => [
-            const Birthplace(name: 'Roma', state: 'RM'),
-          ],
+          (_) async => [const Birthplace(name: 'Roma', state: 'RM')],
         );
 
         // Act & Assert

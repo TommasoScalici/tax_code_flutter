@@ -61,7 +61,9 @@ class FormStickyBottomBar extends StatelessWidget {
           alignment: Alignment.topCenter,
           heightFactor: 1.0,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: AppDimensions.maxContentWidth),
+            constraints: const BoxConstraints(
+              maxWidth: AppDimensions.maxContentWidth,
+            ),
             child: Padding(
               padding: AppSpacing.paddingStickyBar,
               child: SizedBox(
@@ -69,12 +71,16 @@ class FormStickyBottomBar extends StatelessWidget {
                 height: AppDimensions.primaryButtonHeight,
                 child: FilledButton(
                   key: const Key('form_sticky_bottom_bar_button'),
-                  onPressed: isEnabled && !isLoading ? (onSavePressed ?? onPressed) : null,
+                  onPressed: isEnabled && !isLoading
+                      ? (onSavePressed ?? onPressed)
+                      : null,
                   style: FilledButton.styleFrom(
                     backgroundColor: colorScheme.primary,
                     foregroundColor: colorScheme.onPrimary,
-                    disabledBackgroundColor: colorScheme.surfaceContainerHighest,
-                    disabledForegroundColor: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.outline),
+                    disabledBackgroundColor:
+                        colorScheme.surfaceContainerHighest,
+                    disabledForegroundColor: colorScheme.onSurfaceVariant
+                        .withValues(alpha: AppOpacity.outline),
                     shape: const RoundedRectangleBorder(
                       borderRadius: AppRadii.borderMd,
                     ),
@@ -99,7 +105,9 @@ class FormStickyBottomBar extends StatelessWidget {
                               style: theme.textTheme.titleMedium?.copyWith(
                                 color: isEnabled
                                     ? colorScheme.onPrimary
-                                    : colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.outline),
+                                    : colorScheme.onSurfaceVariant.withValues(
+                                        alpha: AppOpacity.outline,
+                                      ),
                                 fontWeight: FontWeight.w700,
                                 fontSize: AppFontSizes.bodyLg,
                               ),

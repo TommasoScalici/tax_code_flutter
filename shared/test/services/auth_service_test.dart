@@ -118,35 +118,38 @@ void main() {
       expect(authService.currentUser, isNull);
     });
 
-    test('should keep user logged in if saving user data fails after login', () async {
-      // Arrange
-      final mockUser = MockUser();
-      final exception = Exception('Firestore connection failed');
+    test(
+      'should keep user logged in if saving user data fails after login',
+      () async {
+        // Arrange
+        final mockUser = MockUser();
+        final exception = Exception('Firestore connection failed');
 
-      when(mockUser.reload).thenAnswer((_) async {});
-      when(() => mockAuth.currentUser).thenReturn(mockUser);
-      when(() => mockDbService.saveUserData(mockUser)).thenThrow(exception);
+        when(mockUser.reload).thenAnswer((_) async {});
+        when(() => mockAuth.currentUser).thenReturn(mockUser);
+        when(() => mockDbService.saveUserData(mockUser)).thenThrow(exception);
 
-      // Act
-      authStreamController.add(mockUser);
-      await pumpEventQueue();
+        // Act
+        authStreamController.add(mockUser);
+        await pumpEventQueue();
 
-      // Assert
-      expect(authService.status, AuthStatus.authenticated);
-      expect(authService.isSignedIn, isTrue);
-      expect(authService.currentUser, mockUser);
+        // Assert
+        expect(authService.status, AuthStatus.authenticated);
+        expect(authService.isSignedIn, isTrue);
+        expect(authService.currentUser, mockUser);
 
-      verify(mockUser.reload).called(1);
-      verify(() => mockDbService.saveUserData(mockUser)).called(1);
-      verifyNever(() => mockAuth.signOut());
-      verify(
-        () => mockLogger.e(
-          'Background: failed to save user data to Firestore',
-          error: exception,
-          stackTrace: any(named: 'stackTrace'),
-        ),
-      ).called(1);
-    });
+        verify(mockUser.reload).called(1);
+        verify(() => mockDbService.saveUserData(mockUser)).called(1);
+        verifyNever(() => mockAuth.signOut());
+        verify(
+          () => mockLogger.e(
+            'Background: failed to save user data to Firestore',
+            error: exception,
+            stackTrace: any(named: 'stackTrace'),
+          ),
+        ).called(1);
+      },
+    );
   });
 
   group('signInWithGoogleForWearable', () {
@@ -230,37 +233,51 @@ void main() {
       expect(authService.errorKey, 'signInFailed');
     });
 
-    test('signInWithGoogle maps network-request-failed to networkError', () async {
-      final exception = FirebaseAuthException(code: 'network-request-failed');
-      when(() => mockAuth.signInWithCredential(any())).thenThrow(exception);
-      when(() => mockGoogleSignIn.signIn()).thenAnswer((_) async => mockGoogleAccount);
+    test(
+      'signInWithGoogle maps network-request-failed to networkError',
+      () async {
+        final exception = FirebaseAuthException(code: 'network-request-failed');
+        when(() => mockAuth.signInWithCredential(any())).thenThrow(exception);
+        when(
+          () => mockGoogleSignIn.signIn(),
+        ).thenAnswer((_) async => mockGoogleAccount);
 
-      final result = await authService.signInWithGoogle();
+        final result = await authService.signInWithGoogle();
 
-      expect(result, isFalse);
-      expect(authService.errorKey, 'networkError');
-    });
+        expect(result, isFalse);
+        expect(authService.errorKey, 'networkError');
+      },
+    );
 
-    test('signInWithGoogle links credential if currentUser is anonymous', () async {
-      // Arrange
-      final anonymousUser = MockUser();
-      when(() => anonymousUser.isAnonymous).thenReturn(true);
-      when(() => anonymousUser.linkWithCredential(any())).thenAnswer((_) async => MockUserCredential());
-      when(() => mockAuth.currentUser).thenReturn(anonymousUser);
-      when(() => mockGoogleSignIn.signIn()).thenAnswer((_) async => mockGoogleAccount);
+    test(
+      'signInWithGoogle links credential if currentUser is anonymous',
+      () async {
+        // Arrange
+        final anonymousUser = MockUser();
+        when(() => anonymousUser.isAnonymous).thenReturn(true);
+        when(
+          () => anonymousUser.linkWithCredential(any()),
+        ).thenAnswer((_) async => MockUserCredential());
+        when(() => mockAuth.currentUser).thenReturn(anonymousUser);
+        when(
+          () => mockGoogleSignIn.signIn(),
+        ).thenAnswer((_) async => mockGoogleAccount);
 
-      // Act
-      final result = await authService.signInWithGoogle();
+        // Act
+        final result = await authService.signInWithGoogle();
 
-      // Assert
-      expect(result, isTrue);
-      verify(() => anonymousUser.linkWithCredential(any())).called(1);
-    });
+        // Assert
+        expect(result, isTrue);
+        verify(() => anonymousUser.linkWithCredential(any())).called(1);
+      },
+    );
   });
 
   group('signInAnonymously & isGuest', () {
     test('signInAnonymously succeeds and logs', () async {
-      when(() => mockAuth.signInAnonymously()).thenAnswer((_) async => MockUserCredential());
+      when(
+        () => mockAuth.signInAnonymously(),
+      ).thenAnswer((_) async => MockUserCredential());
 
       final result = await authService.signInAnonymously();
 

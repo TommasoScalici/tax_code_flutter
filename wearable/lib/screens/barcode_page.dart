@@ -60,8 +60,10 @@ class _BarcodePageState extends State<BarcodePage> {
 
   void _onPointerSignal(PointerSignalEvent event) {
     if (event is PointerScrollEvent && _scrollController.hasClients) {
-      final target = (_scrollController.offset + event.scrollDelta.dy)
-          .clamp(0.0, _scrollController.position.maxScrollExtent);
+      final target = (_scrollController.offset + event.scrollDelta.dy).clamp(
+        0.0,
+        _scrollController.position.maxScrollExtent,
+      );
       _scrollController.jumpTo(target);
     }
   }
@@ -100,7 +102,8 @@ class _BarcodePageState extends State<BarcodePage> {
         onHorizontalDragEnd: (details) {
           // Swipe from left to right dismisses the screen:
           // Triggers on either quick flick (velocity > 150) or steady drag (distance > 45px).
-          if ((details.primaryVelocity ?? 0.0) > 150.0 || _dragDistance > 45.0) {
+          if ((details.primaryVelocity ?? 0.0) > 150.0 ||
+              _dragDistance > 45.0) {
             Navigator.of(context).maybePop();
           }
         },
@@ -118,7 +121,9 @@ class _BarcodePageState extends State<BarcodePage> {
                   // Contact name if present (with safe horizontal margins and multi-line wrapping)
                   if (fullName.isNotEmpty) ...[
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.compact),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.compact,
+                      ),
                       child: Text(
                         fullName,
                         style: WearTypography.cardTitle(),
@@ -190,7 +195,9 @@ class _BarcodePageState extends State<BarcodePage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            _isQrCode ? Icons.barcode_reader : Icons.qr_code_2_rounded,
+                            _isQrCode
+                                ? Icons.barcode_reader
+                                : Icons.qr_code_2_rounded,
                             size: WearDimensions.iconSmall,
                             color: AppColors.emeraldLight,
                           ),
@@ -198,7 +205,9 @@ class _BarcodePageState extends State<BarcodePage> {
                           Flexible(
                             child: Text(
                               _isQrCode ? l10n.barcode1D : l10n.qrCode2D,
-                              style: WearTypography.hint(color: AppColors.emeraldLight),
+                              style: WearTypography.hint(
+                                color: AppColors.emeraldLight,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -210,11 +219,15 @@ class _BarcodePageState extends State<BarcodePage> {
 
                   const SizedBox(height: AppSpacing.xs),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg,
+                    ),
                     child: Text(
                       l10n.swipeToClose,
                       style: WearTypography.hint(
-                        color: AppColors.darkOnSurfaceVariant.withValues(alpha: AppOpacity.medium),
+                        color: AppColors.darkOnSurfaceVariant.withValues(
+                          alpha: AppOpacity.medium,
+                        ),
                       ),
                       textAlign: TextAlign.center,
                     ),

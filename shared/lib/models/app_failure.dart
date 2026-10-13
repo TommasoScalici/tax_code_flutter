@@ -45,7 +45,8 @@ final class BirthplaceNotFoundFailure extends TaxCodeApiServerException {
   const BirthplaceNotFoundFailure() : super('birthplace-not-found');
 
   @override
-  String toString() => 'BirthplaceNotFoundFailure: Birthplace not found in database.';
+  String toString() =>
+      'BirthplaceNotFoundFailure: Birthplace not found in database.';
 }
 
 /// Thrown or emitted when the selected birthplace does not have a valid
@@ -54,7 +55,8 @@ final class MissingBirthplaceCodeFailure extends TaxCodeApiServerException {
   const MissingBirthplaceCodeFailure() : super('missing-birthplace-code');
 
   @override
-  String toString() => 'MissingBirthplaceCodeFailure: Missing Belfiore code for birthplace.';
+  String toString() =>
+      'MissingBirthplaceCodeFailure: Missing Belfiore code for birthplace.';
 }
 
 /// Thrown or emitted when local tax code generation encounters inconsistent or invalid data.
@@ -83,7 +85,8 @@ final class RateLimitFailure extends AppFailure {
   const RateLimitFailure();
 
   @override
-  String toString() => 'RateLimitFailure: Request quota or rate limit exceeded.';
+  String toString() =>
+      'RateLimitFailure: Request quota or rate limit exceeded.';
 }
 
 /// Thrown or emitted when authentication credentials or user session have expired.
@@ -91,7 +94,8 @@ final class SessionExpiredFailure extends AppFailure {
   const SessionExpiredFailure();
 
   @override
-  String toString() => 'SessionExpiredFailure: Session has expired. Please sign in again.';
+  String toString() =>
+      'SessionExpiredFailure: Session has expired. Please sign in again.';
 }
 
 /// Thrown or emitted when remote cloud services are temporarily unavailable or down.
@@ -99,7 +103,8 @@ final class ServiceUnavailableFailure extends AppFailure {
   const ServiceUnavailableFailure();
 
   @override
-  String toString() => 'ServiceUnavailableFailure: Remote service is unavailable.';
+  String toString() =>
+      'ServiceUnavailableFailure: Remote service is unavailable.';
 }
 
 /// Thrown or emitted when an operation times out waiting for a remote response.
@@ -107,7 +112,8 @@ final class DeadlineExceededFailure extends AppFailure {
   const DeadlineExceededFailure();
 
   @override
-  String toString() => 'DeadlineExceededFailure: Operation deadline was exceeded.';
+  String toString() =>
+      'DeadlineExceededFailure: Operation deadline was exceeded.';
 }
 
 /// Thrown or emitted when an interactive or anonymous authentication attempt fails.
@@ -123,7 +129,8 @@ final class ReauthFailedFailure extends AppFailure {
   const ReauthFailedFailure();
 
   @override
-  String toString() => 'ReauthFailedFailure: Re-authentication cancelled or failed.';
+  String toString() =>
+      'ReauthFailedFailure: Re-authentication cancelled or failed.';
 }
 
 /// Catch-all failure for unmapped or generic exceptions.

@@ -69,22 +69,39 @@ abstract final class AppSpacing {
   static const EdgeInsets screenMargin = EdgeInsets.symmetric(horizontal: lg);
 
   /// Standard input and action tile padding: horizontal 16.0 pt, vertical 14.0 pt.
-  static const EdgeInsets paddingField = EdgeInsets.symmetric(horizontal: lg, vertical: fieldVertical);
+  static const EdgeInsets paddingField = EdgeInsets.symmetric(
+    horizontal: lg,
+    vertical: fieldVertical,
+  );
 
   /// Standard vertical field and action padding: vertical 14.0 pt.
-  static const EdgeInsets paddingFieldVertical = EdgeInsets.symmetric(vertical: fieldVertical);
+  static const EdgeInsets paddingFieldVertical = EdgeInsets.symmetric(
+    vertical: fieldVertical,
+  );
 
   /// Form field top label insets: left 4.0 pt, bottom 6.0 pt.
-  static const EdgeInsets labelPadding = EdgeInsets.only(left: xs, bottom: badgeGap);
+  static const EdgeInsets labelPadding = EdgeInsets.only(
+    left: xs,
+    bottom: badgeGap,
+  );
 
   /// Form field validation error insets: left 8.0 pt, top 6.0 pt.
-  static const EdgeInsets errorPadding = EdgeInsets.only(left: sm, top: badgeGap);
+  static const EdgeInsets errorPadding = EdgeInsets.only(
+    left: sm,
+    top: badgeGap,
+  );
 
   /// Standard sticky bottom bar padding: horizontal 20.0 pt, vertical 14.0 pt.
-  static const EdgeInsets paddingStickyBar = EdgeInsets.symmetric(horizontal: card, vertical: fieldVertical);
+  static const EdgeInsets paddingStickyBar = EdgeInsets.symmetric(
+    horizontal: card,
+    vertical: fieldVertical,
+  );
 
   /// Compact badge padding: horizontal 8.0 pt, vertical 3.0 pt.
-  static const EdgeInsets paddingBadge = EdgeInsets.symmetric(horizontal: sm, vertical: badgeVertical);
+  static const EdgeInsets paddingBadge = EdgeInsets.symmetric(
+    horizontal: sm,
+    vertical: badgeVertical,
+  );
 }
 
 /// Centralized corner radius design tokens.
@@ -126,37 +143,55 @@ abstract final class AppRadii {
   // Standard BorderRadius Presets
   // ---------------------------------------------------------------------------
   /// Circular border radius of 2.0 pt.
-  static const BorderRadius borderHandle = BorderRadius.all(Radius.circular(handle));
+  static const BorderRadius borderHandle = BorderRadius.all(
+    Radius.circular(handle),
+  );
 
   /// Circular border radius of 6.0 pt for small badges and tags.
-  static const BorderRadius borderBadge = BorderRadius.all(Radius.circular(badge));
+  static const BorderRadius borderBadge = BorderRadius.all(
+    Radius.circular(badge),
+  );
 
   /// Circular border radius of 8.0 pt.
   static const BorderRadius borderSm = BorderRadius.all(Radius.circular(sm));
 
   /// Circular border radius of 10.0 pt.
-  static const BorderRadius borderCompact = BorderRadius.all(Radius.circular(compact));
+  static const BorderRadius borderCompact = BorderRadius.all(
+    Radius.circular(compact),
+  );
 
   /// Circular border radius of 12.0 pt.
-  static const BorderRadius borderInner = BorderRadius.all(Radius.circular(inner));
+  static const BorderRadius borderInner = BorderRadius.all(
+    Radius.circular(inner),
+  );
 
   /// Circular border radius of 14.0 pt.
-  static const BorderRadius borderInput = BorderRadius.all(Radius.circular(input));
+  static const BorderRadius borderInput = BorderRadius.all(
+    Radius.circular(input),
+  );
 
   /// Circular border radius of 16.0 pt.
   static const BorderRadius borderMd = BorderRadius.all(Radius.circular(md));
 
   /// Circular border radius of 20.0 pt.
-  static const BorderRadius borderCard = BorderRadius.all(Radius.circular(card));
+  static const BorderRadius borderCard = BorderRadius.all(
+    Radius.circular(card),
+  );
 
   /// Circular border radius of 24.0 pt.
-  static const BorderRadius borderDialog = BorderRadius.all(Radius.circular(dialog));
+  static const BorderRadius borderDialog = BorderRadius.all(
+    Radius.circular(dialog),
+  );
 
   /// Modal bottom sheet top rounded border radius: 28.0 pt.
-  static const BorderRadius borderSheet = BorderRadius.vertical(top: Radius.circular(sheet));
+  static const BorderRadius borderSheet = BorderRadius.vertical(
+    top: Radius.circular(sheet),
+  );
 
   /// Stadium border radius of 999.0 pt.
-  static const BorderRadius borderPill = BorderRadius.all(Radius.circular(pill));
+  static const BorderRadius borderPill = BorderRadius.all(
+    Radius.circular(pill),
+  );
 }
 
 /// Centralized opacity tokens for consistent alpha channels across dark/light surfaces.
@@ -348,7 +383,10 @@ abstract final class AppDimensions {
   static const double qrCodeSize = 110.0;
 
   /// Bottom sheet theme drag handle size preset: 36.0 x 4.0 pt.
-  static const Size dragHandleThemeSize = Size(dragHandleThemeWidth, dragHandleHeight);
+  static const Size dragHandleThemeSize = Size(
+    dragHandleThemeWidth,
+    dragHandleHeight,
+  );
 }
 
 /// Centralized typographic font size constants.

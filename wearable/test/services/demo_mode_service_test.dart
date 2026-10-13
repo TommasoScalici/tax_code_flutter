@@ -17,7 +17,10 @@ void main() {
       final contacts = demoModeService.demoContacts;
       expect(contacts, isNotEmpty);
       expect(contacts.length, greaterThanOrEqualTo(2));
-      expect(contacts.any((c) => c.firstName == 'Mario' && c.lastName == 'Rossi'), isTrue);
+      expect(
+        contacts.any((c) => c.firstName == 'Mario' && c.lastName == 'Rossi'),
+        isTrue,
+      );
       expect(contacts.every((c) => c.taxCode.isNotEmpty), isTrue);
     });
 

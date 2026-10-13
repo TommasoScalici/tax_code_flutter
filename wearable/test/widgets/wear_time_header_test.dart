@@ -8,11 +8,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: WearTheme.darkTheme,
-        home: const Scaffold(
-          body: Center(
-            child: WearTimeHeader(),
-          ),
-        ),
+        home: const Scaffold(body: Center(child: WearTimeHeader())),
       ),
     );
 

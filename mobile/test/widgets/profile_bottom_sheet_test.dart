@@ -93,8 +93,9 @@ void main() {
       ),
     );
 
-    when(() => mockInAppReviewService.openStoreListing())
-        .thenAnswer((_) async {});
+    when(
+      () => mockInAppReviewService.openStoreListing(),
+    ).thenAnswer((_) async {});
   });
 
   Widget buildTestApp({
@@ -107,7 +108,8 @@ void main() {
         ChangeNotifierProvider<AuthService>.value(value: mockAuthService),
         ChangeNotifierProvider<SyncService>.value(value: mockSyncService),
         ChangeNotifierProvider<HomePageController>.value(
-            value: mockHomeController),
+          value: mockHomeController,
+        ),
         Provider<InfoService>.value(value: mockInfoService),
         Provider<InAppReviewService>.value(value: mockInAppReviewService),
         Provider<Logger>.value(value: mockLogger),
@@ -141,41 +143,45 @@ void main() {
 
   group('ProfileBottomSheet Widget Tests', () {
     testWidgets(
-        'renders authenticated Google user profile, sync pill, and all action cards in Italian',
-        (tester) async {
-      setLargeViewport(tester);
+      'renders authenticated Google user profile, sync pill, and all action cards in Italian',
+      (tester) async {
+        setLargeViewport(tester);
 
-      await tester.pumpWidget(
-        buildTestApp(child: const ProfileBottomSheet(isEmbedded: true)),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          buildTestApp(child: const ProfileBottomSheet(isEmbedded: true)),
+        );
+        await tester.pumpAndSettle();
 
-      // Header
-      expect(find.text('Account & Impostazioni'), findsOneWidget);
+        // Header
+        expect(find.text('Account & Impostazioni'), findsOneWidget);
 
-      // Section 1: User & Sync
-      expect(find.text('Mario Rossi'), findsOneWidget);
-      expect(find.text('mario.rossi@gmail.com'), findsOneWidget);
-      expect(find.text('Google'), findsOneWidget);
-      expect(find.textContaining('Sincronizzazione attiva'), findsOneWidget);
-      expect(find.textContaining('2 codici salvati'), findsOneWidget);
+        // Section 1: User & Sync
+        expect(find.text('Mario Rossi'), findsOneWidget);
+        expect(find.text('mario.rossi@gmail.com'), findsOneWidget);
+        expect(find.text('Google'), findsOneWidget);
+        expect(find.textContaining('Sincronizzazione attiva'), findsOneWidget);
+        expect(find.textContaining('2 codici salvati'), findsOneWidget);
 
-      // Section 2: Data & Utilities
-      expect(find.text('DATI E FUNZIONI'), findsOneWidget);
-      expect(find.text('Esporta codici'), findsOneWidget);
-      expect(find.text('Backup offline in formato JSON o CSV'), findsOneWidget);
-      expect(find.text('Valuta sul Play Store'), findsOneWidget);
+        // Section 2: Data & Utilities
+        expect(find.text('DATI E FUNZIONI'), findsOneWidget);
+        expect(find.text('Esporta codici'), findsOneWidget);
+        expect(
+          find.text('Backup offline in formato JSON o CSV'),
+          findsOneWidget,
+        );
+        expect(find.text('Valuta sul Play Store'), findsOneWidget);
 
-      // Section 3: Legal
-      expect(find.text('INFORMAZIONI LEGALI'), findsOneWidget);
-      expect(find.text("Informazioni sull'app"), findsOneWidget);
-      expect(find.textContaining('Versione 2.0.0'), findsOneWidget);
+        // Section 3: Legal
+        expect(find.text('INFORMAZIONI LEGALI'), findsOneWidget);
+        expect(find.text("Informazioni sull'app"), findsOneWidget);
+        expect(find.textContaining('Versione 2.0.0'), findsOneWidget);
 
-      // Section 4: Account Management
-      expect(find.text('GESTIONE ACCOUNT'), findsOneWidget);
-      expect(find.text('Esci'), findsOneWidget);
-      expect(find.text('Elimina Account'), findsOneWidget);
-    });
+        // Section 4: Account Management
+        expect(find.text('GESTIONE ACCOUNT'), findsOneWidget);
+        expect(find.text('Esci'), findsOneWidget);
+        expect(find.text('Elimina Account'), findsOneWidget);
+      },
+    );
 
     testWidgets('renders all translated elements in English', (tester) async {
       setLargeViewport(tester);
@@ -200,72 +206,84 @@ void main() {
     });
 
     testWidgets(
-        'renders guest mode with upgrade banner and tapping Google sign in calls authService',
-        (tester) async {
-      setLargeViewport(tester);
+      'renders guest mode with upgrade banner and tapping Google sign in calls authService',
+      (tester) async {
+        setLargeViewport(tester);
 
-      when(() => mockAuthService.isGuest).thenReturn(true);
-      when(() => mockAuthService.currentUser).thenReturn(null);
-      when(() => mockAuthService.signInWithGoogle())
-          .thenAnswer((_) async => true);
+        when(() => mockAuthService.isGuest).thenReturn(true);
+        when(() => mockAuthService.currentUser).thenReturn(null);
+        when(
+          () => mockAuthService.signInWithGoogle(),
+        ).thenAnswer((_) async => true);
 
-      await tester.pumpWidget(
-        buildTestApp(child: const ProfileBottomSheet(isEmbedded: true)),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          buildTestApp(child: const ProfileBottomSheet(isEmbedded: true)),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Ospite'), findsAtLeastNWidgets(2)); // Name + Badge
-      expect(find.text('Attiva il Backup Cloud'), findsOneWidget);
-      expect(find.text('Continua con Google'), findsOneWidget);
+        expect(find.text('Ospite'), findsAtLeastNWidgets(2)); // Name + Badge
+        expect(find.text('Attiva il Backup Cloud'), findsOneWidget);
+        expect(find.text('Continua con Google'), findsOneWidget);
 
-      await tester.tap(find.byKey(const Key('profile_guest_google_signin_button')));
-      await tester.pump();
+        await tester.tap(
+          find.byKey(const Key('profile_guest_google_signin_button')),
+        );
+        await tester.pump();
 
-      verify(() => mockAuthService.signInWithGoogle()).called(1);
-    });
+        verify(() => mockAuthService.signInWithGoogle()).called(1);
+      },
+    );
 
     testWidgets(
-        "tapping Informazioni sull'app navigates to App Info sub-view and back button returns to main view",
-        (tester) async {
-      setLargeViewport(tester);
+      "tapping Informazioni sull'app navigates to App Info sub-view and back button returns to main view",
+      (tester) async {
+        setLargeViewport(tester);
 
-      await tester.pumpWidget(
-        buildTestApp(child: const ProfileBottomSheet(isEmbedded: true)),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          buildTestApp(child: const ProfileBottomSheet(isEmbedded: true)),
+        );
+        await tester.pumpAndSettle();
 
-      // Initially on main view
-      expect(find.text('Account & Impostazioni'), findsOneWidget);
-      expect(find.byKey(const Key('profile_app_info_tile')), findsOneWidget);
+        // Initially on main view
+        expect(find.text('Account & Impostazioni'), findsOneWidget);
+        expect(find.byKey(const Key('profile_app_info_tile')), findsOneWidget);
 
-      // Tap on App Info tile
-      await tester.tap(find.byKey(const Key('profile_app_info_tile')));
-      await tester.pumpAndSettle();
+        // Tap on App Info tile
+        await tester.tap(find.byKey(const Key('profile_app_info_tile')));
+        await tester.pumpAndSettle();
 
-      // Now on App Info view
-      expect(find.text("Informazioni sull'app"), findsOneWidget);
-      expect(find.text('Codice Fiscale'), findsOneWidget);
-      expect(find.text('v2.0.0 (1)'), findsOneWidget);
-      expect(find.text('tommasoscalici.taxcode'), findsOneWidget);
-      expect(find.text('Disclaimer Istituzionale'), findsOneWidget);
-      expect(find.text('Privacy & Protezione Dati'), findsOneWidget);
-      expect(find.byKey(const Key('profile_open_online_policy_button')), findsOneWidget);
-      expect(find.text('Sviluppata da Tommaso Scalici'), findsOneWidget);
+        // Now on App Info view
+        expect(find.text("Informazioni sull'app"), findsOneWidget);
+        expect(find.text('Codice Fiscale'), findsOneWidget);
+        expect(find.text('v2.0.0 (1)'), findsOneWidget);
+        expect(find.text('tommasoscalici.taxcode'), findsOneWidget);
+        expect(find.text('Disclaimer Istituzionale'), findsOneWidget);
+        expect(find.text('Privacy & Protezione Dati'), findsOneWidget);
+        expect(
+          find.byKey(const Key('profile_open_online_policy_button')),
+          findsOneWidget,
+        );
+        expect(find.text('Sviluppata da Tommaso Scalici'), findsOneWidget);
 
-      // Back button in header is visible
-      expect(find.byKey(const Key('profile_sheet_back_button')), findsOneWidget);
+        // Back button in header is visible
+        expect(
+          find.byKey(const Key('profile_sheet_back_button')),
+          findsOneWidget,
+        );
 
-      // Tap back button
-      await tester.tap(find.byKey(const Key('profile_sheet_back_button')));
-      await tester.pumpAndSettle();
+        // Tap back button
+        await tester.tap(find.byKey(const Key('profile_sheet_back_button')));
+        await tester.pumpAndSettle();
 
-      // Back on main view
-      expect(find.text('Account & Impostazioni'), findsOneWidget);
-      expect(find.byKey(const Key('profile_app_info_tile')), findsOneWidget);
-    });
+        // Back on main view
+        expect(find.text('Account & Impostazioni'), findsOneWidget);
+        expect(find.byKey(const Key('profile_app_info_tile')), findsOneWidget);
+      },
+    );
 
-    testWidgets('tapping Valuta sul Play Store calls inAppReviewService',
-        (tester) async {
+    testWidgets('tapping Valuta sul Play Store calls inAppReviewService', (
+      tester,
+    ) async {
       setLargeViewport(tester);
 
       await tester.pumpWidget(
@@ -279,8 +297,9 @@ void main() {
       verify(() => mockInAppReviewService.openStoreListing()).called(1);
     });
 
-    testWidgets('tapping Esporta codici opens ExportDataBottomSheet',
-        (tester) async {
+    testWidgets('tapping Esporta codici opens ExportDataBottomSheet', (
+      tester,
+    ) async {
       setLargeViewport(tester);
 
       await tester.pumpWidget(
@@ -294,8 +313,9 @@ void main() {
       expect(find.byType(ExportDataBottomSheet), findsOneWidget);
     });
 
-    testWidgets("tapping Esci dall'account calls authService.signOut",
-        (tester) async {
+    testWidgets("tapping Esci dall'account calls authService.signOut", (
+      tester,
+    ) async {
       setLargeViewport(tester);
 
       when(() => mockAuthService.signOut()).thenAnswer((_) async {});
@@ -312,111 +332,123 @@ void main() {
     });
 
     testWidgets(
-        'tapping Elimina account e dati shows confirmation dialog and cancel dismisses it',
-        (tester) async {
-      setLargeViewport(tester);
+      'tapping Elimina account e dati shows confirmation dialog and cancel dismisses it',
+      (tester) async {
+        setLargeViewport(tester);
 
-      await tester.pumpWidget(
-        buildTestApp(child: const ProfileBottomSheet(isEmbedded: true)),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          buildTestApp(child: const ProfileBottomSheet(isEmbedded: true)),
+        );
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.byKey(const Key('profile_delete_account_tile')));
-      await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('profile_delete_account_tile')));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(AlertDialog), findsOneWidget);
-      expect(find.text('Conferma Eliminazione'), findsOneWidget);
+        expect(find.byType(AlertDialog), findsOneWidget);
+        expect(find.text('Conferma Eliminazione'), findsOneWidget);
 
-      await tester.tap(find.text('Annulla'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Annulla'));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(AlertDialog), findsNothing);
-      verifyNever(() => mockAuthService.deleteUserAccount());
-    });
+        expect(find.byType(AlertDialog), findsNothing);
+        verifyNever(() => mockAuthService.deleteUserAccount());
+      },
+    );
 
     testWidgets(
-        'confirming account deletion calls authService.deleteUserAccount',
-        (tester) async {
-      setLargeViewport(tester);
+      'confirming account deletion calls authService.deleteUserAccount',
+      (tester) async {
+        setLargeViewport(tester);
 
-      when(() => mockAuthService.deleteUserAccount()).thenAnswer((_) async {});
+        when(
+          () => mockAuthService.deleteUserAccount(),
+        ).thenAnswer((_) async {});
 
-      await tester.pumpWidget(
-        buildTestApp(child: const ProfileBottomSheet(isEmbedded: true)),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          buildTestApp(child: const ProfileBottomSheet(isEmbedded: true)),
+        );
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.byKey(const Key('profile_delete_account_tile')));
-      await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('profile_delete_account_tile')));
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Elimina'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Elimina'));
+        await tester.pumpAndSettle();
 
-      verify(() => mockAuthService.deleteUserAccount()).called(1);
-    });
+        verify(() => mockAuthService.deleteUserAccount()).called(1);
+      },
+    );
 
-    testWidgets('modal bottom sheet show displays and dismisses via close button',
-        (tester) async {
-      setLargeViewport(tester);
+    testWidgets(
+      'modal bottom sheet show displays and dismisses via close button',
+      (tester) async {
+        setLargeViewport(tester);
 
-      await tester.pumpWidget(
-        buildTestApp(
-          child: Builder(
-            builder: (ctx) => ElevatedButton(
-              onPressed: () => ProfileBottomSheet.show<void>(ctx),
-              child: const Text('Open'),
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Open bottom sheet
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(ProfileBottomSheet), findsOneWidget);
-      expect(find.byKey(const Key('profile_sheet_close_button')), findsOneWidget);
-
-      // Close bottom sheet
-      await tester.tap(find.byKey(const Key('profile_sheet_close_button')));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(ProfileBottomSheet), findsNothing);
-    });
-
-    testWidgets('modal bottom sheet with startAtAppInfo: true opens directly to App Info view',
-        (tester) async {
-      setLargeViewport(tester);
-
-      await tester.pumpWidget(
-        buildTestApp(
-          child: Builder(
-            builder: (ctx) => ElevatedButton(
-              onPressed: () => ProfileBottomSheet.show<void>(
-                ctx,
-                startAtAppInfo: true,
+        await tester.pumpWidget(
+          buildTestApp(
+            child: Builder(
+              builder: (ctx) => ElevatedButton(
+                onPressed: () => ProfileBottomSheet.show<void>(ctx),
+                child: const Text('Open'),
               ),
-              child: const Text('Open Info'),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Open Info'));
-      await tester.pumpAndSettle();
+        // Open bottom sheet
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(ProfileBottomSheet), findsOneWidget);
-      expect(find.text("Informazioni sull'app"), findsOneWidget);
-      expect(find.text('Disclaimer Istituzionale'), findsOneWidget);
-      expect(find.byKey(const Key('profile_open_online_policy_button')), findsOneWidget);
+        expect(find.byType(ProfileBottomSheet), findsOneWidget);
+        expect(
+          find.byKey(const Key('profile_sheet_close_button')),
+          findsOneWidget,
+        );
 
-      // Back button pops modal
-      await tester.tap(find.byKey(const Key('profile_sheet_back_button')));
-      await tester.pumpAndSettle();
+        // Close bottom sheet
+        await tester.tap(find.byKey(const Key('profile_sheet_close_button')));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(ProfileBottomSheet), findsNothing);
-    });
+        expect(find.byType(ProfileBottomSheet), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'modal bottom sheet with startAtAppInfo: true opens directly to App Info view',
+      (tester) async {
+        setLargeViewport(tester);
+
+        await tester.pumpWidget(
+          buildTestApp(
+            child: Builder(
+              builder: (ctx) => ElevatedButton(
+                onPressed: () =>
+                    ProfileBottomSheet.show<void>(ctx, startAtAppInfo: true),
+                child: const Text('Open Info'),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Open Info'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ProfileBottomSheet), findsOneWidget);
+        expect(find.text("Informazioni sull'app"), findsOneWidget);
+        expect(find.text('Disclaimer Istituzionale'), findsOneWidget);
+        expect(
+          find.byKey(const Key('profile_open_online_policy_button')),
+          findsOneWidget,
+        );
+
+        // Back button pops modal
+        await tester.tap(find.byKey(const Key('profile_sheet_back_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ProfileBottomSheet), findsNothing);
+      },
+    );
   });
 }

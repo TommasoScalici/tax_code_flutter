@@ -4,19 +4,16 @@ import 'package:tax_code_flutter/widgets/responsive_layout.dart';
 
 void main() {
   group('ResponsiveLayout Widget Tests', () {
-    testWidgets('renders child correctly on mobile screen size',
-        (tester) async {
+    testWidgets('renders child correctly on mobile screen size', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(390, 844);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: ResponsiveLayout(
-              child: Text('Mobile Content'),
-            ),
-          ),
+          home: Scaffold(body: ResponsiveLayout(child: Text('Mobile Content'))),
         ),
       );
 
@@ -45,12 +42,14 @@ void main() {
       );
 
       final renderBox =
-          tester.renderObject(find.byKey(const Key('content-box'))) as RenderBox;
+          tester.renderObject(find.byKey(const Key('content-box')))
+              as RenderBox;
       expect(renderBox.size.width, equals(500.0));
     });
 
-    testWidgets('builder constructor provides isWide flag accurately',
-        (tester) async {
+    testWidgets('builder constructor provides isWide flag accurately', (
+      tester,
+    ) async {
       // Mobile screen: width 400 (< 600)
       tester.view.physicalSize = const Size(400, 800);
       tester.view.devicePixelRatio = 1.0;
@@ -92,8 +91,9 @@ void main() {
       expect(find.text('Wide Mode'), findsOneWidget);
     });
 
-    testWidgets('utility helpers report correct classifications',
-        (tester) async {
+    testWidgets('utility helpers report correct classifications', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(700, 1000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -131,11 +131,7 @@ void main() {
 
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: ResponsiveLayout(
-              child: Text('With SafeArea'),
-            ),
-          ),
+          home: Scaffold(body: ResponsiveLayout(child: Text('With SafeArea'))),
         ),
       );
 

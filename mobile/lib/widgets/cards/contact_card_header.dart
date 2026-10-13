@@ -9,10 +9,7 @@ class ContactCardHeader extends StatelessWidget {
   final Contact contact;
 
   /// Creates a [ContactCardHeader].
-  const ContactCardHeader({
-    required this.contact,
-    super.key,
-  });
+  const ContactCardHeader({required this.contact, super.key});
 
   @override
   Widget build(BuildContext context) {

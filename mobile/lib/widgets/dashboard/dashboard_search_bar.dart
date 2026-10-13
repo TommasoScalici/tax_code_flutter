@@ -135,11 +135,15 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
 
     final containerColor = isDark
         ? colorScheme.surfaceContainerHigh
-        : colorScheme.surfaceContainerHighest.withValues(alpha: AppOpacity.divider);
+        : colorScheme.surfaceContainerHighest.withValues(
+            alpha: AppOpacity.divider,
+          );
 
     final borderColor = _isFocused
         ? colorScheme.primary
-        : colorScheme.outlineVariant.withValues(alpha: isDark ? AppOpacity.outline : AppOpacity.muted);
+        : colorScheme.outlineVariant.withValues(
+            alpha: isDark ? AppOpacity.outline : AppOpacity.muted,
+          );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +159,9 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
             borderRadius: AppRadii.borderPill,
             border: Border.all(
               color: borderColor,
-              width: _isFocused ? AppDimensions.borderThick : AppDimensions.borderDefault,
+              width: _isFocused
+                  ? AppDimensions.borderThick
+                  : AppDimensions.borderDefault,
             ),
             boxShadow: _isFocused
                 ? [
@@ -178,7 +184,9 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                 size: AppDimensions.iconButton,
                 color: _isFocused
                     ? colorScheme.primary
-                    : colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.high),
+                    : colorScheme.onSurfaceVariant.withValues(
+                        alpha: AppOpacity.high,
+                      ),
               ),
               const SizedBox(width: AppSpacing.md),
 
@@ -200,13 +208,17 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                     filled: false,
                     fillColor: AppColors.transparent,
                     isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.md,
+                    ),
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     hintText: widget.hintText ?? l10n.search,
                     hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.medium),
+                      color: colorScheme.onSurfaceVariant.withValues(
+                        alpha: AppOpacity.medium,
+                      ),
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -256,7 +268,9 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                     borderRadius: AppRadii.borderPill,
                     border: Border.all(
                       color: colorScheme.primary.withValues(
-                        alpha: isDark ? AppOpacity.translucent : AppOpacity.glow,
+                        alpha: isDark
+                            ? AppOpacity.translucent
+                            : AppOpacity.glow,
                       ),
                     ),
                   ),

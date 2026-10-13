@@ -12,10 +12,7 @@ class ProfileLegalSection extends StatelessWidget {
   /// Callback executed to transition into the App Info sub-view.
   final VoidCallback onOpenAppInfo;
 
-  const ProfileLegalSection({
-    required this.onOpenAppInfo,
-    super.key,
-  });
+  const ProfileLegalSection({required this.onOpenAppInfo, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +23,7 @@ class ProfileLegalSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ProfileSectionHeader(
-          title: l10n.sectionLegalAndAppInfo.toUpperCase(),
-        ),
+        ProfileSectionHeader(title: l10n.sectionLegalAndAppInfo.toUpperCase()),
         const SizedBox(height: AppSpacing.sm),
         Container(
           decoration: BoxDecoration(
@@ -37,7 +32,8 @@ class ProfileLegalSection extends StatelessWidget {
             border: Border.all(color: theme.colorScheme.outlineVariant),
           ),
           child: FutureBuilder<PackageInfo>(
-            future: infoService?.getPackageInfo() ??
+            future:
+                infoService?.getPackageInfo() ??
                 Future.value(
                   PackageInfo(
                     appName: l10n.appName,
@@ -55,7 +51,10 @@ class ProfileLegalSection extends StatelessWidget {
                 iconBgColor: theme.colorScheme.surfaceContainerHigh,
                 title: l10n.appInfoTitle,
                 subtitle: l10n.appInfoSubtitle(version),
-                trailing: const Icon(Icons.chevron_right_rounded, size: AppDimensions.iconMd),
+                trailing: const Icon(
+                  Icons.chevron_right_rounded,
+                  size: AppDimensions.iconMd,
+                ),
                 onTap: onOpenAppInfo,
               );
             },

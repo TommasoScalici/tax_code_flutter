@@ -10,7 +10,8 @@ class TaxCodeData extends Equatable {
 
   const TaxCodeData({required this.fiscalCode});
 
-  factory TaxCodeData.fromJson(Map<String, dynamic> json) => _$TaxCodeDataFromJson(json);
+  factory TaxCodeData.fromJson(Map<String, dynamic> json) =>
+      _$TaxCodeDataFromJson(json);
   Map<String, dynamic> toJson() => _$TaxCodeDataToJson(this);
 
   @override

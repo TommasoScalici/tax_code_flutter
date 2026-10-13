@@ -18,11 +18,7 @@ void main() {
     lastName: 'Rossi',
     gender: 'M',
     taxCode: 'RSSMRA80A01H501U',
-    birthPlace: const Birthplace(
-      name: 'Roma',
-      state: 'RM',
-      code: 'H501',
-    ),
+    birthPlace: const Birthplace(name: 'Roma', state: 'RM', code: 'H501'),
     birthDate: DateTime(1980),
     listIndex: 0,
   );
@@ -111,7 +107,10 @@ void main() {
 
       final lines = output.split('\r\n');
       // header + row 1 + row 2 (which spans 2 lines due to embedded \n) + trailing empty
-      expect(lines[0], 'ID,Nome,Cognome,Sesso,CodiceFiscale,DataDiNascita,Comune,Provincia,CodiceCatastale');
+      expect(
+        lines[0],
+        'ID,Nome,Cognome,Sesso,CodiceFiscale,DataDiNascita,Comune,Provincia,CodiceCatastale',
+      );
       expect(
         lines[1],
         'id-1,Mario,Rossi,M,RSSMRA80A01H501U,1980-01-01,Roma,RM,H501',

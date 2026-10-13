@@ -16,7 +16,7 @@ class DefaultCameraService implements CameraService {
   final Logger _logger;
 
   DefaultCameraService({required Logger logger}) : _logger = logger;
-  
+
   @override
   Future<List<CameraDescription>> getAvailableCameras() async {
     try {

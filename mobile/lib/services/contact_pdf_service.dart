@@ -28,8 +28,9 @@ class DefaultContactPdfService implements ContactPdfService {
   const DefaultContactPdfService();
 
   static final DateFormat _birthDateFormat = DateFormat('dd/MM/yyyy');
-  static final DateFormat _generationDateFormat =
-      DateFormat('dd/MM/yyyy HH:mm');
+  static final DateFormat _generationDateFormat = DateFormat(
+    'dd/MM/yyyy HH:mm',
+  );
 
   @override
   Future<Uint8List> generateContactPdf({
@@ -71,7 +72,9 @@ class DefaultContactPdfService implements ContactPdfService {
                 ),
                 decoration: pw.BoxDecoration(
                   color: emeraldColor,
-                  borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+                  borderRadius: const pw.BorderRadius.all(
+                    pw.Radius.circular(8),
+                  ),
                 ),
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -105,8 +108,9 @@ class DefaultContactPdfService implements ContactPdfService {
                       ),
                       decoration: const pw.BoxDecoration(
                         color: PdfColors.white,
-                        borderRadius:
-                            pw.BorderRadius.all(pw.Radius.circular(4)),
+                        borderRadius: pw.BorderRadius.all(
+                          pw.Radius.circular(4),
+                        ),
                       ),
                       child: pw.Text(
                         effectiveL10n.pdfPersonalUseBadge,
@@ -129,7 +133,9 @@ class DefaultContactPdfService implements ContactPdfService {
                 decoration: pw.BoxDecoration(
                   color: surfaceColor,
                   border: pw.Border.all(color: borderColor, width: 1.2),
-                  borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+                  borderRadius: const pw.BorderRadius.all(
+                    pw.Radius.circular(8),
+                  ),
                 ),
                 child: pw.Column(
                   children: [
@@ -162,7 +168,9 @@ class DefaultContactPdfService implements ContactPdfService {
               pw.Container(
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: borderColor),
-                  borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+                  borderRadius: const pw.BorderRadius.all(
+                    pw.Radius.circular(8),
+                  ),
                 ),
                 child: pw.Column(
                   children: [
@@ -188,15 +196,32 @@ class DefaultContactPdfService implements ContactPdfService {
                         ),
                       ),
                     ),
-                    _buildTableRow(effectiveL10n.lastName, contact.lastName, darkTextColor,
-                        isFirst: true),
                     _buildTableRow(
-                        effectiveL10n.firstName, contact.firstName, darkTextColor),
-                    _buildTableRow(effectiveL10n.gender, contact.gender, darkTextColor),
+                      effectiveL10n.lastName,
+                      contact.lastName,
+                      darkTextColor,
+                      isFirst: true,
+                    ),
                     _buildTableRow(
-                        effectiveL10n.birthDate, birthDateStr, darkTextColor),
+                      effectiveL10n.firstName,
+                      contact.firstName,
+                      darkTextColor,
+                    ),
                     _buildTableRow(
-                        effectiveL10n.birthPlace, birthplaceStr, darkTextColor),
+                      effectiveL10n.gender,
+                      contact.gender,
+                      darkTextColor,
+                    ),
+                    _buildTableRow(
+                      effectiveL10n.birthDate,
+                      birthDateStr,
+                      darkTextColor,
+                    ),
+                    _buildTableRow(
+                      effectiveL10n.birthPlace,
+                      birthplaceStr,
+                      darkTextColor,
+                    ),
                     _buildTableRow(
                       effectiveL10n.pdfCadastralCodeLabel,
                       belfioreStr,
@@ -214,7 +239,9 @@ class DefaultContactPdfService implements ContactPdfService {
                 padding: const pw.EdgeInsets.all(16),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: borderColor),
-                  borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+                  borderRadius: const pw.BorderRadius.all(
+                    pw.Radius.circular(8),
+                  ),
                 ),
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -319,9 +346,7 @@ class DefaultContactPdfService implements ContactPdfService {
       decoration: pw.BoxDecoration(
         border: isLast
             ? null
-            : const pw.Border(
-                bottom: pw.BorderSide(color: PdfColors.grey200),
-              ),
+            : const pw.Border(bottom: pw.BorderSide(color: PdfColors.grey200)),
       ),
       child: pw.Row(
         children: [
@@ -329,10 +354,7 @@ class DefaultContactPdfService implements ContactPdfService {
             width: 170,
             child: pw.Text(
               label,
-              style: const pw.TextStyle(
-                fontSize: 10,
-                color: PdfColors.grey700,
-              ),
+              style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700),
             ),
           ),
           pw.Expanded(

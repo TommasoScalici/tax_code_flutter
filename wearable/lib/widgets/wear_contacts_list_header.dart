@@ -38,7 +38,9 @@ class WearContactsListHeader extends StatelessWidget {
               ),
               borderRadius: WearDimensions.borderPill,
               border: Border.all(
-                color: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.divider),
+                color: AppColors.emeraldPrimary.withValues(
+                  alpha: AppOpacity.divider,
+                ),
                 width: WearDimensions.borderThin,
               ),
             ),

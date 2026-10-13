@@ -63,9 +63,7 @@ List<SingleChildWidget> getAppProviders({
           DatabaseService(firestore: context.read<FirebaseFirestore>()),
     ),
     Provider<BirthplaceService>(
-      create: (context) => BirthplaceService(
-        logger: context.read<Logger>(),
-      ),
+      create: (context) => BirthplaceService(logger: context.read<Logger>()),
       dispose: (_, service) => service.dispose(),
     ),
     Provider<InfoService>(
@@ -80,12 +78,8 @@ List<SingleChildWidget> getAppProviders({
         shareAdapter: AppShareAdapter(),
       ),
     ),
-    Provider<DataExportService>(
-      create: (_) => const DataExportService(),
-    ),
-    Provider<ContactPdfService>(
-      create: (_) => const ContactPdfService(),
-    ),
+    Provider<DataExportService>(create: (_) => const DataExportService()),
+    Provider<ContactPdfService>(create: (_) => const ContactPdfService()),
     Provider<ContactCardImageService>(
       create: (_) => const ContactCardImageService(),
     ),

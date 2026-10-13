@@ -34,7 +34,9 @@ void main() {
   });
 
   group('DashboardHeader Widget Tests', () {
-    testWidgets('renders brand subtitle and dashboard title by default', (tester) async {
+    testWidgets('renders brand subtitle and dashboard title by default', (
+      tester,
+    ) async {
       setMobileSize(tester);
 
       await pumpApp(
@@ -53,7 +55,9 @@ void main() {
       expect(find.byType(UserAvatar), findsOneWidget);
     });
 
-    testWidgets('renders custom title and subtitle when provided', (tester) async {
+    testWidgets('renders custom title and subtitle when provided', (
+      tester,
+    ) async {
       setMobileSize(tester);
 
       await pumpApp(
@@ -71,7 +75,9 @@ void main() {
       expect(find.text('I Miei Documenti'), findsOneWidget);
     });
 
-    testWidgets('tapping theme button triggers onThemeToggle callback', (tester) async {
+    testWidgets('tapping theme button triggers onThemeToggle callback', (
+      tester,
+    ) async {
       setMobileSize(tester);
       var themeToggled = false;
 
@@ -87,7 +93,9 @@ void main() {
         mockAuthService: mockAuthService,
       );
 
-      final themeButton = find.byKey(const Key('dashboard_header_theme_button'));
+      final themeButton = find.byKey(
+        const Key('dashboard_header_theme_button'),
+      );
       expect(themeButton, findsOneWidget);
 
       await tester.tap(themeButton);
@@ -96,57 +104,69 @@ void main() {
       expect(themeToggled, isTrue);
     });
 
-    testWidgets('tapping cloud sync button triggers onSyncToggle callback when authenticated', (tester) async {
-      setMobileSize(tester);
-      var syncToggled = false;
+    testWidgets(
+      'tapping cloud sync button triggers onSyncToggle callback when authenticated',
+      (tester) async {
+        setMobileSize(tester);
+        var syncToggled = false;
 
-      await pumpApp(
-        tester,
-        Scaffold(
-          appBar: DashboardHeader(
-            onSyncToggle: () {
-              syncToggled = true;
-            },
+        await pumpApp(
+          tester,
+          Scaffold(
+            appBar: DashboardHeader(
+              onSyncToggle: () {
+                syncToggled = true;
+              },
+            ),
           ),
-        ),
-        mockAuthService: mockAuthService,
-      );
+          mockAuthService: mockAuthService,
+        );
 
-      final syncButton = find.byKey(const Key('dashboard_header_sync_button'));
-      expect(syncButton, findsOneWidget);
+        final syncButton = find.byKey(
+          const Key('dashboard_header_sync_button'),
+        );
+        expect(syncButton, findsOneWidget);
 
-      await tester.tap(syncButton);
-      await tester.pump();
+        await tester.tap(syncButton);
+        await tester.pump();
 
-      expect(syncToggled, isTrue);
-    });
+        expect(syncToggled, isTrue);
+      },
+    );
 
-    testWidgets('tapping cloud sync button as guest displays informative snackbar', (tester) async {
-      setMobileSize(tester);
-      when(() => mockAuthService.isGuest).thenReturn(true);
+    testWidgets(
+      'tapping cloud sync button as guest displays informative snackbar',
+      (tester) async {
+        setMobileSize(tester);
+        when(() => mockAuthService.isGuest).thenReturn(true);
 
-      await pumpApp(
-        tester,
-        const Scaffold(
-          appBar: DashboardHeader(),
-        ),
-        mockAuthService: mockAuthService,
-        locale: const Locale('it'),
-      );
+        await pumpApp(
+          tester,
+          const Scaffold(appBar: DashboardHeader()),
+          mockAuthService: mockAuthService,
+          locale: const Locale('it'),
+        );
 
-      final syncButton = find.byKey(const Key('dashboard_header_sync_button'));
-      expect(syncButton, findsOneWidget);
+        final syncButton = find.byKey(
+          const Key('dashboard_header_sync_button'),
+        );
+        expect(syncButton, findsOneWidget);
 
-      await tester.tap(syncButton);
-      await tester.pump();
+        await tester.tap(syncButton);
+        await tester.pump();
 
-      expect(
-        find.text('Accedi con Google per sincronizzare i tuoi codici tra dispositivi'),
-        findsOneWidget,
-      );
-    });
+        expect(
+          find.text(
+            'Accedi con Google per sincronizzare i tuoi codici tra dispositivi',
+          ),
+          findsOneWidget,
+        );
+      },
+    );
 
-    testWidgets('tapping profile avatar triggers onProfileTap callback', (tester) async {
+    testWidgets('tapping profile avatar triggers onProfileTap callback', (
+      tester,
+    ) async {
       setMobileSize(tester);
       var profileTapped = false;
 
@@ -171,21 +191,25 @@ void main() {
       expect(profileTapped, isTrue);
     });
 
-    testWidgets('shows cloud sync badge when user is authenticated with Google', (tester) async {
-      setMobileSize(tester);
-      when(() => mockAuthService.isGuest).thenReturn(false);
+    testWidgets(
+      'shows cloud sync badge when user is authenticated with Google',
+      (tester) async {
+        setMobileSize(tester);
+        when(() => mockAuthService.isGuest).thenReturn(false);
 
-      await pumpApp(
-        tester,
-        const Scaffold(
-          appBar: DashboardHeader(),
-        ),
-        mockAuthService: mockAuthService,
-        authStatus: AuthStatus.authenticated,
-      );
+        await pumpApp(
+          tester,
+          const Scaffold(appBar: DashboardHeader()),
+          mockAuthService: mockAuthService,
+          authStatus: AuthStatus.authenticated,
+        );
 
-      expect(find.byKey(const Key('dashboard_header_sync_badge')), findsOneWidget);
-    });
+        expect(
+          find.byKey(const Key('dashboard_header_sync_badge')),
+          findsOneWidget,
+        );
+      },
+    );
 
     testWidgets('hides cloud sync badge when user is a guest', (tester) async {
       setMobileSize(tester);
@@ -194,13 +218,14 @@ void main() {
 
       await pumpApp(
         tester,
-        const Scaffold(
-          appBar: DashboardHeader(),
-        ),
+        const Scaffold(appBar: DashboardHeader()),
         mockAuthService: mockAuthService,
       );
 
-      expect(find.byKey(const Key('dashboard_header_sync_badge')), findsNothing);
+      expect(
+        find.byKey(const Key('dashboard_header_sync_badge')),
+        findsNothing,
+      );
       expect(find.byType(UserAvatar), findsOneWidget);
     });
   });

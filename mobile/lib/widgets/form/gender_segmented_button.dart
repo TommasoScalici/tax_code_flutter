@@ -222,7 +222,9 @@ class _GenderSegmentOption extends StatelessWidget {
     );
 
     final selectedBorder = Border.all(
-      color: colorScheme.primary.withValues(alpha: isDark ? AppOpacity.high : AppOpacity.prominent),
+      color: colorScheme.primary.withValues(
+        alpha: isDark ? AppOpacity.high : AppOpacity.prominent,
+      ),
       width: AppDimensions.borderMedium,
     );
 

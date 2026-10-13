@@ -114,13 +114,13 @@ class Contact extends Equatable {
   /// Structural value equality based on all entity and content fields.
   @override
   List<Object?> get props => [
-        id,
-        firstName,
-        lastName,
-        gender,
-        taxCode,
-        birthPlace,
-        birthDate,
-        listIndex,
-      ];
+    id,
+    firstName,
+    lastName,
+    gender,
+    taxCode,
+    birthPlace,
+    birthDate,
+    listIndex,
+  ];
 }

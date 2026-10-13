@@ -41,17 +41,15 @@ class DashboardFab extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
-    final fgColor = theme.floatingActionButtonTheme.foregroundColor ??
+    final fgColor =
+        theme.floatingActionButtonTheme.foregroundColor ??
         colorScheme.onPrimary;
 
     final effectiveLabel = label ?? l10n.addCode;
     final effectiveTooltip = tooltip ?? l10n.newTaxCodeTooltip;
-    final effectiveIcon = icon ??
-        Icon(
-          Icons.add_rounded,
-          size: AppDimensions.iconLg,
-          color: fgColor,
-        );
+    final effectiveIcon =
+        icon ??
+        Icon(Icons.add_rounded, size: AppDimensions.iconLg, color: fgColor);
 
     return FloatingActionButton.extended(
       key: const Key('dashboard_fab'),

@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+# Git pre-commit hook for tax_code_flutter
+# Automatically verifies Dart formatting, ARB localization files, and static analysis.
+
+set -e
+
+echo ""
+echo "🚀 [Pre-commit] Starting pre-commit quality checks..."
+echo ""
+
+echo "🎨 1/4 Checking Dart code formatting..."
+dart format --output=none --set-exit-if-changed .
+echo "  ✓ Dart formatting check passed."
+
+echo "🔤 2/4 Checking ARB files alphabetical ordering..."
+dart run tool/arb_tool.dart check
+echo "  ✓ ARB files ordering check passed."
+
+echo "🔍 3/4 Validating ARB files (strict rules: descriptions, type annotations, parity)..."
+dart run tool/arb_tool.dart validate
+echo "  ✓ ARB validation check passed."
+
+echo "🛡️  4/4 Running Flutter analyze (--fatal-infos)..."
+flutter analyze --fatal-infos
+echo "  ✓ Flutter analyze passed with 0 issues."
+
+echo ""
+echo "✅ [Pre-commit] All pre-commit quality checks passed successfully!"
+echo ""

@@ -88,7 +88,9 @@ class CameraPreviewOverlay extends StatelessWidget {
           painter: CardCutoutOverlayPainter(
             scrimColor: AppColors.cameraScrim,
             guideColor: colorScheme.primary,
-            outlineColor: colorScheme.primary.withValues(alpha: AppOpacity.subtleBorder),
+            outlineColor: colorScheme.primary.withValues(
+              alpha: AppOpacity.subtleBorder,
+            ),
             cardRect: cardRect,
           ),
         ),
@@ -110,7 +112,9 @@ class CameraPreviewOverlay extends StatelessWidget {
                 ),
                 borderRadius: AppRadii.borderDialog,
                 border: Border.all(
-                  color: colorScheme.outlineVariant.withValues(alpha: AppOpacity.outline),
+                  color: colorScheme.outlineVariant.withValues(
+                    alpha: AppOpacity.outline,
+                  ),
                 ),
               ),
               child: Row(

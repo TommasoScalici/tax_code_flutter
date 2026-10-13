@@ -29,8 +29,7 @@ class FormSectionDivider extends StatelessWidget {
     final l10n = context.l10n;
     final isDark = theme.brightness == Brightness.dark;
 
-    final displayText =
-        (label ?? l10n.formOrManualEntry).toUpperCase();
+    final displayText = (label ?? l10n.formOrManualEntry).toUpperCase();
 
     final lineColor = colorScheme.outlineVariant.withValues(
       alpha: isDark ? 0.40 : AppOpacity.subtle,

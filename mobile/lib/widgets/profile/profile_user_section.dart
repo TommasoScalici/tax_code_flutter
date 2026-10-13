@@ -206,8 +206,9 @@ class ProfileUserSection extends StatelessWidget {
                           Text(
                             ' • ${l10n.syncSavedCodesCount(savedCount)}',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: AppOpacity.medium),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: AppOpacity.medium,
+                              ),
                               fontWeight: FontWeight.normal,
                             ),
                           ),
@@ -223,12 +224,16 @@ class ProfileUserSection extends StatelessWidget {
               padding: AppSpacing.paddingLg,
               decoration: BoxDecoration(
                 color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.divider,
+                  alpha: isDark
+                      ? AppOpacity.semiTranslucent
+                      : AppOpacity.divider,
                 ),
                 borderRadius: AppRadii.borderMd,
                 border: Border.all(
                   color: theme.colorScheme.primary.withValues(
-                    alpha: isDark ? AppOpacity.subtleBorder : AppOpacity.translucent,
+                    alpha: isDark
+                        ? AppOpacity.subtleBorder
+                        : AppOpacity.translucent,
                   ),
                 ),
               ),
@@ -298,18 +303,14 @@ class ProfileUserSection extends StatelessWidget {
   }
 
   Widget _buildAvatarFallback(ThemeData theme, String displayName) {
-    final initial =
-        displayName.isNotEmpty ? displayName[0].toUpperCase() : '?';
+    final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : '?';
 
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            AppColors.brandGradientStart,
-            AppColors.brandGradientEnd,
-          ],
+          colors: [AppColors.brandGradientStart, AppColors.brandGradientEnd],
         ),
       ),
       child: Center(

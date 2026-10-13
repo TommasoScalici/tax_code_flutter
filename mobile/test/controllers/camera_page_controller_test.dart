@@ -74,11 +74,7 @@ void main() {
       () => mockCameraController.setFlashMode(any()),
     ).thenAnswer((_) async {});
 
-    mockFactory = (
-      desc,
-      preset, {
-      enableAudio = false,
-    }) => mockCameraController;
+    mockFactory = (desc, preset, {enableAudio = false}) => mockCameraController;
 
     cameraPageController = CameraPageController(
       cameraService: mockCameraService,
@@ -192,63 +188,69 @@ void main() {
         verify(() => mockCameraController.pausePreview()).called(1);
       });
 
-      test('resetPicture resumes preview, clears imagePath and deletes temp file', () async {
-        // Arrange
-        await initializeControllerSuccessfully();
-        final tempDir = await Directory.systemTemp.createTemp();
-        final fakeImageFile = File('${tempDir.path}/fake_image.jpg');
-        await fakeImageFile.writeAsBytes([1, 2, 3]);
-        when(
-          () => mockCameraController.takePicture(),
-        ).thenAnswer((_) async => FakeXFile(fakeImageFile.path));
-        await cameraPageController.takePicture();
-        expect(await fakeImageFile.exists(), isTrue);
+      test(
+        'resetPicture resumes preview, clears imagePath and deletes temp file',
+        () async {
+          // Arrange
+          await initializeControllerSuccessfully();
+          final tempDir = await Directory.systemTemp.createTemp();
+          final fakeImageFile = File('${tempDir.path}/fake_image.jpg');
+          await fakeImageFile.writeAsBytes([1, 2, 3]);
+          when(
+            () => mockCameraController.takePicture(),
+          ).thenAnswer((_) async => FakeXFile(fakeImageFile.path));
+          await cameraPageController.takePicture();
+          expect(await fakeImageFile.exists(), isTrue);
 
-        // Act
-        await cameraPageController.resetPicture();
+          // Act
+          await cameraPageController.resetPicture();
 
-        // Assert
-        expect(cameraPageController.status, CameraStatus.readyToScan);
-        expect(cameraPageController.imagePath, isNull);
-        expect(await fakeImageFile.exists(), isFalse);
-        verify(() => mockCameraController.resumePreview()).called(1);
+          // Assert
+          expect(cameraPageController.status, CameraStatus.readyToScan);
+          expect(cameraPageController.imagePath, isNull);
+          expect(await fakeImageFile.exists(), isFalse);
+          verify(() => mockCameraController.resumePreview()).called(1);
 
-        await tempDir.delete(recursive: true);
-      });
-
-      test('takePicture and resetPicture lifecycle cleans temp files', () async {
-        // Arrange
-        await initializeControllerSuccessfully();
-        final tempDir = await Directory.systemTemp.createTemp();
-        final firstImageFile = File('${tempDir.path}/first_image.jpg');
-        await firstImageFile.writeAsBytes([1, 2, 3]);
-        final secondImageFile = File('${tempDir.path}/second_image.jpg');
-        await secondImageFile.writeAsBytes([4, 5, 6]);
-
-        when(
-          () => mockCameraController.takePicture(),
-        ).thenAnswer((_) async => FakeXFile(firstImageFile.path));
-        await cameraPageController.takePicture();
-        expect(await firstImageFile.exists(), isTrue);
-
-        // Act & Assert: reset cleans up first file
-        await cameraPageController.resetPicture();
-        expect(await firstImageFile.exists(), isFalse);
-
-        // Second picture
-        when(
-          () => mockCameraController.takePicture(),
-        ).thenAnswer((_) async => FakeXFile(secondImageFile.path));
-        await cameraPageController.takePicture();
-        expect(await secondImageFile.exists(), isTrue);
-
-        await cameraPageController.resetPicture();
-        expect(await secondImageFile.exists(), isFalse);
-
-        if (await tempDir.exists()) {
           await tempDir.delete(recursive: true);
-        }
-      });
+        },
+      );
+
+      test(
+        'takePicture and resetPicture lifecycle cleans temp files',
+        () async {
+          // Arrange
+          await initializeControllerSuccessfully();
+          final tempDir = await Directory.systemTemp.createTemp();
+          final firstImageFile = File('${tempDir.path}/first_image.jpg');
+          await firstImageFile.writeAsBytes([1, 2, 3]);
+          final secondImageFile = File('${tempDir.path}/second_image.jpg');
+          await secondImageFile.writeAsBytes([4, 5, 6]);
+
+          when(
+            () => mockCameraController.takePicture(),
+          ).thenAnswer((_) async => FakeXFile(firstImageFile.path));
+          await cameraPageController.takePicture();
+          expect(await firstImageFile.exists(), isTrue);
+
+          // Act & Assert: reset cleans up first file
+          await cameraPageController.resetPicture();
+          expect(await firstImageFile.exists(), isFalse);
+
+          // Second picture
+          when(
+            () => mockCameraController.takePicture(),
+          ).thenAnswer((_) async => FakeXFile(secondImageFile.path));
+          await cameraPageController.takePicture();
+          expect(await secondImageFile.exists(), isTrue);
+
+          await cameraPageController.resetPicture();
+          expect(await secondImageFile.exists(), isFalse);
+
+          if (await tempDir.exists()) {
+            await tempDir.delete(recursive: true);
+          }
+        },
+      );
 
       test('dispose deletes temp file if exists', () async {
         // Arrange
@@ -343,27 +345,34 @@ void main() {
         }
       });
 
-      test('lifecycle paused disposes camera controller and resumed reinitializes', () async {
-        // Arrange
-        await initializeControllerSuccessfully();
-        expect(cameraPageController.cameraController, isNotNull);
+      test(
+        'lifecycle paused disposes camera controller and resumed reinitializes',
+        () async {
+          // Arrange
+          await initializeControllerSuccessfully();
+          expect(cameraPageController.cameraController, isNotNull);
 
-        // Act 1: Pause app
-        cameraPageController.didChangeAppLifecycleState(AppLifecycleState.paused);
-        // Let async unawaited complete
-        await pumpEventQueue();
+          // Act 1: Pause app
+          cameraPageController.didChangeAppLifecycleState(
+            AppLifecycleState.paused,
+          );
+          // Let async unawaited complete
+          await pumpEventQueue();
 
-        // Assert 1: Controller disposed and nulled
-        expect(cameraPageController.cameraController, isNull);
-        verify(() => mockCameraController.dispose()).called(1);
+          // Assert 1: Controller disposed and nulled
+          expect(cameraPageController.cameraController, isNull);
+          verify(() => mockCameraController.dispose()).called(1);
 
-        // Act 2: Resume app
-        cameraPageController.didChangeAppLifecycleState(AppLifecycleState.resumed);
-        await pumpEventQueue();
+          // Act 2: Resume app
+          cameraPageController.didChangeAppLifecycleState(
+            AppLifecycleState.resumed,
+          );
+          await pumpEventQueue();
 
-        // Assert 2: Controller reinitialized
-        expect(cameraPageController.cameraController, isNotNull);
-      });
+          // Assert 2: Controller reinitialized
+          expect(cameraPageController.cameraController, isNotNull);
+        },
+      );
 
       test('confirmAndProcessPicture returns ScannedData on success', () async {
         // Arrange 1

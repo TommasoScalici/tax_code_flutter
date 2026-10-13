@@ -25,10 +25,8 @@ class OcrAiHeroBannerPreview extends StatelessWidget {
       builder: (context, _) {
         final l10n = context.l10n;
         return OcrAiHeroBanner(
-          onScanPressed: () => PreviewShell.showFeedback(
-            context,
-            l10n.ocrHeroButton,
-          ),
+          onScanPressed: () =>
+              PreviewShell.showFeedback(context, l10n.ocrHeroButton),
         );
       },
     );

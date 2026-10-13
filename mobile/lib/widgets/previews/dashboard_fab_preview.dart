@@ -41,10 +41,7 @@ class _DashboardFabPreviewState extends State<DashboardFabPreview> {
             alignment: Alignment.center,
             child: DashboardFab(
               isExtended: _isExtended,
-              onPressed: () => PreviewShell.showFeedback(
-                context,
-                l10n.addCode,
-              ),
+              onPressed: () => PreviewShell.showFeedback(context, l10n.addCode),
             ),
           ),
         );

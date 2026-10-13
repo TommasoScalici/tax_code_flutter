@@ -86,8 +86,12 @@ void main() {
       /// Tests for the equality operator
       test('equality should be based on value fields', () {
         final sameContact = contact.copyWith();
-        final contactWithDifferentName = contact.copyWith(firstName: 'Giuseppe');
-        final contactWithDifferentTaxCode = contact.copyWith(taxCode: 'RSSGPP90A15H501A');
+        final contactWithDifferentName = contact.copyWith(
+          firstName: 'Giuseppe',
+        );
+        final contactWithDifferentTaxCode = contact.copyWith(
+          taxCode: 'RSSGPP90A15H501A',
+        );
         final contactWithDifferentId = contact.copyWith(id: '67890');
 
         expect(contact, equals(sameContact));

@@ -45,7 +45,10 @@ void main() {
       );
 
       expect(textTheme.headlineMedium?.fontSize, AppFontSizes.bodyLg);
-      expect(textTheme.headlineMedium?.letterSpacing, AppLetterSpacing.titleTight);
+      expect(
+        textTheme.headlineMedium?.letterSpacing,
+        AppLetterSpacing.titleTight,
+      );
 
       expect(textTheme.headlineSmall?.fontSize, AppFontSizes.bodyMd);
 

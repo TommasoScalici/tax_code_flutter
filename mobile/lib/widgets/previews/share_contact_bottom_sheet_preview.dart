@@ -43,29 +43,19 @@ class _ShareContactBottomSheetPreviewState
       initialDarkMode: widget.isDarkMode,
       initialLocale: widget.locale,
       providers: [
-        Provider<SharingService>.value(
-          value: const FakeSharingService(),
-        ),
+        Provider<SharingService>.value(value: const FakeSharingService()),
         Provider<ContactCardImageService>.value(
           value: const ContactCardImageService(),
         ),
-        Provider<ContactPdfService>.value(
-          value: const ContactPdfService(),
-        ),
+        Provider<ContactPdfService>.value(value: const ContactPdfService()),
       ],
       toolbarActions: (context, _) {
         final l10n = context.l10n;
         return [
           SegmentedButton<int>(
             segments: [
-              ButtonSegment(
-                value: 0,
-                label: Text(_contacts[0].firstName),
-              ),
-              ButtonSegment(
-                value: 1,
-                label: Text(_contacts[1].firstName),
-              ),
+              ButtonSegment(value: 0, label: Text(_contacts[0].firstName)),
+              ButtonSegment(value: 1, label: Text(_contacts[1].firstName)),
             ],
             selected: {_selectedContactIndex},
             onSelectionChanged: (selection) {
@@ -76,10 +66,7 @@ class _ShareContactBottomSheetPreviewState
             icon: const Icon(Icons.open_in_browser_rounded),
             label: Text(l10n.openAsBottomSheet),
             onPressed: () => unawaited(
-              ShareContactBottomSheet.show(
-                context,
-                contact: contact,
-              ),
+              ShareContactBottomSheet.show(context, contact: contact),
             ),
           ),
         ];

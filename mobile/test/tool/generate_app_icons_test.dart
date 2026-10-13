@@ -55,7 +55,11 @@ void main() {
         ..color = primaryColor.withValues(alpha: 0.4)
         ..strokeWidth = 10
         ..strokeCap = StrokeCap.round;
-      canvas.drawLine(const Offset(126, 176), const Offset(220, 176), linePaint);
+      canvas.drawLine(
+        const Offset(126, 176),
+        const Offset(220, 176),
+        linePaint,
+      );
 
       final chipRRect = RRect.fromRectAndRadius(
         const Rect.fromLTWH(340, 166, 46, 30),

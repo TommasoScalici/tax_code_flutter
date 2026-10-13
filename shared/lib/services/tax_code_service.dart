@@ -39,8 +39,8 @@ class DefaultTaxCodeService implements TaxCodeService {
   DefaultTaxCodeService({
     required BirthplaceService birthplaceService,
     required Logger logger,
-  })  : _birthplaceService = birthplaceService,
-        _logger = logger;
+  }) : _birthplaceService = birthplaceService,
+       _logger = logger;
 
   @override
   Future<TaxCodeResponse> fetchTaxCode({
@@ -75,14 +75,16 @@ class DefaultTaxCodeService implements TaxCodeService {
       return TaxCodeResponse(
         status: true,
         message: 'Calculated successfully',
-        data: TaxCodeData(
-          fiscalCode: fiscalCode,
-        ),
+        data: TaxCodeData(fiscalCode: fiscalCode),
       );
     } on TaxCodeApiServerException {
       rethrow;
     } on Object catch (e, s) {
-      _logger.e('Unexpected error in TaxCodeService: $e', error: e, stackTrace: s);
+      _logger.e(
+        'Unexpected error in TaxCodeService: $e',
+        error: e,
+        stackTrace: s,
+      );
       throw const CalculationFailure();
     }
   }

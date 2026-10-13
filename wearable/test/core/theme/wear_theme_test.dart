@@ -21,16 +21,25 @@ void main() {
         expect(theme.colorScheme.brightness, Brightness.dark);
         expect(theme.colorScheme.primary, AppColors.emeraldPrimary);
         expect(theme.colorScheme.surface, AppColors.darkSurface);
-        expect(theme.colorScheme.surfaceContainer, AppColors.darkSurfaceContainer);
+        expect(
+          theme.colorScheme.surfaceContainer,
+          AppColors.darkSurfaceContainer,
+        );
 
         // Verify CardTheme
         expect(theme.cardTheme.color, AppColors.darkSurfaceContainer);
         expect(theme.cardTheme.elevation, AppElevation.none);
         final cardShape = theme.cardTheme.shape! as RoundedRectangleBorder;
-        expect(cardShape.borderRadius, BorderRadius.circular(WearDimensions.cardRadius));
+        expect(
+          cardShape.borderRadius,
+          BorderRadius.circular(WearDimensions.cardRadius),
+        );
 
         // Verify FilledButton
-        expect(theme.filledButtonTheme.style?.backgroundColor?.resolve({}), AppColors.emeraldPrimary);
+        expect(
+          theme.filledButtonTheme.style?.backgroundColor?.resolve({}),
+          AppColors.emeraldPrimary,
+        );
       },
     );
   });

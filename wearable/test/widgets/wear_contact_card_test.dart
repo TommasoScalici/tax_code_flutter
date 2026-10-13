@@ -30,10 +30,7 @@ void main() {
       theme: WearTheme.darkTheme,
       home: Scaffold(
         body: Center(
-          child: WearContactCard(
-            contact: contact,
-            onTap: onTap,
-          ),
+          child: WearContactCard(contact: contact, onTap: onTap),
         ),
       ),
     );
@@ -69,7 +66,9 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('displays taxCode as fallback when name is blank', (tester) async {
+    testWidgets('displays taxCode as fallback when name is blank', (
+      tester,
+    ) async {
       final blankNameContact = testContact.copyWith(
         firstName: '',
         lastName: '',
@@ -83,18 +82,20 @@ void main() {
       expect(find.text('RSSMRA80A01H501U'), findsNWidgets(2));
     });
 
-    testWidgets('renders without overflow on small round display (192x192 dp)',
-        (tester) async {
-      tester.view.physicalSize = const Size(384, 384);
-      tester.view.devicePixelRatio = 2.0;
-      addTearDown(tester.view.reset);
+    testWidgets(
+      'renders without overflow on small round display (192x192 dp)',
+      (tester) async {
+        tester.view.physicalSize = const Size(384, 384);
+        tester.view.devicePixelRatio = 2.0;
+        addTearDown(tester.view.reset);
 
-      await tester.pumpWidget(
-        buildTestCard(contact: testContact, onTap: () {}),
-      );
+        await tester.pumpWidget(
+          buildTestCard(contact: testContact, onTap: () {}),
+        );
 
-      expect(tester.takeException(), isNull);
-      expect(find.byType(WearContactCard), findsOneWidget);
-    });
+        expect(tester.takeException(), isNull);
+        expect(find.byType(WearContactCard), findsOneWidget);
+      },
+    );
   });
 }

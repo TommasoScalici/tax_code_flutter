@@ -48,8 +48,8 @@ class ProfileAppInfoView extends StatelessWidget {
         final rawPackageName = packageInfo.packageName;
         final appPackageId =
             (rawPackageName.isEmpty || rawPackageName == 'Error')
-                ? 'tommasoscalici.taxcode'
-                : rawPackageName;
+            ? 'tommasoscalici.taxcode'
+            : rawPackageName;
 
         final policyUrl = locale.languageCode == 'it'
             ? _privacyPolicyUrlIt
@@ -57,7 +57,12 @@ class ProfileAppInfoView extends StatelessWidget {
 
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.xxl),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            0,
+            AppSpacing.md,
+            AppSpacing.xxl,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -78,9 +83,7 @@ class ProfileAppInfoView extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: theme.colorScheme.surface,
                         borderRadius: AppRadii.borderInput,
-                        boxShadow: [
-                          AppColors.shadowElevated(isDark),
-                        ],
+                        boxShadow: [AppColors.shadowElevated(isDark)],
                       ),
                       child: SvgPicture.asset(
                         'assets/images/tax_code_icon.svg',
@@ -123,7 +126,8 @@ class ProfileAppInfoView extends StatelessWidget {
                       appPackageId,
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontFamily: AppTypography.fontFamilyMono,
-                        fontFamilyFallback: AppTypography.fontFamilyMonoFallback,
+                        fontFamilyFallback:
+                            AppTypography.fontFamilyMonoFallback,
                         color: theme.colorScheme.onSurfaceVariant,
                         fontSize: AppFontSizes.caption,
                       ),
@@ -141,9 +145,7 @@ class ProfileAppInfoView extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainer,
                   borderRadius: AppRadii.borderCard,
-                  border: Border.all(
-                    color: AppColors.warningBorder,
-                  ),
+                  border: Border.all(color: AppColors.warningBorder),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,9 +270,8 @@ class ProfileAppInfoView extends StatelessWidget {
                   ),
                 ),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primaryContainer.withValues(
-                    alpha: isDark ? 0.3 : 0.4,
-                  ),
+                  backgroundColor: theme.colorScheme.primaryContainer
+                      .withValues(alpha: isDark ? 0.3 : 0.4),
                   side: BorderSide(
                     color: theme.colorScheme.primary.withValues(
                       alpha: isDark ? 0.3 : 0.4,
@@ -298,8 +299,9 @@ class ProfileAppInfoView extends StatelessWidget {
                     child: Text(
                       l10n.developedBy,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant
-                            .withValues(alpha: AppOpacity.medium),
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: AppOpacity.medium,
+                        ),
                         fontSize: AppFontSizes.bodySm,
                       ),
                     ),
@@ -359,7 +361,9 @@ class ProfileAppInfoView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.compact),
       child: Divider(
         height: AppDimensions.borderDefault,
-        color: theme.colorScheme.outlineVariant.withValues(alpha: AppOpacity.outline),
+        color: theme.colorScheme.outlineVariant.withValues(
+          alpha: AppOpacity.outline,
+        ),
       ),
     );
   }
@@ -367,10 +371,7 @@ class ProfileAppInfoView extends StatelessWidget {
   Future<void> _openUrl(String urlString) async {
     final uri = Uri.tryParse(urlString);
     if (uri != null) {
-      await launchUrl(
-        uri,
-        mode: LaunchMode.inAppBrowserView,
-      );
+      await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
     }
   }
 }

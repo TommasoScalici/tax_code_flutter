@@ -120,9 +120,7 @@ class ProfileAccountSection extends StatelessWidget {
     if (confirmed == true && context.mounted) {
       final authService = context.read<AuthService?>();
       if (controller != null) {
-        await controller.deleteAccount(
-          onPromptReauth: () async => false,
-        );
+        await controller.deleteAccount(onPromptReauth: () async => false);
       } else if (authService != null) {
         await authService.deleteUserAccount();
       }

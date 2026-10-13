@@ -18,21 +18,24 @@ void main() {
   }
 
   group('DashboardSearchBar Widget Tests', () {
-    testWidgets('renders search text field with default hint and search icon', (tester) async {
+    testWidgets('renders search text field with default hint and search icon', (
+      tester,
+    ) async {
       setMobileSize(tester);
 
       await pumpApp(
         tester,
-        const Scaffold(
-          body: DashboardSearchBar(),
-        ),
+        const Scaffold(body: DashboardSearchBar()),
         locale: const Locale('it'),
       );
 
       expect(find.byType(TextField), findsOneWidget);
       expect(find.byIcon(Icons.search_rounded), findsOneWidget);
       expect(find.text('Cerca per nome o codice fiscale...'), findsOneWidget);
-      expect(find.byKey(const Key('dashboard_search_bar_clear_button')), findsNothing);
+      expect(
+        find.byKey(const Key('dashboard_search_bar_clear_button')),
+        findsNothing,
+      );
     });
 
     testWidgets('renders custom hint text when provided', (tester) async {
@@ -48,16 +51,16 @@ void main() {
       expect(find.text('Filtra anagrafica...'), findsOneWidget);
     });
 
-    testWidgets('entering text triggers onChanged and displays clear button', (tester) async {
+    testWidgets('entering text triggers onChanged and displays clear button', (
+      tester,
+    ) async {
       setMobileSize(tester);
       String? changedText;
 
       await pumpApp(
         tester,
         Scaffold(
-          body: DashboardSearchBar(
-            onChanged: (val) => changedText = val,
-          ),
+          body: DashboardSearchBar(onChanged: (val) => changedText = val),
         ),
       );
 
@@ -66,10 +69,15 @@ void main() {
       await tester.pump();
 
       expect(changedText, 'Mario');
-      expect(find.byKey(const Key('dashboard_search_bar_clear_button')), findsOneWidget);
+      expect(
+        find.byKey(const Key('dashboard_search_bar_clear_button')),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('tapping clear button clears input and triggers callbacks', (tester) async {
+    testWidgets('tapping clear button clears input and triggers callbacks', (
+      tester,
+    ) async {
       setMobileSize(tester);
       final controller = TextEditingController(text: 'Rossi');
       var clearCalled = false;
@@ -86,38 +94,47 @@ void main() {
         ),
       );
 
-      expect(find.byKey(const Key('dashboard_search_bar_clear_button')), findsOneWidget);
+      expect(
+        find.byKey(const Key('dashboard_search_bar_clear_button')),
+        findsOneWidget,
+      );
 
-      await tester.tap(find.byKey(const Key('dashboard_search_bar_clear_button')));
+      await tester.tap(
+        find.byKey(const Key('dashboard_search_bar_clear_button')),
+      );
       await tester.pump();
 
       expect(controller.text, isEmpty);
       expect(clearCalled, isTrue);
       expect(changedText, isEmpty);
-      expect(find.byKey(const Key('dashboard_search_bar_clear_button')), findsNothing);
+      expect(
+        find.byKey(const Key('dashboard_search_bar_clear_button')),
+        findsNothing,
+      );
     });
 
-    testWidgets('displays card counter badge when cardCount is provided', (tester) async {
+    testWidgets('displays card counter badge when cardCount is provided', (
+      tester,
+    ) async {
       setMobileSize(tester);
 
       // Plural test (3)
       await pumpApp(
         tester,
-        const Scaffold(
-          body: DashboardSearchBar(cardCount: 3),
-        ),
+        const Scaffold(body: DashboardSearchBar(cardCount: 3)),
         locale: const Locale('it'),
       );
 
-      expect(find.byKey(const Key('dashboard_search_bar_count_badge')), findsOneWidget);
+      expect(
+        find.byKey(const Key('dashboard_search_bar_count_badge')),
+        findsOneWidget,
+      );
       expect(find.text('3 tessere salvate'), findsOneWidget);
 
       // Singular test (1)
       await pumpApp(
         tester,
-        const Scaffold(
-          body: DashboardSearchBar(cardCount: 1),
-        ),
+        const Scaffold(body: DashboardSearchBar(cardCount: 1)),
         locale: const Locale('it'),
       );
 
@@ -126,26 +143,24 @@ void main() {
       // Zero test (0)
       await pumpApp(
         tester,
-        const Scaffold(
-          body: DashboardSearchBar(cardCount: 0),
-        ),
+        const Scaffold(body: DashboardSearchBar(cardCount: 0)),
         locale: const Locale('it'),
       );
 
       expect(find.text('Nessuna tessera salvata'), findsOneWidget);
     });
 
-    testWidgets('omits card counter badge when cardCount is null', (tester) async {
+    testWidgets('omits card counter badge when cardCount is null', (
+      tester,
+    ) async {
       setMobileSize(tester);
 
-      await pumpApp(
-        tester,
-        const Scaffold(
-          body: DashboardSearchBar(),
-        ),
-      );
+      await pumpApp(tester, const Scaffold(body: DashboardSearchBar()));
 
-      expect(find.byKey(const Key('dashboard_search_bar_count_badge')), findsNothing);
+      expect(
+        find.byKey(const Key('dashboard_search_bar_count_badge')),
+        findsNothing,
+      );
     });
   });
 }

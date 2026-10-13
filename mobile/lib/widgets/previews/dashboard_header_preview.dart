@@ -51,8 +51,8 @@ class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
               _isGuestMode
                   ? Icons.cloud_off_rounded
                   : (_cloudSyncEnabled
-                      ? Icons.cloud_done_rounded
-                      : Icons.cloud_off_rounded),
+                        ? Icons.cloud_done_rounded
+                        : Icons.cloud_off_rounded),
               size: AppDimensions.iconXs,
             ),
             label: Text(
@@ -79,9 +79,7 @@ class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
             border: Border.all(
               color: colorScheme.outlineVariant.withValues(alpha: 0.6),
             ),
-            boxShadow: [
-              AppColors.shadowElevated(isDarkMode),
-            ],
+            boxShadow: [AppColors.shadowElevated(isDarkMode)],
           ),
           clipBehavior: Clip.antiAlias,
           child: ChangeNotifierProvider<AuthService>.value(
@@ -93,14 +91,10 @@ class _DashboardHeaderPreviewState extends State<DashboardHeaderPreview> {
                   setState(() => _cloudSyncEnabled = !_cloudSyncEnabled);
                 }
               },
-              onThemeToggle: () => PreviewShell.showFeedback(
-                context,
-                l10n.themeLight,
-              ),
-              onProfileTap: () => PreviewShell.showFeedback(
-                context,
-                l10n.profilePageTitle,
-              ),
+              onThemeToggle: () =>
+                  PreviewShell.showFeedback(context, l10n.themeLight),
+              onProfileTap: () =>
+                  PreviewShell.showFeedback(context, l10n.profilePageTitle),
             ),
           ),
         );

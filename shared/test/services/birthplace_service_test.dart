@@ -67,14 +67,14 @@ void main() {
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('plugins.flutter.io/path_provider'),
-      (methodCall) async {
-        if (methodCall.method == 'getApplicationDocumentsDirectory') {
-          return tempDir.path;
-        }
-        return null;
-      },
-    );
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          (methodCall) async {
+            if (methodCall.method == 'getApplicationDocumentsDirectory') {
+              return tempDir.path;
+            }
+            return null;
+          },
+        );
 
     when(() => mockStorage.ref(any())).thenReturn(mockRef);
   });
@@ -82,9 +82,9 @@ void main() {
   tearDown(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('plugins.flutter.io/path_provider'),
-      null,
-    );
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          null,
+        );
     if (await tempDir.exists()) {
       await tempDir.delete(recursive: true);
     }
@@ -99,9 +99,9 @@ void main() {
 
       // Return older timestamp from storage so background update does not download
       final metadata = MockFullMetadata();
-      when(() => metadata.updated).thenReturn(
-        DateTime.now().subtract(const Duration(days: 1)),
-      );
+      when(
+        () => metadata.updated,
+      ).thenReturn(DateTime.now().subtract(const Duration(days: 1)));
       when(() => mockRef.getMetadata()).thenAnswer((_) async => metadata);
 
       final service = BirthplaceService(
@@ -130,20 +130,19 @@ void main() {
       await localFile.writeAsString(badJson);
 
       // Mock rootBundle asset fallback
-      const fallbackAssetJson =
-          '[{"name":"Roma","state":"RM","code":"H501"}]';
+      const fallbackAssetJson = '[{"name":"Roma","state":"RM","code":"H501"}]';
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMessageHandler('flutter/assets', (message) async {
-        final byteData = ByteData.view(
-          Uint8List.fromList(fallbackAssetJson.codeUnits).buffer,
-        );
-        return byteData;
-      });
+            final byteData = ByteData.view(
+              Uint8List.fromList(fallbackAssetJson.codeUnits).buffer,
+            );
+            return byteData;
+          });
 
       final metadata = MockFullMetadata();
-      when(() => metadata.updated).thenReturn(
-        DateTime.now().subtract(const Duration(days: 1)),
-      );
+      when(
+        () => metadata.updated,
+      ).thenReturn(DateTime.now().subtract(const Duration(days: 1)));
       when(() => mockRef.getMetadata()).thenAnswer((_) async => metadata);
 
       final service = BirthplaceService(
@@ -161,45 +160,47 @@ void main() {
           .setMockMessageHandler('flutter/assets', null);
     });
 
-    test('background download updates local file and refreshes in-memory cache', () async {
-      final localFile = File('${tempDir.path}/birthplaces.json');
-      const initialJson =
-          '[{"name":"Roma","state":"RM","code":"H501"}]';
-      await localFile.writeAsString(initialJson);
+    test(
+      'background download updates local file and refreshes in-memory cache',
+      () async {
+        final localFile = File('${tempDir.path}/birthplaces.json');
+        const initialJson = '[{"name":"Roma","state":"RM","code":"H501"}]';
+        await localFile.writeAsString(initialJson);
 
-      // Server has newer timestamp
-      final metadata = MockFullMetadata();
-      when(() => metadata.updated).thenReturn(
-        DateTime.now().add(const Duration(days: 1)),
-      );
-      when(() => mockRef.getMetadata()).thenAnswer((_) async => metadata);
+        // Server has newer timestamp
+        final metadata = MockFullMetadata();
+        when(
+          () => metadata.updated,
+        ).thenReturn(DateTime.now().add(const Duration(days: 1)));
+        when(() => mockRef.getMetadata()).thenAnswer((_) async => metadata);
 
-      const updatedJson =
-          '[{"name":"Roma","state":"RM","code":"H501"},{"name":"Napoli","state":"NA","code":"F839"}]';
+        const updatedJson =
+            '[{"name":"Roma","state":"RM","code":"H501"},{"name":"Napoli","state":"NA","code":"F839"}]';
 
-      final fakeTask = FakeDownloadTask();
-      when(() => mockRef.writeToFile(any())).thenAnswer((invocation) {
-        final targetFile = invocation.positionalArguments[0] as File;
-        targetFile.writeAsStringSync(updatedJson);
-        return fakeTask;
-      });
+        final fakeTask = FakeDownloadTask();
+        when(() => mockRef.writeToFile(any())).thenAnswer((invocation) {
+          final targetFile = invocation.positionalArguments[0] as File;
+          targetFile.writeAsStringSync(updatedJson);
+          return fakeTask;
+        });
 
-      final service = BirthplaceService(
-        logger: mockLogger,
-        storage: mockStorage,
-      );
+        final service = BirthplaceService(
+          logger: mockLogger,
+          storage: mockStorage,
+        );
 
-      final initialResult = await service.loadBirthplaces();
-      expect(initialResult.length, 1);
+        final initialResult = await service.loadBirthplaces();
+        expect(initialResult.length, 1);
 
-      // Allow background microtask to execute
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+        // Allow background microtask to execute
+        await Future<void>.delayed(const Duration(milliseconds: 100));
 
-      // Check that in-memory cache was updated
-      final updatedResult = await service.loadBirthplaces();
-      expect(updatedResult.length, 2);
-      expect(updatedResult.any((b) => b.name == 'Napoli'), isTrue);
-    });
+        // Check that in-memory cache was updated
+        final updatedResult = await service.loadBirthplaces();
+        expect(updatedResult.length, 2);
+        expect(updatedResult.any((b) => b.name == 'Napoli'), isTrue);
+      },
+    );
 
     test('dispose cancels active subscription and disposes notifiers', () {
       final service = BirthplaceService(
@@ -214,72 +215,86 @@ void main() {
       expect(service.dispose, returnsNormally);
     });
 
-    test('download progress events update downloadProgress and reset in finally', () async {
-      final localFile = File('${tempDir.path}/birthplaces.json');
-      await localFile.writeAsString('[{"name":"Roma","state":"RM","code":"H501"}]');
+    test(
+      'download progress events update downloadProgress and reset in finally',
+      () async {
+        final localFile = File('${tempDir.path}/birthplaces.json');
+        await localFile.writeAsString(
+          '[{"name":"Roma","state":"RM","code":"H501"}]',
+        );
 
-      final metadata = MockFullMetadata();
-      when(() => metadata.updated).thenReturn(
-        DateTime.now().add(const Duration(days: 1)),
-      );
-      when(() => mockRef.getMetadata()).thenAnswer((_) async => metadata);
+        final metadata = MockFullMetadata();
+        when(
+          () => metadata.updated,
+        ).thenReturn(DateTime.now().add(const Duration(days: 1)));
+        when(() => mockRef.getMetadata()).thenAnswer((_) async => metadata);
 
-      final streamController = StreamController<TaskSnapshot>();
-      final mockSnapshot = MockTaskSnapshot();
-      when(() => mockSnapshot.state).thenReturn(TaskState.running);
-      when(() => mockSnapshot.bytesTransferred).thenReturn(50);
-      when(() => mockSnapshot.totalBytes).thenReturn(100);
+        final streamController = StreamController<TaskSnapshot>();
+        final mockSnapshot = MockTaskSnapshot();
+        when(() => mockSnapshot.state).thenReturn(TaskState.running);
+        when(() => mockSnapshot.bytesTransferred).thenReturn(50);
+        when(() => mockSnapshot.totalBytes).thenReturn(100);
 
-      final fakeTask = FakeProgressDownloadTask(streamController.stream);
-      when(() => mockRef.writeToFile(any())).thenAnswer((invocation) {
-        final targetFile = invocation.positionalArguments[0] as File;
-        targetFile.writeAsStringSync('[{"name":"Roma","state":"RM","code":"H501"}]');
-        return fakeTask;
-      });
+        final fakeTask = FakeProgressDownloadTask(streamController.stream);
+        when(() => mockRef.writeToFile(any())).thenAnswer((invocation) {
+          final targetFile = invocation.positionalArguments[0] as File;
+          targetFile.writeAsStringSync(
+            '[{"name":"Roma","state":"RM","code":"H501"}]',
+          );
+          return fakeTask;
+        });
 
-      final service = BirthplaceService(
-        logger: mockLogger,
-        storage: mockStorage,
-      );
+        final service = BirthplaceService(
+          logger: mockLogger,
+          storage: mockStorage,
+        );
 
-      await service.loadBirthplaces();
+        await service.loadBirthplaces();
 
-      streamController.add(mockSnapshot);
-      await Future<void>.delayed(const Duration(milliseconds: 20));
+        streamController.add(mockSnapshot);
+        await Future<void>.delayed(const Duration(milliseconds: 20));
 
-      await streamController.close();
-      await service.backgroundUpdateFuture;
+        await streamController.close();
+        await service.backgroundUpdateFuture;
 
-      expect(service.downloadProgress.value, isNull);
-      expect(service.downloadStep.value, isNull);
+        expect(service.downloadProgress.value, isNull);
+        expect(service.downloadStep.value, isNull);
 
-      service.dispose();
-    });
+        service.dispose();
+      },
+    );
 
-    test('download error cleans up subscription and resets notifiers', () async {
-      final localFile = File('${tempDir.path}/birthplaces.json');
-      await localFile.writeAsString('[{"name":"Roma","state":"RM","code":"H501"}]');
+    test(
+      'download error cleans up subscription and resets notifiers',
+      () async {
+        final localFile = File('${tempDir.path}/birthplaces.json');
+        await localFile.writeAsString(
+          '[{"name":"Roma","state":"RM","code":"H501"}]',
+        );
 
-      final metadata = MockFullMetadata();
-      when(() => metadata.updated).thenReturn(
-        DateTime.now().add(const Duration(days: 1)),
-      );
-      when(() => mockRef.getMetadata()).thenAnswer((_) async => metadata);
+        final metadata = MockFullMetadata();
+        when(
+          () => metadata.updated,
+        ).thenReturn(DateTime.now().add(const Duration(days: 1)));
+        when(() => mockRef.getMetadata()).thenAnswer((_) async => metadata);
 
-      when(() => mockRef.writeToFile(any())).thenThrow(Exception('Storage write error'));
+        when(
+          () => mockRef.writeToFile(any()),
+        ).thenThrow(Exception('Storage write error'));
 
-      final service = BirthplaceService(
-        logger: mockLogger,
-        storage: mockStorage,
-      );
+        final service = BirthplaceService(
+          logger: mockLogger,
+          storage: mockStorage,
+        );
 
-      await service.loadBirthplaces();
-      await service.backgroundUpdateFuture;
+        await service.loadBirthplaces();
+        await service.backgroundUpdateFuture;
 
-      expect(service.downloadProgress.value, isNull);
-      expect(service.downloadStep.value, isNull);
+        expect(service.downloadProgress.value, isNull);
+        expect(service.downloadStep.value, isNull);
 
-      service.dispose();
-    });
+        service.dispose();
+      },
+    );
   });
 }

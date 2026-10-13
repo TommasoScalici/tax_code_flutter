@@ -15,9 +15,13 @@ import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 import 'package:tax_code_flutter_wear_os/widgets/contacts_list.dart';
 
 class MockAuthService extends Mock implements AuthService {}
+
 class MockNativeViewService extends Mock implements NativeViewService {}
+
 class MockDemoModeService extends Mock implements DemoModeService {}
-class MockContactsListController extends Mock implements ContactsListController {}
+
+class MockContactsListController extends Mock
+    implements ContactsListController {}
 
 void main() {
   late MockNativeViewService mockNativeViewService;
@@ -42,8 +46,12 @@ void main() {
     mockDemoModeService = MockDemoModeService();
     mockContactsController = MockContactsListController();
 
-    when(() => mockNativeViewService.enableHighBrightnessMode()).thenAnswer((_) async {});
-    when(() => mockNativeViewService.disableHighBrightnessMode()).thenAnswer((_) async {});
+    when(
+      () => mockNativeViewService.enableHighBrightnessMode(),
+    ).thenAnswer((_) async {});
+    when(
+      () => mockNativeViewService.disableHighBrightnessMode(),
+    ).thenAnswer((_) async {});
     when(() => mockAuthService.status).thenReturn(AuthStatus.unauthenticated);
     when(() => mockAuthService.isLoading).thenReturn(false);
     when(() => mockAuthService.errorMessage).thenReturn(null);
@@ -59,42 +67,47 @@ void main() {
     const scales = [1.0, 1.24, 1.3, 1.5];
 
     for (final scale in scales) {
-      testWidgets('BarcodePage adapts to font scale ${scale}x on 390x390 circular display without overflow', (tester) async {
-        tester.view.physicalSize = const Size(390, 390);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(() {
-          tester.view.resetPhysicalSize();
-          tester.view.resetDevicePixelRatio();
-        });
+      testWidgets(
+        'BarcodePage adapts to font scale ${scale}x on 390x390 circular display without overflow',
+        (tester) async {
+          tester.view.physicalSize = const Size(390, 390);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(() {
+            tester.view.resetPhysicalSize();
+            tester.view.resetDevicePixelRatio();
+          });
 
-        await tester.pumpWidget(
-          MaterialApp(
-            theme: WearTheme.darkTheme,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: MediaQuery(
-              data: MediaQueryData(
-                size: const Size(390, 390),
-                textScaler: TextScaler.linear(scale),
-              ),
-              child: Provider<NativeViewService>.value(
-                value: mockNativeViewService,
-                child: BarcodePage(
-                  taxCode: testContact.taxCode,
-                  contact: testContact,
+          await tester.pumpWidget(
+            MaterialApp(
+              theme: WearTheme.darkTheme,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: MediaQuery(
+                data: MediaQueryData(
+                  size: const Size(390, 390),
+                  textScaler: TextScaler.linear(scale),
+                ),
+                child: Provider<NativeViewService>.value(
+                  value: mockNativeViewService,
+                  child: BarcodePage(
+                    taxCode: testContact.taxCode,
+                    contact: testContact,
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-        await tester.pumpAndSettle();
+          );
+          await tester.pumpAndSettle();
 
-        expect(tester.takeException(), isNull);
-        expect(find.text('Laura Bianchi'), findsOneWidget);
-        expect(find.text('BNCLRA85M41F205Z'), findsOneWidget);
-      });
+          expect(tester.takeException(), isNull);
+          expect(find.text('Laura Bianchi'), findsOneWidget);
+          expect(find.text('BNCLRA85M41F205Z'), findsOneWidget);
+        },
+      );
 
-      testWidgets('AuthGate adapts to font scale ${scale}x without overflow', (tester) async {
+      testWidgets('AuthGate adapts to font scale ${scale}x without overflow', (
+        tester,
+      ) async {
         tester.view.physicalSize = const Size(390, 390);
         tester.view.devicePixelRatio = 1.0;
         addTearDown(() {
@@ -114,8 +127,12 @@ void main() {
               ),
               child: MultiProvider(
                 providers: [
-                  ChangeNotifierProvider<AuthService>.value(value: mockAuthService),
-                  ChangeNotifierProvider<DemoModeService>.value(value: mockDemoModeService),
+                  ChangeNotifierProvider<AuthService>.value(
+                    value: mockAuthService,
+                  ),
+                  ChangeNotifierProvider<DemoModeService>.value(
+                    value: mockDemoModeService,
+                  ),
                 ],
                 child: const AuthGate(),
               ),
@@ -127,38 +144,45 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('ContactsList empty state adapts to font scale ${scale}x without overflow', (tester) async {
-        tester.view.physicalSize = const Size(390, 390);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(() {
-          tester.view.resetPhysicalSize();
-          tester.view.resetDevicePixelRatio();
-        });
+      testWidgets(
+        'ContactsList empty state adapts to font scale ${scale}x without overflow',
+        (tester) async {
+          tester.view.physicalSize = const Size(390, 390);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(() {
+            tester.view.resetPhysicalSize();
+            tester.view.resetDevicePixelRatio();
+          });
 
-        await tester.pumpWidget(
-          MaterialApp(
-            theme: WearTheme.darkTheme,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: MediaQuery(
-              data: MediaQueryData(
-                size: const Size(390, 390),
-                textScaler: TextScaler.linear(scale),
-              ),
-              child: MultiProvider(
-                providers: [
-                  ChangeNotifierProvider<ContactsListController>.value(value: mockContactsController),
-                  ChangeNotifierProvider<AuthService>.value(value: mockAuthService),
-                ],
-                child: const Scaffold(body: ContactsList()),
+          await tester.pumpWidget(
+            MaterialApp(
+              theme: WearTheme.darkTheme,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: MediaQuery(
+                data: MediaQueryData(
+                  size: const Size(390, 390),
+                  textScaler: TextScaler.linear(scale),
+                ),
+                child: MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider<ContactsListController>.value(
+                      value: mockContactsController,
+                    ),
+                    ChangeNotifierProvider<AuthService>.value(
+                      value: mockAuthService,
+                    ),
+                  ],
+                  child: const Scaffold(body: ContactsList()),
+                ),
               ),
             ),
-          ),
-        );
-        await tester.pumpAndSettle();
+          );
+          await tester.pumpAndSettle();
 
-        expect(tester.takeException(), isNull);
-      });
+          expect(tester.takeException(), isNull);
+        },
+      );
     }
   });
 }

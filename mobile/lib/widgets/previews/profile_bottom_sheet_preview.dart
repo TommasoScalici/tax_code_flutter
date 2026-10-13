@@ -58,7 +58,9 @@ class _ProfileBottomSheetPreviewState extends State<ProfileBottomSheetPreview> {
       providers: [
         ChangeNotifierProvider<AuthService>.value(value: _authService),
         ChangeNotifierProvider<SyncService>.value(value: _syncService),
-        ChangeNotifierProvider<HomePageController>.value(value: _homeController),
+        ChangeNotifierProvider<HomePageController>.value(
+          value: _homeController,
+        ),
         Provider<InfoService>.value(value: _infoService),
         Provider<InAppReviewService>.value(value: _inAppReviewService),
         Provider<Logger>.value(value: _logger),
@@ -73,9 +75,9 @@ class _ProfileBottomSheetPreviewState extends State<ProfileBottomSheetPreview> {
         final l10n = context.l10n;
         return [
           FilterChip(
-            label: Text(_isGuestMode
-                ? l10n.guestBadge
-                : 'Google (Mario Rossi)'),
+            label: Text(
+              _isGuestMode ? l10n.guestBadge : 'Google (Mario Rossi)',
+            ),
             selected: _isGuestMode,
             onSelected: (val) {
               setState(() {
@@ -87,9 +89,7 @@ class _ProfileBottomSheetPreviewState extends State<ProfileBottomSheetPreview> {
           FilledButton.icon(
             icon: const Icon(Icons.open_in_browser, size: 16),
             label: Text(l10n.openAsBottomSheet),
-            style: FilledButton.styleFrom(
-              visualDensity: VisualDensity.compact,
-            ),
+            style: FilledButton.styleFrom(visualDensity: VisualDensity.compact),
             onPressed: () {
               unawaited(ProfileBottomSheet.show(context));
             },

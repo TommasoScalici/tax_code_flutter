@@ -70,20 +70,21 @@ void main() {
       },
     );
 
-    testWidgets('displays ListView with WearContactCard and WearTimeHeader when controller has contacts', (
-      tester,
-    ) async {
-      when(() => mockController.hasContacts).thenReturn(true);
-      when(() => mockController.contacts).thenReturn(testContacts);
+    testWidgets(
+      'displays ListView with WearContactCard and WearTimeHeader when controller has contacts',
+      (tester) async {
+        when(() => mockController.hasContacts).thenReturn(true);
+        when(() => mockController.contacts).thenReturn(testContacts);
 
-      await pumpWidget(tester);
+        await pumpWidget(tester);
 
-      expect(find.byType(ListView), findsOneWidget);
-      expect(find.byType(WearTimeHeader), findsOneWidget);
-      expect(find.byType(WearContactCard), findsOneWidget);
-      expect(find.text('Mario Rossi'), findsOneWidget);
-      expect(find.text('RSSMRA80A01H501U'), findsOneWidget);
-    });
+        expect(find.byType(ListView), findsOneWidget);
+        expect(find.byType(WearTimeHeader), findsOneWidget);
+        expect(find.byType(WearContactCard), findsOneWidget);
+        expect(find.text('Mario Rossi'), findsOneWidget);
+        expect(find.text('RSSMRA80A01H501U'), findsOneWidget);
+      },
+    );
 
     testWidgets(
       'displays empty state message and button when there are no contacts',
@@ -94,7 +95,10 @@ void main() {
           find.text('No contacts found. Add them on your phone.'),
           findsOneWidget,
         );
-        expect(find.text('Sync may take a minutes', skipOffstage: false), findsNothing);
+        expect(
+          find.text('Sync may take a minutes', skipOffstage: false),
+          findsNothing,
+        );
         expect(find.text('Open on phone'), findsOneWidget);
         expect(find.byIcon(Icons.phone_android), findsOneWidget);
         expect(find.byType(WearTimeHeader), findsOneWidget);
@@ -156,36 +160,37 @@ void main() {
       },
     );
 
-    testWidgets('displays DEMO badge and Exit Demo button when isDemoMode is true', (
-      tester,
-    ) async {
-      when(() => mockController.hasContacts).thenReturn(true);
-      when(() => mockController.contacts).thenReturn(testContacts);
-      when(() => mockController.isDemoMode).thenReturn(true);
+    testWidgets(
+      'displays DEMO badge and Exit Demo button when isDemoMode is true',
+      (tester) async {
+        when(() => mockController.hasContacts).thenReturn(true);
+        when(() => mockController.contacts).thenReturn(testContacts);
+        when(() => mockController.isDemoMode).thenReturn(true);
 
-      await pumpWidget(tester);
+        await pumpWidget(tester);
 
-      // Verify DEMO badge is shown
-      expect(find.text('DEMO'), findsOneWidget);
+        // Verify DEMO badge is shown
+        expect(find.text('DEMO'), findsOneWidget);
 
-      // Verify Exit Demo button is shown instead of Sign out
-      expect(find.text('Exit Demo'), findsOneWidget);
-      expect(find.text('Sign out'), findsNothing);
+        // Verify Exit Demo button is shown instead of Sign out
+        expect(find.text('Exit Demo'), findsOneWidget);
+        expect(find.text('Sign out'), findsNothing);
 
-      // Tap Exit Demo
-      await tester.ensureVisible(find.text('Exit Demo'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Exit Demo'));
-      await tester.pumpAndSettle();
+        // Tap Exit Demo
+        await tester.ensureVisible(find.text('Exit Demo'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Exit Demo'));
+        await tester.pumpAndSettle();
 
-      // Verify confirmation dialog
-      expect(find.text('Do you want to exit demo mode?'), findsOneWidget);
+        // Verify confirmation dialog
+        expect(find.text('Do you want to exit demo mode?'), findsOneWidget);
 
-      // Confirm exit
-      await tester.tap(find.byIcon(Icons.check_rounded));
-      await tester.pumpAndSettle();
+        // Confirm exit
+        await tester.tap(find.byIcon(Icons.check_rounded));
+        await tester.pumpAndSettle();
 
-      verify(() => mockController.exitDemoMode()).called(1);
-    });
+        verify(() => mockController.exitDemoMode()).called(1);
+      },
+    );
   });
 }

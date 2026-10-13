@@ -15,11 +15,7 @@ class BarcodeHeader extends StatelessWidget {
   /// Callback invoked when the user taps the quick copy button.
   final VoidCallback onCopy;
 
-  const BarcodeHeader({
-    super.key,
-    required this.contact,
-    required this.onCopy,
-  });
+  const BarcodeHeader({super.key, required this.contact, required this.onCopy});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +37,9 @@ class BarcodeHeader extends StatelessWidget {
             ),
             borderRadius: AppRadii.borderInner,
             border: Border.all(
-              color: colorScheme.primary.withValues(alpha: AppOpacity.translucent),
+              color: colorScheme.primary.withValues(
+                alpha: AppOpacity.translucent,
+              ),
             ),
           ),
           child: Icon(
@@ -71,7 +69,9 @@ class BarcodeHeader extends StatelessWidget {
                     padding: AppSpacing.paddingBadge,
                     decoration: BoxDecoration(
                       color: colorScheme.primary.withValues(
-                        alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.tint,
+                        alpha: isDark
+                            ? AppOpacity.semiTranslucent
+                            : AppOpacity.tint,
                       ),
                       borderRadius: AppRadii.borderBadge,
                       border: Border.all(

@@ -30,9 +30,7 @@ void main() {
         themeMode: themeMode,
         home: Scaffold(
           body: Center(
-            child: OcrAiHeroBanner(
-              onScanPressed: mockOnScanPressed.call,
-            ),
+            child: OcrAiHeroBanner(onScanPressed: mockOnScanPressed.call),
           ),
         ),
       );
@@ -89,29 +87,28 @@ void main() {
       verify(() => mockOnScanPressed.call()).called(1);
     });
 
-    testWidgets('tapping anywhere on the banner triggers onScanPressed callback', (
-      tester,
-    ) async {
-      await tester.pumpWidget(createTestWidget());
-      await tester.pumpAndSettle();
+    testWidgets(
+      'tapping anywhere on the banner triggers onScanPressed callback',
+      (tester) async {
+        await tester.pumpWidget(createTestWidget());
+        await tester.pumpAndSettle();
 
-      final inkWellFinder = find.byKey(
-        const Key('ocr_ai_hero_banner_ink_well'),
-      );
-      expect(inkWellFinder, findsOneWidget);
+        final inkWellFinder = find.byKey(
+          const Key('ocr_ai_hero_banner_ink_well'),
+        );
+        expect(inkWellFinder, findsOneWidget);
 
-      await tester.tap(inkWellFinder);
-      await tester.pumpAndSettle();
+        await tester.tap(inkWellFinder);
+        await tester.pumpAndSettle();
 
-      verify(() => mockOnScanPressed.call()).called(1);
-    });
+        verify(() => mockOnScanPressed.call()).called(1);
+      },
+    );
 
     testWidgets('renders properly in light theme without errors', (
       tester,
     ) async {
-      await tester.pumpWidget(
-        createTestWidget(themeMode: ThemeMode.light),
-      );
+      await tester.pumpWidget(createTestWidget(themeMode: ThemeMode.light));
       await tester.pumpAndSettle();
 
       expect(find.byType(OcrAiHeroBanner), findsOneWidget);

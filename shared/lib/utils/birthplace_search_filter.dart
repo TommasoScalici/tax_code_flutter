@@ -49,10 +49,14 @@ abstract final class BirthplaceSearchFilter {
     }
 
     if (len1 == 0) {
-      return (maxDistance != null && len2 > maxDistance) ? maxDistance + 1 : len2;
+      return (maxDistance != null && len2 > maxDistance)
+          ? maxDistance + 1
+          : len2;
     }
     if (len2 == 0) {
-      return (maxDistance != null && len1 > maxDistance) ? maxDistance + 1 : len1;
+      return (maxDistance != null && len1 > maxDistance)
+          ? maxDistance + 1
+          : len1;
     }
 
     // Orient strings so s2 is the shorter string, minimizing row buffer size.

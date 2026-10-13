@@ -21,9 +21,7 @@ class ProfileDataSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ProfileSectionHeader(
-          title: l10n.sectionDataAndUtilities.toUpperCase(),
-        ),
+        ProfileSectionHeader(title: l10n.sectionDataAndUtilities.toUpperCase()),
         const SizedBox(height: AppSpacing.sm),
         Container(
           decoration: BoxDecoration(
@@ -40,7 +38,10 @@ class ProfileDataSection extends StatelessWidget {
                 iconBgColor: theme.colorScheme.surfaceContainerHigh,
                 title: l10n.exportDataTitle,
                 subtitle: l10n.exportDataSubtitle,
-                trailing: const Icon(Icons.chevron_right_rounded, size: AppDimensions.iconMd),
+                trailing: const Icon(
+                  Icons.chevron_right_rounded,
+                  size: AppDimensions.iconMd,
+                ),
                 onTap: () {
                   unawaited(ExportDataBottomSheet.show(context));
                 },
@@ -53,7 +54,10 @@ class ProfileDataSection extends StatelessWidget {
                 iconBgColor: theme.colorScheme.surfaceContainerHigh,
                 title: l10n.rateAppTitle,
                 subtitle: l10n.rateAppSubtitle,
-                trailing: const Icon(Icons.open_in_new_rounded, size: AppDimensions.iconAction),
+                trailing: const Icon(
+                  Icons.open_in_new_rounded,
+                  size: AppDimensions.iconAction,
+                ),
                 onTap: () {
                   unawaited(inAppReviewService?.openStoreListing());
                 },

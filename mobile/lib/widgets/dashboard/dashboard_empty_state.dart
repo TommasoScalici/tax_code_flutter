@@ -38,8 +38,9 @@ class DashboardEmptyState extends StatelessWidget {
 
     final isSearching = _isSearching;
 
-    final title =
-        isSearching ? l10n.emptySearchTitle : l10n.emptyDashboardTitle;
+    final title = isSearching
+        ? l10n.emptySearchTitle
+        : l10n.emptyDashboardTitle;
 
     final description = isSearching
         ? l10n.emptySearchDescription(searchQuery!.trim())
@@ -59,9 +60,14 @@ class DashboardEmptyState extends StatelessWidget {
 
     return Center(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.xxl),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.xl,
+          vertical: AppSpacing.xxl,
+        ),
         child: Container(
-          constraints: const BoxConstraints(maxWidth: AppDimensions.maxEmptyStateWidth),
+          constraints: const BoxConstraints(
+            maxWidth: AppDimensions.maxEmptyStateWidth,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -77,7 +83,9 @@ class DashboardEmptyState extends StatelessWidget {
                     color: isSearching
                         ? colorScheme.outlineVariant
                         : colorScheme.primary.withValues(
-                            alpha: isDark ? AppOpacity.subtleBorder : AppOpacity.disabled,
+                            alpha: isDark
+                                ? AppOpacity.subtleBorder
+                                : AppOpacity.disabled,
                           ),
                     width: AppDimensions.borderMedium,
                   ),
@@ -127,13 +135,19 @@ class DashboardEmptyState extends StatelessWidget {
               if (isSearching && onClearSearch != null)
                 OutlinedButton.icon(
                   onPressed: onClearSearch,
-                  icon: const Icon(Icons.refresh_rounded, size: AppDimensions.iconAction),
+                  icon: const Icon(
+                    Icons.refresh_rounded,
+                    size: AppDimensions.iconAction,
+                  ),
                   label: Text(l10n.emptySearchClearAction),
                 )
               else if (!isSearching && onAddContact != null)
                 FilledButton.icon(
                   onPressed: onAddContact,
-                  icon: const Icon(Icons.add_rounded, size: AppDimensions.iconMd),
+                  icon: const Icon(
+                    Icons.add_rounded,
+                    size: AppDimensions.iconMd,
+                  ),
                   label: Text(l10n.addCode),
                 ),
             ],

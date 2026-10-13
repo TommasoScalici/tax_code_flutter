@@ -32,10 +32,7 @@ void main() {
         themeMode: themeMode,
         home: Scaffold(
           body: Center(
-            child: TaxCodeLivePreviewCard(
-              taxCode: taxCode,
-              onCopied: onCopied,
-            ),
+            child: TaxCodeLivePreviewCard(taxCode: taxCode, onCopied: onCopied),
           ),
         ),
       );
@@ -69,41 +66,40 @@ void main() {
       );
     });
 
-    testWidgets('renders full code, verified icon, and copy button when complete', (
+    testWidgets(
+      'renders full code, verified icon, and copy button when complete',
+      (tester) async {
+        const fullCode = 'RSSMRA85D15H501Z';
+
+        await tester.pumpWidget(
+          createTestWidget(taxCode: fullCode, onCopied: mockOnCopied.call),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text(fullCode), findsOneWidget);
+        expect(find.byIcon(Icons.verified_rounded), findsOneWidget);
+        expect(
+          find.byKey(const Key('tax_code_live_preview_copy_button')),
+          findsOneWidget,
+        );
+
+        // Tap copy button
+        await tester.tap(
+          find.byKey(const Key('tax_code_live_preview_copy_button')),
+        );
+        await tester.pumpAndSettle();
+
+        verify(() => mockOnCopied.call()).called(1);
+      },
+    );
+
+    testWidgets('tapping entire card copies code when complete', (
       tester,
     ) async {
       const fullCode = 'RSSMRA85D15H501Z';
 
       await tester.pumpWidget(
-        createTestWidget(
-          taxCode: fullCode,
-          onCopied: mockOnCopied.call,
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text(fullCode), findsOneWidget);
-      expect(find.byIcon(Icons.verified_rounded), findsOneWidget);
-      expect(
-        find.byKey(const Key('tax_code_live_preview_copy_button')),
-        findsOneWidget,
-      );
-
-      // Tap copy button
-      await tester.tap(find.byKey(const Key('tax_code_live_preview_copy_button')));
-      await tester.pumpAndSettle();
-
-      verify(() => mockOnCopied.call()).called(1);
-    });
-
-    testWidgets('tapping entire card copies code when complete', (tester) async {
-      const fullCode = 'RSSMRA85D15H501Z';
-
-      await tester.pumpWidget(
-        createTestWidget(
-          taxCode: fullCode,
-          onCopied: mockOnCopied.call,
-        ),
+        createTestWidget(taxCode: fullCode, onCopied: mockOnCopied.call),
       );
       await tester.pumpAndSettle();
 

@@ -26,17 +26,15 @@ class DefaultGeminiService implements GeminiService {
   DefaultGeminiService({
     required FirebaseFunctions functions,
     required Logger logger,
-  })  : _functions = functions,
-        _logger = logger;
+  }) : _functions = functions,
+       _logger = logger;
 
   @override
   Future<ScannedData?> extractDataFromDocument(String base64Image) async {
     _logger.i("Calling 'extractDataFromDocument' Firebase Function.");
     try {
       final callable = _functions.httpsCallable('extractDataFromDocument');
-      final result = await callable.call<dynamic>({
-        'image': base64Image,
-      });
+      final result = await callable.call<dynamic>({'image': base64Image});
 
       _logger.i('Successfully received data from Gemini Function.');
 

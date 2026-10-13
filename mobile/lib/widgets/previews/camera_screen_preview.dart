@@ -34,7 +34,9 @@ class _CameraScreenPreviewState extends State<CameraScreenPreview> {
             label: const Text('Scanner Feed'),
             selected: _selectedStatus == CameraStatus.readyToScan,
             onSelected: (val) {
-              if (val) setState(() => _selectedStatus = CameraStatus.readyToScan);
+              if (val) {
+                setState(() => _selectedStatus = CameraStatus.readyToScan);
+              }
             },
           ),
           ChoiceChip(
@@ -92,17 +94,15 @@ class _CameraScreenPreviewState extends State<CameraScreenPreview> {
                     l10n.cameraPermissionInfo,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppColors.cameraReticle,
-                        ),
+                      color: AppColors.cameraReticle,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.xxl),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.settings),
                     label: Text(l10n.openSettings),
-                    onPressed: () => PreviewShell.showFeedback(
-                      context,
-                      l10n.openSettings,
-                    ),
+                    onPressed: () =>
+                        PreviewShell.showFeedback(context, l10n.openSettings),
                   ),
                 ],
               ),
@@ -171,10 +171,7 @@ class _CameraScreenPreviewState extends State<CameraScreenPreview> {
             width: cardWidth,
             height: cardHeight,
             decoration: BoxDecoration(
-              border: Border.all(
-                color: colorScheme.primary,
-                width: 2.0,
-              ),
+              border: Border.all(color: colorScheme.primary, width: 2.0),
               borderRadius: BorderRadius.circular(16),
             ),
             alignment: Alignment.center,
@@ -185,9 +182,7 @@ class _CameraScreenPreviewState extends State<CameraScreenPreview> {
                 color: AppColors.opticalWhite,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                shadows: [
-                  Shadow(blurRadius: 4),
-                ],
+                shadows: [Shadow(blurRadius: 4)],
               ),
             ),
           ),
@@ -231,10 +226,7 @@ class _CameraScreenPreviewState extends State<CameraScreenPreview> {
           right: 0,
           child: Center(
             child: GestureDetector(
-              onTap: () => PreviewShell.showFeedback(
-                context,
-                l10n.takePicture,
-              ),
+              onTap: () => PreviewShell.showFeedback(context, l10n.takePicture),
               child: Container(
                 width: 72,
                 height: 72,

@@ -12,11 +12,7 @@ class ExportDataHeader extends StatelessWidget {
   final VoidCallback? onClose;
 
   /// Creates an [ExportDataHeader].
-  const ExportDataHeader({
-    required this.contactCount,
-    this.onClose,
-    super.key,
-  });
+  const ExportDataHeader({required this.contactCount, this.onClose, super.key});
 
   @override
   Widget build(BuildContext context) {

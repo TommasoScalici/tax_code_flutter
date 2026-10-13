@@ -26,16 +26,10 @@ class ShareContactBottomSheet extends StatefulWidget {
   final Contact contact;
 
   /// Creates a [ShareContactBottomSheet].
-  const ShareContactBottomSheet({
-    required this.contact,
-    super.key,
-  });
+  const ShareContactBottomSheet({required this.contact, super.key});
 
   /// Displays the share contact sheet modally.
-  static Future<void> show(
-    BuildContext context, {
-    required Contact contact,
-  }) {
+  static Future<void> show(BuildContext context, {required Contact contact}) {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -138,9 +132,7 @@ class _ShareContactBottomSheetState extends State<ShareContactBottomSheet> {
             color: sheetBgColor,
             borderRadius: AppRadii.borderSheet,
             border: Border(top: BorderSide(color: topBorderColor)),
-            boxShadow: [
-              AppColors.shadowSheet(isDark),
-            ],
+            boxShadow: [AppColors.shadowSheet(isDark)],
           ),
           child: SafeArea(
             top: false,

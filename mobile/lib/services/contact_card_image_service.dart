@@ -78,10 +78,7 @@ class DefaultContactCardImageService implements ContactCardImageService {
     final cardGradient = ui.Gradient.linear(
       const Offset(24, 24),
       Offset(24, size.height - 24),
-      const [
-        AppColors.darkSurfaceContainer,
-        AppColors.darkBackground,
-      ],
+      const [AppColors.darkSurfaceContainer, AppColors.darkBackground],
     );
     final cardPaint = Paint()..shader = cardGradient;
     canvas.drawRRect(cardRect, cardPaint);
@@ -248,10 +245,7 @@ class DefaultContactCardImageService implements ContactCardImageService {
       canvas: canvas,
       text: contact.taxCode,
       offset: const Offset(96, 545),
-      style: AppTypography.codeDisplay(
-        color: Colors.black87,
-        letterSpacing: 4,
-      ),
+      style: AppTypography.codeDisplay(color: Colors.black87, letterSpacing: 4),
     );
 
     _drawText(
@@ -278,11 +272,7 @@ class DefaultContactCardImageService implements ContactCardImageService {
 
     // 9. 2D QR Code
     final qrCode = Barcode.qrCode();
-    final qrOperations = qrCode.make(
-      contact.taxCode,
-      width: 170,
-      height: 170,
-    );
+    final qrOperations = qrCode.make(contact.taxCode, width: 170, height: 170);
 
     for (final element in qrOperations) {
       if (element is BarcodeBar && element.black) {

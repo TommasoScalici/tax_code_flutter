@@ -47,7 +47,9 @@ void main() {
     testWidgets('renders English label and placeholder properly', (
       tester,
     ) async {
-      await tester.pumpWidget(createStandaloneWidget(locale: const Locale('en')));
+      await tester.pumpWidget(
+        createStandaloneWidget(locale: const Locale('en')),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Date of Birth'), findsOneWidget);
@@ -68,7 +70,10 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('birthdate_picker_clear_button')), findsOneWidget);
+      expect(
+        find.byKey(const Key('birthdate_picker_clear_button')),
+        findsOneWidget,
+      );
 
       await tester.tap(find.byKey(const Key('birthdate_picker_clear_button')));
       await tester.pumpAndSettle();
@@ -90,9 +95,7 @@ void main() {
       tester,
     ) async {
       final form = FormGroup({
-        'birthDate': FormControl<DateTime>(
-          validators: [Validators.required],
-        ),
+        'birthDate': FormControl<DateTime>(validators: [Validators.required]),
       });
 
       await tester.pumpWidget(

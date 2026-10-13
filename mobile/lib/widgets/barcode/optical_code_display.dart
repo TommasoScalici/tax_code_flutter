@@ -12,10 +12,7 @@ class OpticalCodeDisplay extends StatelessWidget {
   /// The Italian tax code string to encode in the barcodes.
   final String taxCode;
 
-  const OpticalCodeDisplay({
-    super.key,
-    required this.taxCode,
-  });
+  const OpticalCodeDisplay({super.key, required this.taxCode});
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +25,7 @@ class OpticalCodeDisplay extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.opticalWhite,
         borderRadius: AppRadii.borderCard,
-        boxShadow: [
-          AppColors.shadowCard(isDark),
-        ],
+        boxShadow: [AppColors.shadowCard(isDark)],
       ),
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.lg,

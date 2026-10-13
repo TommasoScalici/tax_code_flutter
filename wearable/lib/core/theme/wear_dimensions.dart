@@ -66,19 +66,29 @@ abstract final class WearDimensions {
   static const double dialogRadius = AppRadii.dialog;
 
   /// Circular border radius for compact contact cards.
-  static const BorderRadius borderCard = BorderRadius.all(Radius.circular(cardRadius));
+  static const BorderRadius borderCard = BorderRadius.all(
+    Radius.circular(cardRadius),
+  );
 
   /// Circular border radius for Codice Fiscale monospace badge pills.
-  static const BorderRadius borderPill = BorderRadius.all(Radius.circular(pillRadius));
+  static const BorderRadius borderPill = BorderRadius.all(
+    Radius.circular(pillRadius),
+  );
 
   /// Stadium border radius for buttons and toggle chips.
-  static const BorderRadius borderStadium = BorderRadius.all(Radius.circular(stadiumRadius));
+  static const BorderRadius borderStadium = BorderRadius.all(
+    Radius.circular(stadiumRadius),
+  );
 
   /// Circular border radius for optical barcode/QR presentation surfaces.
-  static const BorderRadius borderOptical = BorderRadius.all(Radius.circular(opticalRadius));
+  static const BorderRadius borderOptical = BorderRadius.all(
+    Radius.circular(opticalRadius),
+  );
 
   /// Circular border radius for dialogs and modal confirmation sheets.
-  static const BorderRadius borderDialog = BorderRadius.all(Radius.circular(dialogRadius));
+  static const BorderRadius borderDialog = BorderRadius.all(
+    Radius.circular(dialogRadius),
+  );
 
   /// Thin border stroke width for compact watch cards and pills: 0.8 pt.
   static const double borderThin = AppDimensions.borderThin;

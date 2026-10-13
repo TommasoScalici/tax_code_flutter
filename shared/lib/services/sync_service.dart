@@ -24,8 +24,8 @@ class SyncService with ChangeNotifier {
   SyncService({
     required SharedPreferencesAsync prefs,
     required AuthService authService,
-  })  : _prefs = prefs,
-        _authService = authService {
+  }) : _prefs = prefs,
+       _authService = authService {
     _authService.addListener(_onAuthChanged);
   }
 

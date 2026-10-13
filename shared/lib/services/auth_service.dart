@@ -184,7 +184,11 @@ class AuthService with ChangeNotifier {
       await _auth.signInWithCredential(credential);
       return true;
     } on FirebaseAuthException catch (e, s) {
-      _logger.e('Error during Google Sign-In: ${e.code}', error: e, stackTrace: s);
+      _logger.e(
+        'Error during Google Sign-In: ${e.code}',
+        error: e,
+        stackTrace: s,
+      );
       _failure = e.code == 'network-request-failed'
           ? const NetworkFailure()
           : const SignInFailedFailure();
@@ -209,7 +213,11 @@ class AuthService with ChangeNotifier {
       _logger.i('User signed in anonymously as guest.');
       return true;
     } on FirebaseAuthException catch (e, s) {
-      _logger.e('Error during anonymous sign-in: ${e.code}', error: e, stackTrace: s);
+      _logger.e(
+        'Error during anonymous sign-in: ${e.code}',
+        error: e,
+        stackTrace: s,
+      );
       _failure = e.code == 'network-request-failed'
           ? const NetworkFailure()
           : const SignInFailedFailure();
@@ -326,7 +334,6 @@ class AuthService with ChangeNotifier {
       }
     });
   }
-
 
   ///
   /// Private helper to manage the loading state and notify listeners.

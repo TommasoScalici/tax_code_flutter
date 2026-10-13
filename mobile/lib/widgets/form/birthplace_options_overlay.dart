@@ -51,7 +51,9 @@ class BirthplaceOptionsOverlay extends StatelessWidget {
             separatorBuilder: (context, index) => Divider(
               height: 1,
               thickness: AppDimensions.borderHairline,
-              color: colorScheme.outlineVariant.withValues(alpha: AppOpacity.translucent),
+              color: colorScheme.outlineVariant.withValues(
+                alpha: AppOpacity.translucent,
+              ),
             ),
             itemBuilder: (context, index) {
               final birthplace = options.elementAt(index);
@@ -93,7 +95,9 @@ class BirthplaceOptionsOverlay extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: colorScheme.surfaceContainerHighest.withValues(
-                            alpha: isDark ? AppOpacity.muted : AppOpacity.outline,
+                            alpha: isDark
+                                ? AppOpacity.muted
+                                : AppOpacity.outline,
                           ),
                           borderRadius: AppRadii.borderBadge,
                         ),

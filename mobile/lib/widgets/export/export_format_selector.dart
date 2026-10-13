@@ -46,7 +46,9 @@ class ExportFormatSelector extends StatelessWidget {
           description: l10n.exportFormatJsonDesc,
           icon: Icons.data_object_rounded,
           isSelected: selectedFormat == ExportFormat.json,
-          onTap: isEnabled ? () => onFormatSelected?.call(ExportFormat.json) : null,
+          onTap: isEnabled
+              ? () => onFormatSelected?.call(ExportFormat.json)
+              : null,
         ),
         const SizedBox(height: AppSpacing.compact),
         ExportFormatOptionCard(
@@ -55,7 +57,9 @@ class ExportFormatSelector extends StatelessWidget {
           description: l10n.exportFormatCsvDesc,
           icon: Icons.table_chart_outlined,
           isSelected: selectedFormat == ExportFormat.csv,
-          onTap: isEnabled ? () => onFormatSelected?.call(ExportFormat.csv) : null,
+          onTap: isEnabled
+              ? () => onFormatSelected?.call(ExportFormat.csv)
+              : null,
         ),
       ],
     );

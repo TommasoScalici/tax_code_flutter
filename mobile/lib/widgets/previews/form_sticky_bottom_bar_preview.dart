@@ -58,9 +58,9 @@ class _FormStickyBottomBarPreviewState
               isLoading: _isLoading,
               onPressed: _isEnabled
                   ? () => PreviewShell.showFeedback(
-                        context,
-                        context.l10n.savingCodeInProgress,
-                      )
+                      context,
+                      context.l10n.savingCodeInProgress,
+                    )
                   : null,
             ),
           ],

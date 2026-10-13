@@ -90,9 +90,7 @@ void main() {
 
       await pumpApp(
         tester,
-        const Scaffold(
-          body: DashboardEmptyState(searchQuery: 'Bianchi'),
-        ),
+        const Scaffold(body: DashboardEmptyState(searchQuery: 'Bianchi')),
         locale: const Locale('en'),
       );
 
@@ -105,21 +103,20 @@ void main() {
       );
     });
 
-    testWidgets('renders empty dashboard state in English locale with Add Code button', (tester) async {
-      setMobileSize(tester);
+    testWidgets(
+      'renders empty dashboard state in English locale with Add Code button',
+      (tester) async {
+        setMobileSize(tester);
 
-      await pumpApp(
-        tester,
-        Scaffold(
-          body: DashboardEmptyState(
-            onAddContact: () {},
-          ),
-        ),
-        locale: const Locale('en'),
-      );
+        await pumpApp(
+          tester,
+          Scaffold(body: DashboardEmptyState(onAddContact: () {})),
+          locale: const Locale('en'),
+        );
 
-      expect(find.text('No cards saved yet'), findsOneWidget);
-      expect(find.text('Add Code'), findsOneWidget);
-    });
+        expect(find.text('No cards saved yet'), findsOneWidget);
+        expect(find.text('Add Code'), findsOneWidget);
+      },
+    );
   });
 }

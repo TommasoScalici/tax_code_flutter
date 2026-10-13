@@ -24,7 +24,9 @@ void main() {
 
   group('ContactPdfService', () {
     test('generates non-empty PDF byte array with valid PDF header', () async {
-      final pdfBytes = await pdfService.generateContactPdf(contact: testContact);
+      final pdfBytes = await pdfService.generateContactPdf(
+        contact: testContact,
+      );
 
       expect(pdfBytes, isNotEmpty);
       // Valid PDF documents begin with the '%PDF-' magic header bytes (0x25, 0x50, 0x44, 0x46, 0x2D)

@@ -19,11 +19,7 @@ void main() {
         darkTheme: AppTheme.darkTheme,
         themeMode: themeMode,
         home: Scaffold(
-          body: Center(
-            child: FormSectionDivider(
-              label: customLabel,
-            ),
-          ),
+          body: Center(child: FormSectionDivider(label: customLabel)),
         ),
       );
     }
@@ -46,18 +42,14 @@ void main() {
     });
 
     testWidgets('renders custom label correctly in uppercase', (tester) async {
-      await tester.pumpWidget(
-        createTestWidget(customLabel: 'Altre Opzioni'),
-      );
+      await tester.pumpWidget(createTestWidget(customLabel: 'Altre Opzioni'));
       await tester.pumpAndSettle();
 
       expect(find.text('ALTRE OPZIONI'), findsOneWidget);
     });
 
     testWidgets('renders without error in light theme', (tester) async {
-      await tester.pumpWidget(
-        createTestWidget(themeMode: ThemeMode.light),
-      );
+      await tester.pumpWidget(createTestWidget(themeMode: ThemeMode.light));
       await tester.pumpAndSettle();
 
       expect(find.byType(FormSectionDivider), findsOneWidget);

@@ -19,34 +19,31 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
     AuthStatus initialStatus = AuthStatus.initializing,
     FakeUser? initialUser,
     bool isGuest = false,
-  })  : _status = initialStatus,
-        _currentUser = initialUser ??
-            (initialStatus == AuthStatus.authenticated
-                ? FakeUser(
-                    uid: isGuest ? 'fake-guest-uid' : 'fake-user-uid',
-                    isAnonymous: isGuest,
-                    displayName: isGuest ? 'Guest User' : 'Mario Rossi',
-                    email: isGuest ? null : 'mario.rossi@example.com',
-                  )
-                : null);
+  }) : _status = initialStatus,
+       _currentUser =
+           initialUser ??
+           (initialStatus == AuthStatus.authenticated
+               ? FakeUser(
+                   uid: isGuest ? 'fake-guest-uid' : 'fake-user-uid',
+                   isAnonymous: isGuest,
+                   displayName: isGuest ? 'Guest User' : 'Mario Rossi',
+                   email: isGuest ? null : 'mario.rossi@example.com',
+                 )
+               : null);
 
   /// Convenience factory for an already authenticated user.
-  factory FakeAuthService.authenticated({FakeUser? user}) =>
-      FakeAuthService(
-        initialStatus: AuthStatus.authenticated,
-        initialUser: user,
-      );
+  factory FakeAuthService.authenticated({FakeUser? user}) => FakeAuthService(
+    initialStatus: AuthStatus.authenticated,
+    initialUser: user,
+  );
 
   /// Convenience factory for a guest authenticated user.
-  factory FakeAuthService.guest() => FakeAuthService(
-        initialStatus: AuthStatus.authenticated,
-        isGuest: true,
-      );
+  factory FakeAuthService.guest() =>
+      FakeAuthService(initialStatus: AuthStatus.authenticated, isGuest: true);
 
   /// Convenience factory for an unauthenticated state.
-  factory FakeAuthService.unauthenticated() => FakeAuthService(
-        initialStatus: AuthStatus.unauthenticated,
-      );
+  factory FakeAuthService.unauthenticated() =>
+      FakeAuthService(initialStatus: AuthStatus.unauthenticated);
 
   @override
   AuthStatus get status => _status;

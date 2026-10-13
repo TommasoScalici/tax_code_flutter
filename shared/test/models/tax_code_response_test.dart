@@ -8,14 +8,10 @@ void main() {
     final fakeJson = {
       'status': true,
       'message': 'Codice Fiscale Calcolato',
-      'data': {
-        'cf': 'RSSMRA80A01H501A',
-      },
+      'data': {'cf': 'RSSMRA80A01H501A'},
     };
 
-    const expectedData = TaxCodeData(
-      fiscalCode: 'RSSMRA80A01H501A',
-    );
+    const expectedData = TaxCodeData(fiscalCode: 'RSSMRA80A01H501A');
 
     const expectedResponse = TaxCodeResponse(
       status: true,
@@ -49,7 +45,9 @@ void main() {
     group('TaxCodeData Model', () {
       test('fromJson should create a valid model from map', () {
         // Act
-        final result = TaxCodeData.fromJson(fakeJson['data']! as Map<String, dynamic>);
+        final result = TaxCodeData.fromJson(
+          fakeJson['data']! as Map<String, dynamic>,
+        );
         // Assert
         expect(result, equals(expectedData));
       });

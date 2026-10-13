@@ -68,9 +68,7 @@ class _DashboardSearchBarPreviewState extends State<DashboardSearchBarPreview> {
             border: Border.all(
               color: colorScheme.outlineVariant.withValues(alpha: 0.6),
             ),
-            boxShadow: [
-              AppColors.shadowElevated(isDarkMode),
-            ],
+            boxShadow: [AppColors.shadowElevated(isDarkMode)],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,8 +87,9 @@ class _DashboardSearchBarPreviewState extends State<DashboardSearchBarPreview> {
                     vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest
-                        .withValues(alpha: 0.5),
+                    color: colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
+                    ),
                     borderRadius: BorderRadius.circular(AppRadii.sm),
                   ),
                   child: Row(

@@ -110,15 +110,15 @@ class _BarcodeBottomSheetState extends State<BarcodeBottomSheet> {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: AppDimensions.maxContentWidth),
+        constraints: const BoxConstraints(
+          maxWidth: AppDimensions.maxContentWidth,
+        ),
         child: Container(
           decoration: BoxDecoration(
             color: sheetBgColor,
             borderRadius: AppRadii.borderSheet,
             border: Border(top: BorderSide(color: topBorderColor)),
-            boxShadow: [
-              AppColors.shadowSheet(isDark),
-            ],
+            boxShadow: [AppColors.shadowSheet(isDark)],
           ),
           child: SafeArea(
             top: false,

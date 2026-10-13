@@ -31,8 +31,9 @@ class DatabaseService {
         .doc(userId)
         .collection('contacts');
     final snapshot = await collection.get();
-    final contacts =
-        snapshot.docs.map((doc) => Contact.fromJson(doc.data())).toList();
+    final contacts = snapshot.docs
+        .map((doc) => Contact.fromJson(doc.data()))
+        .toList();
     contacts.sort((a, b) => a.listIndex.compareTo(b.listIndex));
     return contacts;
   }

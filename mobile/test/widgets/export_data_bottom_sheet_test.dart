@@ -48,18 +48,19 @@ void main() {
     tempDir = await Directory.systemTemp.createTemp('export_test_');
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('plugins.flutter.io/path_provider'),
-      (methodCall) async {
-        if (methodCall.method == 'getTemporaryDirectory') {
-          return tempDir.path;
-        }
-        return null;
-      },
-    );
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          (methodCall) async {
+            if (methodCall.method == 'getTemporaryDirectory') {
+              return tempDir.path;
+            }
+            return null;
+          },
+        );
 
     when(() => mockDataExportService.fileExtension(any())).thenReturn('json');
-    when(() => mockDataExportService.mimeType(any()))
-        .thenReturn('application/json');
+    when(
+      () => mockDataExportService.mimeType(any()),
+    ).thenReturn('application/json');
     when(
       () => mockDataExportService.formatContacts(
         contacts: any(named: 'contacts'),
@@ -81,9 +82,9 @@ void main() {
   tearDown(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('plugins.flutter.io/path_provider'),
-      null,
-    );
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          null,
+        );
     try {
       if (tempDir.existsSync()) {
         await tempDir.delete(recursive: true);
@@ -120,75 +121,82 @@ void main() {
   }
 
   group('ExportDataBottomSheet Widget Tests', () {
-    testWidgets('renders empty state message and disables export when no contacts', (
-      tester,
-    ) async {
-      when(() => mockContactRepository.contacts).thenReturn([]);
+    testWidgets(
+      'renders empty state message and disables export when no contacts',
+      (tester) async {
+        when(() => mockContactRepository.contacts).thenReturn([]);
 
-      await tester.pumpWidget(
-        buildTestApp(
-          child: Builder(
-            builder: (context) => ElevatedButton(
-              onPressed: () => ExportDataBottomSheet.show(context),
-              child: const Text('Open'),
+        await tester.pumpWidget(
+          buildTestApp(
+            child: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () => ExportDataBottomSheet.show(context),
+                child: const Text('Open'),
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Esporta codici'), findsOneWidget);
-      expect(
-        find.text('Non hai ancora salvato alcun codice fiscale da esportare.'),
-        findsOneWidget,
-      );
+        expect(find.text('Esporta codici'), findsOneWidget);
+        expect(
+          find.text(
+            'Non hai ancora salvato alcun codice fiscale da esportare.',
+          ),
+          findsOneWidget,
+        );
 
-      final confirmBtn = tester.widget<FilledButton>(
-        find.byKey(const Key('export_confirm_button')),
-      );
-      expect(confirmBtn.onPressed, isNull);
-    });
+        final confirmBtn = tester.widget<FilledButton>(
+          find.byKey(const Key('export_confirm_button')),
+        );
+        expect(confirmBtn.onPressed, isNull);
+      },
+    );
 
-    testWidgets('renders contact count and allows switching between JSON and CSV', (
-      tester,
-    ) async {
-      when(() => mockContactRepository.contacts).thenReturn([testContact]);
+    testWidgets(
+      'renders contact count and allows switching between JSON and CSV',
+      (tester) async {
+        when(() => mockContactRepository.contacts).thenReturn([testContact]);
 
-      await tester.pumpWidget(
-        buildTestApp(
-          child: Builder(
-            builder: (context) => ElevatedButton(
-              onPressed: () => ExportDataBottomSheet.show(context),
-              child: const Text('Open'),
+        await tester.pumpWidget(
+          buildTestApp(
+            child: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () => ExportDataBottomSheet.show(context),
+                child: const Text('Open'),
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
 
-      expect(
-        find.text("1 codice fiscale pronto per l'esportazione"),
-        findsOneWidget,
-      );
+        expect(
+          find.text("1 codice fiscale pronto per l'esportazione"),
+          findsOneWidget,
+        );
 
-      // JSON is selected by default
-      expect(find.byKey(const Key('export_format_json_card')), findsOneWidget);
-      expect(find.byKey(const Key('export_format_csv_card')), findsOneWidget);
+        // JSON is selected by default
+        expect(
+          find.byKey(const Key('export_format_json_card')),
+          findsOneWidget,
+        );
+        expect(find.byKey(const Key('export_format_csv_card')), findsOneWidget);
 
-      // Tap CSV option card
-      await tester.tap(find.byKey(const Key('export_format_csv_card')));
-      await tester.pumpAndSettle();
+        // Tap CSV option card
+        await tester.tap(find.byKey(const Key('export_format_csv_card')));
+        await tester.pumpAndSettle();
 
-      // Export button is enabled
-      final confirmBtn = tester.widget<FilledButton>(
-        find.byKey(const Key('export_confirm_button')),
-      );
-      expect(confirmBtn.onPressed, isNotNull);
-    });
+        // Export button is enabled
+        final confirmBtn = tester.widget<FilledButton>(
+          find.byKey(const Key('export_confirm_button')),
+        );
+        expect(confirmBtn.onPressed, isNotNull);
+      },
+    );
 
     testWidgets('tapping cancel closes the bottom sheet', (tester) async {
       when(() => mockContactRepository.contacts).thenReturn([testContact]);
@@ -215,57 +223,60 @@ void main() {
       expect(find.text('Esporta codici'), findsNothing);
     });
 
-    testWidgets('tapping export formats data, pops sheet, and calls sharingService.shareFile', (
-      tester,
-    ) async {
-      when(() => mockContactRepository.contacts).thenReturn([testContact]);
+    testWidgets(
+      'tapping export formats data, pops sheet, and calls sharingService.shareFile',
+      (tester) async {
+        when(() => mockContactRepository.contacts).thenReturn([testContact]);
 
-      await tester.pumpWidget(
-        buildTestApp(
-          child: Builder(
-            builder: (context) => ElevatedButton(
-              onPressed: () => ExportDataBottomSheet.show(context),
-              child: const Text('Open'),
+        await tester.pumpWidget(
+          buildTestApp(
+            child: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () => ExportDataBottomSheet.show(context),
+                child: const Text('Open'),
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
 
-      final btn = tester.widget<FilledButton>(
-        find.byKey(const Key('export_confirm_button')),
-      );
-      expect(btn.onPressed, isNotNull);
+        final btn = tester.widget<FilledButton>(
+          find.byKey(const Key('export_confirm_button')),
+        );
+        expect(btn.onPressed, isNotNull);
 
-      await tester.runAsync(() async {
-        btn.onPressed!();
-        await Future<void>.delayed(const Duration(milliseconds: 300));
-      });
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
+        await tester.runAsync(() async {
+          btn.onPressed!();
+          await Future<void>.delayed(const Duration(milliseconds: 300));
+        });
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
 
-      verify(
-        () => mockDataExportService.formatContacts(
-          contacts: any(named: 'contacts'),
-          format: ExportFormat.json,
-        ),
-      ).called(1);
+        verify(
+          () => mockDataExportService.formatContacts(
+            contacts: any(named: 'contacts'),
+            format: ExportFormat.json,
+          ),
+        ).called(1);
 
-      verify(
-        () => mockSharingService.shareFile(
-          filePath: any(named: 'filePath'),
-          mimeType: 'application/json',
-          subject: any(named: 'subject'),
-        ),
-      ).called(1);
+        verify(
+          () => mockSharingService.shareFile(
+            filePath: any(named: 'filePath'),
+            mimeType: 'application/json',
+            subject: any(named: 'subject'),
+          ),
+        ).called(1);
 
-      // The sheet is dismissed after export
-      expect(find.byType(ExportDataBottomSheet), findsNothing);
-    });
+        // The sheet is dismissed after export
+        expect(find.byType(ExportDataBottomSheet), findsNothing);
+      },
+    );
 
-    testWidgets('ExportDataHeader renders contact count badge when count > 0', (tester) async {
+    testWidgets('ExportDataHeader renders contact count badge when count > 0', (
+      tester,
+    ) async {
       var closeTapped = false;
       await tester.pumpWidget(
         buildTestApp(
@@ -279,13 +290,18 @@ void main() {
 
       expect(find.byIcon(Icons.file_download_outlined), findsOneWidget);
       expect(find.byIcon(Icons.badge_outlined), findsOneWidget);
-      expect(find.byKey(const Key('export_sheet_close_button')), findsOneWidget);
+      expect(
+        find.byKey(const Key('export_sheet_close_button')),
+        findsOneWidget,
+      );
 
       await tester.tap(find.byKey(const Key('export_sheet_close_button')));
       expect(closeTapped, isTrue);
     });
 
-    testWidgets('ExportFormatOptionCard handles selection state and taps', (tester) async {
+    testWidgets('ExportFormatOptionCard handles selection state and taps', (
+      tester,
+    ) async {
       var tapped = false;
       await tester.pumpWidget(
         buildTestApp(
@@ -308,7 +324,9 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('ExportFormatSelector triggers onFormatSelected callback', (tester) async {
+    testWidgets('ExportFormatSelector triggers onFormatSelected callback', (
+      tester,
+    ) async {
       ExportFormat? selected;
       await tester.pumpWidget(
         buildTestApp(
@@ -324,21 +342,23 @@ void main() {
       expect(selected, ExportFormat.csv);
     });
 
-    test('ExportDataFileHelper prepares export file with formatted data and timestamp', () async {
-      final now = DateTime(2026, 10, 12, 14, 30);
-      final result = await ExportDataFileHelper.prepareExportFile(
-        contacts: [testContact],
-        format: ExportFormat.json,
-        exportService: mockDataExportService,
-        getTempDir: () async => tempDir,
-        now: now,
-      );
+    test(
+      'ExportDataFileHelper prepares export file with formatted data and timestamp',
+      () async {
+        final now = DateTime(2026, 10, 12, 14, 30);
+        final result = await ExportDataFileHelper.prepareExportFile(
+          contacts: [testContact],
+          format: ExportFormat.json,
+          exportService: mockDataExportService,
+          getTempDir: () async => tempDir,
+          now: now,
+        );
 
-      expect(result.fileName, 'codici_fiscali_20261012_143000.json');
-      expect(result.mimeType, 'application/json');
-      expect(result.file.existsSync(), isTrue);
-      expect(await result.file.readAsString(), '[{"id":"1"}]');
-    });
+        expect(result.fileName, 'codici_fiscali_20261012_143000.json');
+        expect(result.mimeType, 'application/json');
+        expect(result.file.existsSync(), isTrue);
+        expect(await result.file.readAsString(), '[{"id":"1"}]');
+      },
+    );
   });
 }
-

@@ -96,9 +96,7 @@ class ContactCard extends StatelessWidget {
         color: colorScheme.surfaceContainer,
         borderRadius: AppRadii.borderCard,
         border: Border.all(color: cardBorderColor),
-        boxShadow: [
-          AppColors.shadowCard(isDark),
-        ],
+        boxShadow: [AppColors.shadowCard(isDark)],
       ),
       child: Material(
         color: AppColors.transparent,

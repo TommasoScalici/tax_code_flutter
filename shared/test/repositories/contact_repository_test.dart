@@ -142,6 +142,7 @@ void main() {
         completer.complete();
       }
     }
+
     contactRepository.addListener(listener);
     await action();
     await completer.future;
@@ -628,97 +629,144 @@ void main() {
       syncRepo.dispose();
     });
 
-    test('disabling sync cancels subscription without deleting cloud contacts', () async {
-      await pumpEventQueue();
-      clearInteractions(mockDbService);
-
-      when(() => mockSyncService.isSyncEnabled).thenReturn(false);
-      final listener = verify(() => mockSyncService.addListener(captureAny())).captured.first as VoidCallback;
-      listener();
-      await pumpEventQueue();
-
-      verifyNever(() => mockDbService.saveAllContacts(any(), any()));
-    });
-
-    test('enabling sync reconciles local and remote contacts before listening to stream', () async {
-      await pumpEventQueue();
-
-      // Disable first
-      when(() => mockSyncService.isSyncEnabled).thenReturn(false);
-      final listener = verify(() => mockSyncService.addListener(captureAny())).captured.first as VoidCallback;
-      listener();
-      await pumpEventQueue();
-
-      // Add contact locally while sync is disabled
-      await syncRepo.addOrUpdateContact(contact1);
-      clearInteractions(mockDbService);
-
-      // Re-enable sync
-      when(() => mockSyncService.isSyncEnabled).thenReturn(true);
-      when(() => mockDbService.getContacts(fakeUser.uid)).thenAnswer((_) async => <Contact>[]);
-      listener();
-      await pumpEventQueue();
-
-      verifyInOrder([
-        () => mockDbService.getContacts(fakeUser.uid),
-        () => mockDbService.saveAllContacts(fakeUser.uid, [contact1]),
-        () => mockDbService.getContactsStream(fakeUser.uid),
-      ]);
-    });
-
-    test('remote empty contacts update local state to empty without re-upload', () async {
-      while (syncRepo.isLoading) {
+    test(
+      'disabling sync cancels subscription without deleting cloud contacts',
+      () async {
         await pumpEventQueue();
-      }
-      await syncRepo.addOrUpdateContact(contact1);
-      clearInteractions(mockDbService);
+        clearInteractions(mockDbService);
 
-      // Remote stream legitimately emits empty list (e.g. user deleted contacts on another device)
-      contactsStreamController.add([]);
-      await pumpEventQueue();
+        when(() => mockSyncService.isSyncEnabled).thenReturn(false);
+        final listener =
+            verify(
+                  () => mockSyncService.addListener(captureAny()),
+                ).captured.first
+                as VoidCallback;
+        listener();
+        await pumpEventQueue();
 
-      // Contacts in repo must now reflect the empty remote list without resurrecting contacts
-      expect(syncRepo.contacts, isEmpty);
-      verifyNever(() => mockDbService.saveAllContacts(any(), any()));
-    });
+        verifyNever(() => mockDbService.saveAllContacts(any(), any()));
+      },
+    );
 
-    test('reconciliation resolves conflicts using updatedAt timestamp', () async {
-      await pumpEventQueue();
+    test(
+      'enabling sync reconciles local and remote contacts before listening to stream',
+      () async {
+        await pumpEventQueue();
 
-      // Disable first
-      when(() => mockSyncService.isSyncEnabled).thenReturn(false);
-      final listener = verify(() => mockSyncService.addListener(captureAny())).captured.first as VoidCallback;
-      listener();
-      await pumpEventQueue();
+        // Disable first
+        when(() => mockSyncService.isSyncEnabled).thenReturn(false);
+        final listener =
+            verify(
+                  () => mockSyncService.addListener(captureAny()),
+                ).captured.first
+                as VoidCallback;
+        listener();
+        await pumpEventQueue();
 
-      // Local contact modified more recently
-      final olderTime = DateTime(2025);
-      final newerTime = DateTime(2025, 6);
-      final localContact = contact1.copyWith(firstName: 'Mario-Local', updatedAt: newerTime);
-      final remoteContact = contact1.copyWith(firstName: 'Mario-Remote', updatedAt: olderTime);
+        // Add contact locally while sync is disabled
+        await syncRepo.addOrUpdateContact(contact1);
+        clearInteractions(mockDbService);
 
-      await syncRepo.addOrUpdateContact(localContact);
-      clearInteractions(mockDbService);
+        // Re-enable sync
+        when(() => mockSyncService.isSyncEnabled).thenReturn(true);
+        when(
+          () => mockDbService.getContacts(fakeUser.uid),
+        ).thenAnswer((_) async => <Contact>[]);
+        listener();
+        await pumpEventQueue();
 
-      when(() => mockSyncService.isSyncEnabled).thenReturn(true);
-      when(() => mockDbService.getContacts(fakeUser.uid)).thenAnswer((_) async => [remoteContact]);
-      listener();
-      await pumpEventQueue();
+        verifyInOrder([
+          () => mockDbService.getContacts(fakeUser.uid),
+          () => mockDbService.saveAllContacts(fakeUser.uid, [contact1]),
+          () => mockDbService.getContactsStream(fakeUser.uid),
+        ]);
+      },
+    );
 
-      // Newer local contact should win over older remote contact
-      expect(syncRepo.contacts.first.firstName, 'Mario-Local');
-      verify(() => mockDbService.saveAllContacts(fakeUser.uid, any(that: contains(localContact)))).called(1);
-    });
+    test(
+      'remote empty contacts update local state to empty without re-upload',
+      () async {
+        while (syncRepo.isLoading) {
+          await pumpEventQueue();
+        }
+        await syncRepo.addOrUpdateContact(contact1);
+        clearInteractions(mockDbService);
+
+        // Remote stream legitimately emits empty list (e.g. user deleted contacts on another device)
+        contactsStreamController.add([]);
+        await pumpEventQueue();
+
+        // Contacts in repo must now reflect the empty remote list without resurrecting contacts
+        expect(syncRepo.contacts, isEmpty);
+        verifyNever(() => mockDbService.saveAllContacts(any(), any()));
+      },
+    );
+
+    test(
+      'reconciliation resolves conflicts using updatedAt timestamp',
+      () async {
+        await pumpEventQueue();
+
+        // Disable first
+        when(() => mockSyncService.isSyncEnabled).thenReturn(false);
+        final listener =
+            verify(
+                  () => mockSyncService.addListener(captureAny()),
+                ).captured.first
+                as VoidCallback;
+        listener();
+        await pumpEventQueue();
+
+        // Local contact modified more recently
+        final olderTime = DateTime(2025);
+        final newerTime = DateTime(2025, 6);
+        final localContact = contact1.copyWith(
+          firstName: 'Mario-Local',
+          updatedAt: newerTime,
+        );
+        final remoteContact = contact1.copyWith(
+          firstName: 'Mario-Remote',
+          updatedAt: olderTime,
+        );
+
+        await syncRepo.addOrUpdateContact(localContact);
+        clearInteractions(mockDbService);
+
+        when(() => mockSyncService.isSyncEnabled).thenReturn(true);
+        when(
+          () => mockDbService.getContacts(fakeUser.uid),
+        ).thenAnswer((_) async => [remoteContact]);
+        listener();
+        await pumpEventQueue();
+
+        // Newer local contact should win over older remote contact
+        expect(syncRepo.contacts.first.firstName, 'Mario-Local');
+        verify(
+          () => mockDbService.saveAllContacts(
+            fakeUser.uid,
+            any(that: contains(localContact)),
+          ),
+        ).called(1);
+      },
+    );
 
     test('reconciliation preserves reordered contacts order across sync', () async {
       await pumpEventQueue();
 
-      final listener = verify(() => mockSyncService.addListener(captureAny())).captured.first as VoidCallback;
+      final listener =
+          verify(() => mockSyncService.addListener(captureAny())).captured.first
+              as VoidCallback;
 
       // Local contacts were reordered: contact2 is first (listIndex: 0), contact1 is second (listIndex: 1)
       final reorderedTime = DateTime.now();
-      final localContact2 = contact2.copyWith(listIndex: 0, updatedAt: reorderedTime);
-      final localContact1 = contact1.copyWith(listIndex: 1, updatedAt: reorderedTime);
+      final localContact2 = contact2.copyWith(
+        listIndex: 0,
+        updatedAt: reorderedTime,
+      );
+      final localContact1 = contact1.copyWith(
+        listIndex: 1,
+        updatedAt: reorderedTime,
+      );
 
       // Disable sync to simulate offline reordering
       when(() => mockSyncService.isSyncEnabled).thenReturn(false);
@@ -731,59 +779,84 @@ void main() {
       // Re-enable sync. Remote returns contacts in doc ID order (contact1, then contact2)
       when(() => mockSyncService.isSyncEnabled).thenReturn(true);
       when(() => mockDbService.getContacts(fakeUser.uid)).thenAnswer(
-        (_) async => [contact1.copyWith(listIndex: 0), contact2.copyWith(listIndex: 1)],
+        (_) async => [
+          contact1.copyWith(listIndex: 0),
+          contact2.copyWith(listIndex: 1),
+        ],
       );
       listener();
       await pumpEventQueue();
 
       // The reordered order [contact2, contact1] must be preserved
-      expect(syncRepo.contacts.map((c) => c.id).toList(), [contact2.id, contact1.id]);
+      expect(syncRepo.contacts.map((c) => c.id).toList(), [
+        contact2.id,
+        contact1.id,
+      ]);
       expect(syncRepo.contacts[0].listIndex, 0);
       expect(syncRepo.contacts[1].listIndex, 1);
     });
 
-    test('migrates guest contacts to Google account on sign-in without losing cloud contacts', () async {
-      final guestContact = contact1.copyWith(id: 'guest_1', taxCode: 'RSSMRA90A01H501Z');
-      final cloudContact = contact2.copyWith(id: 'cloud_1', taxCode: 'VRDLGU92B02F205Y');
+    test(
+      'migrates guest contacts to Google account on sign-in without losing cloud contacts',
+      () async {
+        final guestContact = contact1.copyWith(
+          id: 'guest_1',
+          taxCode: 'RSSMRA90A01H501Z',
+        );
+        final cloudContact = contact2.copyWith(
+          id: 'cloud_1',
+          taxCode: 'VRDLGU92B02F205Y',
+        );
 
-      // 1. Arrange: User is guest with non-syncing session
-      fakeAuthService.login(FakeUser(uid: 'guest_123', isAnonymous: true));
-      when(() => mockSyncService.isSyncEnabled).thenReturn(false);
-      when(() => mockDbService.getContacts('google_456')).thenAnswer((_) async => [cloudContact]);
+        // 1. Arrange: User is guest with non-syncing session
+        fakeAuthService.login(FakeUser(uid: 'guest_123', isAnonymous: true));
+        when(() => mockSyncService.isSyncEnabled).thenReturn(false);
+        when(
+          () => mockDbService.getContacts('google_456'),
+        ).thenAnswer((_) async => [cloudContact]);
 
-      final repo = ContactRepository(
-        authService: fakeAuthService,
-        dbService: mockDbService,
-        cacheService: HiveLocalCacheService(),
-        logger: mockLogger,
-        syncService: mockSyncService,
-      );
+        final repo = ContactRepository(
+          authService: fakeAuthService,
+          dbService: mockDbService,
+          cacheService: HiveLocalCacheService(),
+          logger: mockLogger,
+          syncService: mockSyncService,
+        );
 
-      while (repo.isLoading) {
+        while (repo.isLoading) {
+          await pumpEventQueue();
+        }
+
+        // Guest adds contact
+        await repo.addOrUpdateContact(guestContact);
+        expect(repo.contacts, [guestContact]);
+        clearInteractions(mockDbService);
+
+        // 2. Act: User signs in with Google
+        when(() => mockSyncService.isSyncEnabled).thenReturn(true);
+        fakeAuthService.login(FakeUser(uid: 'google_456'));
+        // Allow auth change event loop cycle to start
         await pumpEventQueue();
-      }
+        while (repo.isLoading) {
+          await pumpEventQueue();
+        }
 
-      // Guest adds contact
-      await repo.addOrUpdateContact(guestContact);
-      expect(repo.contacts, [guestContact]);
-      clearInteractions(mockDbService);
+        // 3. Assert: contacts should be merged ([cloudContact, guestContact])
+        expect(repo.contacts.length, 2);
+        expect(
+          repo.contacts.map((c) => c.id),
+          containsAll(['guest_1', 'cloud_1']),
+        );
+        verify(() => mockDbService.getContacts('google_456')).called(1);
+        verify(
+          () => mockDbService.saveAllContacts(
+            'google_456',
+            any(that: hasLength(2)),
+          ),
+        ).called(1);
 
-      // 2. Act: User signs in with Google
-      when(() => mockSyncService.isSyncEnabled).thenReturn(true);
-      fakeAuthService.login(FakeUser(uid: 'google_456'));
-      // Allow auth change event loop cycle to start
-      await pumpEventQueue();
-      while (repo.isLoading) {
-        await pumpEventQueue();
-      }
-
-      // 3. Assert: contacts should be merged ([cloudContact, guestContact])
-      expect(repo.contacts.length, 2);
-      expect(repo.contacts.map((c) => c.id), containsAll(['guest_1', 'cloud_1']));
-      verify(() => mockDbService.getContacts('google_456')).called(1);
-      verify(() => mockDbService.saveAllContacts('google_456', any(that: hasLength(2)))).called(1);
-
-      repo.dispose();
-    });
+        repo.dispose();
+      },
+    );
   });
 }

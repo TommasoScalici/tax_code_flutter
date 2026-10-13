@@ -81,7 +81,9 @@ abstract final class AppTheme {
           foregroundColor: colorScheme.onPrimary,
           shape: const StadiumBorder(),
           minimumSize: const Size.fromHeight(AppDimensions.minTouchTarget),
-          textStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+          textStyle: textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
           elevation: AppElevation.none,
         ),
       ),
@@ -91,24 +93,33 @@ abstract final class AppTheme {
           foregroundColor: colorScheme.onPrimary,
           shape: const StadiumBorder(),
           minimumSize: const Size.fromHeight(AppDimensions.minTouchTarget),
-          textStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+          textStyle: textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
           elevation: AppElevation.none,
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: colorScheme.primary,
-          side: BorderSide(color: colorScheme.outline, width: AppDimensions.borderThick),
+          side: BorderSide(
+            color: colorScheme.outline,
+            width: AppDimensions.borderThick,
+          ),
           shape: const StadiumBorder(),
           minimumSize: const Size.fromHeight(AppDimensions.minTouchTarget),
-          textStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+          textStyle: textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: colorScheme.onSurfaceVariant,
           shape: const StadiumBorder(),
-          textStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+          textStyle: textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
 
@@ -119,7 +130,9 @@ abstract final class AppTheme {
         elevation: isDark ? AppElevation.none : AppElevation.level1,
         focusElevation: isDark ? AppElevation.none : AppElevation.level1,
         hoverElevation: isDark ? AppElevation.none : AppElevation.levelHover,
-        highlightElevation: isDark ? AppElevation.none : AppElevation.levelHover,
+        highlightElevation: isDark
+            ? AppElevation.none
+            : AppElevation.levelHover,
         shape: const StadiumBorder(),
       ),
 
@@ -128,9 +141,7 @@ abstract final class AppTheme {
         backgroundColor: colorScheme.surfaceContainer,
         modalBackgroundColor: colorScheme.surfaceContainer,
         elevation: AppElevation.modal,
-        shape: const RoundedRectangleBorder(
-          borderRadius: AppRadii.borderSheet,
-        ),
+        shape: const RoundedRectangleBorder(borderRadius: AppRadii.borderSheet),
         dragHandleColor: colorScheme.outline,
         dragHandleSize: AppDimensions.dragHandleThemeSize,
         showDragHandle: true,
@@ -169,7 +180,9 @@ abstract final class AppTheme {
         ),
         labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
         hintStyle: TextStyle(
-          color: colorScheme.onSurfaceVariant.withValues(alpha: AppOpacity.muted),
+          color: colorScheme.onSurfaceVariant.withValues(
+            alpha: AppOpacity.muted,
+          ),
         ),
         prefixIconColor: colorScheme.onSurfaceVariant,
         suffixIconColor: colorScheme.onSurfaceVariant,
@@ -181,9 +194,7 @@ abstract final class AppTheme {
           shape: const WidgetStatePropertyAll(
             RoundedRectangleBorder(borderRadius: AppRadii.borderMd),
           ),
-          side: WidgetStatePropertyAll(
-            BorderSide(color: colorScheme.outline),
-          ),
+          side: WidgetStatePropertyAll(BorderSide(color: colorScheme.outline)),
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.selected)) {
               return colorScheme.primaryContainer;
@@ -203,7 +214,9 @@ abstract final class AppTheme {
       dialogTheme: DialogThemeData(
         backgroundColor: colorScheme.surfaceContainer,
         elevation: AppElevation.dialog,
-        shape: const RoundedRectangleBorder(borderRadius: AppRadii.borderDialog),
+        shape: const RoundedRectangleBorder(
+          borderRadius: AppRadii.borderDialog,
+        ),
       ),
 
       // Divider

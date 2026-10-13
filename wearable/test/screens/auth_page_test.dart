@@ -122,25 +122,28 @@ void main() {
       expect(find.text('Login failed. Please try again.'), findsNothing);
     });
 
-    testWidgets('displays loading indicator and disables demo button when loading', (
-      tester,
-    ) async {
-      // Arrange
-      when(() => mockAuthService.status).thenReturn(AuthStatus.unauthenticated);
-      when(() => mockAuthService.isLoading).thenReturn(true);
-      when(() => mockAuthService.errorMessage).thenReturn(null);
+    testWidgets(
+      'displays loading indicator and disables demo button when loading',
+      (tester) async {
+        // Arrange
+        when(
+          () => mockAuthService.status,
+        ).thenReturn(AuthStatus.unauthenticated);
+        when(() => mockAuthService.isLoading).thenReturn(true);
+        when(() => mockAuthService.errorMessage).thenReturn(null);
 
-      // Act
-      await pumpWidget(tester);
+        // Act
+        await pumpWidget(tester);
 
-      // Assert
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      await tester.tap(find.text('Sign In with Google'));
-      await tester.tap(find.text('Demo Mode'));
+        // Assert
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        await tester.tap(find.text('Sign In with Google'));
+        await tester.tap(find.text('Demo Mode'));
 
-      verifyNever(() => mockAuthService.signInWithGoogleForWearable());
-      verifyNever(() => mockDemoModeService.enableDemoMode());
-    });
+        verifyNever(() => mockAuthService.signInWithGoogleForWearable());
+        verifyNever(() => mockDemoModeService.enableDemoMode());
+      },
+    );
 
     testWidgets('displays error message when authService has an error', (
       tester,

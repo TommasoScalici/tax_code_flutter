@@ -33,9 +33,7 @@ class _ThemeShowcasePreviewState extends State<ThemeShowcasePreview> {
 
         return Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor,
-          appBar: AppBar(
-            title: Text(l10n.themeShowcase),
-          ),
+          appBar: AppBar(title: Text(l10n.themeShowcase)),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {},
             icon: const Icon(Icons.add),

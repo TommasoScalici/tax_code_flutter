@@ -47,12 +47,12 @@ class DefaultContactRepository extends ContactRepository {
     required Logger logger,
     SyncService? syncService,
     bool autoInit = true,
-  })  : _authService = authService,
-        _dbService = dbService,
-        _cacheService = cacheService,
-        _logger = logger,
-        _syncService = syncService,
-        super.base() {
+  }) : _authService = authService,
+       _dbService = dbService,
+       _cacheService = cacheService,
+       _logger = logger,
+       _syncService = syncService,
+       super.base() {
     _authService.addListener(_onAuthChanged);
     _syncService?.addListener(_onSyncStateChanged);
 
@@ -293,8 +293,9 @@ class DefaultContactRepository extends ContactRepository {
       final previousUserId = _cachedUserId;
       final hadLocalOnlyContacts =
           _contactsSubscription == null && _contacts.isNotEmpty;
-      final guestContactsToMigrate =
-          hadLocalOnlyContacts ? List<Contact>.from(_contacts) : <Contact>[];
+      final guestContactsToMigrate = hadLocalOnlyContacts
+          ? List<Contact>.from(_contacts)
+          : <Contact>[];
 
       await _contactsSubscription?.cancel();
       _contactsSubscription = null;

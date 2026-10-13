@@ -16,11 +16,7 @@ class OcrAiHeroBanner extends StatelessWidget {
   /// Optional outer margin around the card container.
   final EdgeInsetsGeometry? margin;
 
-  const OcrAiHeroBanner({
-    super.key,
-    required this.onScanPressed,
-    this.margin,
-  });
+  const OcrAiHeroBanner({super.key, required this.onScanPressed, this.margin});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +42,10 @@ class OcrAiHeroBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: cardBgColor,
         borderRadius: AppRadii.borderCard,
-        border: Border.all(color: borderColor, width: AppDimensions.borderMedium),
+        border: Border.all(
+          color: borderColor,
+          width: AppDimensions.borderMedium,
+        ),
         boxShadow: [
           BoxShadow(
             color: glowColor,
@@ -94,12 +93,16 @@ class OcrAiHeroBanner extends StatelessWidget {
                         height: AppDimensions.avatarMd,
                         decoration: BoxDecoration(
                           color: colorScheme.primary.withValues(
-                            alpha: isDark ? AppOpacity.semiTranslucent : AppOpacity.faint,
+                            alpha: isDark
+                                ? AppOpacity.semiTranslucent
+                                : AppOpacity.faint,
                           ),
                           borderRadius: AppRadii.borderInput,
                           border: Border.all(
                             color: colorScheme.primary.withValues(
-                              alpha: isDark ? AppOpacity.outline : AppOpacity.translucent,
+                              alpha: isDark
+                                  ? AppOpacity.outline
+                                  : AppOpacity.translucent,
                             ),
                           ),
                         ),
@@ -141,7 +144,8 @@ class OcrAiHeroBanner extends StatelessWidget {
                                     style: theme.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.w700,
                                       color: colorScheme.onSurface,
-                                      letterSpacing: AppLetterSpacing.titleTight,
+                                      letterSpacing:
+                                          AppLetterSpacing.titleTight,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -154,12 +158,16 @@ class OcrAiHeroBanner extends StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color: colorScheme.primary.withValues(
-                                      alpha: isDark ? AppOpacity.glow : AppOpacity.semiTranslucent,
+                                      alpha: isDark
+                                          ? AppOpacity.glow
+                                          : AppOpacity.semiTranslucent,
                                     ),
                                     borderRadius: AppRadii.borderBadge,
                                     border: Border.all(
                                       color: colorScheme.primary.withValues(
-                                        alpha: isDark ? AppOpacity.outline : AppOpacity.translucent,
+                                        alpha: isDark
+                                            ? AppOpacity.outline
+                                            : AppOpacity.translucent,
                                       ),
                                       width: AppDimensions.borderThin,
                                     ),
@@ -200,7 +208,10 @@ class OcrAiHeroBanner extends StatelessWidget {
                                     horizontal: AppSpacing.fieldVertical,
                                     vertical: AppSpacing.xs,
                                   ),
-                                  minimumSize: const Size(0, AppDimensions.iconXl),
+                                  minimumSize: const Size(
+                                    0,
+                                    AppDimensions.iconXl,
+                                  ),
                                   tapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                   visualDensity: VisualDensity.compact,

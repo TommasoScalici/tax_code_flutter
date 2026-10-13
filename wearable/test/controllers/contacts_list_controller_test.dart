@@ -65,9 +65,7 @@ void main() {
 
     when(() => mockContactRepository.removeListener(any())).thenAnswer((_) {});
 
-    when(() => mockDemoModeService.addListener(any())).thenAnswer((
-      invocation,
-    ) {
+    when(() => mockDemoModeService.addListener(any())).thenAnswer((invocation) {
       onDemoModeChangedCallback =
           invocation.positionalArguments.first as VoidCallback;
     });
@@ -84,10 +82,13 @@ void main() {
 
   group('ContactsListController', () {
     group('Initialization', () {
-      test('adds listener to ContactRepository and DemoModeService on creation', () {
-        verify(() => mockContactRepository.addListener(any())).called(1);
-        verify(() => mockDemoModeService.addListener(any())).called(1);
-      });
+      test(
+        'adds listener to ContactRepository and DemoModeService on creation',
+        () {
+          verify(() => mockContactRepository.addListener(any())).called(1);
+          verify(() => mockDemoModeService.addListener(any())).called(1);
+        },
+      );
 
       test('correctly exposes repository properties when not in demo mode', () {
         final contacts = createRealContacts(2);
@@ -183,14 +184,17 @@ void main() {
       });
     });
 
-    test('dispose removes listener from ContactRepository and DemoModeService', () {
-      controller.dispose();
-      verify(
-        () => mockContactRepository.removeListener(onContactsChangedCallback),
-      ).called(1);
-      verify(
-        () => mockDemoModeService.removeListener(onDemoModeChangedCallback),
-      ).called(1);
-    });
+    test(
+      'dispose removes listener from ContactRepository and DemoModeService',
+      () {
+        controller.dispose();
+        verify(
+          () => mockContactRepository.removeListener(onContactsChangedCallback),
+        ).called(1);
+        verify(
+          () => mockDemoModeService.removeListener(onDemoModeChangedCallback),
+        ).called(1);
+      },
+    );
   });
 }

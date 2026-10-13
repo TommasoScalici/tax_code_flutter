@@ -137,8 +137,8 @@ class _CameraView extends StatelessWidget {
                     l10n.cameraPermissionInfo,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppColors.cameraReticle,
-                        ),
+                      color: AppColors.cameraReticle,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.xxl),
                   ElevatedButton.icon(
@@ -173,11 +173,8 @@ class _CameraView extends StatelessWidget {
       children: [
         const CameraPreviewOverlay(),
         CameraControlsWidget(
-          onMainButtonPressed: () => _onMainButtonPressed(
-            context,
-            controller,
-            l10n,
-          ),
+          onMainButtonPressed: () =>
+              _onMainButtonPressed(context, controller, l10n),
         ),
       ],
     );

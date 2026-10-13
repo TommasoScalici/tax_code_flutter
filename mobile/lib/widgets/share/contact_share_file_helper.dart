@@ -45,8 +45,8 @@ abstract final class ContactShareFileHelper {
 
     final contactName =
         '${contact.firstName} ${contact.lastName}'.trim().isNotEmpty
-            ? '${contact.firstName} ${contact.lastName}'.trim()
-            : contact.taxCode;
+        ? '${contact.firstName} ${contact.lastName}'.trim()
+        : contact.taxCode;
 
     if (format == ContactShareFormat.image) {
       final bytes = await imageService.generateCardImage(

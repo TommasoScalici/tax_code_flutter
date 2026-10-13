@@ -11,10 +11,7 @@ class ShareContactHeader extends StatelessWidget {
   final Contact contact;
 
   /// Creates a [ShareContactHeader].
-  const ShareContactHeader({
-    required this.contact,
-    super.key,
-  });
+  const ShareContactHeader({required this.contact, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +22,8 @@ class ShareContactHeader extends StatelessWidget {
 
     final contactDisplayName =
         '${contact.firstName} ${contact.lastName}'.trim().isNotEmpty
-            ? '${contact.firstName} ${contact.lastName}'.trim()
-            : l10n.contactFallback;
+        ? '${contact.firstName} ${contact.lastName}'.trim()
+        : l10n.contactFallback;
 
     return Column(
       mainAxisSize: MainAxisSize.min,

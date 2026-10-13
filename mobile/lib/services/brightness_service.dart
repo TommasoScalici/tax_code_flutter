@@ -5,7 +5,8 @@ abstract interface class BrightnessService {
   Future<void> setMaxBrightness();
   Future<void> resetBrightness();
 
-  factory BrightnessService({required Logger logger}) = DefaultBrightnessService;
+  factory BrightnessService({required Logger logger}) =
+      DefaultBrightnessService;
 }
 
 typedef BrightnessServiceAbstract = BrightnessService;

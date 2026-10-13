@@ -8,14 +8,13 @@ class TaxCodeGenerator {
     required DateTime dateOfBirth,
     required Gender gender,
     required String birthplaceCode,
-  }) =>
-      generate(
-        firstName: firstName,
-        lastName: lastName,
-        dateOfBirth: dateOfBirth,
-        gender: gender.code,
-        birthplaceCode: birthplaceCode,
-      );
+  }) => generate(
+    firstName: firstName,
+    lastName: lastName,
+    dateOfBirth: dateOfBirth,
+    gender: gender.code,
+    birthplaceCode: birthplaceCode,
+  );
 
   /// Generates the 16-character Italian tax code (Codice Fiscale).
   static String generate({

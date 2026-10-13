@@ -28,8 +28,8 @@ class WearContactCard extends StatelessWidget {
     final birthDateStr = DateFormat.yMd().format(contact.birthDate);
     final birthPlaceStr = contact.birthPlace.name.isNotEmpty
         ? (contact.birthPlace.state.isNotEmpty
-            ? '${contact.birthPlace.name} (${contact.birthPlace.state})'
-            : contact.birthPlace.name)
+              ? '${contact.birthPlace.name} (${contact.birthPlace.state})'
+              : contact.birthPlace.name)
         : '';
     final metadataStr = [
       if (birthDateStr.isNotEmpty) birthDateStr,
@@ -48,7 +48,9 @@ class WearContactCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: WearDimensions.borderCard,
         side: BorderSide(
-          color: AppColors.darkOutline.withValues(alpha: AppOpacity.subtleBorder),
+          color: AppColors.darkOutline.withValues(
+            alpha: AppOpacity.subtleBorder,
+          ),
           width: WearDimensions.borderThin,
         ),
       ),
@@ -56,8 +58,12 @@ class WearContactCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: WearDimensions.borderCard,
-        splashColor: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.semiTranslucent),
-        highlightColor: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.tint),
+        splashColor: AppColors.emeraldPrimary.withValues(
+          alpha: AppOpacity.semiTranslucent,
+        ),
+        highlightColor: AppColors.emeraldPrimary.withValues(
+          alpha: AppOpacity.tint,
+        ),
         child: Padding(
           padding: WearDimensions.cardPadding,
           child: Column(
@@ -77,10 +83,14 @@ class WearContactCard extends StatelessWidget {
               Container(
                 padding: WearDimensions.pillPadding,
                 decoration: BoxDecoration(
-                  color: AppColors.emeraldContainerDark.withValues(alpha: AppOpacity.subtleBorder),
+                  color: AppColors.emeraldContainerDark.withValues(
+                    alpha: AppOpacity.subtleBorder,
+                  ),
                   borderRadius: WearDimensions.borderPill,
                   border: Border.all(
-                    color: AppColors.emeraldPrimary.withValues(alpha: AppOpacity.disabled),
+                    color: AppColors.emeraldPrimary.withValues(
+                      alpha: AppOpacity.disabled,
+                    ),
                     width: WearDimensions.borderThin,
                   ),
                 ),
@@ -98,7 +108,9 @@ class WearContactCard extends StatelessWidget {
                       Icon(
                         Icons.qr_code_2_rounded,
                         size: WearDimensions.iconSmall,
-                        color: AppColors.emeraldLight.withValues(alpha: AppOpacity.high),
+                        color: AppColors.emeraldLight.withValues(
+                          alpha: AppOpacity.high,
+                        ),
                       ),
                     ],
                   ),

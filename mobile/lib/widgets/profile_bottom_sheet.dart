@@ -47,9 +47,7 @@ class ProfileBottomSheet extends StatefulWidget {
       backgroundColor: AppColors.transparent,
       elevation: AppElevation.none,
       barrierColor: AppColors.modalBarrier,
-      builder: (context) => ProfileBottomSheet(
-        startAtAppInfo: startAtAppInfo,
-      ),
+      builder: (context) => ProfileBottomSheet(startAtAppInfo: startAtAppInfo),
     );
   }
 
@@ -97,7 +95,9 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
       },
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppDimensions.maxContentWidth),
+          constraints: const BoxConstraints(
+            maxWidth: AppDimensions.maxContentWidth,
+          ),
           child: Container(
             decoration: BoxDecoration(
               color: isDark
@@ -108,9 +108,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                   : AppRadii.borderSheet,
               boxShadow: widget.isEmbedded
                   ? null
-                  : [
-                      AppColors.shadowSheet(isDark),
-                    ],
+                  : [AppColors.shadowSheet(isDark)],
             ),
             child: Column(
               mainAxisSize: widget.isEmbedded
@@ -122,7 +120,10 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                 if (!widget.isEmbedded)
                   Center(
                     child: Container(
-                      margin: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.xs),
+                      margin: const EdgeInsets.only(
+                        top: AppSpacing.md,
+                        bottom: AppSpacing.xs,
+                      ),
                       width: AppDimensions.dragHandleWidth,
                       height: AppDimensions.dragHandleHeight,
                       decoration: BoxDecoration(
@@ -208,7 +209,12 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
     return SingleChildScrollView(
       key: const ValueKey('profile_main_view'),
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        0,
+        AppSpacing.lg,
+        AppSpacing.xl,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

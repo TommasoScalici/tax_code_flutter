@@ -24,7 +24,11 @@ void main() {
       const Birthplace(name: 'Campagnano di Roma', state: 'RM', code: 'B496'),
       const Birthplace(name: 'Carpineto Romano', state: 'RM', code: 'B828'),
       const Birthplace(name: 'Casalromano', state: 'MN', code: 'B911'),
-      const Birthplace(name: 'Castel San Pietro Romano', state: 'RM', code: 'C266'),
+      const Birthplace(
+        name: 'Castel San Pietro Romano',
+        state: 'RM',
+        code: 'C266',
+      ),
       const Birthplace(name: 'Cervara di Roma', state: 'RM', code: 'C543'),
       const Birthplace(name: 'Cineto Romano', state: 'RM', code: 'C702'),
       const Birthplace(name: 'Civitella di Romagna', state: 'FC', code: 'C777'),
@@ -48,37 +52,63 @@ void main() {
 
     group('damerauLevenshteinDistance', () {
       test('identifies exact strings as distance 0', () {
-        expect(BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'roma'), 0);
+        expect(
+          BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'roma'),
+          0,
+        );
       });
 
       test('identifies single insertion/deletion', () {
-        expect(BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'romma'), 1);
-        expect(BirthplaceSearchFilter.damerauLevenshteinDistance('milano', 'milan'), 1);
+        expect(
+          BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'romma'),
+          1,
+        );
+        expect(
+          BirthplaceSearchFilter.damerauLevenshteinDistance('milano', 'milan'),
+          1,
+        );
       });
 
       test('identifies transposition of adjacent characters', () {
-        expect(BirthplaceSearchFilter.damerauLevenshteinDistance('milano', 'milnao'), 1);
+        expect(
+          BirthplaceSearchFilter.damerauLevenshteinDistance('milano', 'milnao'),
+          1,
+        );
       });
 
       test('identifies single substitution', () {
-        expect(BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'toma'), 1);
+        expect(
+          BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'toma'),
+          1,
+        );
       });
 
       test('applies fast-fail when length difference exceeds maxDistance', () {
         // |4 - 7| = 3 > 2 -> returns maxDistance + 1 = 3
         expect(
-          BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'palermo', 2),
+          BirthplaceSearchFilter.damerauLevenshteinDistance(
+            'roma',
+            'palermo',
+            2,
+          ),
           3,
         );
       });
 
-      test('applies early exit when minimum row distance exceeds maxDistance', () {
-        // Strings with equal length but completely distinct letters
-        expect(
-          BirthplaceSearchFilter.damerauLevenshteinDistance('roma', 'xyzw', 1),
-          2,
-        );
-      });
+      test(
+        'applies early exit when minimum row distance exceeds maxDistance',
+        () {
+          // Strings with equal length but completely distinct letters
+          expect(
+            BirthplaceSearchFilter.damerauLevenshteinDistance(
+              'roma',
+              'xyzw',
+              1,
+            ),
+            2,
+          );
+        },
+      );
 
       test('returns exact distance when within maxDistance threshold', () {
         expect(
@@ -86,25 +116,41 @@ void main() {
           1,
         );
         expect(
-          BirthplaceSearchFilter.damerauLevenshteinDistance('milano', 'milnao', 2),
+          BirthplaceSearchFilter.damerauLevenshteinDistance(
+            'milano',
+            'milnao',
+            2,
+          ),
           1,
         );
       });
 
       test('handles empty strings correctly with maxDistance', () {
         expect(BirthplaceSearchFilter.damerauLevenshteinDistance('', '', 2), 0);
-        expect(BirthplaceSearchFilter.damerauLevenshteinDistance('a', '', 2), 1);
-        expect(BirthplaceSearchFilter.damerauLevenshteinDistance('', 'abc', 2), 3);
+        expect(
+          BirthplaceSearchFilter.damerauLevenshteinDistance('a', '', 2),
+          1,
+        );
+        expect(
+          BirthplaceSearchFilter.damerauLevenshteinDistance('', 'abc', 2),
+          3,
+        );
       });
     });
 
     group('search & ranking', () {
-      test('places exact match "Roma" at index 0 despite numerous alphabetical distractors', () {
-        final results = BirthplaceSearchFilter.search(romaDistractors, 'roma');
+      test(
+        'places exact match "Roma" at index 0 despite numerous alphabetical distractors',
+        () {
+          final results = BirthplaceSearchFilter.search(
+            romaDistractors,
+            'roma',
+          );
 
-        expect(results, isNotEmpty);
-        expect(results.first, equals(roma));
-      });
+          expect(results, isNotEmpty);
+          expect(results.first, equals(roma));
+        },
+      );
 
       test('places shorter prefix match before longer prefix matches', () {
         final results = BirthplaceSearchFilter.search(romaDistractors, 'roma');
@@ -122,8 +168,14 @@ void main() {
       });
 
       test('handles case-insensitivity seamlessly', () {
-        final resultsUpper = BirthplaceSearchFilter.search(romaDistractors, 'ROMA');
-        final resultsLower = BirthplaceSearchFilter.search(romaDistractors, 'roma');
+        final resultsUpper = BirthplaceSearchFilter.search(
+          romaDistractors,
+          'ROMA',
+        );
+        final resultsLower = BirthplaceSearchFilter.search(
+          romaDistractors,
+          'roma',
+        );
 
         expect(resultsUpper.first, equals(roma));
         expect(resultsLower.first, equals(roma));
@@ -150,17 +202,28 @@ void main() {
       });
 
       test('supports compound search with name and province', () {
-        final results1 = BirthplaceSearchFilter.search(romaDistractors, 'roma rm');
+        final results1 = BirthplaceSearchFilter.search(
+          romaDistractors,
+          'roma rm',
+        );
         expect(results1.first, equals(roma));
 
-        final results2 = BirthplaceSearchFilter.search(romaDistractors, 'roma (rm)');
+        final results2 = BirthplaceSearchFilter.search(
+          romaDistractors,
+          'roma (rm)',
+        );
         expect(results2.first, equals(roma));
       });
 
       test('supports province-only search', () {
         final results = BirthplaceSearchFilter.search(romaDistractors, 'rm');
         expect(results, isNotEmpty);
-        expect(results.every((b) => b.state == 'RM' || b.name.toLowerCase().contains('rm')), isTrue);
+        expect(
+          results.every(
+            (b) => b.state == 'RM' || b.name.toLowerCase().contains('rm'),
+          ),
+          isTrue,
+        );
       });
     });
 

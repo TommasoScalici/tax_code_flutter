@@ -45,9 +45,7 @@ void main() {
   const mockResponse = TaxCodeResponse(
     status: true,
     message: 'Success',
-    data: TaxCodeData(
-      fiscalCode: 'RSSMRA90A01H501A',
-    ),
+    data: TaxCodeData(fiscalCode: 'RSSMRA90A01H501A'),
   );
 
   setUp(() {
@@ -212,9 +210,7 @@ void main() {
         greaterThan(0),
       );
 
-      addTearDown(
-        () => tester.view.viewInsets = FakeViewPadding.zero,
-      );
+      addTearDown(() => tester.view.viewInsets = FakeViewPadding.zero);
     });
 
     testWidgets('clears birthplace field when clear icon is tapped', (
@@ -323,7 +319,10 @@ void main() {
             widget.formControlName == 'firstName',
       );
       final firstNameTextField = tester.widget<legacy.TextField>(
-        find.descendant(of: firstNameFinder, matching: find.byType(legacy.TextField)),
+        find.descendant(
+          of: firstNameFinder,
+          matching: find.byType(legacy.TextField),
+        ),
       );
       expect(firstNameTextField.controller!.text, 'Laura');
 
@@ -332,7 +331,10 @@ void main() {
             widget is ReactiveTextField && widget.formControlName == 'lastName',
       );
       final lastNameTextField = tester.widget<legacy.TextField>(
-        find.descendant(of: lastNameFinder, matching: find.byType(legacy.TextField)),
+        find.descendant(
+          of: lastNameFinder,
+          matching: find.byType(legacy.TextField),
+        ),
       );
       expect(lastNameTextField.controller!.text, 'Neri');
 

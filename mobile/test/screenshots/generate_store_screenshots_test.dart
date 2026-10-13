@@ -55,10 +55,7 @@ Widget _buildBarcodeScenario(Locale locale, Contact contact) {
             ),
           ),
           // Scrim overlay
-          const ModalBarrier(
-            dismissible: false,
-            color: Colors.black45,
-          ),
+          const ModalBarrier(dismissible: false, color: Colors.black45),
           // Elevated Barcode Card
           Align(
             alignment: Alignment.bottomCenter,
@@ -75,9 +72,7 @@ Widget _buildBarcodeScenario(Locale locale, Contact contact) {
               ),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(28)),
-                child: BarcodeBottomSheet(
-                  contact: contact,
-                ),
+                child: BarcodeBottomSheet(contact: contact),
               ),
             ),
           ),
@@ -122,7 +117,8 @@ void main() {
   Future<void> loadFonts(WidgetTester tester) async {
     await tester.runAsync(() async {
       // 1. Text fonts (Inter, Arial, JetBrains Mono, Roboto)
-      final winDir = Platform.environment['WINDIR'] ??
+      final winDir =
+          Platform.environment['WINDIR'] ??
           Platform.environment['SYSTEMROOT'] ??
           r'C:\Windows';
       final fontFiles = [
@@ -171,12 +167,13 @@ void main() {
       }
 
       // 3. MaterialSymbols icons
-      final pubCache = Platform.environment['PUB_CACHE'] ??
+      final pubCache =
+          Platform.environment['PUB_CACHE'] ??
           (Platform.environment['LOCALAPPDATA'] != null
               ? '${Platform.environment['LOCALAPPDATA']}\\Pub\\Cache'
               : (Platform.environment['USERPROFILE'] != null
-                  ? '${Platform.environment['USERPROFILE']}\\.pub-cache'
-                  : null));
+                    ? '${Platform.environment['USERPROFILE']}\\.pub-cache'
+                    : null));
       if (pubCache != null) {
         final hostedDir = Directory('$pubCache\\hosted\\pub.dev');
         if (hostedDir.existsSync()) {
@@ -231,10 +228,8 @@ void main() {
           'Archivia, organizza e consulta in qualsiasi momento, anche offline.',
       enHeadline: 'Your tax codes, always with you',
       enSubtitle: 'Store, organize and access anytime, fully offline.',
-      widgetBuilder: (locale) => DashboardScreenPreview(
-        locale: locale,
-        initialContacts: const [],
-      ),
+      widgetBuilder: (locale) =>
+          DashboardScreenPreview(locale: locale, initialContacts: const []),
     ),
     _Scenario(
       filename: '02_dashboard_contacts',
@@ -253,10 +248,8 @@ void main() {
           "Inserisci i dati anagrafici e visualizza il codice all'istante.",
       enHeadline: 'Real-time calculation with live preview',
       enSubtitle: 'Fill in personal details and see the tax code update live.',
-      widgetBuilder: (locale) => FormScreenPreview(
-        locale: locale,
-        initialContact: sampleContact,
-      ),
+      widgetBuilder: (locale) =>
+          FormScreenPreview(locale: locale, initialContact: sampleContact),
     ),
     _Scenario(
       filename: '04_barcode_qr',
@@ -274,10 +267,9 @@ void main() {
       itSubtitle:
           'Inquadra la tessera: estrazione automatica dei dati in un istante.',
       enHeadline: 'Smart document scanning with Gemini AI',
-      enSubtitle: 'Point at the health card: instant automatic data extraction.',
-      widgetBuilder: (locale) => FormScreenPreview(
-        locale: locale,
-      ),
+      enSubtitle:
+          'Point at the health card: instant automatic data extraction.',
+      widgetBuilder: (locale) => FormScreenPreview(locale: locale),
     ),
   ];
 
@@ -287,10 +279,7 @@ void main() {
     'tablet_10': ShowcaseDeviceSpec.tablet10,
   };
 
-  final locales = {
-    'it': const Locale('it'),
-    'en': const Locale('en'),
-  };
+  final locales = {'it': const Locale('it'), 'en': const Locale('en')};
 
   testWidgets('Generate all Google Play Store showcase screenshots', (
     tester,
@@ -322,10 +311,12 @@ void main() {
         );
 
         for (final scenario in scenarios) {
-          final headline =
-              langKey == 'it' ? scenario.itHeadline : scenario.enHeadline;
-          final subtitle =
-              langKey == 'it' ? scenario.itSubtitle : scenario.enSubtitle;
+          final headline = langKey == 'it'
+              ? scenario.itHeadline
+              : scenario.enHeadline;
+          final subtitle = langKey == 'it'
+              ? scenario.itSubtitle
+              : scenario.enSubtitle;
 
           final repaintKey = GlobalKey();
 
@@ -356,7 +347,9 @@ void main() {
             );
             final bytes = byteData!.buffer.asUint8List();
 
-            final targetFile = File('${outputDir.path}/${scenario.filename}.png');
+            final targetFile = File(
+              '${outputDir.path}/${scenario.filename}.png',
+            );
             await targetFile.writeAsBytes(bytes);
 
             expect(targetFile.existsSync(), isTrue);

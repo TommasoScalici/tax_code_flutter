@@ -6,10 +6,8 @@ abstract interface class NativeViewService {
   Future<void> enableHighBrightnessMode();
   Future<void> disableHighBrightnessMode();
 
-  factory NativeViewService({
-    required Logger logger,
-    MethodChannel? platform,
-  }) = DefaultNativeViewService;
+  factory NativeViewService({required Logger logger, MethodChannel? platform}) =
+      DefaultNativeViewService;
 }
 
 typedef NativeViewServiceAbstract = NativeViewService;
@@ -18,15 +16,13 @@ class DefaultNativeViewService implements NativeViewService {
   final MethodChannel _platform;
   final Logger _logger;
 
-  DefaultNativeViewService({
-    required Logger logger,
-    MethodChannel? platform,
-  })  : _logger = logger,
-        _platform =
-            platform ??
-            const MethodChannel(
-              'tommasoscalici.tax_code_flutter_wear_os/channel',
-            );
+  DefaultNativeViewService({required Logger logger, MethodChannel? platform})
+    : _logger = logger,
+      _platform =
+          platform ??
+          const MethodChannel(
+            'tommasoscalici.tax_code_flutter_wear_os/channel',
+          );
 
   @override
   Future<void> launchPhoneApp() async {

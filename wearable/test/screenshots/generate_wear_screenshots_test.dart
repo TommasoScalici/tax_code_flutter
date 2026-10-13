@@ -30,10 +30,7 @@ class MockNativeViewService extends Mock implements NativeViewService {}
 //--- Scenario Definition ---//
 
 class _WearScenario {
-  const _WearScenario({
-    required this.filename,
-    required this.widgetBuilder,
-  });
+  const _WearScenario({required this.filename, required this.widgetBuilder});
 
   final String filename;
   final Widget Function(Locale locale) widgetBuilder;
@@ -71,7 +68,8 @@ void main() {
 
   Future<void> loadFonts(WidgetTester tester) async {
     await tester.runAsync(() async {
-      final winDir = Platform.environment['WINDIR'] ??
+      final winDir =
+          Platform.environment['WINDIR'] ??
           Platform.environment['SYSTEMROOT'] ??
           r'C:\Windows';
 
@@ -84,12 +82,7 @@ void main() {
         '$winDir\\Fonts\\arialbd.ttf',
       ];
 
-      for (final family in [
-        'Segoe UI',
-        'Arial',
-        'Roboto',
-        'Inter',
-      ]) {
+      for (final family in ['Segoe UI', 'Arial', 'Roboto', 'Inter']) {
         final loader = FontLoader(family);
         for (final path in fontFiles) {
           final file = File(path);
@@ -109,11 +102,7 @@ void main() {
         '$winDir\\Fonts\\courbd.ttf',
       ];
 
-      for (final family in [
-        'monospace',
-        'Courier',
-        'Consolas',
-      ]) {
+      for (final family in ['monospace', 'Courier', 'Consolas']) {
         final loader = FontLoader(family);
         for (final path in monoFiles) {
           final file = File(path);
@@ -228,9 +217,9 @@ void main() {
       filename: '02_empty_state',
       widgetBuilder: (locale) =>
           ChangeNotifierProvider<ContactsListController>.value(
-        value: mockEmptyController,
-        child: const ContactsList(),
-      ),
+            value: mockEmptyController,
+            child: const ContactsList(),
+          ),
     ),
 
     // 3) Contacts list
@@ -238,9 +227,9 @@ void main() {
       filename: '03_contacts_list',
       widgetBuilder: (locale) =>
           ChangeNotifierProvider<ContactsListController>.value(
-        value: mockLoadedController,
-        child: const ContactsList(),
-      ),
+            value: mockLoadedController,
+            child: const ContactsList(),
+          ),
     ),
 
     // 4) Barcode Code 128 (1D)
@@ -269,10 +258,7 @@ void main() {
     ),
   ];
 
-  final locales = {
-    'it': const Locale('it'),
-    'en': const Locale('en'),
-  };
+  final locales = {'it': const Locale('it'), 'en': const Locale('en')};
 
   testWidgets(
     'Generate all Google Play Store showcase screenshots for Wear OS',
@@ -293,8 +279,7 @@ void main() {
         }
 
         // Set device surface size for exact 1:1 rendering at 512x512
-        tester.view.physicalSize =
-            const Size(canvasDimension, canvasDimension);
+        tester.view.physicalSize = const Size(canvasDimension, canvasDimension);
         tester.view.devicePixelRatio = 1.0;
         await tester.binding.setSurfaceSize(
           const Size(canvasDimension, canvasDimension),
@@ -308,21 +293,23 @@ void main() {
               debugShowCheckedModeBanner: false,
               theme: WearTheme.darkTheme.copyWith(
                 textTheme: WearTheme.darkTheme.textTheme.apply(
-                      fontFamily: 'Segoe UI',
-                    ),
+                  fontFamily: 'Segoe UI',
+                ),
                 elevatedButtonTheme: ElevatedButtonThemeData(
-                  style: WearTheme.darkTheme.elevatedButtonTheme.style?.copyWith(
-                    textStyle: const WidgetStatePropertyAll(
-                      TextStyle(fontFamily: 'Segoe UI'),
-                    ),
-                  ),
+                  style: WearTheme.darkTheme.elevatedButtonTheme.style
+                      ?.copyWith(
+                        textStyle: const WidgetStatePropertyAll(
+                          TextStyle(fontFamily: 'Segoe UI'),
+                        ),
+                      ),
                 ),
                 outlinedButtonTheme: OutlinedButtonThemeData(
-                  style: WearTheme.darkTheme.outlinedButtonTheme.style?.copyWith(
-                    textStyle: const WidgetStatePropertyAll(
-                      TextStyle(fontFamily: 'Segoe UI'),
-                    ),
-                  ),
+                  style: WearTheme.darkTheme.outlinedButtonTheme.style
+                      ?.copyWith(
+                        textStyle: const WidgetStatePropertyAll(
+                          TextStyle(fontFamily: 'Segoe UI'),
+                        ),
+                      ),
                 ),
               ),
               locale: locale,
@@ -379,8 +366,9 @@ void main() {
             );
             final bytes = byteData!.buffer.asUint8List();
 
-            final targetFile =
-                File('${outputDir.path}/${scenario.filename}.png');
+            final targetFile = File(
+              '${outputDir.path}/${scenario.filename}.png',
+            );
             await targetFile.writeAsBytes(bytes);
 
             expect(targetFile.existsSync(), isTrue);

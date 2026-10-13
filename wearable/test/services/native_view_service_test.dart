@@ -65,20 +65,23 @@ void main() {
     group('enableHighBrightnessMode', () {
       test('should invoke method on channel successfully', () async {
         when(
-          () => mockMethodChannel.invokeMethod<void>('enableHighBrightnessMode'),
+          () =>
+              mockMethodChannel.invokeMethod<void>('enableHighBrightnessMode'),
         ).thenAnswer((_) async {});
 
         await nativeViewService.enableHighBrightnessMode();
 
         verify(
-          () => mockMethodChannel.invokeMethod<void>('enableHighBrightnessMode'),
+          () =>
+              mockMethodChannel.invokeMethod<void>('enableHighBrightnessMode'),
         ).called(1);
       });
 
       test('should log error and throw on PlatformException', () async {
         final exception = PlatformException(code: 'ERROR', message: 'Failed');
         when(
-          () => mockMethodChannel.invokeMethod<void>('enableHighBrightnessMode'),
+          () =>
+              mockMethodChannel.invokeMethod<void>('enableHighBrightnessMode'),
         ).thenThrow(exception);
 
         expect(

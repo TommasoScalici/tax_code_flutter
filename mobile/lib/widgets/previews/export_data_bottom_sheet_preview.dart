@@ -40,9 +40,7 @@ class _ExportDataBottomSheetPreviewState
         Provider<DataExportService>.value(
           value: const DefaultDataExportService(),
         ),
-        Provider<SharingService>.value(
-          value: const FakeSharingService(),
-        ),
+        Provider<SharingService>.value(value: const FakeSharingService()),
       ],
       toolbarActions: (context, _) {
         final l10n = context.l10n;
@@ -50,9 +48,7 @@ class _ExportDataBottomSheetPreviewState
           FilledButton.icon(
             icon: const Icon(Icons.open_in_browser_rounded),
             label: Text(l10n.openAsBottomSheet),
-            onPressed: () => unawaited(
-              ExportDataBottomSheet.show(context),
-            ),
+            onPressed: () => unawaited(ExportDataBottomSheet.show(context)),
           ),
         ];
       },

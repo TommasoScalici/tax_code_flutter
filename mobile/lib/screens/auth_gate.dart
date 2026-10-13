@@ -22,11 +22,7 @@ class AuthGate extends StatelessWidget {
       case AuthStatus.unauthenticated:
         return const WelcomeScreen();
       case AuthStatus.initializing:
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
   }
 }

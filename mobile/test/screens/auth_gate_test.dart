@@ -26,7 +26,9 @@ void main() {
   });
 
   group('AuthGate Widget Tests', () {
-    testWidgets('renders HomePage when status is authenticated', (tester) async {
+    testWidgets('renders HomePage when status is authenticated', (
+      tester,
+    ) async {
       await pumpApp(
         tester,
         const AuthGate(),
@@ -38,7 +40,9 @@ void main() {
       expect(find.byType(WelcomeScreen), findsNothing);
     });
 
-    testWidgets('renders WelcomeScreen when status is unauthenticated', (tester) async {
+    testWidgets('renders WelcomeScreen when status is unauthenticated', (
+      tester,
+    ) async {
       await pumpApp(
         tester,
         const AuthGate(),
@@ -50,17 +54,20 @@ void main() {
       expect(find.byType(HomePage), findsNothing);
     });
 
-    testWidgets('renders CircularProgressIndicator when status is initializing', (tester) async {
-      await pumpApp(
-        tester,
-        const AuthGate(),
-        authStatus: AuthStatus.initializing,
-        mockAuthService: mockAuthService,
-      );
+    testWidgets(
+      'renders CircularProgressIndicator when status is initializing',
+      (tester) async {
+        await pumpApp(
+          tester,
+          const AuthGate(),
+          authStatus: AuthStatus.initializing,
+          mockAuthService: mockAuthService,
+        );
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.byType(HomePage), findsNothing);
-      expect(find.byType(WelcomeScreen), findsNothing);
-    });
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.byType(HomePage), findsNothing);
+        expect(find.byType(WelcomeScreen), findsNothing);
+      },
+    );
   });
 }

@@ -32,9 +32,7 @@ class _WelcomeScreenPreviewState extends State<WelcomeScreenPreview> {
       expandChild: true,
       padding: EdgeInsets.zero,
       providers: [
-        ChangeNotifierProvider<AuthService>.value(
-          value: _fakeAuthService,
-        ),
+        ChangeNotifierProvider<AuthService>.value(value: _fakeAuthService),
       ],
       child: const WelcomeScreen(),
     );

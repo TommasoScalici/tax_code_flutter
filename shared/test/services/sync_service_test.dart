@@ -23,10 +23,7 @@ void main() {
       when(() => mockAuthService.isSignedIn).thenReturn(true);
       when(() => mockAuthService.isGuest).thenReturn(false);
 
-      syncService = SyncService(
-        prefs: mockPrefs,
-        authService: mockAuthService,
-      );
+      syncService = SyncService(prefs: mockPrefs, authService: mockAuthService);
     });
 
     test('should have isUserSyncEnabled as true by default', () {
@@ -48,8 +45,9 @@ void main() {
     });
 
     test('should load persisted preference on init', () async {
-      when(() => mockPrefs.getBool(SyncService.prefKey))
-          .thenAnswer((_) async => false);
+      when(
+        () => mockPrefs.getBool(SyncService.prefKey),
+      ).thenAnswer((_) async => false);
 
       await syncService.init();
 
@@ -59,8 +57,9 @@ void main() {
     });
 
     test('setSyncEnabled should persist value and notify listeners', () async {
-      when(() => mockPrefs.setBool(SyncService.prefKey, false))
-          .thenAnswer((_) async => true);
+      when(
+        () => mockPrefs.setBool(SyncService.prefKey, false),
+      ).thenAnswer((_) async => true);
 
       var notified = false;
       syncService.addListener(() => notified = true);
@@ -73,8 +72,9 @@ void main() {
     });
 
     test('toggleSync should invert state and persist', () async {
-      when(() => mockPrefs.setBool(SyncService.prefKey, false))
-          .thenAnswer((_) async => true);
+      when(
+        () => mockPrefs.setBool(SyncService.prefKey, false),
+      ).thenAnswer((_) async => true);
 
       await syncService.toggleSync();
 
