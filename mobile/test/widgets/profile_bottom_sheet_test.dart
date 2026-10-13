@@ -15,6 +15,7 @@ import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/widgets/export/export_data_bottom_sheet.dart';
+import 'package:tax_code_flutter/widgets/profile/profile_account_section.dart';
 import 'package:tax_code_flutter/widgets/profile_bottom_sheet.dart';
 
 import '../helpers/mocks.dart';
@@ -224,6 +225,12 @@ void main() {
         expect(find.text('Ospite'), findsAtLeastNWidgets(2)); // Name + Badge
         expect(find.text('Attiva il Backup Cloud'), findsOneWidget);
         expect(find.text('Continua con Google'), findsOneWidget);
+
+        // Account management section (sign out & delete account) must be hidden for guest users
+        expect(find.text('GESTIONE ACCOUNT'), findsNothing);
+        expect(find.text('Esci'), findsNothing);
+        expect(find.text('Elimina Account'), findsNothing);
+        expect(find.byType(ProfileAccountSection), findsNothing);
 
         await tester.tap(
           find.byKey(const Key('profile_guest_google_signin_button')),

@@ -12,6 +12,12 @@ class ProfileAccountSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authService = context.watch<AuthService?>();
+    final isGuest = authService?.isGuest ?? false;
+    if (isGuest) {
+      return const SizedBox.shrink();
+    }
+
     final theme = Theme.of(context);
     final l10n = context.l10n;
     final controller = context.watch<ProfileScreenController?>();

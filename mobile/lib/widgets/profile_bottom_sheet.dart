@@ -1,4 +1,6 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:provider/provider.dart';
+import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
@@ -206,6 +208,9 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
   }
 
   Widget _buildMainListView() {
+    final authService = context.watch<AuthService?>();
+    final isGuest = authService?.isGuest ?? false;
+
     return SingleChildScrollView(
       key: const ValueKey('profile_main_view'),
       physics: const BouncingScrollPhysics(),
@@ -228,10 +233,12 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
 
           // Section 3: Legal & Info
           ProfileLegalSection(onOpenAppInfo: _navigateToAppInfo),
-          const SizedBox(height: AppSpacing.card),
 
-          // Section 4: Account Management & GDPR
-          const ProfileAccountSection(),
+          // Section 4: Account Management & GDPR (only for authenticated non-guest users)
+          if (!isGuest) ...[
+            const SizedBox(height: AppSpacing.card),
+            const ProfileAccountSection(),
+          ],
         ],
       ),
     );
