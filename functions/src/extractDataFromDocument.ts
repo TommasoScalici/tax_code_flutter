@@ -155,7 +155,7 @@ interface ExtractDataRequest {
   image: string;
 }
 
-interface ExtractDataResponse {
+export interface ExtractDataResponse {
   firstName: string | null;
   lastName: string | null;
   gender: string | null;
@@ -164,6 +164,78 @@ interface ExtractDataResponse {
     state: string | null;
   } | null;
   birthDate: string | null;
+}
+
+/**
+ * Strips markdown code block fences (```json ... ```) and extracts clean JSON content.
+ */
+export function cleanJsonResponseText(rawText: string): string {
+  const trimmed = rawText.trim();
+  const codeBlockMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+  return (codeBlockMatch ? (codeBlockMatch[1] ?? trimmed) : trimmed).trim();
+}
+
+/**
+ * Normalizes extracted data, trimming strings, uppercasing gender ('M'/'F')
+ * and ensuring dates match the ISO format YYYY-MM-DD.
+ */
+export function normalizeExtractedData(
+  raw: Partial<ExtractDataResponse>,
+): ExtractDataResponse {
+  // Normalize gender
+  let gender: string | null = null;
+  if (typeof raw.gender === "string") {
+    const g = raw.gender.trim().toUpperCase();
+    if (g === "M" || g === "F") {
+      gender = g;
+    }
+  }
+
+  // Normalize birthDate (handles YYYY-MM-DD and common DD/MM/YYYY OCR slips)
+  let birthDate: string | null = null;
+  if (typeof raw.birthDate === "string") {
+    const trimmed = raw.birthDate.trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+      birthDate = trimmed;
+    } else {
+      const ddmmyyyy = trimmed.match(/^(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{4})$/);
+      if (ddmmyyyy && ddmmyyyy[1] && ddmmyyyy[2] && ddmmyyyy[3]) {
+        const [, d, m, y] = ddmmyyyy;
+        birthDate = `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+      } else {
+        birthDate = trimmed;
+      }
+    }
+  }
+
+  // Normalize birthPlace
+  let birthPlace: ExtractDataResponse["birthPlace"] = null;
+  if (raw.birthPlace && typeof raw.birthPlace === "object") {
+    birthPlace = {
+      name:
+        typeof raw.birthPlace.name === "string"
+          ? raw.birthPlace.name.trim()
+          : null,
+      state:
+        typeof raw.birthPlace.state === "string"
+          ? raw.birthPlace.state.trim().toUpperCase()
+          : null,
+    };
+  }
+
+  return {
+    firstName:
+      typeof raw.firstName === "string" && raw.firstName.trim().length > 0
+        ? raw.firstName.trim()
+        : null,
+    lastName:
+      typeof raw.lastName === "string" && raw.lastName.trim().length > 0
+        ? raw.lastName.trim()
+        : null,
+    gender,
+    birthPlace,
+    birthDate,
+  };
 }
 
 export const extractDataFromDocument = onCall<ExtractDataRequest>(
@@ -329,7 +401,8 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
       }
     }
 
-    if (!content || !content.parts[0]?.text) {
+    const rawOutputText = content?.parts?.[0]?.text;
+    if (!rawOutputText) {
       logger.error("Gemini API returned an empty or invalid response.", {
         uid,
       });
@@ -339,13 +412,14 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
       );
     }
 
-    const jsonResponseText = content.parts[0].text
-      .replace(/```json|```/g, "")
-      .trim();
+    const jsonResponseText = cleanJsonResponseText(rawOutputText);
 
     let parsedData: ExtractDataResponse;
     try {
-      parsedData = JSON.parse(jsonResponseText) as ExtractDataResponse;
+      const rawJson = JSON.parse(
+        jsonResponseText,
+      ) as Partial<ExtractDataResponse>;
+      parsedData = normalizeExtractedData(rawJson);
     } catch (jsonErr) {
       logger.error("Failed to parse Gemini JSON output.", {
         jsonErr,

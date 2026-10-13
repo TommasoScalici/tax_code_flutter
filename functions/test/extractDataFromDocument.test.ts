@@ -4,7 +4,9 @@ import fft from "firebase-functions-test";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
+  cleanJsonResponseText,
   extractDataFromDocument,
+  normalizeExtractedData,
   resetCachedAiConfig,
 } from "../src/extractDataFromDocument.js";
 
@@ -401,5 +403,78 @@ describe("extractDataFromDocument", () => {
         }),
       }),
     );
+  });
+
+  describe("cleanJsonResponseText", () => {
+    it("should extract JSON from markdown fences with json language identifier", () => {
+      const markdown = '```json\n{"firstName":"MARIO"}\n```';
+      expect(cleanJsonResponseText(markdown)).toBe('{"firstName":"MARIO"}');
+    });
+
+    it("should extract JSON from markdown fences without language identifier", () => {
+      const markdown = '```\n{"firstName":"MARIO"}\n```';
+      expect(cleanJsonResponseText(markdown)).toBe('{"firstName":"MARIO"}');
+    });
+
+    it("should trim and return plain JSON when no fences are present", () => {
+      const plain = '  {"firstName":"MARIO"}  ';
+      expect(cleanJsonResponseText(plain)).toBe('{"firstName":"MARIO"}');
+    });
+  });
+
+  describe("normalizeExtractedData", () => {
+    it("should normalize valid lowercase gender and whitespace", () => {
+      const normalized = normalizeExtractedData({
+        firstName: " Mario ",
+        lastName: " Rossi ",
+        gender: "m",
+        birthDate: "1990-05-15",
+        birthPlace: {
+          name: " Roma ",
+          state: "rm",
+        },
+      });
+
+      expect(normalized).toEqual({
+        firstName: "Mario",
+        lastName: "Rossi",
+        gender: "M",
+        birthDate: "1990-05-15",
+        birthPlace: {
+          name: "Roma",
+          state: "RM",
+        },
+      });
+    });
+
+    it("should convert DD/MM/YYYY dates to ISO YYYY-MM-DD", () => {
+      const normalized = normalizeExtractedData({
+        birthDate: "15/05/1990",
+      });
+      expect(normalized.birthDate).toBe("1990-05-15");
+    });
+
+    it("should convert DD-MM-YYYY dates to ISO YYYY-MM-DD", () => {
+      const normalized = normalizeExtractedData({
+        birthDate: "01-02-1985",
+      });
+      expect(normalized.birthDate).toBe("1985-02-01");
+    });
+
+    it("should set gender to null if unrecognized value", () => {
+      const normalized = normalizeExtractedData({
+        gender: "UNKNOWN",
+      });
+      expect(normalized.gender).toBeNull();
+    });
+
+    it("should handle empty or whitespace-only names by setting null", () => {
+      const normalized = normalizeExtractedData({
+        firstName: "   ",
+        lastName: "",
+      });
+      expect(normalized.firstName).toBeNull();
+      expect(normalized.lastName).toBeNull();
+    });
   });
 });

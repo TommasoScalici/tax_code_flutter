@@ -33,20 +33,47 @@ function getFormattedDate(): string {
 }
 
 /**
+ * Fetches a resource with retries and exponential backoff.
+ */
+async function fetchWithRetry(
+  url: string,
+  retries = 3,
+  delayMs = 1000,
+): Promise<Response> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(url, {
+        signal: AbortSignal.timeout(30_000),
+      });
+      if (response.ok) return response;
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    } catch (err) {
+      lastError = err;
+      if (attempt < retries) {
+        logger.warn(
+          `Fetch attempt ${attempt} failed for ${url}. Retrying in ${delayMs * attempt}ms...`,
+          { error: err },
+        );
+        await new Promise((resolve) => setTimeout(resolve, delayMs * attempt));
+      }
+    }
+  }
+  throw new Error(
+    `Failed to fetch from ${url} after ${retries} attempts: ${
+      lastError instanceof Error ? lastError.message : String(lastError)
+    }`,
+  );
+}
+
+/**
  * Fetches Italian municipalities from ISTAT JSON API.
  */
 async function fetchItalianMunicipalities(): Promise<Birthplace[]> {
   const url = `${ITALIAN_MUNICIPALITIES_API}?pfun=61&pdata=${getFormattedDate()}`;
   logger.info(`Fetching Italian municipalities from: ${url}`);
 
-  const response = await fetch(url, {
-    signal: AbortSignal.timeout(30_000),
-  });
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch Italian municipalities: ${response.statusText}`,
-    );
-  }
+  const response = await fetchWithRetry(url);
 
   const data = (await response.json()) as {
     resultset: Array<{
