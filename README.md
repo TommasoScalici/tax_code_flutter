@@ -129,8 +129,14 @@ tax_code_flutter/
 
 6. **Maintenance & Tools:**
    ```bash
-   # Format and sort all ARB localization files alphabetically
-   dart scripts/sort_arb.dart
+   # Sort and format all ARB localization files alphabetically
+   dart run tool/arb_tool.dart sort
+
+   # Check ARB formatting and ordering (CI / pre-commit check)
+   dart run tool/arb_tool.dart check
+
+   # Strictly validate ARB descriptions, placeholder types, and 1:1 language parity
+   dart run tool/arb_tool.dart validate
 
    # Generate Play Store showcase screenshots (Mobile)
    cd mobile && flutter test test/screenshots/generate_store_screenshots_test.dart
