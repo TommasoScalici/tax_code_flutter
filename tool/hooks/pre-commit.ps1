@@ -20,7 +20,10 @@ dart run tool/arb_tool.dart validate
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 Write-Host "  ✓ ARB validation check passed." -ForegroundColor Green
 
-Write-Host "🛡️  4/4 Running Flutter analyze (--fatal-infos)..." -ForegroundColor Yellow
+Write-Host "⚙️  4/5 Ensuring Firebase options stubs exist..." -ForegroundColor Yellow
+dart run tool/setup_ci_stubs.dart | Out-Null
+
+Write-Host "🛡️  5/5 Running Flutter analyze (--fatal-infos)..." -ForegroundColor Yellow
 flutter analyze --fatal-infos
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 Write-Host "  ✓ Flutter analyze passed with 0 issues." -ForegroundColor Green

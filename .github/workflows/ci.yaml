@@ -44,6 +44,9 @@ jobs:
       - name: 🔍 Validate ARB strict rules
         run: dart run tool/arb_tool.dart validate
 
+      - name: ⚙️ Setup Firebase Options stubs (if missing)
+        run: dart run tool/setup_ci_stubs.dart
+
       - name: 🛡️ Run Flutter static analysis
         run: flutter analyze --fatal-infos
 

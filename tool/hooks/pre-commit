@@ -20,7 +20,10 @@ echo "🔍 3/4 Validating ARB files (strict rules: descriptions, type annotation
 dart run tool/arb_tool.dart validate
 echo "  ✓ ARB validation check passed."
 
-echo "🛡️  4/4 Running Flutter analyze (--fatal-infos)..."
+echo "⚙️  4/5 Ensuring Firebase options stubs exist..."
+dart run tool/setup_ci_stubs.dart > /dev/null 2>&1 || true
+
+echo "🛡️  5/5 Running Flutter analyze (--fatal-infos)..."
 flutter analyze --fatal-infos
 echo "  ✓ Flutter analyze passed with 0 issues."
 
