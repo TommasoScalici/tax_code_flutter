@@ -6,21 +6,14 @@
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
 
-# Flutter Engine & Embedding
--keep class io.flutter.** { *; }
--keep class io.flutter.embedding.** { *; }
+# Flutter View & Accessibility Bridge (prevents ClassNotFoundException in AccessibilityBridge)
+-keep class io.flutter.view.** { *; }
 
-# Google Play Services & Auth
--keep class com.google.android.gms.** { *; }
--keep class com.google.android.gms.auth.** { *; }
-
-# Firebase
--keep class com.google.firebase.** { *; }
--keep class com.google.firebase.crashlytics.** { *; }
--keep class com.google.firebase.appcheck.** { *; }
-
-# Camera & Support
--keep class androidx.camera.** { *; }
+# Google Sign-In & Auth Parcelables (prevents NullPointerException in SignInHubActivity)
+-keep class com.google.android.gms.auth.api.signin.** { *; }
+-keep class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator *;
+}
 
 # Serialization & Reflection: Preserve annotations and generic signatures
 -keepattributes *Annotation*
