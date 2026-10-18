@@ -79,48 +79,48 @@ class FeatureGraphicCanvas extends StatelessWidget {
               ),
             ),
           ),
-          // Centered Safe Zone container (horizontal margin ~125px ensures no crop in 16:9)
+          // Centered Safe Zone container (horizontal margin 72px ensures no crop even in 16:9)
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 125),
+              padding: const EdgeInsets.symmetric(horizontal: 72),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Official Brand App Icon
                   Container(
-                    width: 200,
-                    height: 200,
+                    width: 288,
+                    height: 288,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(44),
+                      borderRadius: BorderRadius.circular(64),
                       boxShadow: [
                         BoxShadow(
                           color: const Color(
                             0xFF10B981,
-                          ).withValues(alpha: 0.28),
-                          blurRadius: 40,
-                          spreadRadius: 2,
+                          ).withValues(alpha: 0.32),
+                          blurRadius: 48,
+                          spreadRadius: 4,
                         ),
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.5),
-                          blurRadius: 24,
-                          offset: const Offset(0, 10),
+                          color: Colors.black.withValues(alpha: 0.55),
+                          blurRadius: 28,
+                          offset: const Offset(0, 12),
                         ),
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(44),
+                      borderRadius: BorderRadius.circular(64),
                       child: iconImage != null
                           ? RawImage(
                               image: iconImage,
-                              width: 200,
-                              height: 200,
+                              width: 288,
+                              height: 288,
                               fit: BoxFit.cover,
                             )
                           : const SizedBox.shrink(),
                     ),
                   ),
 
-                  const SizedBox(width: 44),
+                  const SizedBox(width: 48),
 
                   // Information (Right)
                   Expanded(
@@ -131,27 +131,27 @@ class FeatureGraphicCanvas extends StatelessWidget {
                         // Pill Badge (Active indicator + practical value proposition)
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 6,
+                            horizontal: 20,
+                            vertical: 9,
                           ),
                           decoration: BoxDecoration(
                             color: const Color(
                               0xFF10B981,
-                            ).withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(20),
+                            ).withValues(alpha: 0.16),
+                            borderRadius: BorderRadius.circular(28),
                             border: Border.all(
                               color: const Color(
                                 0xFF10B981,
-                              ).withValues(alpha: 0.6),
-                              width: 1.2,
+                              ).withValues(alpha: 0.65),
+                              width: 1.5,
                             ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(
-                                width: 7,
-                                height: 7,
+                                width: 10,
+                                height: 10,
                                 decoration: const BoxDecoration(
                                   color: Color(0xFF34D399),
                                   shape: BoxShape.circle,
@@ -164,33 +164,33 @@ class FeatureGraphicCanvas extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              const SizedBox(width: 10),
                               Text(
                                 badgeText,
                                 style: const TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 12.5,
+                                  fontSize: 17.5,
                                   fontWeight: FontWeight.w800,
                                   color: Color(0xFF34D399),
-                                  letterSpacing: 0.8,
+                                  letterSpacing: 0.9,
                                 ),
                               ),
                             ],
                           ),
                         ),
 
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 14),
 
                         // Title
                         Text(
                           titleText,
                           style: const TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 50,
+                            fontSize: 66,
                             fontWeight: FontWeight.w900,
                             color: Colors.white,
-                            letterSpacing: -0.6,
-                            height: 1.1,
+                            letterSpacing: -1.0,
+                            height: 1.06,
                             shadows: [
                               Shadow(
                                 color: Color(0x99000000),
@@ -201,7 +201,7 @@ class FeatureGraphicCanvas extends StatelessWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
 
                         // Subtitle
                         Text(
@@ -209,10 +209,10 @@ class FeatureGraphicCanvas extends StatelessWidget {
                           maxLines: 2,
                           style: const TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFFCBD5E1),
-                            height: 1.3,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFE2E8F0),
+                            height: 1.28,
                             letterSpacing: 0.1,
                             shadows: [
                               Shadow(
@@ -224,39 +224,33 @@ class FeatureGraphicCanvas extends StatelessWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 18),
+                        const SizedBox(height: 22),
 
-                        // Feature Chips
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
+                        // Feature Chips (2x2 Grid with aligned columns)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            for (final chip in chips)
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 11,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(
-                                    0xFF1E293B,
-                                  ).withValues(alpha: 0.85),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: const Color(0xFF334155),
-                                  ),
-                                ),
-                                child: Text(
-                                  chip,
-                                  style: const TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFFF1F5F9),
-                                    letterSpacing: 0.2,
-                                  ),
-                                ),
+                            IntrinsicWidth(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  _FeatureChip(label: chips[0]),
+                                  const SizedBox(height: 12),
+                                  _FeatureChip(label: chips[2]),
+                                ],
                               ),
+                            ),
+                            const SizedBox(width: 14),
+                            IntrinsicWidth(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  _FeatureChip(label: chips[1]),
+                                  const SizedBox(height: 12),
+                                  _FeatureChip(label: chips[3]),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -267,6 +261,43 @@ class FeatureGraphicCanvas extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _FeatureChip extends StatelessWidget {
+  const _FeatureChip({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 12),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E293B).withValues(alpha: 0.92),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF475569), width: 1.6),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.28),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 21,
+          fontWeight: FontWeight.w700,
+          color: Color(0xFFF8FAFC),
+          letterSpacing: 0.2,
+        ),
       ),
     );
   }
