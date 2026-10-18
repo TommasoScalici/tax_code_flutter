@@ -125,9 +125,11 @@ void main() {
           ...GlobalMaterialLocalizations.delegates,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        theme: brightness == Brightness.dark
-            ? AppTheme.darkTheme
-            : AppTheme.lightTheme,
+        theme:
+            (brightness == Brightness.dark
+                    ? AppTheme.darkTheme
+                    : AppTheme.lightTheme)
+                .copyWith(splashFactory: NoSplash.splashFactory),
         home: Scaffold(body: child),
       ),
     );

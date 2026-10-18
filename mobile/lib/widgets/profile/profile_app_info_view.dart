@@ -61,7 +61,7 @@ class ProfileAppInfoView extends StatelessWidget {
             AppSpacing.md,
             0,
             AppSpacing.md,
-            AppSpacing.xxl,
+            AppSpacing.xxl + AppSpacing.sm,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -284,7 +284,7 @@ class ProfileAppInfoView extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.card),
 
               // 5. Developer Attribution with Link
               Center(
@@ -294,7 +294,7 @@ class ProfileAppInfoView extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.md,
-                      vertical: AppSpacing.badgeGap,
+                      vertical: AppSpacing.sm,
                     ),
                     child: Text(
                       l10n.developedBy,

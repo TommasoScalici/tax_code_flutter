@@ -112,48 +112,52 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                   ? null
                   : [AppColors.shadowSheet(isDark)],
             ),
-            child: Column(
-              mainAxisSize: widget.isEmbedded
-                  ? MainAxisSize.max
-                  : MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Top drag handle (standard M3 sheet)
-                if (!widget.isEmbedded)
-                  Center(
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        top: AppSpacing.md,
-                        bottom: AppSpacing.xs,
-                      ),
-                      width: AppDimensions.dragHandleWidth,
-                      height: AppDimensions.dragHandleHeight,
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.onSurfaceVariant.withValues(
-                          alpha: AppOpacity.disabled,
+            child: SafeArea(
+              top: false,
+              bottom: !widget.isEmbedded,
+              child: Column(
+                mainAxisSize: widget.isEmbedded
+                    ? MainAxisSize.max
+                    : MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Top drag handle (standard M3 sheet)
+                  if (!widget.isEmbedded)
+                    Center(
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                          top: AppSpacing.md,
+                          bottom: AppSpacing.xs,
                         ),
-                        borderRadius: AppRadii.borderHandle,
+                        width: AppDimensions.dragHandleWidth,
+                        height: AppDimensions.dragHandleHeight,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.onSurfaceVariant.withValues(
+                            alpha: AppOpacity.disabled,
+                          ),
+                          borderRadius: AppRadii.borderHandle,
+                        ),
                       ),
                     ),
-                  ),
 
-                // Dynamic Header (Title + Back/Close buttons)
-                _buildHeader(theme, l10n),
+                  // Dynamic Header (Title + Back/Close buttons)
+                  _buildHeader(theme, l10n),
 
-                // Active View Content
-                Flexible(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 220),
-                    switchInCurve: Curves.easeOutCubic,
-                    switchOutCurve: Curves.easeInCubic,
-                    child: _currentView == _ProfileSheetView.main
-                        ? _buildMainListView()
-                        : const ProfileAppInfoView(
-                            key: ValueKey('profile_app_info_view'),
-                          ),
+                  // Active View Content
+                  Flexible(
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 220),
+                      switchInCurve: Curves.easeOutCubic,
+                      switchOutCurve: Curves.easeInCubic,
+                      child: _currentView == _ProfileSheetView.main
+                          ? _buildMainListView()
+                          : const ProfileAppInfoView(
+                              key: ValueKey('profile_app_info_view'),
+                            ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -218,7 +222,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
         AppSpacing.lg,
         0,
         AppSpacing.lg,
-        AppSpacing.xl,
+        AppSpacing.xxl,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
