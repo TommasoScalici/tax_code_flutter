@@ -20,11 +20,11 @@ dependencies:
   shared:
 
   # Core & Utilities
-  cloud_firestore: ^6.10.0
-  firebase_auth: ^6.7.0
-  firebase_core: ^4.15.0
+  cloud_firestore: ^7.1.0
+  firebase_auth: ^7.0.1
+  firebase_core: ^5.1.0
   google_sign_in: ^6.3.0
-  hive_ce_flutter: ^2.3.4
+  hive_ce_flutter: ^2.5.0
   intl: ^0.20.3
   logger: ^2.8.0
   provider: ^6.1.5
@@ -34,8 +34,8 @@ dependencies:
   barcode_widget: ^2.0.4
 
   # Firebase & Backend
-  firebase_app_check: ^0.4.8
-  firebase_crashlytics: ^5.4.0
+  firebase_app_check: ^0.5.1
+  firebase_crashlytics: ^6.0.1
   
 dev_dependencies:
   flutter_test:

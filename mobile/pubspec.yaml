@@ -20,11 +20,11 @@ dependencies:
   shared:
 
   # Core & Utilities
-  cloud_firestore: ^6.10.0
-  firebase_auth: ^6.7.0
-  firebase_core: ^4.15.0
+  cloud_firestore: ^7.1.0
+  firebase_auth: ^7.0.1
+  firebase_core: ^5.1.0
   google_sign_in: ^6.3.0
-  hive_ce_flutter: ^2.3.4
+  hive_ce_flutter: ^2.5.0
   image: ^4.10.1
   intl: ^0.20.3
   logger: ^2.8.0
@@ -36,24 +36,24 @@ dependencies:
   # UI & Widgets (Mobile specific)
   animated_reorderable_list: ^1.1.1
   barcode_widget: ^2.0.4
-  flutter_svg: ^2.0.17
+  flutter_svg: ^2.3.2
   material_symbols_icons: ^4.2960.0
   material_ui: ^1.3.0
   reactive_date_time_picker: ^5.0.1
   reactive_forms: ^18.1.1
 
   # Platform Plugins (Mobile specific)
-  camera: ^0.12.0
+  camera: ^0.12.2
   package_info_plus: ^10.2.1
-  permission_handler: ^12.0.1
+  permission_handler: ^13.0.2
   screen_brightness: ^2.1.0
   share_plus: ^13.3.0
   url_launcher: ^6.3.0
 
   # Firebase (Mobile specific UI/Services)
-  cloud_functions: ^6.5.0
-  firebase_app_check: ^0.4.8
-  firebase_crashlytics: ^5.4.0
+  cloud_functions: ^7.0.1
+  firebase_app_check: ^0.5.1
+  firebase_crashlytics: ^6.0.1
   in_app_review: ^2.0.11
   path_provider: ^2.1.5
 
@@ -62,7 +62,7 @@ dev_dependencies:
     sdk: flutter
 
   camera_platform_interface: ^2.15.0
-  firebase_auth_mocks: ^0.15.2
+  firebase_auth_mocks: ^0.16.0
   firebase_core_platform_interface: ^8.1.1
   flutter_launcher_icons: ^0.14.4
   mocktail: ^1.0.5
