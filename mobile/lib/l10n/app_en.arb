@@ -437,6 +437,24 @@
   "@invalidCharacters": {
     "description": "Error message shown when a form field contains disallowed characters (like numbers or symbols)."
   },
+  "isMeLabel": "This is my tax code",
+  "@isMeLabel": {
+    "description": "Label for the switch in the form marking the contact as belonging to the user."
+  },
+  "isMeReplacesExisting": "Will replace {name} as your primary tax code.",
+  "@isMeReplacesExisting": {
+    "description": "Informational note when enabling the personal tax code replaces another previously designated contact.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "John Doe"
+      }
+    }
+  },
+  "isMeSubtitle": "Set as personal tax code for quick access and Google Gemini voice commands.",
+  "@isMeSubtitle": {
+    "description": "Descriptive subtitle for the personal tax code toggle."
+  },
   "lastName": "Last Name",
   "@lastName": {
     "description": "Label for the last name input field."
@@ -452,6 +470,10 @@
   "missingBirthplaceCode": "The selected birthplace is missing its cadastral code (Belfiore).",
   "@missingBirthplaceCode": {
     "description": "Error message displayed when the birthplace lacks a valid 4-character Belfiore code."
+  },
+  "myContactBadge": "YOU",
+  "@myContactBadge": {
+    "description": "Compact badge displayed next to the name of the contact representing the owner user."
   },
   "networkError": "No internet connection. Please check your network and try again.",
   "@networkError": {

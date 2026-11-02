@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:shared/models/contact.dart';
 import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
+import 'package:tax_code_flutter/l10n/l10n.dart';
 
 /// Top header section for `ContactCard`, featuring a circular avatar,
 /// contact full name, gender pill badge, and drag handle icon.
@@ -66,6 +67,35 @@ class ContactCardHeader extends StatelessWidget {
                   ),
                 ),
               ),
+              if (contact.isMe) ...[
+                const SizedBox(width: AppSpacing.xs),
+                Container(
+                  key: const Key('contact_card_me_badge'),
+                  margin: const EdgeInsets.only(left: AppSpacing.sm),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.compact,
+                    vertical: AppSpacing.xxs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer,
+                    borderRadius: AppRadii.borderPill,
+                    border: Border.all(
+                      color: colorScheme.primary.withValues(
+                        alpha: isDark ? AppOpacity.subtleBorder : 0.4,
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    context.l10n.myContactBadge,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: colorScheme.onPrimaryContainer,
+                      fontSize: AppFontSizes.micro,
+                      letterSpacing: AppLetterSpacing.uppercase,
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

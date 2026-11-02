@@ -348,6 +348,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get invalidCharacters => 'Il campo contiene caratteri non ammessi.';
 
   @override
+  String get isMeLabel => 'Questo è il mio codice fiscale';
+
+  @override
+  String isMeReplacesExisting(String name) {
+    return 'Sostituirà $name come tuo codice fiscale principale.';
+  }
+
+  @override
+  String get isMeSubtitle =>
+      'Imposta come codice personale per accesso rapido e comandi vocali con Google Gemini.';
+
+  @override
   String get lastName => 'Cognome';
 
   @override
@@ -359,6 +371,9 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get missingBirthplaceCode =>
       'Il luogo di nascita selezionato non ha un codice catastale (Belfiore) valido.';
+
+  @override
+  String get myContactBadge => 'TU';
 
   @override
   String get networkError =>

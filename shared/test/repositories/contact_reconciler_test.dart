@@ -12,6 +12,7 @@ void main() {
     required String taxCode,
     required int listIndex,
     DateTime? updatedAt,
+    bool isMe = false,
   }) {
     return Contact(
       id: id,
@@ -23,6 +24,7 @@ void main() {
       birthPlace: birthplace,
       listIndex: listIndex,
       updatedAt: updatedAt,
+      isMe: isMe,
     );
   }
 
@@ -199,6 +201,46 @@ void main() {
       expect(result[1].id, 'rem1');
       expect(result[1].listIndex, 1);
     });
+
+    test(
+      'ensures only one contact keeps isMe == true (latest updatedAt wins)',
+      () {
+        final t1 = DateTime(2026, 1, 1, 10);
+        final t2 = DateTime(2026, 1, 1, 12);
+
+        final remote = [
+          createTestContact(
+            id: 'rem1',
+            firstName: 'Remote Me',
+            taxCode: 'REM1',
+            listIndex: 0,
+            updatedAt: t1,
+            isMe: true,
+          ),
+        ];
+        final local = [
+          createTestContact(
+            id: 'loc1',
+            firstName: 'Local Me',
+            taxCode: 'LOC1',
+            listIndex: 1,
+            updatedAt: t2,
+            isMe: true,
+          ),
+        ];
+
+        final result = ContactReconciler.reconcileByTimestamp(
+          remoteContacts: remote,
+          localContacts: local,
+        );
+
+        expect(result.length, 2);
+        final loc = result.firstWhere((c) => c.id == 'loc1');
+        final rem = result.firstWhere((c) => c.id == 'rem1');
+        expect(loc.isMe, isTrue);
+        expect(rem.isMe, isFalse);
+      },
+    );
   });
 
   group('ContactReconciler.mergeGuestIntoRemote', () {
@@ -288,6 +330,38 @@ void main() {
       expect(result.length, 1);
       expect(result.first.id, 'shared_id');
       expect(result.first.taxCode, 'REM1');
+    });
+
+    test('remote isMe takes precedence over guest isMe during merge', () {
+      final remote = [
+        createTestContact(
+          id: 'rem1',
+          firstName: 'Remote Me',
+          taxCode: 'REM1',
+          listIndex: 0,
+          isMe: true,
+        ),
+      ];
+      final guest = [
+        createTestContact(
+          id: 'guest1',
+          firstName: 'Guest Me',
+          taxCode: 'GUEST1',
+          listIndex: 1,
+          isMe: true,
+        ),
+      ];
+
+      final result = ContactReconciler.mergeGuestIntoRemote(
+        remoteContacts: remote,
+        guestContacts: guest,
+      );
+
+      expect(result.length, 2);
+      final rem = result.firstWhere((c) => c.id == 'rem1');
+      final guestResult = result.firstWhere((c) => c.id == 'guest1');
+      expect(rem.isMe, isTrue);
+      expect(guestResult.isMe, isFalse);
     });
   });
 }

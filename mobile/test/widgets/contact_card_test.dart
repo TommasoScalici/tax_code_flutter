@@ -171,6 +171,9 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           MaterialApp(
+            locale: const Locale('en'),
+            localizationsDelegates:
+                AppLocalizationsSetup.localizationsDelegates,
             home: Scaffold(body: ContactCardHeader(contact: tContact)),
           ),
         );
@@ -181,6 +184,26 @@ void main() {
         expect(find.text('Rossi'), findsOneWidget);
         expect(find.text('M'), findsOneWidget);
         expect(find.byIcon(Icons.drag_indicator_rounded), findsOneWidget);
+        expect(find.byKey(const Key('contact_card_me_badge')), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'ContactCardHeader displays YOU badge when contact.isMe is true',
+      (tester) async {
+        final meContact = tContact.copyWith(isMe: true);
+        await tester.pumpWidget(
+          MaterialApp(
+            locale: const Locale('en'),
+            localizationsDelegates:
+                AppLocalizationsSetup.localizationsDelegates,
+            home: Scaffold(body: ContactCardHeader(contact: meContact)),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('contact_card_me_badge')), findsOneWidget);
+        expect(find.text('YOU'), findsOneWidget);
       },
     );
 

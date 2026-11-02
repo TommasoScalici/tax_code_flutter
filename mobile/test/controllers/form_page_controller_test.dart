@@ -174,6 +174,30 @@ void main() {
       },
     );
 
+    test(
+      'initializes isMe to true by default when contacts is empty',
+      () async {
+        when(() => mockContactRepository.contacts).thenReturn([]);
+        await createController();
+        expect(formPageController.form.control('isMe').value, isTrue);
+      },
+    );
+
+    test(
+      'initializes isMe to false when contacts list already has contacts',
+      () async {
+        when(() => mockContactRepository.contacts).thenReturn([sampleContact]);
+        await createController();
+        expect(formPageController.form.control('isMe').value, isFalse);
+      },
+    );
+
+    test('initializes isMe matching initialContact.isMe', () async {
+      final meContact = sampleContact.copyWith(isMe: true);
+      await createController(initialContact: meContact);
+      expect(formPageController.form.control('isMe').value, isTrue);
+    });
+
     test('populateFormFromScannedData patches form values correctly', () async {
       // Arrange
       await createController();

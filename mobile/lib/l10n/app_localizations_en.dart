@@ -344,6 +344,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidCharacters => 'The field contains invalid characters.';
 
   @override
+  String get isMeLabel => 'This is my tax code';
+
+  @override
+  String isMeReplacesExisting(String name) {
+    return 'Will replace $name as your primary tax code.';
+  }
+
+  @override
+  String get isMeSubtitle =>
+      'Set as personal tax code for quick access and Google Gemini voice commands.';
+
+  @override
   String get lastName => 'Last Name';
 
   @override
@@ -355,6 +367,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get missingBirthplaceCode =>
       'The selected birthplace is missing its cadastral code (Belfiore).';
+
+  @override
+  String get myContactBadge => 'YOU';
 
   @override
   String get networkError =>

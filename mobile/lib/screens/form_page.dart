@@ -22,6 +22,7 @@ import 'package:tax_code_flutter/widgets/form/custom_text_field.dart';
 import 'package:tax_code_flutter/widgets/form/form_section_divider.dart';
 import 'package:tax_code_flutter/widgets/form/form_sticky_bottom_bar.dart';
 import 'package:tax_code_flutter/widgets/form/gender_segmented_button.dart';
+import 'package:tax_code_flutter/widgets/form/is_me_switch_field.dart';
 import 'package:tax_code_flutter/widgets/form/ocr_ai_hero_banner.dart';
 import 'package:tax_code_flutter/widgets/form/tax_code_live_preview_card.dart';
 import 'package:tax_code_flutter/widgets/responsive_layout.dart';
@@ -280,6 +281,13 @@ class _FormViewState extends State<_FormView> {
                             focusNode: _birthplaceFocusNode,
                             labelText: l10n.birthPlace,
                             birthplaces: controller.birthplaces,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+
+                          // Personal Tax Code ("TU") Switch
+                          IsMeSwitchField(
+                            formControlName: 'isMe',
+                            otherMeContactName: controller.otherMeContactName,
                           ),
                           const SizedBox(height: AppSpacing.card),
 

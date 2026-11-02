@@ -53,6 +53,23 @@ interface class FormPageController with ChangeNotifier {
   /// The original contact if in editing mode.
   Contact? get initialContact => _initialContact;
 
+  /// Whether another contact in repository is currently designated as 'isMe'.
+  bool get hasOtherMeContact {
+    return _contactRepository.contacts.any(
+      (c) => c.isMe && c.id != _initialContact?.id,
+    );
+  }
+
+  /// The name of the other contact currently designated as 'isMe', if any.
+  String? get otherMeContactName {
+    final other = _contactRepository.contacts
+        .where((c) => c.isMe && c.id != _initialContact?.id)
+        .firstOrNull;
+    if (other == null) return null;
+    final fullName = '${other.firstName} ${other.lastName}'.trim();
+    return fullName.isEmpty ? null : fullName;
+  }
+
   /// Dynamically calculated 16-character tax code based on current form field values.
   /// Falls back to existing contact's tax code if form is partially completed.
   String? get calculatedTaxCode {
@@ -134,6 +151,9 @@ interface class FormPageController with ChangeNotifier {
       'birthPlace': FormControl<Birthplace>(
         value: _initialContact?.birthPlace,
         validators: [Validators.required],
+      ),
+      'isMe': FormControl<bool>(
+        value: _initialContact?.isMe ?? _contactRepository.contacts.isEmpty,
       ),
     });
 
@@ -274,6 +294,7 @@ interface class FormPageController with ChangeNotifier {
       final firstName = (formData['firstName']! as String).trim();
       final lastName = (formData['lastName']! as String).trim();
       final birthPlace = formData['birthPlace']! as Birthplace;
+      final isMe = formData['isMe'] as bool? ?? false;
 
       final response = await _taxCodeService.fetchTaxCode(
         firstName: firstName,
@@ -296,6 +317,7 @@ interface class FormPageController with ChangeNotifier {
           listIndex:
               _initialContact?.listIndex ??
               _contactRepository.contacts.length + 1,
+          isMe: isMe,
         );
         _setLoading(false);
         return newContact;

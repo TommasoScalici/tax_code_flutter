@@ -53,6 +53,23 @@ abstract final class ContactReconciler {
       mergedList[i] = mergedList[i].copyWith(listIndex: i);
     }
 
+    // Ensure only one contact has isMe == true across the reconciled list
+    final meContacts = mergedList.where((c) => c.isMe).toList();
+    if (meContacts.length > 1) {
+      meContacts.sort((a, b) {
+        if (a.updatedAt == null && b.updatedAt == null) return 0;
+        if (a.updatedAt == null) return 1;
+        if (b.updatedAt == null) return -1;
+        return b.updatedAt!.compareTo(a.updatedAt!);
+      });
+      final primaryMeId = meContacts.first.id;
+      for (var i = 0; i < mergedList.length; i++) {
+        if (mergedList[i].isMe && mergedList[i].id != primaryMeId) {
+          mergedList[i] = mergedList[i].copyWith(isMe: false);
+        }
+      }
+    }
+
     return mergedList;
   }
 
@@ -90,6 +107,18 @@ abstract final class ContactReconciler {
 
     for (var i = 0; i < mergedContacts.length; i++) {
       mergedContacts[i] = mergedContacts[i].copyWith(listIndex: i);
+    }
+
+    // Ensure only one contact has isMe == true (remote contacts take priority)
+    final meContacts = mergedContacts.where((c) => c.isMe).toList();
+    if (meContacts.length > 1) {
+      final remoteMe = remoteContacts.where((c) => c.isMe).firstOrNull;
+      final winnerId = remoteMe?.id ?? meContacts.first.id;
+      for (var i = 0; i < mergedContacts.length; i++) {
+        if (mergedContacts[i].isMe && mergedContacts[i].id != winnerId) {
+          mergedContacts[i] = mergedContacts[i].copyWith(isMe: false);
+        }
+      }
     }
 
     return mergedContacts;

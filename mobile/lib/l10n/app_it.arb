@@ -437,6 +437,24 @@
   "@invalidCharacters": {
     "description": "Messaggio di errore mostrato quando un campo del form contiene caratteri non ammessi (come numeri o simboli)."
   },
+  "isMeLabel": "Questo è il mio codice fiscale",
+  "@isMeLabel": {
+    "description": "Etichetta per l'interruttore nel form che contrassegna il contatto come appartenente all'utente stesso."
+  },
+  "isMeReplacesExisting": "Sostituirà {name} come tuo codice fiscale principale.",
+  "@isMeReplacesExisting": {
+    "description": "Nota informativa quando l'attivazione del codice personale sostituisce un altro contatto precedentemente designato.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Mario Rossi"
+      }
+    }
+  },
+  "isMeSubtitle": "Imposta come codice personale per accesso rapido e comandi vocali con Google Gemini.",
+  "@isMeSubtitle": {
+    "description": "Sottotitolo descrittivo per l'interruttore del codice fiscale personale."
+  },
   "lastName": "Cognome",
   "@lastName": {
     "description": "Label for the last name input field."
@@ -452,6 +470,10 @@
   "missingBirthplaceCode": "Il luogo di nascita selezionato non ha un codice catastale (Belfiore) valido.",
   "@missingBirthplaceCode": {
     "description": "Error message displayed when the birthplace lacks a valid 4-character Belfiore code."
+  },
+  "myContactBadge": "TU",
+  "@myContactBadge": {
+    "description": "Badge compatto mostrato accanto al nome del contatto che rappresenta l'utente proprietario."
   },
   "networkError": "Nessuna connessione internet. Controlla la tua rete e riprova.",
   "@networkError": {

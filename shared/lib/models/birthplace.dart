@@ -62,18 +62,22 @@ class Birthplace extends Equatable {
   }
 
   /// Normalized municipality name for instant search indexing.
+  @JsonKey(includeToJson: false)
   String get normalizedName =>
       _normalizedName ?? BirthplaceSearchFilter.normalize(name);
 
   /// Normalized province / state code for instant search indexing.
+  @JsonKey(includeToJson: false)
   String get normalizedState =>
       _normalizedState ?? BirthplaceSearchFilter.normalize(state);
 
   /// Combined normalized name and state (e.g. "roma rm").
+  @JsonKey(includeToJson: false)
   String get normalizedFull =>
       _normalizedFull ?? '$normalizedName $normalizedState';
 
   /// Pre-split words in municipality name.
+  @JsonKey(includeToJson: false)
   List<String> get nameWords => _nameWords ?? normalizedName.split(' ');
 
   @override

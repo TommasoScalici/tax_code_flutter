@@ -698,6 +698,24 @@ abstract class AppLocalizations {
   /// **'The field contains invalid characters.'**
   String get invalidCharacters;
 
+  /// Label for the switch in the form marking the contact as belonging to the user.
+  ///
+  /// In en, this message translates to:
+  /// **'This is my tax code'**
+  String get isMeLabel;
+
+  /// Informational note when enabling the personal tax code replaces another previously designated contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Will replace {name} as your primary tax code.'**
+  String isMeReplacesExisting(String name);
+
+  /// Descriptive subtitle for the personal tax code toggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set as personal tax code for quick access and Google Gemini voice commands.'**
+  String get isMeSubtitle;
+
   /// Label for the last name input field.
   ///
   /// In en, this message translates to:
@@ -721,6 +739,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The selected birthplace is missing its cadastral code (Belfiore).'**
   String get missingBirthplaceCode;
+
+  /// Compact badge displayed next to the name of the contact representing the owner user.
+  ///
+  /// In en, this message translates to:
+  /// **'YOU'**
+  String get myContactBadge;
 
   /// Error message when there is no internet connectivity.
   ///

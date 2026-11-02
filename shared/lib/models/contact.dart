@@ -43,6 +43,10 @@ class Contact extends Equatable {
   @HiveField(8)
   final DateTime? updatedAt;
 
+  @HiveField(9, defaultValue: false)
+  @JsonKey(defaultValue: false)
+  final bool isMe;
+
   const Contact({
     required this.id,
     required this.firstName,
@@ -53,6 +57,7 @@ class Contact extends Equatable {
     required this.birthDate,
     required this.listIndex,
     this.updatedAt,
+    this.isMe = false,
   });
 
   /// Convenience getter for typed [Gender], defaulting to [Gender.male] if invalid or blank.
@@ -87,6 +92,7 @@ class Contact extends Equatable {
     DateTime? birthDate,
     int? listIndex,
     DateTime? updatedAt,
+    bool? isMe,
   }) {
     return Contact(
       id: id ?? this.id,
@@ -98,6 +104,7 @@ class Contact extends Equatable {
       birthDate: birthDate ?? this.birthDate,
       listIndex: listIndex ?? this.listIndex,
       updatedAt: updatedAt ?? this.updatedAt,
+      isMe: isMe ?? this.isMe,
     );
   }
 
@@ -122,5 +129,6 @@ class Contact extends Equatable {
     birthPlace,
     birthDate,
     listIndex,
+    isMe,
   ];
 }

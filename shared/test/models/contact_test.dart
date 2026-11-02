@@ -27,10 +27,11 @@ void main() {
         'lastName': 'Rossi',
         'gender': 'M',
         'taxCode': 'RSSMRA90A15H501A',
-        'birthPlace': {'name': 'Roma', 'state': 'RM', 'code': 'H501'},
+        'birthPlace': birthplace.toJson(),
         'birthDate': Timestamp.fromDate(birthDate),
         'listIndex': 0,
         'updatedAt': null,
+        'isMe': false,
       };
 
       /// Tests for converting JSON to the model
@@ -39,11 +40,19 @@ void main() {
         expect(model, equals(contact));
       });
 
+      test('fromJson should default isMe to false if missing', () {
+        final mapWithoutIsMe = Map<String, dynamic>.from(contactMap)
+          ..remove('isMe');
+        final model = Contact.fromJson(mapWithoutIsMe);
+        expect(model.isMe, isFalse);
+      });
+
       /// Tests for converting the model to JSON
       test('toJson should return a valid json map', () {
         final json = contact.toJson();
         expect(json, equals(contactMap));
         expect(json['birthDate'], isA<Timestamp>());
+        expect(json['isMe'], isFalse);
       });
     });
 
@@ -59,6 +68,7 @@ void main() {
         expect(emptyContact.birthDate, DateTime(1970));
         expect(emptyContact.listIndex, 0);
         expect(emptyContact.updatedAt, isNotNull);
+        expect(emptyContact.isMe, isFalse);
       });
 
       /// Tests for the copyWith method
@@ -66,12 +76,14 @@ void main() {
         final updatedContact = contact.copyWith(
           firstName: 'Luigi',
           listIndex: 1,
+          isMe: true,
         );
 
         expect(updatedContact.id, contact.id);
         expect(updatedContact.firstName, 'Luigi');
         expect(updatedContact.lastName, contact.lastName);
         expect(updatedContact.listIndex, 1);
+        expect(updatedContact.isMe, isTrue);
       });
 
       /// Tests for the toString method
@@ -93,11 +105,13 @@ void main() {
           taxCode: 'RSSGPP90A15H501A',
         );
         final contactWithDifferentId = contact.copyWith(id: '67890');
+        final contactWithDifferentIsMe = contact.copyWith(isMe: true);
 
         expect(contact, equals(sameContact));
         expect(contact, isNot(equals(contactWithDifferentName)));
         expect(contact, isNot(equals(contactWithDifferentTaxCode)));
         expect(contact, isNot(equals(contactWithDifferentId)));
+        expect(contact, isNot(equals(contactWithDifferentIsMe)));
       });
 
       /// Tests for entity identity comparison

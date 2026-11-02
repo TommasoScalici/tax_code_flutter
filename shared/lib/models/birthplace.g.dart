@@ -54,6 +54,12 @@ Birthplace _$BirthplaceFromJson(Map<String, dynamic> json) => Birthplace(
   name: json['name'] as String,
   state: json['state'] as String,
   code: json['code'] as String? ?? '',
+  normalizedName: json['normalizedName'] as String?,
+  normalizedState: json['normalizedState'] as String?,
+  normalizedFull: json['normalizedFull'] as String?,
+  nameWords: (json['nameWords'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
 );
 
 Map<String, dynamic> _$BirthplaceToJson(Birthplace instance) =>

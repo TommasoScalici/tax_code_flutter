@@ -26,13 +26,14 @@ class ContactAdapter extends TypeAdapter<Contact> {
       birthDate: fields[6] as DateTime,
       listIndex: (fields[7] as num).toInt(),
       updatedAt: fields[8] as DateTime?,
+      isMe: fields[9] == null ? false : fields[9] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Contact obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -50,7 +51,9 @@ class ContactAdapter extends TypeAdapter<Contact> {
       ..writeByte(7)
       ..write(obj.listIndex)
       ..writeByte(8)
-      ..write(obj.updatedAt);
+      ..write(obj.updatedAt)
+      ..writeByte(9)
+      ..write(obj.isMe);
   }
 
   @override
@@ -82,6 +85,7 @@ Contact _$ContactFromJson(Map<String, dynamic> json) => Contact(
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
+  isMe: json['isMe'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
@@ -94,4 +98,5 @@ Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
   'birthDate': const TimestampConverter().toJson(instance.birthDate),
   'listIndex': instance.listIndex,
   'updatedAt': instance.updatedAt?.toIso8601String(),
+  'isMe': instance.isMe,
 };

@@ -154,6 +154,30 @@ class DefaultContactRepository extends ContactRepository {
 
     final stampedContact = contact.copyWith(updatedAt: DateTime.now());
 
+    // Ensure exclusivity: if this contact is marked as "isMe", demote any other contact.
+    if (stampedContact.isMe) {
+      for (var i = 0; i < _contacts.length; i++) {
+        if (_contacts[i].id != stampedContact.id && _contacts[i].isMe) {
+          final demoted = _contacts[i].copyWith(
+            isMe: false,
+            updatedAt: DateTime.now(),
+          );
+          _contacts[i] = demoted;
+          if (isSyncActive && uid != guestUserId) {
+            try {
+              await _dbService.addOrUpdateContact(uid, demoted);
+            } on Exception catch (e, s) {
+              _logger.e(
+                'Error updating demoted isMe contact in Firebase',
+                error: e,
+                stackTrace: s,
+              );
+            }
+          }
+        }
+      }
+    }
+
     final index = _contacts.indexWhere((c) => c.id == stampedContact.id);
     if (index != -1) {
       _contacts[index] = stampedContact;
