@@ -192,8 +192,8 @@ void main() {
         final initialResult = await service.loadBirthplaces();
         expect(initialResult.length, 1);
 
-        // Allow background microtask to execute
-        await Future<void>.delayed(const Duration(milliseconds: 100));
+        // Await background update completion deterministically
+        await service.backgroundUpdateFuture;
 
         // Check that in-memory cache was updated
         final updatedResult = await service.loadBirthplaces();
