@@ -116,6 +116,12 @@ abstract class AppLocalizations {
   /// **'Add Code'**
   String get addCode;
 
+  /// Message explaining that Google sign-in is required to use the optical AI document scanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google to use the smart AI scanner.'**
+  String get aiScannerRequiresGoogle;
+
   /// Subtitle for app information item with dynamic version.
   ///
   /// In en, this message translates to:
@@ -332,6 +338,12 @@ abstract class AppLocalizations {
   /// **'Cloud sync active'**
   String get cloudSyncActive;
 
+  /// Label indicating cloud synchronization is disabled because the user is in guest mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud sync disabled • Google required'**
+  String get cloudSyncDisabledGuest;
+
   /// Tooltip and message explaining that Google sign-in is required for cloud synchronization.
   ///
   /// In en, this message translates to:
@@ -349,6 +361,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cloud sync active'**
   String get cloudSyncOn;
+
+  /// Message explaining that Google sign-in is required to activate cloud synchronization.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google to enable cloud sync and protect your data across devices.'**
+  String get cloudSyncRequiresGoogle;
 
   /// Notification indicating tax code was saved successfully.
   ///

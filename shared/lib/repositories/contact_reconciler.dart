@@ -17,7 +17,7 @@ abstract final class ContactReconciler {
     required List<Contact> localContacts,
   }) {
     if (remoteContacts.isEmpty && localContacts.isEmpty) {
-      return const [];
+      return <Contact>[];
     }
 
     final mergedMap = <String, Contact>{};

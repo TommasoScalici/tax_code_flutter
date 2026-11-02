@@ -16,7 +16,15 @@ class OcrAiHeroBanner extends StatelessWidget {
   /// Optional outer margin around the card container.
   final EdgeInsetsGeometry? margin;
 
-  const OcrAiHeroBanner({super.key, required this.onScanPressed, this.margin});
+  /// Whether the current session is in guest mode (AI scanner disabled/locked).
+  final bool isGuest;
+
+  const OcrAiHeroBanner({
+    super.key,
+    required this.onScanPressed,
+    this.margin,
+    this.isGuest = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -221,8 +229,10 @@ class OcrAiHeroBanner extends StatelessWidget {
                                   elevation: AppElevation.none,
                                 ),
                                 iconAlignment: IconAlignment.end,
-                                icon: const Icon(
-                                  Icons.arrow_forward_rounded,
+                                icon: Icon(
+                                  isGuest
+                                      ? Icons.lock_outline_rounded
+                                      : Icons.arrow_forward_rounded,
                                   size: AppDimensions.iconSm,
                                 ),
                                 label: Text(

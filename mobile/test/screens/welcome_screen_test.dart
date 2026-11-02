@@ -85,13 +85,11 @@ void main() {
       verify(() => mockAuthService.signInWithGoogle()).called(1);
     });
 
-    testWidgets('tapping Guest button calls authService.signInAnonymously', (
+    testWidgets('tapping Guest button calls authService.continueAsGuest', (
       tester,
     ) async {
       setMobileSize(tester);
-      when(
-        () => mockAuthService.signInAnonymously(),
-      ).thenAnswer((_) async => true);
+      when(() => mockAuthService.continueAsGuest()).thenAnswer((_) async {});
 
       await pumpApp(
         tester,
@@ -102,7 +100,7 @@ void main() {
       await tester.tap(find.text('Continue as guest'));
       await tester.pump();
 
-      verify(() => mockAuthService.signInAnonymously()).called(1);
+      verify(() => mockAuthService.continueAsGuest()).called(1);
     });
 
     testWidgets(
@@ -147,32 +145,6 @@ void main() {
           ),
           findsOneWidget,
         );
-      },
-    );
-
-    testWidgets(
-      'shows snackbar when signInAnonymously fails with error message',
-      (tester) async {
-        setMobileSize(tester);
-        when(
-          () => mockAuthService.signInAnonymously(),
-        ).thenAnswer((_) async => false);
-        when(() => mockAuthService.errorKey).thenReturn('signInFailed');
-        when(() => mockAuthService.errorMessage).thenReturn('signInFailed');
-
-        await pumpApp(
-          tester,
-          const WelcomeScreen(),
-          mockAuthService: mockAuthService,
-        );
-
-        final guestBtn = find.text('Continue as guest');
-        await tester.ensureVisible(guestBtn);
-        await tester.tap(guestBtn);
-        await tester.pumpAndSettle();
-
-        expect(find.byType(SnackBar), findsOneWidget);
-        expect(find.text('Sign in failed. Please try again.'), findsOneWidget);
       },
     );
 

@@ -9,6 +9,7 @@ import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/database_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // --- Mocks ---
 class FakeAuthCredential extends Fake implements AuthCredential {}
@@ -19,7 +20,10 @@ class MockDatabaseService extends Mock implements DatabaseService {}
 
 class MockLogger extends Mock implements Logger {}
 
-class MockUser extends Mock implements User {}
+class MockUser extends Mock implements User {
+  @override
+  bool get isAnonymous => false;
+}
 
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
 
@@ -30,6 +34,9 @@ class MockGoogleSignInAuthentication extends Mock
 
 class MockUserCredential extends Mock implements UserCredential {}
 
+class MockSharedPreferencesAsync extends Mock
+    implements SharedPreferencesAsync {}
+
 void main() {
   late AuthService authService;
   late MockFirebaseAuth mockAuth;
@@ -37,6 +44,7 @@ void main() {
   late MockDatabaseService mockDbService;
   late MockLogger mockLogger;
   late StreamController<User?> authStreamController;
+  late MockSharedPreferencesAsync mockPrefs;
 
   setUpAll(() {
     registerFallbackValue(MockUser());
@@ -49,6 +57,7 @@ void main() {
     mockGoogleSignIn = MockGoogleSignIn();
     mockDbService = MockDatabaseService();
     mockLogger = MockLogger();
+    mockPrefs = MockSharedPreferencesAsync();
 
     when(
       () => mockAuth.authStateChanges(),
@@ -63,12 +72,15 @@ void main() {
     ).thenAnswer((_) {});
     when(() => mockLogger.w(any<Object?>())).thenAnswer((_) {});
     when(() => mockLogger.i(any<Object?>())).thenAnswer((_) {});
+    when(() => mockPrefs.getBool(any())).thenAnswer((_) async => null);
+    when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async {});
 
     authService = AuthService(
       auth: mockAuth,
       googleSignIn: mockGoogleSignIn,
       dbService: mockDbService,
       logger: mockLogger,
+      prefs: mockPrefs,
     );
   });
 
@@ -248,71 +260,16 @@ void main() {
         expect(authService.errorKey, 'networkError');
       },
     );
-
-    test(
-      'signInWithGoogle links credential if currentUser is anonymous',
-      () async {
-        // Arrange
-        final anonymousUser = MockUser();
-        when(() => anonymousUser.isAnonymous).thenReturn(true);
-        when(
-          () => anonymousUser.linkWithCredential(any()),
-        ).thenAnswer((_) async => MockUserCredential());
-        when(() => mockAuth.currentUser).thenReturn(anonymousUser);
-        when(
-          () => mockGoogleSignIn.signIn(),
-        ).thenAnswer((_) async => mockGoogleAccount);
-
-        // Act
-        final result = await authService.signInWithGoogle();
-
-        // Assert
-        expect(result, isTrue);
-        verify(() => anonymousUser.linkWithCredential(any())).called(1);
-      },
-    );
   });
 
-  group('signInAnonymously & isGuest', () {
-    test('signInAnonymously succeeds and logs', () async {
-      when(
-        () => mockAuth.signInAnonymously(),
-      ).thenAnswer((_) async => MockUserCredential());
+  group('continueAsGuest & isGuest', () {
+    test('continueAsGuest sets guest status', () async {
+      await authService.continueAsGuest();
 
-      final result = await authService.signInAnonymously();
-
-      expect(result, isTrue);
-      verify(() => mockAuth.signInAnonymously()).called(1);
-    });
-
-    test('signInAnonymously handles errors gracefully', () async {
-      final exception = Exception('Anonymous auth disabled');
-      when(() => mockAuth.signInAnonymously()).thenThrow(exception);
-
-      final result = await authService.signInAnonymously();
-
-      expect(result, isFalse);
-      expect(authService.errorMessage, isNotNull);
-      expect(authService.errorKey, 'signInFailed');
-      verify(
-        () => mockLogger.e(
-          'Error during anonymous sign-in',
-          error: exception,
-          stackTrace: any(named: 'stackTrace'),
-        ),
-      ).called(1);
-    });
-
-    test('isGuest returns true when currentUser is anonymous', () async {
-      final anonUser = MockUser();
-      when(() => anonUser.isAnonymous).thenReturn(true);
-      when(anonUser.reload).thenAnswer((_) async {});
-      when(() => mockAuth.currentUser).thenReturn(anonUser);
-
-      authStreamController.add(anonUser);
-      await pumpEventQueue();
-
+      expect(authService.status, AuthStatus.guest);
       expect(authService.isGuest, isTrue);
+      expect(authService.isSignedIn, isFalse);
+      expect(authService.currentUser, isNull);
     });
   });
 

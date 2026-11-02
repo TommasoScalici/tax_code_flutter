@@ -40,6 +40,19 @@ void main() {
       expect(find.byType(WelcomeScreen), findsNothing);
     });
 
+    testWidgets('renders HomePage when status is guest', (tester) async {
+      when(() => mockAuthService.isGuest).thenReturn(true);
+      await pumpApp(
+        tester,
+        const AuthGate(),
+        authStatus: AuthStatus.guest,
+        mockAuthService: mockAuthService,
+      );
+
+      expect(find.byType(HomePage), findsOneWidget);
+      expect(find.byType(WelcomeScreen), findsNothing);
+    });
+
     testWidgets('renders WelcomeScreen when status is unauthenticated', (
       tester,
     ) async {

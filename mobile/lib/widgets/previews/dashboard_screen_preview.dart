@@ -137,7 +137,7 @@ class _DashboardScreenPreviewState extends State<DashboardScreenPreview> {
             selected: _authService.isGuest,
             onSelected: (val) {
               if (val) {
-                unawaited(_authService.signInAnonymously());
+                unawaited(_authService.continueAsGuest());
               } else {
                 unawaited(_authService.signInWithGoogle());
               }

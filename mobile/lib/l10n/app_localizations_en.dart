@@ -20,6 +20,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addCode => 'Add Code';
 
   @override
+  String get aiScannerRequiresGoogle =>
+      'Sign in with Google to use the smart AI scanner.';
+
+  @override
   String appInfoSubtitle(String version) {
     return 'Version $version • Legal notes and Privacy Policy';
   }
@@ -138,6 +142,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cloudSyncActive => 'Cloud sync active';
 
   @override
+  String get cloudSyncDisabledGuest => 'Cloud sync disabled • Google required';
+
+  @override
   String get cloudSyncGuestTooltip =>
       'Sign in with Google to sync your tax codes across devices';
 
@@ -146,6 +153,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cloudSyncOn => 'Cloud sync active';
+
+  @override
+  String get cloudSyncRequiresGoogle =>
+      'Sign in with Google to enable cloud sync and protect your data across devices.';
 
   @override
   String codeSavedSuccess(String code) {

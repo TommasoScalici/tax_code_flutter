@@ -6,6 +6,7 @@ import 'package:shared/models/birthplace.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/models/scanned_data.dart';
 import 'package:shared/repositories/contact_repository.dart';
+import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 import 'package:shared/testing/testing.dart';
@@ -45,6 +46,7 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
   late final FakeBirthplaceService _birthplaceService;
   late final FakeTaxCodeService _taxCodeService;
   late final FakeContactRepository _contactRepository;
+  late final FakeAuthService _authService;
   late final Logger _logger;
 
   @override
@@ -54,12 +56,14 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
     _birthplaceService = FakeBirthplaceService();
     _taxCodeService = FakeTaxCodeService(birthplaceService: _birthplaceService);
     _contactRepository = FakeContactRepository();
+    _authService = FakeAuthService.authenticated();
     _logger = Logger(level: Level.off);
   }
 
   @override
   void dispose() {
     _birthplaceService.dispose();
+    _authService.dispose();
     super.dispose();
   }
 
@@ -79,6 +83,7 @@ class _FormScreenPreviewState extends State<FormScreenPreview> {
         ChangeNotifierProvider<ContactRepository>.value(
           value: _contactRepository,
         ),
+        ChangeNotifierProvider<AuthService>.value(value: _authService),
         Provider<Logger>.value(value: _logger),
       ],
       toolbarActions: (context, _) => [

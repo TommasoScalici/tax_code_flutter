@@ -18,6 +18,7 @@ class AuthGate extends StatelessWidget {
 
     switch (authService.status) {
       case AuthStatus.authenticated:
+      case AuthStatus.guest:
         return const HomePage();
       case AuthStatus.unauthenticated:
         return const WelcomeScreen();

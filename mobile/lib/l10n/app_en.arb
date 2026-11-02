@@ -19,6 +19,10 @@
   "@addCode": {
     "description": "Button label to add or create a new tax code."
   },
+  "aiScannerRequiresGoogle": "Sign in with Google to use the smart AI scanner.",
+  "@aiScannerRequiresGoogle": {
+    "description": "Message explaining that Google sign-in is required to use the optical AI document scanner."
+  },
   "appInfoSubtitle": "Version {version} • Legal notes and Privacy Policy",
   "@appInfoSubtitle": {
     "description": "Subtitle for app information item with dynamic version.",
@@ -169,6 +173,10 @@
   "@cloudSyncActive": {
     "description": "Tooltip indicating active cloud synchronization on the user avatar."
   },
+  "cloudSyncDisabledGuest": "Cloud sync disabled • Google required",
+  "@cloudSyncDisabledGuest": {
+    "description": "Label indicating cloud synchronization is disabled because the user is in guest mode."
+  },
   "cloudSyncGuestTooltip": "Sign in with Google to sync your tax codes across devices",
   "@cloudSyncGuestTooltip": {
     "description": "Tooltip and message explaining that Google sign-in is required for cloud synchronization."
@@ -180,6 +188,10 @@
   "cloudSyncOn": "Cloud sync active",
   "@cloudSyncOn": {
     "description": "Tooltip and message when cloud synchronization is enabled."
+  },
+  "cloudSyncRequiresGoogle": "Sign in with Google to enable cloud sync and protect your data across devices.",
+  "@cloudSyncRequiresGoogle": {
+    "description": "Message explaining that Google sign-in is required to activate cloud synchronization."
   },
   "codeSavedSuccess": "Tax code saved successfully: {code}",
   "@codeSavedSuccess": {

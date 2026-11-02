@@ -53,17 +53,7 @@ class WelcomeScreen extends StatelessWidget {
       return;
     }
 
-    final success = await authService.signInAnonymously();
-    if (!context.mounted) return;
-
-    if (!success && authService.errorKey != null) {
-      final l10n = context.l10n;
-      final failure = ErrorMapper.fromKey(authService.errorKey);
-      final message = failure.toLocalizedMessage(l10n);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
-      );
-    }
+    await authService.continueAsGuest();
   }
 
   @override

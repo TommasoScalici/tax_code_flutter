@@ -11,6 +11,9 @@ import 'package:shared/services/sync_service.dart';
 /// Default concrete implementation of [ContactRepository], managing loading,
 /// local Hive caching, Firestore remote synchronization, and authentication changes.
 class DefaultContactRepository extends ContactRepository {
+  /// Storage identifier for local-only guest mode contacts in cache.
+  static const String guestUserId = 'guest';
+
   final AuthService _authService;
   final DatabaseService _dbService;
   final LocalCacheService _cacheService;
@@ -29,7 +32,8 @@ class DefaultContactRepository extends ContactRepository {
   @override
   bool get isLoading => _isLoading;
 
-  String? get _userId => _authService.currentUser?.uid;
+  String? get _effectiveUserId =>
+      _authService.isGuest ? guestUserId : _authService.currentUser?.uid;
 
   @override
   bool get isSyncActive =>
@@ -66,10 +70,10 @@ class DefaultContactRepository extends ContactRepository {
 
   @override
   Future<void> init() async {
-    final initialUser = _authService.currentUser;
-    if (initialUser != null) {
-      _cachedUserId = initialUser.uid;
-      await _initializeUserData(initialUser.uid);
+    final effectiveId = _effectiveUserId;
+    if (effectiveId != null) {
+      _cachedUserId = effectiveId;
+      await _initializeUserData(effectiveId);
     } else {
       _isLoading = false;
       if (!_isDisposed) {
@@ -97,11 +101,13 @@ class DefaultContactRepository extends ContactRepository {
   Future<void> _handleSyncStateChanged() async {
     if (_isDisposed) return;
     if (isSyncActive) {
-      if (_contactsSubscription == null && _userId != null) {
-        final userId = _userId!;
-        await _reconcileLocalAndRemoteContacts(userId);
+      final effectiveId = _effectiveUserId;
+      if (_contactsSubscription == null &&
+          effectiveId != null &&
+          effectiveId != guestUserId) {
+        await _reconcileLocalAndRemoteContacts(effectiveId);
         if (_isDisposed || !isSyncActive) return;
-        _listenToRemoteContacts(userId);
+        _listenToRemoteContacts(effectiveId);
       }
     } else {
       final subscription = _contactsSubscription;
@@ -129,7 +135,7 @@ class DefaultContactRepository extends ContactRepository {
         localContacts: _contacts,
       );
 
-      _contacts = mergedList;
+      _contacts = List<Contact>.from(mergedList);
       await _dbService.saveAllContacts(userId, _contacts);
       await _saveContactsToLocalCache();
     } on Object catch (e, s) {
@@ -143,7 +149,8 @@ class DefaultContactRepository extends ContactRepository {
 
   @override
   Future<void> addOrUpdateContact(Contact contact) async {
-    if (_userId == null) return;
+    final uid = _cachedUserId ?? _effectiveUserId;
+    if (uid == null) return;
 
     final stampedContact = contact.copyWith(updatedAt: DateTime.now());
 
@@ -158,9 +165,9 @@ class DefaultContactRepository extends ContactRepository {
     if (_isDisposed) return;
     notifyListeners();
 
-    if (isSyncActive) {
+    if (isSyncActive && uid != guestUserId) {
       try {
-        await _dbService.addOrUpdateContact(_userId!, stampedContact);
+        await _dbService.addOrUpdateContact(uid, stampedContact);
       } on Exception catch (e, s) {
         _logger.e(
           'Error adding/updating contact in Firebase',
@@ -174,16 +181,17 @@ class DefaultContactRepository extends ContactRepository {
 
   @override
   Future<void> removeContact(Contact contact) async {
-    if (_userId == null) return;
+    final uid = _cachedUserId ?? _effectiveUserId;
+    if (uid == null) return;
 
     _contacts.removeWhere((c) => c.id == contact.id);
 
     if (_isDisposed) return;
     notifyListeners();
 
-    if (isSyncActive) {
+    if (isSyncActive && uid != guestUserId) {
       try {
-        await _dbService.removeContact(_userId!, contact.id);
+        await _dbService.removeContact(uid, contact.id);
       } on Exception catch (e, s) {
         _logger.e(
           'Error removing contact from Firebase',
@@ -198,7 +206,7 @@ class DefaultContactRepository extends ContactRepository {
   @override
   Future<void> updateContacts(List<Contact> contacts) async {
     final now = DateTime.now();
-    _contacts = contacts;
+    _contacts = List<Contact>.from(contacts);
     for (var i = 0; i < _contacts.length; i++) {
       _contacts[i] = _contacts[i].copyWith(listIndex: i, updatedAt: now);
     }
@@ -211,9 +219,9 @@ class DefaultContactRepository extends ContactRepository {
 
   @override
   Future<void> saveContacts() async {
-    final uid = _userId ?? _cachedUserId;
+    final uid = _cachedUserId ?? _effectiveUserId;
     if (uid == null) return;
-    if (isSyncActive) {
+    if (isSyncActive && uid != guestUserId) {
       try {
         await _dbService.saveAllContacts(uid, _contacts);
       } on Exception catch (e, s) {
@@ -229,7 +237,7 @@ class DefaultContactRepository extends ContactRepository {
 
   Future<void> _clearUserData() async {
     final userIdToClear = _cachedUserId;
-    if (userIdToClear != null) {
+    if (userIdToClear != null && userIdToClear != guestUserId) {
       try {
         await _cacheService.clearContacts(userIdToClear);
         _logger.i('Local cache for user $userIdToClear has been cleared.');
@@ -258,7 +266,7 @@ class DefaultContactRepository extends ContactRepository {
       await _loadContactsFromLocalCache();
     } on Object catch (e, s) {
       _logger.e(
-        'Could not load contacts from local cache.',
+        'Failed to initialize user data for $userId',
         error: e,
         stackTrace: s,
       );
@@ -269,7 +277,7 @@ class DefaultContactRepository extends ContactRepository {
       }
     }
 
-    if (isSyncActive) {
+    if (isSyncActive && userId != guestUserId) {
       _listenToRemoteContacts(userId);
     }
   }
@@ -287,10 +295,10 @@ class DefaultContactRepository extends ContactRepository {
   }
 
   Future<void> _processAuthChange() async {
-    final user = _authService.currentUser;
+    final currentId = _effectiveUserId;
 
     // Act only if the user state has actually changed
-    if (user?.uid != _cachedUserId) {
+    if (currentId != _cachedUserId) {
       final previousUserId = _cachedUserId;
       final hadLocalOnlyContacts =
           _contactsSubscription == null && _contacts.isNotEmpty;
@@ -301,17 +309,20 @@ class DefaultContactRepository extends ContactRepository {
       await _contactsSubscription?.cancel();
       _contactsSubscription = null;
 
-      if (user != null) {
-        _cachedUserId = user.uid;
+      if (currentId != null) {
+        _cachedUserId = currentId;
 
-        if (guestContactsToMigrate.isNotEmpty && isSyncActive) {
+        if (previousUserId == guestUserId &&
+            currentId != guestUserId &&
+            guestContactsToMigrate.isNotEmpty &&
+            isSyncActive) {
           await _migrateGuestContactsToAccount(
-            user.uid,
+            currentId,
             guestContactsToMigrate,
             previousUserId,
           );
         } else {
-          await _initializeUserData(user.uid);
+          await _initializeUserData(currentId);
         }
       } else {
         await _clearUserData();
@@ -336,7 +347,7 @@ class DefaultContactRepository extends ContactRepository {
         guestContacts: guestContacts,
       );
 
-      _contacts = mergedContacts;
+      _contacts = List<Contact>.from(mergedContacts);
 
       await _dbService.saveAllContacts(targetUserId, _contacts);
       await _saveContactsToLocalCache();
@@ -366,12 +377,13 @@ class DefaultContactRepository extends ContactRepository {
       }
     }
 
-    if (isSyncActive) {
+    if (isSyncActive && targetUserId != guestUserId) {
       _listenToRemoteContacts(targetUserId);
     }
   }
 
   void _listenToRemoteContacts(String userId) {
+    if (userId == guestUserId || !isSyncActive) return;
     _contactsSubscription = _dbService
         .getContactsStream(userId)
         .listen(
@@ -412,7 +424,7 @@ class DefaultContactRepository extends ContactRepository {
   }
 
   Future<void> _saveContactsToLocalCache() async {
-    final uid = _cachedUserId ?? _userId;
+    final uid = _cachedUserId ?? _effectiveUserId;
     if (uid != null) {
       await _cacheService.saveContacts(uid, _contacts);
     }

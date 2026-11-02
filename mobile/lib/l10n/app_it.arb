@@ -19,6 +19,10 @@
   "@addCode": {
     "description": "Label del pulsante per aggiungere o creare un nuovo codice fiscale."
   },
+  "aiScannerRequiresGoogle": "Accedi con Google per utilizzare lo scanner intelligente con IA.",
+  "@aiScannerRequiresGoogle": {
+    "description": "Messaggio che spiega che è necessario accedere con Google per usare lo scanner IA di documenti."
+  },
   "appInfoSubtitle": "Versione {version} • Note legali e Privacy Policy",
   "@appInfoSubtitle": {
     "description": "Sottotitolo per la voce informazioni sull'app con versione dinamica.",
@@ -169,6 +173,10 @@
   "@cloudSyncActive": {
     "description": "Tooltip indicating active cloud synchronization on the user avatar."
   },
+  "cloudSyncDisabledGuest": "Sincronizzazione disattivata • Richiede Google",
+  "@cloudSyncDisabledGuest": {
+    "description": "Etichetta che indica che la sincronizzazione cloud è disattivata perché l'utente è in modalità ospite."
+  },
   "cloudSyncGuestTooltip": "Accedi con Google per sincronizzare i tuoi codici tra dispositivi",
   "@cloudSyncGuestTooltip": {
     "description": "Tooltip and message explaining that Google sign-in is required for cloud synchronization."
@@ -180,6 +188,10 @@
   "cloudSyncOn": "Sincronizzazione cloud attiva",
   "@cloudSyncOn": {
     "description": "Tooltip and message when cloud synchronization is enabled."
+  },
+  "cloudSyncRequiresGoogle": "Accedi con Google per abilitare la sincronizzazione cloud e proteggere i tuoi dati su tutti i dispositivi.",
+  "@cloudSyncRequiresGoogle": {
+    "description": "Messaggio che spiega che è necessario accedere con Google per attivare la sincronizzazione cloud."
   },
   "codeSavedSuccess": "Codice fiscale salvato con successo: {code}",
   "@codeSavedSuccess": {

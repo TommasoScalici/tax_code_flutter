@@ -71,8 +71,12 @@ void main() {
           ...GlobalMaterialLocalizations.delegates,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        theme: AppTheme.lightTheme.copyWith(
+          splashFactory: NoSplash.splashFactory,
+        ),
+        darkTheme: AppTheme.darkTheme.copyWith(
+          splashFactory: NoSplash.splashFactory,
+        ),
         home: Scaffold(body: child),
       ),
     );

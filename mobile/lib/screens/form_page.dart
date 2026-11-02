@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:logger/logger.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +7,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/models/scanned_data.dart';
 import 'package:shared/repositories/contact_repository.dart';
+import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/birthplace_service.dart';
 import 'package:shared/services/tax_code_service.dart';
 import 'package:tax_code_flutter/controllers/form_page_controller.dart';
@@ -91,7 +94,40 @@ class _FormViewState extends State<_FormView> {
     super.dispose();
   }
 
+  bool get _isGuestUser {
+    try {
+      return Provider.of<AuthService>(context).isGuest;
+    } on Object {
+      return false;
+    }
+  }
+
   Future<void> _openCameraPage(FormPageController controller) async {
+    AuthService? authService;
+    try {
+      authService = context.read<AuthService>();
+    } on Object {
+      authService = null;
+    }
+
+    if (authService != null && authService.isGuest) {
+      final l10n = context.l10n;
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.aiScannerRequiresGoogle),
+          behavior: SnackBarBehavior.floating,
+          action: SnackBarAction(
+            label: l10n.continueWithGoogle,
+            onPressed: () {
+              unawaited(authService?.signInWithGoogle());
+            },
+          ),
+        ),
+      );
+      return;
+    }
+
     final scannedData = await Navigator.pushNamed<ScannedData?>(
       context,
       Routes.camera,
@@ -188,6 +224,7 @@ class _FormViewState extends State<_FormView> {
                           // Smart OCR AI Scanner Hero Banner (only on creation)
                           if (!controller.isEditing) ...[
                             OcrAiHeroBanner(
+                              isGuest: _isGuestUser,
                               onScanPressed: () => _openCameraPage(controller),
                             ),
                             const SizedBox(height: AppSpacing.fieldVertical),

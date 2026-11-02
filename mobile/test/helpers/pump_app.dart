@@ -169,6 +169,7 @@ Future<void> pumpApp(
         ),
       ],
       child: MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
         locale: locale,
         onGenerateTitle: (context) => context.l10n.appTitle,
         localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,

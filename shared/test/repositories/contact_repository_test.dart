@@ -809,7 +809,7 @@ void main() {
         );
 
         // 1. Arrange: User is guest with non-syncing session
-        fakeAuthService.login(FakeUser(uid: 'guest_123', isAnonymous: true));
+        await fakeAuthService.continueAsGuest();
         when(() => mockSyncService.isSyncEnabled).thenReturn(false);
         when(
           () => mockDbService.getContacts('google_456'),
@@ -865,7 +865,7 @@ void main() {
     });
 
     test('isSyncActive is false when user is guest', () async {
-      await fakeAuthService.signInAnonymously();
+      await fakeAuthService.continueAsGuest();
       expect(syncRepo.isSyncActive, isFalse);
     });
 

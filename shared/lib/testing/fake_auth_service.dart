@@ -19,15 +19,14 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
     AuthStatus initialStatus = AuthStatus.initializing,
     FakeUser? initialUser,
     bool isGuest = false,
-  }) : _status = initialStatus,
+  }) : _status = isGuest ? AuthStatus.guest : initialStatus,
        _currentUser =
            initialUser ??
-           (initialStatus == AuthStatus.authenticated
+           (initialStatus == AuthStatus.authenticated && !isGuest
                ? FakeUser(
-                   uid: isGuest ? 'fake-guest-uid' : 'fake-user-uid',
-                   isAnonymous: isGuest,
-                   displayName: isGuest ? 'Guest User' : 'Mario Rossi',
-                   email: isGuest ? null : 'mario.rossi@example.com',
+                   uid: 'fake-user-uid',
+                   displayName: 'Mario Rossi',
+                   email: 'mario.rossi@example.com',
                  )
                : null);
 
@@ -39,7 +38,7 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
 
   /// Convenience factory for a guest authenticated user.
   factory FakeAuthService.guest() =>
-      FakeAuthService(initialStatus: AuthStatus.authenticated, isGuest: true);
+      FakeAuthService(initialStatus: AuthStatus.guest, isGuest: true);
 
   /// Convenience factory for an unauthenticated state.
   factory FakeAuthService.unauthenticated() =>
@@ -55,7 +54,7 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
   bool get isSignedIn => _status == AuthStatus.authenticated;
 
   @override
-  bool get isGuest => _currentUser != null && _currentUser!.isAnonymous;
+  bool get isGuest => _status == AuthStatus.guest;
 
   @override
   bool get isLoading => _isLoading;
@@ -83,15 +82,12 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
   }
 
   @override
-  Future<bool> signInAnonymously() async {
-    login(
-      FakeUser(
-        uid: 'fake-guest-uid',
-        isAnonymous: true,
-        displayName: 'Guest User',
-      ),
-    );
-    return true;
+  Future<void> continueAsGuest() async {
+    _currentUser = null;
+    _status = AuthStatus.guest;
+    _errorMessage = null;
+    _isLoading = false;
+    notifyListeners();
   }
 
   @override
@@ -156,12 +152,8 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
   /// Toggles whether the active user is in guest mode.
   void setGuest(bool isGuest) {
     if (isGuest) {
-      _currentUser = FakeUser(
-        uid: 'fake-guest-uid',
-        isAnonymous: true,
-        displayName: 'Guest User',
-      );
-      _status = AuthStatus.authenticated;
+      _currentUser = null;
+      _status = AuthStatus.guest;
     } else {
       _currentUser = FakeUser(
         uid: 'fake-google-uid',
@@ -205,17 +197,8 @@ class FakeAuthService extends ChangeNotifier implements AuthService {
     notifyListeners();
   }
 
-  /// Sets the authentication status explicitly.
-  void setStatus(AuthStatus newStatus) {
-    _status = newStatus;
-    if (newStatus != AuthStatus.authenticated) {
-      _currentUser = null;
-    }
-    notifyListeners();
-  }
-
-  /// Sets whether reauthentication should fail.
-  void setReauthShouldFail(bool fail) {
-    _reauthShouldFail = fail;
+  /// Configures next reauth attempt to fail.
+  void setReauthShouldFail(bool shouldFail) {
+    _reauthShouldFail = shouldFail;
   }
 }

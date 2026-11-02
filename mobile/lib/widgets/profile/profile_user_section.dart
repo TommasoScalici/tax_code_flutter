@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
@@ -153,72 +155,108 @@ class ProfileUserSection extends StatelessWidget {
 
           const SizedBox(height: AppSpacing.lg),
 
-          // Cloud Sync Pill OR Guest Promo Upgrade
-          if (!isGuest)
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.fieldVertical,
-                vertical: AppSpacing.compact,
-              ),
-              decoration: BoxDecoration(
-                color: isSyncActive
-                    ? theme.colorScheme.primaryContainer.withValues(
-                        alpha: isDark ? 0.3 : 0.5,
-                      )
-                    : theme.colorScheme.surfaceContainerHigh,
-                borderRadius: AppRadii.borderInput,
-                border: Border.all(
-                  color: isSyncActive
-                      ? theme.colorScheme.primary.withValues(
-                          alpha: isDark ? 0.3 : 0.4,
-                        )
-                      : theme.colorScheme.outlineVariant,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    isSyncActive
-                        ? Icons.cloud_done_rounded
-                        : Icons.cloud_queue_rounded,
-                    size: AppDimensions.iconAction,
-                    color: isSyncActive
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.onSurfaceVariant,
-                  ),
-                  const SizedBox(width: AppSpacing.compact),
-                  Expanded(
-                    child: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        Text(
-                          isSyncActive
-                              ? l10n.cloudSyncActive
-                              : l10n.cloudSyncOff,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: isSyncActive
-                                ? theme.colorScheme.primary
-                                : theme.colorScheme.onSurfaceVariant,
+          // Cloud Sync Pill (always visible; interactive with feedback for guest)
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: AppRadii.borderInput,
+              onTap: isGuest
+                  ? () {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(l10n.cloudSyncRequiresGoogle),
+                          behavior: SnackBarBehavior.floating,
+                          action: SnackBarAction(
+                            label: l10n.continueWithGoogle,
+                            onPressed: () {
+                              if (authService != null) {
+                                unawaited(authService.signInWithGoogle());
+                              }
+                            },
                           ),
                         ),
-                        if (isSyncActive)
+                      );
+                    }
+                  : null,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.fieldVertical,
+                  vertical: AppSpacing.compact,
+                ),
+                decoration: BoxDecoration(
+                  color: isSyncActive
+                      ? theme.colorScheme.primaryContainer.withValues(
+                          alpha: isDark ? 0.3 : 0.5,
+                        )
+                      : theme.colorScheme.surfaceContainerHigh,
+                  borderRadius: AppRadii.borderInput,
+                  border: Border.all(
+                    color: isSyncActive
+                        ? theme.colorScheme.primary.withValues(
+                            alpha: isDark ? 0.3 : 0.4,
+                          )
+                        : theme.colorScheme.outlineVariant,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      isGuest
+                          ? Icons.cloud_off_rounded
+                          : (isSyncActive
+                                ? Icons.cloud_done_rounded
+                                : Icons.cloud_queue_rounded),
+                      size: AppDimensions.iconAction,
+                      color: isSyncActive
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: AppSpacing.compact),
+                    Expanded(
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
                           Text(
-                            ' • ${l10n.syncSavedCodesCount(savedCount)}',
+                            isGuest
+                                ? l10n.cloudSyncDisabledGuest
+                                : (isSyncActive
+                                      ? l10n.cloudSyncActive
+                                      : l10n.cloudSyncOff),
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: AppOpacity.medium,
-                              ),
-                              fontWeight: FontWeight.normal,
+                              fontWeight: FontWeight.w600,
+                              color: isSyncActive
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
-                      ],
+                          if (isSyncActive)
+                            Text(
+                              ' • ${l10n.syncSavedCodesCount(savedCount)}',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: AppOpacity.medium,
+                                ),
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    if (isGuest)
+                      Icon(
+                        Icons.lock_outline_rounded,
+                        size: AppDimensions.iconSm,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                  ],
+                ),
               ),
-            )
-          else
+            ),
+          ),
+
+          if (isGuest) ...[
+            const SizedBox(height: AppSpacing.md),
             // Guest Mode Upgrade Card
             Container(
               padding: AppSpacing.paddingLg,
@@ -297,6 +335,7 @@ class ProfileUserSection extends StatelessWidget {
                 ],
               ),
             ),
+          ],
         ],
       ),
     );

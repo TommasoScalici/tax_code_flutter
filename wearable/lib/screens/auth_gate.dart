@@ -30,6 +30,7 @@ class AuthGate extends StatelessWidget {
 
     switch (authService.status) {
       case AuthStatus.authenticated:
+      case AuthStatus.guest:
         return homePage;
 
       case AuthStatus.unauthenticated:
