@@ -282,7 +282,7 @@ void main() {
         final locale = localeEntry.value;
 
         final outputDir = Directory(
-          _resolveOutputDir('screenshots/play_store/$langKey'),
+          _resolveOutputDir('screenshots/play_store/$langKey/wear'),
         );
         if (!outputDir.existsSync()) {
           outputDir.createSync(recursive: true);
