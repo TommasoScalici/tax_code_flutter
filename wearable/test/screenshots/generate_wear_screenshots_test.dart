@@ -18,6 +18,14 @@ import 'package:tax_code_flutter_wear_os/screens/barcode_page.dart';
 import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 import 'package:tax_code_flutter_wear_os/widgets/contacts_list.dart';
 
+String _resolveOutputDir(String path) {
+  if (Directory.current.path.endsWith('mobile') ||
+      Directory.current.path.endsWith('wearable')) {
+    return '../$path';
+  }
+  return path;
+}
+
 //--- Mocks ---//
 
 class MockAuthService extends Mock implements AuthService {}
@@ -273,7 +281,9 @@ void main() {
         final langKey = localeEntry.key;
         final locale = localeEntry.value;
 
-        final outputDir = Directory('screenshots/play_store/$langKey');
+        final outputDir = Directory(
+          _resolveOutputDir('screenshots/play_store/$langKey'),
+        );
         if (!outputDir.existsSync()) {
           outputDir.createSync(recursive: true);
         }

@@ -15,6 +15,14 @@ import 'package:tax_code_flutter/widgets/previews/form_screen_preview.dart';
 
 import 'showcase_canvas.dart';
 
+String _resolveOutputDir(String path) {
+  if (Directory.current.path.endsWith('mobile') ||
+      Directory.current.path.endsWith('wearable')) {
+    return '../$path';
+  }
+  return path;
+}
+
 class _Scenario {
   const _Scenario({
     required this.filename,
@@ -306,7 +314,7 @@ void main() {
         final spec = deviceEntry.value;
 
         final outputDir = Directory(
-          'screenshots/play_store/$langKey/$deviceKey',
+          _resolveOutputDir('screenshots/play_store/$langKey/$deviceKey'),
         );
         if (!outputDir.existsSync()) {
           outputDir.createSync(recursive: true);

@@ -1,5 +1,5 @@
-import { onUserDeleted } from "firebase-functions/v2/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import { onUserDeleted } from "firebase-functions/v2/identity";
 
 /**
  * Trigger eseguito automaticamente lato server ogni volta che un utente

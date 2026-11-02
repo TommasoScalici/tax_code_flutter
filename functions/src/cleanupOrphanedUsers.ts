@@ -1,6 +1,6 @@
-import { initializeApp, getApps } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
+import { getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 
 // Inizializza l'app se non già inizializzata
 if (getApps().length === 0) {
@@ -26,8 +26,12 @@ interface CleanupReport {
  *
  * @param dryRun Se true (default), simula la pulizia senza cancellare nulla.
  */
-export async function cleanupOrphanedUsers(dryRun = true): Promise<CleanupReport> {
-  console.log(`[CLEANUP] Avvio scansione utenti Firestore... (dryRun: ${dryRun})`);
+export async function cleanupOrphanedUsers(
+  dryRun = true,
+): Promise<CleanupReport> {
+  console.log(
+    `[CLEANUP] Avvio scansione utenti Firestore... (dryRun: ${dryRun})`,
+  );
 
   const usersCollection = db.collection("users");
   const snapshot = await usersCollection.get();
@@ -45,13 +49,18 @@ export async function cleanupOrphanedUsers(dryRun = true): Promise<CleanupReport
     const uid = doc.id;
     const data = doc.data();
 
-    let authUserExists = false;
+    let authUserExists: boolean;
     try {
       await auth.getUser(uid);
       authUserExists = true;
       report.validUsers++;
-    } catch (err: any) {
-      if (err.code === "auth/user-not-found") {
+    } catch (err: unknown) {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "code" in err &&
+        (err as { code: string }).code === "auth/user-not-found"
+      ) {
         authUserExists = false;
       } else {
         console.error(`Errore verifica Auth per UID ${uid}:`, err);
@@ -94,6 +103,12 @@ export async function cleanupOrphanedUsers(dryRun = true): Promise<CleanupReport
   return report;
 }
 
-// Esecuzione diretta via riga di comando: node cleanup_orphaned_users.js [--apply]
-const isApply = process.argv.includes("--apply");
-cleanupOrphanedUsers(!isApply).catch(console.error);
+// Esecuzione diretta via riga di comando: node cleanupOrphanedUsers.js [--apply]
+if (
+  process.argv[1] &&
+  (process.argv[1].endsWith("cleanupOrphanedUsers.ts") ||
+    process.argv[1].endsWith("cleanupOrphanedUsers.js"))
+) {
+  const isApply = process.argv.includes("--apply");
+  cleanupOrphanedUsers(!isApply).catch(console.error);
+}
