@@ -1,9 +1,12 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared/models/contact.dart';
+import 'package:shared/models/scanned_data.dart';
 import 'package:shared/testing/test_contact_fixtures.dart';
+import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
@@ -154,5 +157,80 @@ class FakeHomePageController extends ChangeNotifier
     _contacts.clear();
     _contacts.addAll(contacts);
     notifyListeners();
+  }
+}
+
+/// Centralized fake implementation of [CameraPageController] for previews and tests.
+class FakeCameraPageController extends ChangeNotifier
+    with WidgetsBindingObserver
+    implements CameraPageController {
+  FakeCameraPageController({
+    CameraStatus status = CameraStatus.readyToScan,
+    bool isFlashOn = false,
+  }) : _status = status,
+       _flashMode = isFlashOn ? FlashMode.torch : FlashMode.off;
+
+  CameraStatus _status;
+  FlashMode _flashMode;
+  String? _imagePath;
+
+  @override
+  CameraStatus get status => _status;
+
+  @override
+  FlashMode get flashMode => _flashMode;
+
+  bool get isFlashOn => _flashMode == FlashMode.torch;
+
+  @override
+  CameraController? get cameraController => null;
+
+  @override
+  String? get imagePath => _imagePath;
+
+  @override
+  int get quarterTurns => 0;
+
+  @override
+  Future<void> openAppSettingsHandler() async {}
+
+  void setStatus(CameraStatus newStatus) {
+    _status = newStatus;
+    notifyListeners();
+  }
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<void> toggleFlash() async {
+    _flashMode = isFlashOn ? FlashMode.off : FlashMode.torch;
+    notifyListeners();
+  }
+
+  @override
+  Future<void> takePicture() async {
+    _status = CameraStatus.pictureTaken;
+    notifyListeners();
+  }
+
+  @override
+  Future<void> resetPicture() async {
+    _status = CameraStatus.readyToScan;
+    notifyListeners();
+  }
+
+  @override
+  Future<ScannedData?> confirmAndProcessPicture() async {
+    _status = CameraStatus.processing;
+    notifyListeners();
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+    _status = CameraStatus.readyToScan;
+    notifyListeners();
+    return const ScannedData(
+      firstName: 'Mario',
+      lastName: 'Rossi',
+      gender: 'M',
+    );
   }
 }

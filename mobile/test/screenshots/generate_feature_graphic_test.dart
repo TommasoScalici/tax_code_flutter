@@ -6,6 +6,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+String _resolveAssetPath(String relativePath) {
+  if (Directory.current.path.endsWith('mobile')) {
+    return relativePath;
+  }
+  return 'mobile/$relativePath';
+}
+
 /// Renders a modern, high-conversion Google Play Store Feature Graphic (1024x500).
 /// Strictly adheres to the Google Play Safe Zone (leaving ~125px margins left/right)
 /// and utilizes the official app icon for consistent brand identity.
@@ -274,7 +281,7 @@ class _FeatureChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: const Color(0xFF1E293B).withValues(alpha: 0.92),
@@ -293,7 +300,7 @@ class _FeatureChip extends StatelessWidget {
         textAlign: TextAlign.center,
         style: const TextStyle(
           fontFamily: 'Inter',
-          fontSize: 21,
+          fontSize: 18,
           fontWeight: FontWeight.w700,
           color: Color(0xFFF8FAFC),
           letterSpacing: 0.2,
@@ -311,10 +318,10 @@ void main() {
 
     await tester.runAsync(() async {
       final interFiles = [
-        'assets/fonts/Inter-Regular.ttf',
-        'assets/fonts/Inter-Medium.ttf',
-        'assets/fonts/Inter-SemiBold.ttf',
-        'assets/fonts/Inter-Bold.ttf',
+        _resolveAssetPath('assets/fonts/Inter-Regular.ttf'),
+        _resolveAssetPath('assets/fonts/Inter-Medium.ttf'),
+        _resolveAssetPath('assets/fonts/Inter-SemiBold.ttf'),
+        _resolveAssetPath('assets/fonts/Inter-Bold.ttf'),
       ];
 
       for (final family in ['Inter', 'Arial', 'Roboto']) {
@@ -329,7 +336,9 @@ void main() {
         await loader.load();
       }
 
-      final iconFile = File('assets/images/play_store_icon.png');
+      final iconFile = File(
+        _resolveAssetPath('assets/images/play_store_icon.png'),
+      );
       if (iconFile.existsSync()) {
         final bytes = await iconFile.readAsBytes();
         final codec = await ui.instantiateImageCodec(bytes);
@@ -339,8 +348,8 @@ void main() {
     });
 
     final targets = {
-      'it': 'assets/images/feature_graphic_it.png',
-      'en': 'assets/images/feature_graphic_en.png',
+      'it': _resolveAssetPath('assets/images/feature_graphic_it.png'),
+      'en': _resolveAssetPath('assets/images/feature_graphic_en.png'),
     };
 
     tester.view.physicalSize = const Size(1024, 500);

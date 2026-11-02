@@ -23,11 +23,9 @@ class CameraPreviewOverlay extends StatelessWidget {
         controller.status == CameraStatus.processing;
 
     final isProcessing = controller.status == CameraStatus.processing;
-
-    if (controller.cameraController == null ||
-        !controller.cameraController!.value.isInitialized) {
-      return const SizedBox.shrink();
-    }
+    final hasActiveCamera =
+        controller.cameraController != null &&
+        controller.cameraController!.value.isInitialized;
 
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
@@ -56,7 +54,7 @@ class CameraPreviewOverlay extends StatelessWidget {
               height: double.infinity,
             ),
           )
-        else
+        else if (hasActiveCamera)
           LayoutBuilder(
             builder: (context, constraints) {
               final cameraController = controller.cameraController!;
@@ -80,6 +78,29 @@ class CameraPreviewOverlay extends StatelessWidget {
                 ),
               );
             },
+          )
+        else
+          Container(
+            color: const Color(0xFF101413),
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.camera_alt_outlined,
+                  size: 48,
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Live Camera Feed Simulator',
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
           ),
 
         // ID-1 Card framing guide cutout and corners

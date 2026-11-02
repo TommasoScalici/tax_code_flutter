@@ -4,6 +4,13 @@ import 'dart:ui' as ui;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
+String _resolveAssetPath(String relativePath) {
+  if (Directory.current.path.endsWith('mobile')) {
+    return relativePath;
+  }
+  return 'mobile/$relativePath';
+}
+
 void main() {
   test('Generate high resolution app icon PNGs from design system', () async {
     // Canvas size
@@ -117,7 +124,7 @@ void main() {
       final picture = recorder.endRecording();
       final image = await picture.toImage(1024, 1024);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      final file = File('assets/images/app_icon.png');
+      final file = File(_resolveAssetPath('assets/images/app_icon.png'));
       await file.writeAsBytes(byteData!.buffer.asUint8List());
       expect(file.existsSync(), isTrue);
     }
@@ -133,7 +140,9 @@ void main() {
       final picture = recorder.endRecording();
       final image = await picture.toImage(1024, 1024);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      final file = File('assets/images/app_icon_foreground.png');
+      final file = File(
+        _resolveAssetPath('assets/images/app_icon_foreground.png'),
+      );
       await file.writeAsBytes(byteData!.buffer.asUint8List());
       expect(file.existsSync(), isTrue);
     }
@@ -148,7 +157,9 @@ void main() {
       final picture = recorder.endRecording();
       final image = await picture.toImage(1024, 1024);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      final file = File('assets/images/app_icon_monochrome.png');
+      final file = File(
+        _resolveAssetPath('assets/images/app_icon_monochrome.png'),
+      );
       await file.writeAsBytes(byteData!.buffer.asUint8List());
       expect(file.existsSync(), isTrue);
     }
