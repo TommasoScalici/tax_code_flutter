@@ -8,6 +8,8 @@ import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/theme_service.dart';
 import 'package:tax_code_flutter/screens/home_page.dart';
+import 'package:tax_code_flutter/services/deep_link_service.dart';
+import 'package:tax_code_flutter/widgets/barcode_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/contacts_list.dart';
 import 'package:tax_code_flutter/widgets/user_avatar.dart';
 
@@ -168,5 +170,41 @@ void main() {
       await tester.tap(find.byType(UserAvatar));
       await tester.pumpAndSettle();
     });
+
+    testWidgets(
+      'automatically opens BarcodeBottomSheet when a deep link is pending',
+      (tester) async {
+        final mockContactRepository = MockContactRepository();
+        final contactMe = Contact(
+          id: 'me-1',
+          firstName: 'Tommaso',
+          lastName: 'Scalici',
+          gender: 'M',
+          taxCode: 'SCLTMS91A01H501X',
+          birthPlace: const Birthplace(name: 'Rome', state: 'RM'),
+          birthDate: DateTime(1991),
+          listIndex: 0,
+          isMe: true,
+        );
+        when(() => mockContactRepository.isLoading).thenReturn(false);
+        when(() => mockContactRepository.contacts).thenReturn([contactMe]);
+
+        final deepLinkService = DeepLinkService(
+          initialRoute: 'taxcode://barcode/me',
+        );
+        addTearDown(deepLinkService.dispose);
+
+        await pumpApp(
+          tester,
+          const HomePage(),
+          authStatus: AuthStatus.authenticated,
+          mockContactRepository: mockContactRepository,
+          deepLinkService: deepLinkService,
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byType(BarcodeBottomSheet), findsOneWidget);
+      },
+    );
   });
 }

@@ -24,6 +24,7 @@ import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
+import 'package:tax_code_flutter/services/deep_link_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
@@ -43,6 +44,7 @@ Future<void> pumpApp(
   MockCameraService? mockCameraService,
   MockGeminiService? mockGeminiService,
   MockPermissionService? mockPermissionService,
+  DeepLinkService? deepLinkService,
   AuthStatus? authStatus,
   Locale? locale,
 }) async {
@@ -64,6 +66,8 @@ Future<void> pumpApp(
   final firebaseFunctions = MockFirebaseFunctions();
   final databaseService = MockDatabaseService();
   final brightnessService = MockBrightnessService();
+  when(brightnessService.setMaxBrightness).thenAnswer((_) async {});
+  when(brightnessService.resetBrightness).thenAnswer((_) async {});
   final sharingService = MockSharingService();
 
   final currentStatus = authStatus ?? AuthStatus.unauthenticated;
@@ -147,6 +151,8 @@ Future<void> pumpApp(
         Provider<InfoService>.value(value: infoService),
         Provider<BrightnessService>.value(value: brightnessService),
         Provider<SharingService>.value(value: sharingService),
+        if (deepLinkService != null)
+          ChangeNotifierProvider<DeepLinkService>.value(value: deepLinkService),
         Provider<GeminiService>.value(value: geminiService),
         Provider<TaxCodeService>.value(value: taxCodeService),
 

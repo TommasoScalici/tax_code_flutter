@@ -49,6 +49,10 @@
   "@barcodeCode128": {
     "description": "Label for the 1D Code 128 barcode in the bottom sheet."
   },
+  "barcodeDeepLinkNotFound": "No matching tax code found.",
+  "@barcodeDeepLinkNotFound": {
+    "description": "Message displayed when a deep link barcode request fails to find any matching contact."
+  },
   "barcodeMaxBrightnessActive": "Maximum brightness active for optical scanning",
   "@barcodeMaxBrightnessActive": {
     "description": "Notice indicating screen brightness is set to maximum for easy optical scanning."

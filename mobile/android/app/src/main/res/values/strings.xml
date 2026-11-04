@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tax Code</string>
+    <string name="shortcut_my_tax_code_short">My Tax Code</string>
+    <string name="shortcut_my_tax_code_long">Show my tax code</string>
 </resources>

@@ -152,6 +152,12 @@ abstract class AppLocalizations {
   /// **'Barcode (Code 128)'**
   String get barcodeCode128;
 
+  /// Message displayed when a deep link barcode request fails to find any matching contact.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching tax code found.'**
+  String get barcodeDeepLinkNotFound;
+
   /// Notice indicating screen brightness is set to maximum for easy optical scanning.
   ///
   /// In en, this message translates to:

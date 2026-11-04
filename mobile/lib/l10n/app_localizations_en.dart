@@ -41,6 +41,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get barcodeCode128 => 'Barcode (Code 128)';
 
   @override
+  String get barcodeDeepLinkNotFound => 'No matching tax code found.';
+
+  @override
   String get barcodeMaxBrightnessActive =>
       'Maximum brightness active for optical scanning';
 

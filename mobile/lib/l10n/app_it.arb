@@ -49,6 +49,10 @@
   "@barcodeCode128": {
     "description": "Etichetta per il codice a barre 1D Code 128 nel bottom sheet."
   },
+  "barcodeDeepLinkNotFound": "Nessun codice fiscale corrispondente trovato.",
+  "@barcodeDeepLinkNotFound": {
+    "description": "Messaggio visualizzato quando una richiesta di apertura codice a barre via deep link non trova alcun contatto corrispondente."
+  },
   "barcodeMaxBrightnessActive": "Luminosità massima attiva per lettura ottica",
   "@barcodeMaxBrightnessActive": {
     "description": "Avviso indicante che la luminosità dello schermo è al massimo per facilitare la scansione ottica."

@@ -26,6 +26,7 @@ import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
 import 'package:tax_code_flutter/services/contact_card_image_service.dart';
 import 'package:tax_code_flutter/services/contact_pdf_service.dart';
+import 'package:tax_code_flutter/services/deep_link_service.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
@@ -71,6 +72,9 @@ List<SingleChildWidget> getAppProviders({
     ),
     Provider<BrightnessService>(
       create: (context) => BrightnessService(logger: context.read<Logger>()),
+    ),
+    ChangeNotifierProvider<DeepLinkService>(
+      create: (context) => DeepLinkService(logger: context.read<Logger>()),
     ),
     Provider<SharingService>(
       create: (context) => SharingService(

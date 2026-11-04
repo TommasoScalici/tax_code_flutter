@@ -146,6 +146,17 @@ class FakeHomePageController extends ChangeNotifier
     notifyListeners();
   }
 
+  @override
+  Future<Contact?> handleBarcodeDeepLink(
+    BuildContext context,
+    Uri uri, {
+    String? userDisplayName,
+    Future<void> Function(BuildContext, {required Contact contact})?
+    showBarcodeSheet,
+  }) async {
+    return _contacts.isNotEmpty ? _contacts.first : null;
+  }
+
   /// Sets loading state.
   void setLoading(bool loading) {
     _isLoading = loading;

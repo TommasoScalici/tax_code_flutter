@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
@@ -8,6 +7,7 @@ import 'package:shared/models/contact.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/birthplace_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
+import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
 
 class MockContactRepository extends Mock implements ContactRepository {}
@@ -30,6 +30,7 @@ void main() {
   late MockContactRepository mockContactRepository;
   late MockSharingService mockSharingService;
   late MockBirthplaceService mockBirthplaceService;
+  late VoidCallback repositoryListener;
 
   final sampleContacts = [
     Contact(
@@ -66,7 +67,9 @@ void main() {
     // Stub the initial behavior of the repository
     when(() => mockContactRepository.isLoading).thenReturn(false);
     when(() => mockContactRepository.contacts).thenReturn([]);
-    when(() => mockContactRepository.addListener(any())).thenAnswer((_) {});
+    when(() => mockContactRepository.addListener(any())).thenAnswer((inv) {
+      repositoryListener = inv.positionalArguments.first as VoidCallback;
+    });
     when(() => mockContactRepository.removeListener(any())).thenAnswer((_) {});
     when(
       () => mockBirthplaceService.loadBirthplaces(),
@@ -253,6 +256,197 @@ void main() {
       // Assert
       // We still verify against the global mock, which is fine
       verify(() => mockContactRepository.removeListener(any())).called(1);
+    });
+
+    group('handleBarcodeDeepLink', () {
+      testWidgets('returns null on unsupported scheme', (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates:
+                AppLocalizationsSetup.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      final res = await homePageController
+                          .handleBarcodeDeepLink(
+                            context,
+                            Uri.parse('https://example.com/barcode'),
+                          );
+                      expect(res, isNull);
+                    },
+                    child: const Text('Go'),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Go'));
+        await tester.pumpAndSettle();
+      });
+
+      testWidgets('resolves and opens barcode for primary contact (isMe)', (
+        tester,
+      ) async {
+        final contactWithMe = sampleContacts.first.copyWith(isMe: true);
+        when(
+          () => mockContactRepository.contacts,
+        ).thenReturn([contactWithMe, sampleContacts.last]);
+        repositoryListener();
+
+        Contact? displayedContact;
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates:
+                AppLocalizationsSetup.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      final res = await homePageController
+                          .handleBarcodeDeepLink(
+                            context,
+                            Uri.parse('taxcode://barcode/me'),
+                            showBarcodeSheet: (_, {required contact}) async {
+                              displayedContact = contact;
+                            },
+                          );
+                      expect(res, equals(contactWithMe));
+                    },
+                    child: const Text('Go'),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Go'));
+        await tester.pumpAndSettle();
+
+        expect(displayedContact, equals(contactWithMe));
+      });
+
+      testWidgets('resolves and opens barcode for specific contact ID', (
+        tester,
+      ) async {
+        when(() => mockContactRepository.contacts).thenReturn(sampleContacts);
+        repositoryListener();
+
+        Contact? displayedContact;
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates:
+                AppLocalizationsSetup.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      final res = await homePageController
+                          .handleBarcodeDeepLink(
+                            context,
+                            Uri.parse('taxcode://barcode/2'),
+                            showBarcodeSheet: (_, {required contact}) async {
+                              displayedContact = contact;
+                            },
+                          );
+                      expect(res, equals(sampleContacts.last));
+                    },
+                    child: const Text('Go'),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Go'));
+        await tester.pumpAndSettle();
+
+        expect(displayedContact, equals(sampleContacts.last));
+      });
+
+      testWidgets('resolves and opens barcode for search query', (
+        tester,
+      ) async {
+        when(() => mockContactRepository.contacts).thenReturn(sampleContacts);
+        repositoryListener();
+
+        Contact? displayedContact;
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates:
+                AppLocalizationsSetup.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      final res = await homePageController
+                          .handleBarcodeDeepLink(
+                            context,
+                            Uri.parse('taxcode://barcode?query=Jane'),
+                            showBarcodeSheet: (_, {required contact}) async {
+                              displayedContact = contact;
+                            },
+                          );
+                      expect(res, equals(sampleContacts.last));
+                    },
+                    child: const Text('Go'),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Go'));
+        await tester.pumpAndSettle();
+
+        expect(displayedContact, equals(sampleContacts.last));
+      });
+
+      testWidgets('shows snackbar when contact is not found', (tester) async {
+        when(() => mockContactRepository.contacts).thenReturn(sampleContacts);
+        repositoryListener();
+
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates:
+                AppLocalizationsSetup.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      await homePageController.handleBarcodeDeepLink(
+                        context,
+                        Uri.parse('taxcode://barcode/non-existent-id'),
+                      );
+                    },
+                    child: const Text('Go'),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Go'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SnackBar), findsOneWidget);
+      });
     });
   });
 }

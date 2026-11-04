@@ -19,8 +19,12 @@ final class Routes {
 
     if (routeName != null) {
       final uri = Uri.tryParse(routeName);
-      if (uri != null && uri.scheme == 'app') {
-        routeName = uri.path.isEmpty ? home : uri.path;
+      if (uri != null) {
+        if (uri.scheme == 'app') {
+          routeName = uri.path.isEmpty ? home : uri.path;
+        } else if (uri.scheme == 'taxcode') {
+          routeName = home;
+        }
       }
     }
 

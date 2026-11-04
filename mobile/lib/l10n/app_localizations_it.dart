@@ -41,6 +41,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get barcodeCode128 => 'Codice a Barre (Code 128)';
 
   @override
+  String get barcodeDeepLinkNotFound =>
+      'Nessun codice fiscale corrispondente trovato.';
+
+  @override
   String get barcodeMaxBrightnessActive =>
       'Luminosità massima attiva per lettura ottica';
 

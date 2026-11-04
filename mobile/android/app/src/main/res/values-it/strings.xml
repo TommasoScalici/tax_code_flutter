@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Codice Fiscale</string>
+    <string name="shortcut_my_tax_code_short">Il mio codice</string>
+    <string name="shortcut_my_tax_code_long">Mostra il mio codice fiscale</string>
 </resources>
