@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tax_code_flutter/core/theme/app_colors.dart';
 import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
+import 'package:tax_code_flutter/services/gemini_integration_service.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/widgets/export/export_data_bottom_sheet.dart';
 import 'package:tax_code_flutter/widgets/profile/profile_action_tile.dart';
@@ -17,6 +18,7 @@ class ProfileDataSection extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = context.l10n;
     final inAppReviewService = context.watch<InAppReviewService?>();
+    final geminiService = context.watch<GeminiIntegrationService?>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,6 +33,24 @@ class ProfileDataSection extends StatelessWidget {
           ),
           child: Column(
             children: [
+              ProfileActionTile(
+                key: const Key('profile_gemini_integration_tile'),
+                icon: Icons.auto_awesome_rounded,
+                iconColor: theme.colorScheme.primary,
+                iconBgColor: theme.colorScheme.surfaceContainerHigh,
+                title: l10n.geminiIntegrationTitle,
+                subtitle: l10n.geminiIntegrationSubtitle,
+                trailing: Switch.adaptive(
+                  value: geminiService?.isGeminiEnabled ?? true,
+                  onChanged: geminiService != null
+                      ? (val) => unawaited(geminiService.setGeminiEnabled(val))
+                      : null,
+                ),
+                onTap: geminiService != null
+                    ? () => unawaited(geminiService.toggleGeminiEnabled())
+                    : null,
+              ),
+              const ProfileCardDivider(),
               ProfileActionTile(
                 key: const Key('profile_export_codes_tile'),
                 icon: Icons.file_download_outlined,

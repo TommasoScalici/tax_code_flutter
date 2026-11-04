@@ -10,6 +10,7 @@ import 'package:provider/single_child_widget.dart';
 import 'package:shared/repositories/contact_repository.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:shared/services/birthplace_service.dart';
+import 'package:shared/services/contact_resolution_service.dart';
 import 'package:shared/services/data_export_service.dart';
 import 'package:shared/services/database_service.dart';
 import 'package:shared/services/gemini_service.dart';
@@ -22,11 +23,13 @@ import 'package:shared/services/theme_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
+import 'package:tax_code_flutter/services/app_functions_service.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
 import 'package:tax_code_flutter/services/contact_card_image_service.dart';
 import 'package:tax_code_flutter/services/contact_pdf_service.dart';
 import 'package:tax_code_flutter/services/deep_link_service.dart';
+import 'package:tax_code_flutter/services/gemini_integration_service.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
@@ -136,6 +139,16 @@ List<SingleChildWidget> getAppProviders({
         return syncService;
       },
     ),
+    ChangeNotifierProvider<GeminiIntegrationService>(
+      create: (context) {
+        final service = GeminiIntegrationService(
+          prefs: context.read<SharedPreferencesAsync>(),
+          logger: context.read<Logger>(),
+        );
+        unawaited(service.init());
+        return service;
+      },
+    ),
 
     // --- Level 4: Repositories ---
     ChangeNotifierProvider<ContactRepository>(
@@ -146,6 +159,20 @@ List<SingleChildWidget> getAppProviders({
         logger: context.read<Logger>(),
         syncService: context.read<SyncService>(),
       ),
+    ),
+    Provider<AppFunctionsService>(
+      create: (context) {
+        final service = AppFunctionsService(
+          contactRepository: context.read<ContactRepository>(),
+          contactResolutionService: const ContactResolutionService(),
+          authService: context.read<AuthService>(),
+          deepLinkService: context.read<DeepLinkService>(),
+          geminiIntegrationService: context.read<GeminiIntegrationService>(),
+          logger: context.read<Logger>(),
+        );
+        service.init();
+        return service;
+      },
     ),
 
     // --- Level 5: View Controllers ---

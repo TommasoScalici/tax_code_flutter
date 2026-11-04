@@ -25,6 +25,7 @@ import 'package:tax_code_flutter/routes.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
 import 'package:tax_code_flutter/services/deep_link_service.dart';
+import 'package:tax_code_flutter/services/gemini_integration_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
@@ -45,6 +46,7 @@ Future<void> pumpApp(
   MockGeminiService? mockGeminiService,
   MockPermissionService? mockPermissionService,
   DeepLinkService? deepLinkService,
+  GeminiIntegrationService? mockGeminiIntegrationService,
   AuthStatus? authStatus,
   Locale? locale,
 }) async {
@@ -69,6 +71,10 @@ Future<void> pumpApp(
   when(brightnessService.setMaxBrightness).thenAnswer((_) async {});
   when(brightnessService.resetBrightness).thenAnswer((_) async {});
   final sharingService = MockSharingService();
+
+  final geminiIntegrationService =
+      mockGeminiIntegrationService ??
+      GeminiIntegrationService(prefs: sharedPreferences);
 
   final currentStatus = authStatus ?? AuthStatus.unauthenticated;
   if (mockAuthService == null) {
@@ -159,6 +165,9 @@ Future<void> pumpApp(
         // --- Level 3: State Services ---
         ChangeNotifierProvider<ThemeService>.value(value: themeService),
         ChangeNotifierProvider<AuthService>.value(value: authService),
+        ChangeNotifierProvider<GeminiIntegrationService>.value(
+          value: geminiIntegrationService,
+        ),
 
         // --- Level 4: Repositories ---
         ChangeNotifierProvider<ContactRepository>.value(

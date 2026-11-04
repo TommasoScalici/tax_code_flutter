@@ -323,6 +323,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get formOrManualEntry => 'Or enter manually';
 
   @override
+  String get geminiIntegrationSubtitle =>
+      'Allow Gemini to read or display saved tax codes upon voice request.';
+
+  @override
+  String get geminiIntegrationTitle => 'Google Gemini Integration';
+
+  @override
   String get gender => 'Gender';
 
   @override
@@ -449,6 +456,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get privacyGdprRightsDesc =>
       'You can export or permanently delete your account and all data at any time.';
+
+  @override
+  String get privacyGeminiIntegration => 'Gemini Voice Commands (On-Device)';
+
+  @override
+  String get privacyGeminiIntegrationDesc =>
+      'When you ask Gemini to read or open a tax code, the search is performed locally on your device and only the requested code is read by Gemini.';
 
   @override
   String get privacyHighlightsTitle => 'Privacy & Data Protection';

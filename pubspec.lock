@@ -534,6 +534,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_app_functions:
+    dependency: transitive
+    description:
+      name: flutter_app_functions
+      sha256: "7acfd452296958a20e2d158fddef96a930716693442caeb06707e48febb1e82c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   flutter_launcher_icons:
     dependency: transitive
     description:

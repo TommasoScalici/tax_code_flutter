@@ -409,6 +409,14 @@
   "@formOrManualEntry": {
     "description": "Testo separatore tra il banner di scansione smart OCR e i campi di inserimento manuale nel form."
   },
+  "geminiIntegrationSubtitle": "Consenti a Gemini di leggere o mostrare i codici fiscali salvati su richiesta vocale.",
+  "@geminiIntegrationSubtitle": {
+    "description": "Subtitle describing the Google Gemini voice integration in profile settings."
+  },
+  "geminiIntegrationTitle": "Integrazione Google Gemini",
+  "@geminiIntegrationTitle": {
+    "description": "Title of the profile settings tile for Google Gemini and AppFunctions integration."
+  },
   "gender": "Sesso",
   "@gender": {
     "description": "Label for the gender input field."
@@ -576,6 +584,14 @@
   "privacyGdprRightsDesc": "Puoi esportare o eliminare definitivamente il tuo account e i dati in qualsiasi momento.",
   "@privacyGdprRightsDesc": {
     "description": "Descrizione del punto relativo ai diritti dell'interessato e GDPR."
+  },
+  "privacyGeminiIntegration": "Comandi Vocali Gemini (On-Device)",
+  "@privacyGeminiIntegration": {
+    "description": "Title of the privacy highlight bullet for Google Gemini and on-device voice queries."
+  },
+  "privacyGeminiIntegrationDesc": "Quando chiedi a Gemini di leggere o aprire un codice fiscale, la ricerca avviene localmente sul tuo dispositivo e solo il codice richiesto viene letto da Gemini.",
+  "@privacyGeminiIntegrationDesc": {
+    "description": "Description of the privacy highlight bullet explaining on-device search for Gemini voice queries."
   },
   "privacyHighlightsTitle": "Privacy & Protezione Dati",
   "@privacyHighlightsTitle": {

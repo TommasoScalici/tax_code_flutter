@@ -409,6 +409,14 @@
   "@formOrManualEntry": {
     "description": "Divider text separating smart OCR scan hero and manual form input fields."
   },
+  "geminiIntegrationSubtitle": "Allow Gemini to read or display saved tax codes upon voice request.",
+  "@geminiIntegrationSubtitle": {
+    "description": "Subtitle describing the Google Gemini voice integration in profile settings."
+  },
+  "geminiIntegrationTitle": "Google Gemini Integration",
+  "@geminiIntegrationTitle": {
+    "description": "Title of the profile settings tile for Google Gemini and AppFunctions integration."
+  },
   "gender": "Gender",
   "@gender": {
     "description": "Label for the gender input field."
@@ -576,6 +584,14 @@
   "privacyGdprRightsDesc": "You can export or permanently delete your account and all data at any time.",
   "@privacyGdprRightsDesc": {
     "description": "Description for GDPR user rights highlight."
+  },
+  "privacyGeminiIntegration": "Gemini Voice Commands (On-Device)",
+  "@privacyGeminiIntegration": {
+    "description": "Title of the privacy highlight bullet for Google Gemini and on-device voice queries."
+  },
+  "privacyGeminiIntegrationDesc": "When you ask Gemini to read or open a tax code, the search is performed locally on your device and only the requested code is read by Gemini.",
+  "@privacyGeminiIntegrationDesc": {
+    "description": "Description of the privacy highlight bullet explaining on-device search for Gemini voice queries."
   },
   "privacyHighlightsTitle": "Privacy & Data Protection",
   "@privacyHighlightsTitle": {

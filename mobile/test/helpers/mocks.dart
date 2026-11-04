@@ -22,6 +22,7 @@ import 'package:tax_code_flutter/services/brightness_service.dart';
 import 'package:tax_code_flutter/services/camera_service.dart';
 import 'package:tax_code_flutter/services/contact_card_image_service.dart';
 import 'package:tax_code_flutter/services/contact_pdf_service.dart';
+import 'package:tax_code_flutter/services/gemini_integration_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/permission_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
@@ -29,6 +30,9 @@ import 'package:tax_code_flutter/services/sharing_service.dart';
 class MockAuthService extends Mock implements AuthService {}
 
 class MockThemeService extends Mock implements ThemeService {}
+
+class MockGeminiIntegrationService extends Mock
+    implements GeminiIntegrationService {}
 
 class MockHomePageController extends Mock implements HomePageController {}
 

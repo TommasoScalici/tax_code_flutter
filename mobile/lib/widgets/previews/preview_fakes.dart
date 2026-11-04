@@ -9,6 +9,7 @@ import 'package:shared/testing/test_contact_fixtures.dart';
 import 'package:tax_code_flutter/controllers/camera_page_controller.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/services/brightness_service.dart';
+import 'package:tax_code_flutter/services/gemini_integration_service.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/services/sharing_service.dart';
@@ -243,5 +244,32 @@ class FakeCameraPageController extends ChangeNotifier
       lastName: 'Rossi',
       gender: 'M',
     );
+  }
+}
+
+/// Centralized fake implementation of [GeminiIntegrationService] for previews and tests.
+class FakeGeminiIntegrationService extends ChangeNotifier
+    implements GeminiIntegrationService {
+  FakeGeminiIntegrationService({bool isEnabled = true})
+    : _isGeminiEnabled = isEnabled;
+
+  bool _isGeminiEnabled;
+
+  @override
+  bool get isGeminiEnabled => _isGeminiEnabled;
+
+  @override
+  Future<void> init() async {}
+
+  @override
+  Future<void> setGeminiEnabled(bool enabled) async {
+    if (_isGeminiEnabled == enabled) return;
+    _isGeminiEnabled = enabled;
+    notifyListeners();
+  }
+
+  @override
+  Future<void> toggleGeminiEnabled() async {
+    await setGeminiEnabled(!_isGeminiEnabled);
   }
 }

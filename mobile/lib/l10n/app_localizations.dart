@@ -656,6 +656,18 @@ abstract class AppLocalizations {
   /// **'Or enter manually'**
   String get formOrManualEntry;
 
+  /// Subtitle describing the Google Gemini voice integration in profile settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Gemini to read or display saved tax codes upon voice request.'**
+  String get geminiIntegrationSubtitle;
+
+  /// Title of the profile settings tile for Google Gemini and AppFunctions integration.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Gemini Integration'**
+  String get geminiIntegrationTitle;
+
   /// Label for the gender input field.
   ///
   /// In en, this message translates to:
@@ -889,6 +901,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can export or permanently delete your account and all data at any time.'**
   String get privacyGdprRightsDesc;
+
+  /// Title of the privacy highlight bullet for Google Gemini and on-device voice queries.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini Voice Commands (On-Device)'**
+  String get privacyGeminiIntegration;
+
+  /// Description of the privacy highlight bullet explaining on-device search for Gemini voice queries.
+  ///
+  /// In en, this message translates to:
+  /// **'When you ask Gemini to read or open a tax code, the search is performed locally on your device and only the requested code is read by Gemini.'**
+  String get privacyGeminiIntegrationDesc;
 
   /// Title for privacy highlights section.
   ///

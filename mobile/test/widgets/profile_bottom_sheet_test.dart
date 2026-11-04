@@ -12,6 +12,7 @@ import 'package:shared/services/sync_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/core/theme/app_theme.dart';
 import 'package:tax_code_flutter/l10n/app_localizations_setup.dart';
+import 'package:tax_code_flutter/services/gemini_integration_service.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/widgets/export/export_data_bottom_sheet.dart';
@@ -36,6 +37,7 @@ void main() {
   late MockInAppReviewService mockInAppReviewService;
   late MockLogger mockLogger;
   late MockContactRepository mockContactRepository;
+  late MockGeminiIntegrationService mockGeminiService;
 
   final sampleContacts = [
     Contact(
@@ -69,7 +71,9 @@ void main() {
     mockInAppReviewService = MockInAppReviewService();
     mockLogger = MockLogger();
     mockContactRepository = MockContactRepository();
+    mockGeminiService = MockGeminiIntegrationService();
 
+    when(() => mockGeminiService.isGeminiEnabled).thenReturn(true);
     when(() => mockContactRepository.contacts).thenReturn(sampleContacts);
 
     when(() => mockAuthService.currentUser).thenReturn(mockUser);
@@ -116,6 +120,9 @@ void main() {
         Provider<Logger>.value(value: mockLogger),
         ChangeNotifierProvider<ContactRepository>.value(
           value: mockContactRepository,
+        ),
+        ChangeNotifierProvider<GeminiIntegrationService>.value(
+          value: mockGeminiService,
         ),
       ],
       child: MaterialApp(
@@ -459,5 +466,29 @@ void main() {
         expect(find.byType(ProfileBottomSheet), findsNothing);
       },
     );
+
+    testWidgets('tapping gemini integration tile toggles gemini integration', (
+      tester,
+    ) async {
+      setLargeViewport(tester);
+      when(
+        () => mockGeminiService.toggleGeminiEnabled(),
+      ).thenAnswer((_) async {});
+
+      await tester.pumpWidget(
+        buildTestApp(child: const ProfileBottomSheet(isEmbedded: true)),
+      );
+      await tester.pumpAndSettle();
+
+      final tileFinder = find.byKey(
+        const Key('profile_gemini_integration_tile'),
+      );
+      expect(tileFinder, findsOneWidget);
+
+      await tester.tap(tileFinder);
+      await tester.pumpAndSettle();
+
+      verify(() => mockGeminiService.toggleGeminiEnabled()).called(1);
+    });
   });
 }
