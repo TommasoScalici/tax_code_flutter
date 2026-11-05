@@ -3,4 +3,7 @@
     <string name="app_name">Codice Fiscale</string>
     <string name="shortcut_my_tax_code_short">Il mio codice</string>
     <string name="shortcut_my_tax_code_long">Mostra il mio codice fiscale</string>
+    <string name="appfn_instructions">TaxCode calcola i codici fiscali italiani, li formatta foneticamente e visualizza i codici a barre.</string>
+    <string name="appfn_description">TaxCode calcola i codici fiscali italiani, li formatta foneticamente e visualizza i codici a barre.</string>
+    <string name="appfn_display_description">TaxCode - Calcolo codice fiscale e visualizzazione codice a barre</string>
 </resources>
