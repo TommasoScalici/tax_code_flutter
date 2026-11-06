@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AppFunctionAppMetadata xmlns:appfn="http://schemas.android.com/apk/androidx.appfunctions"
-    appfn:instructions="TaxCode calculates Italian tax codes (Codice Fiscale), formats them phonetically, and displays barcodes."
-    appfn:description="TaxCode calculates Italian tax codes (Codice Fiscale), formats them phonetically, and displays barcodes."
+    appfn:instructions="This app manages saved Italian tax codes (Codice Fiscale) and barcodes. Operational Patterns: Use getMyTaxCode to retrieve or phonetically spell out the owner tax code. Use getContactTaxCode with parameter name to retrieve or spell out a saved contact tax code. Use openMyTaxCodeBarcode to open the owner barcode bottom sheet. Use openContactTaxCodeBarcode with parameter name to open a contact barcode bottom sheet. Constraints: Searches only tax codes and contacts already saved in TaxCode."
+    appfn:description="TaxCode retrieves saved Italian tax codes (Codice Fiscale), spells them phonetically, and displays their barcodes."
     appfn:displayDescription="@string/appfn_display_description" />

@@ -3,7 +3,7 @@
     <string name="app_name">Codice Fiscale</string>
     <string name="shortcut_my_tax_code_short">Il mio codice</string>
     <string name="shortcut_my_tax_code_long">Mostra il mio codice fiscale</string>
-    <string name="appfn_instructions">TaxCode calcola i codici fiscali italiani, li formatta foneticamente e visualizza i codici a barre.</string>
-    <string name="appfn_description">TaxCode calcola i codici fiscali italiani, li formatta foneticamente e visualizza i codici a barre.</string>
-    <string name="appfn_display_description">TaxCode - Calcolo codice fiscale e visualizzazione codice a barre</string>
+    <string name="appfn_instructions">Questa app gestisce codici fiscali italiani e codici a barre salvati. Pattern operativi: Usa getMyTaxCode per recuperare o sillabare foneticamente il codice fiscale del proprietario. Usa getContactTaxCode con il parametro name per recuperare o sillabare il codice fiscale di un contatto salvato. Usa openMyTaxCodeBarcode per aprire la schermata del codice a barre del proprietario. Usa openContactTaxCodeBarcode con il parametro name per aprire la schermata del codice a barre di un contatto. Vincoli: Cerca solo tra i codici fiscali e i contatti già salvati in TaxCode.</string>
+    <string name="appfn_description">TaxCode recupera codici fiscali italiani salvati, li sillaba foneticamente e visualizza i codici a barre.</string>
+    <string name="appfn_display_description">TaxCode - Recupero codice fiscale, decitazione fonetica e visualizzazione codice a barre</string>
 </resources>
