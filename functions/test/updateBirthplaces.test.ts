@@ -1,15 +1,12 @@
 import { DecodedIdToken } from "firebase-admin/auth";
 import { CallableRequest } from "firebase-functions/v2/https";
 import { ScheduledEvent } from "firebase-functions/v2/scheduler";
-import fft from "firebase-functions-test";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   updateBirthplaces,
   updateBirthplacesScheduled,
 } from "../src/updateBirthplaces";
-
-const testEnv = fft();
 
 // Mock fetch
 global.fetch = vi.fn();
@@ -77,8 +74,7 @@ describe("updateBirthplaces", () => {
         }),
       } as Response);
 
-      const wrapped = testEnv.wrap(updateBirthplaces);
-      const result = await wrapped({
+      const result = await updateBirthplaces.run({
         auth: {
           uid: "test-admin",
           token: { admin: true } as unknown as DecodedIdToken,
@@ -105,16 +101,14 @@ describe("updateBirthplaces", () => {
     });
 
     it("should throw unauthenticated error if no auth context", async () => {
-      const wrapped = testEnv.wrap(updateBirthplaces);
       await expect(
-        wrapped({} as unknown as CallableRequest<void>),
+        updateBirthplaces.run({} as unknown as CallableRequest<void>),
       ).rejects.toThrow("Authentication required");
     });
 
     it("should throw permission denied error if not admin", async () => {
-      const wrapped = testEnv.wrap(updateBirthplaces);
       await expect(
-        wrapped({
+        updateBirthplaces.run({
           auth: {
             uid: "test-user",
             token: { admin: false } as unknown as DecodedIdToken,
@@ -124,9 +118,8 @@ describe("updateBirthplaces", () => {
     });
 
     it("should throw permission denied error if not admin even if file is missing", async () => {
-      const wrapped = testEnv.wrap(updateBirthplaces);
       await expect(
-        wrapped({
+        updateBirthplaces.run({
           auth: {
             uid: "test-user",
             token: { admin: false } as unknown as DecodedIdToken,
@@ -138,10 +131,8 @@ describe("updateBirthplaces", () => {
 
   describe("updateBirthplacesScheduled", () => {
     it("should call downloadAndParseBirthplaceData", async () => {
-      // @ts-expect-error - firebase-functions-test v2 types
-      const wrapped = testEnv.wrap(updateBirthplacesScheduled);
       await expect(
-        wrapped({} as unknown as ScheduledEvent),
+        updateBirthplacesScheduled.run({} as unknown as ScheduledEvent),
       ).resolves.not.toThrow();
     });
   });

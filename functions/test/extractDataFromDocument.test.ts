@@ -1,6 +1,5 @@
 import { DecodedIdToken } from "firebase-admin/auth";
 import { CallableRequest } from "firebase-functions/v2/https";
-import fft from "firebase-functions-test";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -9,8 +8,6 @@ import {
   normalizeExtractedData,
   resetCachedAiConfig,
 } from "../src/extractDataFromDocument.js";
-
-const testEnv = fft();
 
 // Mock logger to silence verbose output during tests
 vi.mock("firebase-functions", async (importOriginal) => {
@@ -27,24 +24,26 @@ vi.mock("firebase-functions", async (importOriginal) => {
   };
 });
 
-// Mock Vertex AI
+// Mock Google Gen AI SDK
 const mockGenerateContent = vi.fn();
-const mockGetGenerativeModel = vi.fn();
-vi.mock("@google-cloud/vertexai", () => {
+vi.mock("@google/genai", () => {
   return {
-    VertexAI: class {
-      getGenerativeModel(args: unknown) {
-        mockGetGenerativeModel(args);
-        return {
-          generateContent: mockGenerateContent,
-        };
-      }
+    GoogleGenAI: class {
+      models = {
+        generateContent: mockGenerateContent,
+      };
     },
     HarmCategory: {
       HARM_CATEGORY_DANGEROUS_CONTENT: "HARM_CATEGORY_DANGEROUS_CONTENT",
     },
     HarmBlockThreshold: { BLOCK_MEDIUM_AND_ABOVE: "BLOCK_MEDIUM_AND_ABOVE" },
-    SchemaType: {
+    ThinkingLevel: {
+      MINIMAL: "MINIMAL",
+      LOW: "LOW",
+      MEDIUM: "MEDIUM",
+      HIGH: "HIGH",
+    },
+    Type: {
       STRING: "STRING",
       NUMBER: "NUMBER",
       INTEGER: "INTEGER",
@@ -104,9 +103,8 @@ describe("extractDataFromDocument", () => {
   });
 
   it("should throw unauthenticated error if no auth context", async () => {
-    const wrapped = testEnv.wrap(extractDataFromDocument);
     await expect(
-      wrapped({
+      extractDataFromDocument.run({
         data: { image: "base64" },
       } as unknown as CallableRequest<unknown>),
     ).rejects.toThrow("The function must be called while authenticated.");
@@ -114,29 +112,16 @@ describe("extractDataFromDocument", () => {
 
   it("should extract data correctly and increment rate limit after success", async () => {
     mockGenerateContent.mockResolvedValue({
-      response: {
-        candidates: [
-          {
-            content: {
-              parts: [
-                {
-                  text: JSON.stringify({
-                    firstName: "MARIO",
-                    lastName: "ROSSI",
-                    gender: "M",
-                    birthPlace: { name: "ROMA", state: "RM" },
-                    birthDate: "1980-01-01",
-                  }),
-                },
-              ],
-            },
-          },
-        ],
-      },
+      text: JSON.stringify({
+        firstName: "MARIO",
+        lastName: "ROSSI",
+        gender: "M",
+        birthPlace: { name: "ROMA", state: "RM" },
+        birthDate: "1980-01-01",
+      }),
     });
 
-    const wrapped = testEnv.wrap(extractDataFromDocument);
-    const result = await wrapped({
+    const result = await extractDataFromDocument.run({
       data: { image: "valid-base64-string" },
       auth: {
         uid: "test-user",
@@ -152,9 +137,8 @@ describe("extractDataFromDocument", () => {
   });
 
   it("should throw error if image data is missing", async () => {
-    const wrapped = testEnv.wrap(extractDataFromDocument);
     await expect(
-      wrapped({
+      extractDataFromDocument.run({
         data: {}, // No image
         auth: {
           uid: "test-user",
@@ -171,9 +155,8 @@ describe("extractDataFromDocument", () => {
       message: "Quota exceeded",
     });
 
-    const wrapped = testEnv.wrap(extractDataFromDocument);
     await expect(
-      wrapped({
+      extractDataFromDocument.run({
         data: { image: "valid-base64-string" },
         auth: {
           uid: "test-user",
@@ -191,9 +174,8 @@ describe("extractDataFromDocument", () => {
   it("should handle Vertex AI generic error without consuming user quota", async () => {
     mockGenerateContent.mockRejectedValue(new Error("Something went wrong"));
 
-    const wrapped = testEnv.wrap(extractDataFromDocument);
     await expect(
-      wrapped({
+      extractDataFromDocument.run({
         data: { image: "valid-base64-string" },
         auth: {
           uid: "test-user",
@@ -216,9 +198,8 @@ describe("extractDataFromDocument", () => {
       return { exists: false, data: () => ({}) };
     });
 
-    const wrapped = testEnv.wrap(extractDataFromDocument);
     await expect(
-      wrapped({
+      extractDataFromDocument.run({
         data: { image: "base64" },
         auth: {
           uid: "test-user",
@@ -236,9 +217,8 @@ describe("extractDataFromDocument", () => {
       return { exists: false, data: () => ({}) };
     });
 
-    const wrapped = testEnv.wrap(extractDataFromDocument);
     await expect(
-      wrapped({
+      extractDataFromDocument.run({
         data: { image: "base64" },
         auth: {
           uid: "test-user",
@@ -250,14 +230,11 @@ describe("extractDataFromDocument", () => {
 
   it("should handle Gemini empty response without consuming quota", async () => {
     mockGenerateContent.mockResolvedValue({
-      response: {
-        candidates: [],
-      },
+      candidates: [],
     });
 
-    const wrapped = testEnv.wrap(extractDataFromDocument);
     await expect(
-      wrapped({
+      extractDataFromDocument.run({
         data: { image: "base64" },
         auth: {
           uid: "test-user",
@@ -283,9 +260,8 @@ describe("extractDataFromDocument", () => {
       return { exists: false, data: () => ({}) };
     });
 
-    const wrapped = testEnv.wrap(extractDataFromDocument);
     await expect(
-      wrapped({
+      extractDataFromDocument.run({
         data: { image: "base64" },
         auth: {
           uid: "test-user",
@@ -305,29 +281,16 @@ describe("extractDataFromDocument", () => {
     mockGenerateContent
       .mockRejectedValueOnce(new Error("Model not found in region"))
       .mockResolvedValueOnce({
-        response: {
-          candidates: [
-            {
-              content: {
-                parts: [
-                  {
-                    text: JSON.stringify({
-                      firstName: "GIULIA",
-                      lastName: "BIANCHI",
-                      gender: "F",
-                      birthPlace: { name: "MILANO", state: "MI" },
-                      birthDate: "1992-05-12",
-                    }),
-                  },
-                ],
-              },
-            },
-          ],
-        },
+        text: JSON.stringify({
+          firstName: "GIULIA",
+          lastName: "BIANCHI",
+          gender: "F",
+          birthPlace: { name: "MILANO", state: "MI" },
+          birthDate: "1992-05-12",
+        }),
       });
 
-    const wrapped = testEnv.wrap(extractDataFromDocument);
-    const result = await wrapped({
+    const result = await extractDataFromDocument.run({
       data: { image: "valid-base64-string" },
       auth: {
         uid: "test-user",
@@ -349,7 +312,7 @@ describe("extractDataFromDocument", () => {
           data: () => ({
             model: "custom-gemini-model",
             fallbackModel: "custom-fallback-model",
-            temperature: 0.05,
+            thinkingLevel: "medium",
             maxOutputTokens: 1024,
           }),
         };
@@ -364,29 +327,16 @@ describe("extractDataFromDocument", () => {
     });
 
     mockGenerateContent.mockResolvedValue({
-      response: {
-        candidates: [
-          {
-            content: {
-              parts: [
-                {
-                  text: JSON.stringify({
-                    firstName: "LUCA",
-                    lastName: "VERDI",
-                    gender: "M",
-                    birthPlace: { name: "NAPOLI", state: "NA" },
-                    birthDate: "1995-03-20",
-                  }),
-                },
-              ],
-            },
-          },
-        ],
-      },
+      text: JSON.stringify({
+        firstName: "LUCA",
+        lastName: "VERDI",
+        gender: "M",
+        birthPlace: { name: "NAPOLI", state: "NA" },
+        birthDate: "1995-03-20",
+      }),
     });
 
-    const wrapped = testEnv.wrap(extractDataFromDocument);
-    await wrapped({
+    await extractDataFromDocument.run({
       data: { image: "valid-base64-string" },
       auth: {
         uid: "test-user",
@@ -394,11 +344,11 @@ describe("extractDataFromDocument", () => {
       },
     } as unknown as CallableRequest<unknown>);
 
-    expect(mockGetGenerativeModel).toHaveBeenCalledWith(
+    expect(mockGenerateContent).toHaveBeenCalledWith(
       expect.objectContaining({
         model: "custom-gemini-model",
-        generationConfig: expect.objectContaining({
-          temperature: 0.05,
+        config: expect.objectContaining({
+          thinkingConfig: { thinkingLevel: "MEDIUM" },
           maxOutputTokens: 1024,
         }),
       }),

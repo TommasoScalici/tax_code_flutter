@@ -1,4 +1,3 @@
-import fft from "firebase-functions-test";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { mockRecursiveDelete, mockDocRef, mockDoc, mockCollection } = vi.hoisted(
@@ -20,22 +19,21 @@ vi.mock("firebase-admin/firestore", () => ({
 
 import { cleanupUserOnDelete } from "../src/cleanupUserOnDelete.js";
 
-const testEnv = fft();
-
 describe("cleanupUserOnDelete", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("should recursively delete the user document and nested subcollections upon user deletion", async () => {
-    const wrapped = testEnv.wrap(cleanupUserOnDelete);
     const mockEvent = {
       data: {
         uid: "target-user-uid-789",
       },
     };
 
-    await wrapped(mockEvent as unknown as Parameters<typeof wrapped>[0]);
+    await cleanupUserOnDelete.run(
+      mockEvent as unknown as Parameters<typeof cleanupUserOnDelete.run>[0],
+    );
 
     expect(mockCollection).toHaveBeenCalledWith("users");
     expect(mockDoc).toHaveBeenCalledWith("target-user-uid-789");
@@ -47,7 +45,6 @@ describe("cleanupUserOnDelete", () => {
       new Error("Firestore deletion failed"),
     );
 
-    const wrapped = testEnv.wrap(cleanupUserOnDelete);
     const mockEvent = {
       data: {
         uid: "failing-user-uid",
@@ -55,7 +52,9 @@ describe("cleanupUserOnDelete", () => {
     };
 
     await expect(
-      wrapped(mockEvent as unknown as Parameters<typeof wrapped>[0]),
+      cleanupUserOnDelete.run(
+        mockEvent as unknown as Parameters<typeof cleanupUserOnDelete.run>[0],
+      ),
     ).rejects.toThrow("Firestore deletion failed");
   });
 });

@@ -1,10 +1,12 @@
 import {
-  GenerativeModel,
+  type GenerateContentResponse,
+  GoogleGenAI,
   HarmBlockThreshold,
   HarmCategory,
-  SchemaType,
-  VertexAI,
-} from "@google-cloud/vertexai";
+  type Schema,
+  ThinkingLevel,
+  Type,
+} from "@google/genai";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { logger } from "firebase-functions";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
@@ -13,24 +15,40 @@ const LOCATION = process.env.VERTEX_LOCATION || "us-central1";
 const PROJECT_ID = process.env.GCLOUD_PROJECT || "tax-code-flutter";
 const SERVICE_ACCOUNT = `vertex-ai-invoker@${PROJECT_ID}.iam.gserviceaccount.com`;
 
-const DEFAULT_MODEL = "gemini-3.8-flash";
-const DEFAULT_FALLBACK_MODEL = "gemini-3.7-flash";
+const DEFAULT_MODEL = "gemini-3.5-flash-lite";
+const DEFAULT_FALLBACK_MODEL = "gemini-3.8-flash";
+const DEFAULT_THINKING_LEVEL = ThinkingLevel.LOW;
 const CONFIG_TTL_MS = 10 * 60 * 1000; // 10 minutes cache
 
 export interface AiConfig {
   model: string;
   fallbackModel: string;
-  temperature: number;
+  thinkingLevel: ThinkingLevel;
   maxOutputTokens: number;
 }
 
 let cachedConfig: AiConfig | null = null;
 let lastConfigFetchTime = 0;
-let vertexAI: VertexAI;
+let genAI: GoogleGenAI | undefined;
 
 export function resetCachedAiConfig(): void {
   cachedConfig = null;
   lastConfigFetchTime = 0;
+}
+
+function parseThinkingLevel(value: unknown): ThinkingLevel {
+  if (typeof value === "string") {
+    const normalized = value.trim().toUpperCase();
+    if (
+      normalized === ThinkingLevel.MINIMAL ||
+      normalized === ThinkingLevel.LOW ||
+      normalized === ThinkingLevel.MEDIUM ||
+      normalized === ThinkingLevel.HIGH
+    ) {
+      return normalized;
+    }
+  }
+  return DEFAULT_THINKING_LEVEL;
 }
 
 export async function getAiConfig(): Promise<AiConfig> {
@@ -51,8 +69,7 @@ export async function getAiConfig(): Promise<AiConfig> {
           (data?.fallbackModel as string) ||
           process.env.GEMINI_FALLBACK_MODEL ||
           DEFAULT_FALLBACK_MODEL,
-        temperature:
-          typeof data?.temperature === "number" ? data.temperature : 0.1,
+        thinkingLevel: parseThinkingLevel(data?.thinkingLevel),
         maxOutputTokens:
           typeof data?.maxOutputTokens === "number"
             ? data.maxOutputTokens
@@ -71,44 +88,44 @@ export async function getAiConfig(): Promise<AiConfig> {
   cachedConfig = {
     model: process.env.GEMINI_MODEL || DEFAULT_MODEL,
     fallbackModel: process.env.GEMINI_FALLBACK_MODEL || DEFAULT_FALLBACK_MODEL,
-    temperature: 0.1,
+    thinkingLevel: DEFAULT_THINKING_LEVEL,
     maxOutputTokens: 2048,
   };
   lastConfigFetchTime = now;
   return cachedConfig;
 }
 
-const DOCUMENT_SCHEMA = {
-  type: SchemaType.OBJECT,
+const DOCUMENT_SCHEMA: Schema = {
+  type: Type.OBJECT,
   properties: {
     firstName: {
-      type: SchemaType.STRING,
+      type: Type.STRING,
       description: "First name extracted from the document, or null if absent",
       nullable: true,
     },
     lastName: {
-      type: SchemaType.STRING,
+      type: Type.STRING,
       description: "Last name extracted from the document, or null if absent",
       nullable: true,
     },
     gender: {
-      type: SchemaType.STRING,
+      type: Type.STRING,
       description: "Gender ('M' or 'F'), or null if absent",
       nullable: true,
     },
     birthPlace: {
-      type: SchemaType.OBJECT,
+      type: Type.OBJECT,
       description: "Place of birth details, or null if absent",
       nullable: true,
       properties: {
         name: {
-          type: SchemaType.STRING,
+          type: Type.STRING,
           description:
             "Municipality name or foreign country, or null if absent",
           nullable: true,
         },
         state: {
-          type: SchemaType.STRING,
+          type: Type.STRING,
           description:
             "2-letter province abbreviation, or 'EE' for foreign country, or null",
           nullable: true,
@@ -116,7 +133,7 @@ const DOCUMENT_SCHEMA = {
       },
     },
     birthDate: {
-      type: SchemaType.STRING,
+      type: Type.STRING,
       description:
         "Birth date formatted strictly as 'YYYY-MM-DD', or null if absent",
       nullable: true,
@@ -124,27 +141,43 @@ const DOCUMENT_SCHEMA = {
   },
 };
 
-function getGenerativeModel(
+function getGenAIClient(): GoogleGenAI {
+  if (!genAI) {
+    genAI = new GoogleGenAI({
+      vertexai: true,
+      project: PROJECT_ID,
+      location: LOCATION,
+    });
+  }
+  return genAI;
+}
+
+async function generateWithModel(
   modelName: string,
   config: AiConfig,
-): GenerativeModel {
-  if (!vertexAI) {
-    vertexAI = new VertexAI({ project: PROJECT_ID, location: LOCATION });
-  }
-
-  return vertexAI.getGenerativeModel({
+  contents: Array<{
+    role: string;
+    parts: Array<
+      { inlineData: { data: string; mimeType: string } } | { text: string }
+    >;
+  }>,
+): Promise<GenerateContentResponse> {
+  return getGenAIClient().models.generateContent({
     model: modelName,
-    systemInstruction:
-      "You are an expert document parser. Your task is to extract demographic data from Italian documents and format them strictly into JSON according to the prompt instructions.",
-    safetySettings: [
-      {
-        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-      },
-    ],
-    generationConfig: {
+    contents,
+    config: {
+      systemInstruction:
+        "You are an expert document parser. Your task is to extract demographic data from Italian documents and format them strictly into JSON according to the prompt instructions.",
+      safetySettings: [
+        {
+          category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+          threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+        },
+      ],
       maxOutputTokens: config.maxOutputTokens,
-      temperature: config.temperature,
+      thinkingConfig: {
+        thinkingLevel: config.thinkingLevel,
+      },
       responseMimeType: "application/json",
       responseSchema: DOCUMENT_SCHEMA,
     },
@@ -350,19 +383,17 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
   `;
 
     const config = await getAiConfig();
-    const geminiRequest = {
-      contents: [{ role: "user", parts: [imagePart, { text: prompt }] }],
-    };
+    const geminiContents = [
+      { role: "user", parts: [imagePart, { text: prompt }] },
+    ];
 
-    let content;
+    let response: GenerateContentResponse;
     try {
       logger.info(
         `Sending request to Gemini Vision API using model ${config.model}.`,
         { uid },
       );
-      const primaryModel = getGenerativeModel(config.model, config);
-      const response = await primaryModel.generateContent(geminiRequest);
-      content = response.response.candidates?.[0]?.content;
+      response = await generateWithModel(config.model, config, geminiContents);
     } catch (primaryError: unknown) {
       logger.warn(
         `Primary model ${config.model} failed. Attempting fallback model ${config.fallbackModel}.`,
@@ -370,10 +401,11 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
       );
 
       try {
-        const fallbackModel = getGenerativeModel(config.fallbackModel, config);
-        const fallbackResponse =
-          await fallbackModel.generateContent(geminiRequest);
-        content = fallbackResponse.response.candidates?.[0]?.content;
+        response = await generateWithModel(
+          config.fallbackModel,
+          config,
+          geminiContents,
+        );
       } catch (fallbackError: unknown) {
         if (
           typeof fallbackError === "object" &&
@@ -401,7 +433,8 @@ export const extractDataFromDocument = onCall<ExtractDataRequest>(
       }
     }
 
-    const rawOutputText = content?.parts?.[0]?.text;
+    const rawOutputText =
+      response.text ?? response.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!rawOutputText) {
       logger.error("Gemini API returned an empty or invalid response.", {
         uid,
