@@ -247,13 +247,6 @@ class ProfileAppInfoView extends StatelessWidget {
                       title: l10n.privacyGdprRights,
                       description: l10n.privacyGdprRightsDesc,
                     ),
-                    _buildHighlightDivider(theme),
-                    _buildHighlightItem(
-                      theme: theme,
-                      icon: Icons.auto_awesome_rounded,
-                      title: l10n.privacyGeminiIntegration,
-                      description: l10n.privacyGeminiIntegrationDesc,
-                    ),
                   ],
                 ),
               ),

@@ -21,10 +21,6 @@
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="true">
 
-        <property
-            android:name="android.app.appfunctions.app_metadata"
-            android:resource="@xml/app_metadata" />
-
         <activity android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"

@@ -11,7 +11,6 @@ import 'package:shared/testing/fake_sync_service.dart';
 import 'package:tax_code_flutter/controllers/home_page_controller.dart';
 import 'package:tax_code_flutter/controllers/profile_screen_controller.dart';
 import 'package:tax_code_flutter/l10n/l10n.dart';
-import 'package:tax_code_flutter/services/gemini_integration_service.dart';
 import 'package:tax_code_flutter/services/in_app_review_service.dart';
 import 'package:tax_code_flutter/services/info_service.dart';
 import 'package:tax_code_flutter/widgets/previews/preview_fakes.dart';
@@ -36,7 +35,6 @@ class _ProfileBottomSheetPreviewState extends State<ProfileBottomSheetPreview> {
   late final FakeHomePageController _homeController;
   late final FakeInfoService _infoService;
   late final FakeInAppReviewService _inAppReviewService;
-  late final FakeGeminiIntegrationService _geminiService;
   late final Logger _logger;
 
   @override
@@ -49,7 +47,6 @@ class _ProfileBottomSheetPreviewState extends State<ProfileBottomSheetPreview> {
     _homeController = FakeHomePageController();
     _infoService = FakeInfoService();
     _inAppReviewService = FakeInAppReviewService();
-    _geminiService = FakeGeminiIntegrationService();
     _logger = Logger();
   }
 
@@ -61,9 +58,6 @@ class _ProfileBottomSheetPreviewState extends State<ProfileBottomSheetPreview> {
       providers: [
         ChangeNotifierProvider<AuthService>.value(value: _authService),
         ChangeNotifierProvider<SyncService>.value(value: _syncService),
-        ChangeNotifierProvider<GeminiIntegrationService>.value(
-          value: _geminiService,
-        ),
         ChangeNotifierProvider<HomePageController>.value(
           value: _homeController,
         ),

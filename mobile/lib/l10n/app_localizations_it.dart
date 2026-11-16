@@ -328,13 +328,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get formOrManualEntry => 'Oppure inserisci manualmente';
 
   @override
-  String get geminiIntegrationSubtitle =>
-      'Consenti a Gemini di leggere o mostrare i codici fiscali salvati su richiesta vocale.';
-
-  @override
-  String get geminiIntegrationTitle => 'Integrazione Google Gemini';
-
-  @override
   String get gender => 'Sesso';
 
   @override
@@ -368,7 +361,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get isMeSubtitle =>
-      'Imposta come codice personale per accesso rapido e comandi vocali con Google Gemini.';
+      'Imposta come codice personale per accesso rapido.';
 
   @override
   String get lastName => 'Cognome';
@@ -461,13 +454,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get privacyGdprRightsDesc =>
       'Puoi esportare o eliminare definitivamente il tuo account e i dati in qualsiasi momento.';
-
-  @override
-  String get privacyGeminiIntegration => 'Comandi Vocali Gemini (On-Device)';
-
-  @override
-  String get privacyGeminiIntegrationDesc =>
-      'Quando chiedi a Gemini di leggere o aprire un codice fiscale, la ricerca avviene localmente sul tuo dispositivo e solo il codice richiesto viene letto da Gemini.';
 
   @override
   String get privacyHighlightsTitle => 'Privacy & Protezione Dati';
