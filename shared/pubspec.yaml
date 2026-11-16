@@ -24,7 +24,8 @@ dependencies:
   shared_preferences: ^2.5.5
   uuid: ^4.6.0
 
-  # State Management
+  # State Management & UI
+  material_ui: ^1.11.1
   provider: ^6.1.5
 
   # Firebase & Backend

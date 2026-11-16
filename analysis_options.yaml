@@ -8,6 +8,7 @@ analyzer:
   exclude:
     - "**/*.mocks.dart"
     - "**/*.g.dart"
+    - "**/l10n/app_localizations*.dart"
     - build/**
     - android/**
     - .dart_tool/**

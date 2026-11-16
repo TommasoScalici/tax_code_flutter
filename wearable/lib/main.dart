@@ -4,9 +4,9 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:logger/logger.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/hive_registrar.g.dart';
 import 'package:shared/utils/app_bootstrap.dart';
@@ -15,6 +15,7 @@ import 'package:tax_code_flutter_wear_os/core/providers.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_theme.dart';
 import 'package:tax_code_flutter_wear_os/firebase_options.dart';
 import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
+import 'package:tax_code_flutter_wear_os/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
 import 'package:tax_code_flutter_wear_os/screens/barcode_page.dart';
 
@@ -77,10 +78,8 @@ class TaxCodeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      localizationsDelegates: const [
-        ...AppLocalizations.localizationsDelegates,
-      ],
-      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+      supportedLocales: AppLocalizationsSetup.supportedLocales,
       theme: WearTheme.darkTheme,
       onGenerateRoute: _onGenerateRoute,
     );

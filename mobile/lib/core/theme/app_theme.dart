@@ -18,7 +18,7 @@ export 'package:tax_code_flutter/core/theme/theme_context_extensions.dart';
 abstract final class AppTheme {
   /// Dark Theme (OLED First).
   static ThemeData get darkTheme {
-    final colorScheme = AppColors.darkColorScheme().toModern();
+    final colorScheme = AppColors.darkColorScheme();
     final textTheme = AppTypography.createTextTheme(
       onSurface: colorScheme.onSurface,
       onSurfaceVariant: colorScheme.onSurfaceVariant,
@@ -28,7 +28,7 @@ abstract final class AppTheme {
 
   /// Light Theme.
   static ThemeData get lightTheme {
-    final colorScheme = AppColors.lightColorScheme().toModern();
+    final colorScheme = AppColors.lightColorScheme();
     final textTheme = AppTypography.createTextTheme(
       onSurface: colorScheme.onSurface,
       onSurfaceVariant: colorScheme.onSurfaceVariant,

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_theme.dart';
-import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
+import 'package:tax_code_flutter_wear_os/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter_wear_os/services/demo_mode_service.dart';
 import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
 import 'package:tax_code_flutter_wear_os/widgets/previews/wear_preview_fakes.dart';
@@ -90,8 +90,8 @@ class _WearPreviewShellState extends State<WearPreviewShell> {
         debugShowCheckedModeBanner: false,
         theme: WearTheme.darkTheme,
         locale: _locale,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+        supportedLocales: AppLocalizationsSetup.supportedLocales,
         routes: widget.routes ?? const {},
         onGenerateRoute: widget.onGenerateRoute,
         home: Scaffold(

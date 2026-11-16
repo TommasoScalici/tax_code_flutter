@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_dimensions.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_typography.dart';
 

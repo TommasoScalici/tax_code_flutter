@@ -12,7 +12,7 @@ void main() {
 
         expect(theme.useMaterial3, isTrue);
         expect(theme.brightness, Brightness.dark);
-        expect(theme.colorScheme, AppColors.darkColorScheme().toModern());
+        expect(theme.colorScheme, AppColors.darkColorScheme());
         expect(theme.scaffoldBackgroundColor, AppColors.darkSurface);
         expect(theme.cardTheme.color, AppColors.darkSurfaceContainer);
         expect(theme.cardTheme.elevation, AppElevation.none);
@@ -59,7 +59,7 @@ void main() {
 
         expect(theme.useMaterial3, isTrue);
         expect(theme.brightness, Brightness.light);
-        expect(theme.colorScheme, AppColors.lightColorScheme().toModern());
+        expect(theme.colorScheme, AppColors.lightColorScheme());
         expect(theme.scaffoldBackgroundColor, AppColors.lightSurface);
         expect(theme.cardTheme.color, AppColors.lightSurfaceContainer);
         expect(theme.cardTheme.elevation, AppElevation.none);

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared/models/contact.dart';
 import 'package:shared/testing/test_contact_fixtures.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_colors.dart';

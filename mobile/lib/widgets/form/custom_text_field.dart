@@ -1,4 +1,9 @@
-import 'package:flutter/material.dart';
+// reactive_forms still expects Material/InputDecoration/OutlineInputBorder from flutter/material.dart.
+// ignore: deprecated_member_use
+import 'package:flutter/material.dart'
+    as flutter_material
+    show InputDecoration, Material, MaterialType, OutlineInputBorder;
+import 'package:material_ui/material_ui.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:tax_code_flutter/core/theme/app_dimensions.dart';
 
@@ -89,8 +94,8 @@ class CustomTextField extends StatelessWidget {
         ),
 
         // Reactive text field
-        Material(
-          type: MaterialType.transparency,
+        flutter_material.Material(
+          type: flutter_material.MaterialType.transparency,
           child: ReactiveTextField<String>(
             formControlName: formControlName,
             textCapitalization: textCapitalization,
@@ -102,31 +107,31 @@ class CustomTextField extends StatelessWidget {
               fontSize: AppFontSizes.input,
               color: colorScheme.onSurface,
             ),
-            decoration: InputDecoration(
+            decoration: flutter_material.InputDecoration(
               hintText: placeholder,
               filled: true,
               fillColor: bgColor,
               contentPadding: AppSpacing.paddingField,
-              border: OutlineInputBorder(
+              border: flutter_material.OutlineInputBorder(
                 borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(color: borderColor),
               ),
-              enabledBorder: OutlineInputBorder(
+              enabledBorder: flutter_material.OutlineInputBorder(
                 borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(color: borderColor),
               ),
-              focusedBorder: OutlineInputBorder(
+              focusedBorder: flutter_material.OutlineInputBorder(
                 borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(
                   color: colorScheme.primary,
                   width: AppDimensions.borderThick,
                 ),
               ),
-              errorBorder: OutlineInputBorder(
+              errorBorder: flutter_material.OutlineInputBorder(
                 borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(color: colorScheme.error),
               ),
-              focusedErrorBorder: OutlineInputBorder(
+              focusedErrorBorder: flutter_material.OutlineInputBorder(
                 borderRadius: AppRadii.borderInput,
                 borderSide: BorderSide(
                   color: colorScheme.error,

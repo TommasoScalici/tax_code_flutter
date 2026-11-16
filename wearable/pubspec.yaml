@@ -32,11 +32,12 @@ dependencies:
 
   # UI & Functionality
   barcode_widget: ^2.0.4
+  material_ui: ^1.11.1
 
   # Firebase & Backend
   firebase_app_check: ^0.5.1
   firebase_crashlytics: ^6.0.1
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

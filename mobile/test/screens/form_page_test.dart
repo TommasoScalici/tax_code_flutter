@@ -1,5 +1,7 @@
 import 'dart:async';
 
+// Needed to inspect legacy TextField/InputDecorator widgets rendered by reactive_forms.
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart' as legacy;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';

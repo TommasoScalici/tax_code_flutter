@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Ergonomic context extensions for accessing Wear OS theme tokens directly in widgets.
 extension ThemeContextExtensions on BuildContext {

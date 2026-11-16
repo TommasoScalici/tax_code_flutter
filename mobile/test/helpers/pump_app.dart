@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// Needed by MaterialUiCompatibilityBridge for legacy Material widgets (e.g. reactive_forms).
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart' as legacy;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';

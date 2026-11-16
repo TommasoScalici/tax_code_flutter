@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 import 'package:shared/models/birthplace.dart';
@@ -12,7 +12,7 @@ import 'package:shared/models/contact.dart';
 import 'package:shared/services/auth_service.dart';
 import 'package:tax_code_flutter_wear_os/controllers/contacts_list_controller.dart';
 import 'package:tax_code_flutter_wear_os/core/theme/wear_theme.dart';
-import 'package:tax_code_flutter_wear_os/l10n/app_localizations.dart';
+import 'package:tax_code_flutter_wear_os/l10n/app_localizations_setup.dart';
 import 'package:tax_code_flutter_wear_os/screens/auth_gate.dart';
 import 'package:tax_code_flutter_wear_os/screens/barcode_page.dart';
 import 'package:tax_code_flutter_wear_os/services/native_view_service.dart';
@@ -323,8 +323,9 @@ void main() {
                 ),
               ),
               locale: locale,
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates:
+                  AppLocalizationsSetup.localizationsDelegates,
+              supportedLocales: AppLocalizationsSetup.supportedLocales,
               home: Scaffold(
                 backgroundColor: Colors.black,
                 body: RepaintBoundary(
