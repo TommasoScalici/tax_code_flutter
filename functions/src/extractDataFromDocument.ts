@@ -11,7 +11,9 @@ import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { logger } from "firebase-functions";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 
-const LOCATION = process.env.VERTEX_LOCATION || "us-central1";
+const VERTEX_LOCATION = process.env.VERTEX_LOCATION || "eu";
+// Keep us-central1 alongside europe-west1 during transition so existing mobile clients keep working.
+const FUNCTION_REGIONS = ["europe-west1", "us-central1"];
 const PROJECT_ID = process.env.GCLOUD_PROJECT || "tax-code-flutter";
 const SERVICE_ACCOUNT = `vertex-ai-invoker@${PROJECT_ID}.iam.gserviceaccount.com`;
 
@@ -146,7 +148,7 @@ function getGenAIClient(): GoogleGenAI {
     genAI = new GoogleGenAI({
       vertexai: true,
       project: PROJECT_ID,
-      location: LOCATION,
+      location: VERTEX_LOCATION,
     });
   }
   return genAI;
@@ -273,9 +275,10 @@ export function normalizeExtractedData(
 
 export const extractDataFromDocument = onCall<ExtractDataRequest>(
   {
-    region: LOCATION,
+    region: FUNCTION_REGIONS,
     serviceAccount: SERVICE_ACCOUNT,
     maxInstances: 10,
+    enforceAppCheck: true,
   },
   async (request) => {
     if (!request.auth) {

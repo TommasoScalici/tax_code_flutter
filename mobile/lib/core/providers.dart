@@ -46,7 +46,7 @@ List<SingleChildWidget> getAppProviders({
     Provider<FirebaseCrashlytics>(create: (_) => FirebaseCrashlytics.instance),
     Provider<FirebaseFirestore>.value(value: FirebaseFirestore.instance),
     Provider<FirebaseFunctions>.value(
-      value: FirebaseFunctions.instanceFor(region: 'us-central1'),
+      value: FirebaseFunctions.instanceFor(region: 'europe-west1'),
     ),
 
     // --- Level 2: Specialized, Self-Contained Services ---

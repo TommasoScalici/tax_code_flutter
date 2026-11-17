@@ -7,11 +7,14 @@ import { onUserDeleted } from "firebase-functions/v2/identity";
  * Esegue l'eliminazione a cascata ricorsiva del documento users/{uid}
  * e di tutte le sottocollezioni (come /contacts).
  */
-export const cleanupUserOnDelete = onUserDeleted(async (event) => {
-  const uid = event.data.uid;
-  const db = getFirestore();
-  const userDocRef = db.collection("users").doc(uid);
+export const cleanupUserOnDelete = onUserDeleted(
+  { region: "europe-west1" },
+  async (event) => {
+    const uid = event.data.uid;
+    const db = getFirestore();
+    const userDocRef = db.collection("users").doc(uid);
 
-  // recursiveDelete elimina il documento e qualsiasi sottocollezione annidata
-  await db.recursiveDelete(userDocRef);
-});
+    // recursiveDelete elimina il documento e qualsiasi sottocollezione annidata
+    await db.recursiveDelete(userDocRef);
+  },
+);

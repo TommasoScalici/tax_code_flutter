@@ -180,6 +180,7 @@ export const updateBirthplaces = onCall<void>(
     timeoutSeconds: 300,
     memory: "512MiB",
     maxInstances: 3,
+    enforceAppCheck: true,
   },
   async (request) => {
     if (!request.auth) {
